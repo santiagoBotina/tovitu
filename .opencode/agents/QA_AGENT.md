@@ -3,10 +3,10 @@ description: Reviews code for quality and best practices
 mode: subagent
 model: deepseek-v4-pro
 temperature: 0.1
-tools:
-  write: false
-  edit: false
-  bash: false
+permission:
+  write: deny
+  edit: deny
+  bash: deny
 ---
 
 # QA Agent

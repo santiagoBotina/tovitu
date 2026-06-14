@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:16
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-tovitu}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tovitu_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-tovitu_development}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-tovitu}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    volumes:
+      - redis_data:/data
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  localstack:
+    image: localstack/localstack:4
+    profiles:
+      - localstack
+    volumes:
+      - localstack_data:/var/lib/localstack
+      - "${LOCALSTACK_VOLUME:-./.localstack}:/etc/localstack/init/ready.d"
+    environment:
+      SERVICES: s3
+      AWS_DEFAULT_REGION: ${AWS_REGION:-us-east-1}
+      AWS_ACCESS_KEY_ID: ${LOCALSTACK_ACCESS_KEY:-test}
+      AWS_SECRET_ACCESS_KEY: ${LOCALSTACK_SECRET_KEY:-test}
+      EDGE_PORT: 4566
+    ports:
+      - "${LOCALSTACK_PORT:-4566}:4566"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:
+  localstack_data:

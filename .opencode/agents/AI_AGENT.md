@@ -3,10 +3,10 @@ description: Designs and maintains AI capabilities and prompts
 mode: subagent
 model: qwen3.7-max
 temperature: 0.1
-tools:
-  write: false
-  edit: false
-  bash: false
+permission:
+  write: deny
+  edit: deny
+  bash: deny
 ---
 
 # AI Agent

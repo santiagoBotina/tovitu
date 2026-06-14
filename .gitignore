@@ -1,1 +1,41 @@
 .idea/
+
+# Rails generated
+/config/master.key
+/config/credentials/*.key
+
+# Environment
+.env
+.env.local
+.env.production
+.env.staging
+
+# Logs
+log/
+tmp/
+
+# Storage (Active Storage local disk)
+storage/
+tmp/storage/
+
+# Node modules (if any JS deps are added)
+node_modules/
+
+# TailwindCSS build output
+app/assets/builds/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# LocalStack
+.localstack/
+
+# OS
+.DS_Store
+
+/app/assets/builds/*
+!/app/assets/builds/.keep

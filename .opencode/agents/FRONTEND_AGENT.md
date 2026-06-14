@@ -3,10 +3,10 @@ description: Builds accessible and consistent user experiences
 mode: subagent
 model: kimi-k2.7-code
 temperature: 0.1
-tools:
-  write: false
-  edit: false
-  bash: false
+permission:
+  write: deny
+  edit: deny
+  bash: deny
 ---
 
 # Frontend Agent

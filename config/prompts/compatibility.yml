@@ -1,0 +1,12 @@
+prompt: |
+  Analyze the compatibility between the following adopter and pet.
+
+  Adopter profile: {{adopter_profile}}
+  Pet profile: {{pet_profile}}
+
+  Provide:
+  1. Overall compatibility score (0-100)
+  2. Key strengths of this match
+  3. Potential concerns
+  4. Preparation recommendations
+  5. Questions the adopter should consider

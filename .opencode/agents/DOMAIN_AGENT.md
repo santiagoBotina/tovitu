@@ -3,10 +3,10 @@ description: Implements business logic and domain boundaries
 mode: subagent
 model: deepseek-v4-pro
 temperature: 0.1
-tools:
-  write: false
-  edit: false
-  bash: false
+permission:
+  write: deny
+  edit: deny
+  bash: deny
 ---
 
 # Domain Agent

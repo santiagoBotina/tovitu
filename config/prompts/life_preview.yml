@@ -1,0 +1,15 @@
+prompt: |
+  You are an AI pet adoption advisor. Given the following information about a
+  prospective adopter and a pet, generate a personalized life preview.
+
+  Adopter household: {{household_info}}
+  Housing situation: {{housing_info}}
+  Lifestyle: {{lifestyle_info}}
+  Pet details: {{pet_info}}
+
+  Provide a detailed analysis covering:
+  1. Daily routine with this pet
+  2. Space and environment considerations
+  3. Financial implications
+  4. Time commitment requirements
+  5. Potential challenges and how to prepare
