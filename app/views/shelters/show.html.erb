@@ -11,7 +11,7 @@
       <div>
         <h1 class="font-display text-3xl font-bold text-neutral-900 mb-2"><%= @shelter.name %></h1>
         <div class="flex flex-wrap items-center gap-3">
-          <%= raw shelter.status_badge %>
+          <%= shelter.status_badge %>
           <% @shelter.species_served.each do |species| %>
             <span class="px-3 py-1 bg-primary-50 text-primary-600 text-xs font-medium rounded-full"><%= species.capitalize %></span>
           <% end %>
@@ -52,7 +52,7 @@
             <div class="w-10 h-10 bg-primary-50 rounded-full flex items-center justify-center shrink-0">
               <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
             </div>
-            <%= link_to @shelter.website, @shelter.website, target: "_blank", class: "text-primary-500 hover:text-primary-600 underline", rel: "noopener" %>
+            <%= link_to @shelter.website, safe_url(@shelter.website), target: "_blank", class: "text-primary-500 hover:text-primary-600 underline", rel: "noopener" %>
           </div>
         <% end %>
       </div>

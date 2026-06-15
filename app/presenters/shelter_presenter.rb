@@ -7,9 +7,9 @@ class ShelterPresenter < ApplicationPresenter
 
   def status_badge
     if model.active?
-      "<span class=\"inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700\"><span class=\"w-1.5 h-1.5 rounded-full bg-green-500\"></span>#{I18n.t('presenters.shelter.status_active')}</span>"
+      "<span class=\"inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700\"><span class=\"w-1.5 h-1.5 rounded-full bg-green-500\"></span>#{I18n.t('presenters.shelter.status_active')}</span>".html_safe
     else
-      "<span class=\"inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-neutral-50 text-neutral-500\"><span class=\"w-1.5 h-1.5 rounded-full bg-neutral-400\"></span>#{I18n.t('presenters.shelter.status_inactive')}</span>"
+      "<span class=\"inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-neutral-50 text-neutral-500\"><span class=\"w-1.5 h-1.5 rounded-full bg-neutral-400\"></span>#{I18n.t('presenters.shelter.status_inactive')}</span>".html_safe
     end
   end
 
