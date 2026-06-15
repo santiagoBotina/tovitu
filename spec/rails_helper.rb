@@ -15,6 +15,8 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
+  config.include ActiveSupport::Testing::TimeHelpers
+
   config.fixture_paths = [Rails.root.join("spec/fixtures")]
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!

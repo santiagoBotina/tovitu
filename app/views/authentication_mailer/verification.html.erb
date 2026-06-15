@@ -1,0 +1,22 @@
+<div style="text-align: center; margin-bottom: 30px;">
+  <h1 style="color: #6C30FF; font-family: 'Baloo 2', 'Arial Black', cursive; font-size: 28px; margin: 0;">Tovitu</h1>
+</div>
+
+<div style="background-color: #ffffff; border-radius: 16px; padding: 30px;">
+  <h2 style="margin-top: 0; color: #111827; font-size: 24px; margin-bottom: 16px;">Welcome to Tovitu, <%= @user.name %>!</h2>
+
+  <p style="color: #4B5563; line-height: 1.6;">Thank you for creating an account. Please verify your email address by clicking the button below:</p>
+
+  <div style="text-align: center; margin: 30px 0;">
+    <a href="<%= @verification_url %>" style="display: inline-block; background-color: #6C30FF; color: white; padding: 14px 36px; border-radius: 24px; text-decoration: none; font-weight: 600; font-size: 16px;">
+      Verify Email Address
+    </a>
+  </div>
+
+  <p style="color: #6B7280; font-size: 14px; line-height: 1.5;">This link will expire in 24 hours.</p>
+  <p style="color: #6B7280; font-size: 14px; line-height: 1.5;">If you did not create an account, please ignore this email.</p>
+</div>
+
+<div style="text-align: center; margin-top: 20px; color: #A0A6B4; font-size: 12px;">
+  <p>&copy; 2026 Tovitu. All rights reserved.</p>
+</div>
