@@ -1,0 +1,337 @@
+es:
+  layouts:
+    application:
+      title: "Tovitu"
+  shared:
+    error_messages:
+      one: "%{count} error prohibió que esto se guardara:"
+      other: "%{count} errores prohibieron que esto se guardara:"
+    sidebar:
+      dashboard: "Panel"
+      shelters: "Refugios"
+      pets: "Mascotas"
+      adoptions: "Adopciones"
+      settings: "Ajustes"
+      sign_out: "Cerrar sesión"
+      sign_out_confirm: "¿Estás seguro de que quieres cerrar sesión?"
+    navbar:
+      sign_in: "Iniciar sesión"
+      create_account: "Crear cuenta"
+  dashboard:
+    index:
+      welcome: "Bienvenido, %{name}"
+      role: "Has iniciado sesión como %{role}"
+      profile:
+        title: "Perfil"
+        description: "Actualiza tu nombre y correo electrónico"
+      logout:
+        title: "Cerrar sesión"
+        description: "Finaliza tu sesión actual"
+  shelters:
+    index:
+      title: "Buscar un Refugio"
+      subtitle: "Explora refugios cercanos y descubre mascotas que esperan un hogar."
+      city: "Ciudad"
+      city_placeholder: "Cualquier ciudad"
+      state: "Estado"
+      all_states: "Todos los estados"
+      species: "Especie"
+      dog: "Perro"
+      cat: "Gato"
+      other: "Otro"
+      search: "Buscar"
+      view_shelter: "Ver Refugio →"
+      empty_title: "No se encontraron refugios"
+      empty_body: "Ajusta los filtros de búsqueda para encontrar más refugios."
+      clear_filters: "Limpiar filtros"
+    new:
+      title: "Registrar tu Refugio"
+      subtitle: "Cuéntanos sobre tu refugio para comenzar."
+      name_label: "Nombre del Refugio"
+      name_placeholder: "Happy Paws Rescue"
+      street_label: "Dirección"
+      street_placeholder: "Calle 123"
+      city_label: "Ciudad"
+      city_placeholder: "Ciudad de México"
+      state_label: "Estado"
+      state_prompt: "Seleccionar estado"
+      zip_label: "Código Postal"
+      zip_placeholder: "12345"
+      phone_label: "Teléfono"
+      phone_placeholder: "555-123-4567"
+      website_label: "Sitio web (opcional)"
+      website_placeholder: "https://ejemplo.com"
+      description_label: "Acerca de tu Refugio (opcional)"
+      description_placeholder: "Cuéntales a los adoptantes sobre tu misión..."
+      species_label: "Especies Atendidas"
+      hours_label: "Horario de Atención (opcional)"
+      hours_placeholder: "Lun-Vie 9-5, Sáb 10-2"
+      submit: "Registrar Refugio"
+      login_prompt: "¿Ya tienes una cuenta?"
+      login_link: "Iniciar sesión"
+    show:
+      back: "Volver a refugios"
+      location: "Ubicación"
+      contact: "Contacto"
+      hours: "Horario"
+      adoption_process: "Proceso de Adopción"
+      adoption_fee: "Tarifa de Adopción"
+      minimum_age: "Edad Mínima"
+      minimum_age_text: "Los adoptantes deben tener al menos %{age} años."
+      home_visit: "Visita Domiciliaria"
+      home_visit_text: "Se requiere una visita domiciliaria como parte del proceso de adopción."
+      available_pets: "Mascotas Disponibles"
+      pets_coming_soon: "¡Mascotas próximamente!"
+      no_pets_yet: "Este refugio aún no ha publicado mascotas."
+    edit:
+      title: "Editar Perfil del Refugio"
+      name_label: "Nombre del Refugio"
+      street_label: "Dirección"
+      city_label: "Ciudad"
+      state_label: "Estado"
+      zip_label: "Código Postal"
+      phone_label: "Teléfono"
+      website_label: "Sitio web"
+      description_label: "Acerca de tu Refugio"
+      species_label: "Especies Atendidas"
+      hours_label: "Horario de Atención"
+      hours_placeholder: "Lun-Vie 9-5, Sáb 10-2"
+      status_label: "Estado"
+      active: "Activo"
+      inactive: "Inactivo"
+      submit: "Guardar Cambios"
+    dashboard:
+      show:
+        title: "Panel de %{name}"
+        subtitle: "Administra tu refugio, mascotas y equipo."
+        onboarding: "Lista de Verificación"
+        progress: "%{percent}% completado"
+        total_pets: "Total de Mascotas"
+        active_applications: "Solicitudes Activas"
+        pending_tasks: "Tareas Pendientes"
+        quick_actions: "Acciones Rápidas"
+        add_pet: "Agregar Mascota"
+        add_pet_desc: "Publicar una nueva mascota"
+        manage_staff: "Gestionar Personal"
+        manage_staff_desc: "Invitar miembros del equipo"
+        adoption_policies: "Políticas de Adopción"
+        adoption_policies_desc: "Configurar requisitos"
+    staff:
+      index:
+        title: "Gestión de Personal"
+        current_staff: "Personal Actual"
+        empty_staff: "Aún no hay miembros del personal."
+        pending_invitations: "Invitaciones Pendientes"
+        invited_ago: "Invitado hace %{time}"
+        expired: "Expirado"
+        pending: "Pendiente"
+        invite_new: "Invitar Nuevo Personal"
+        email_label: "Correo Electrónico"
+        email_placeholder: "colega@ejemplo.com"
+        send_invitation: "Enviar Invitación"
+        remove_confirm: "¿Estás seguro de que deseas eliminar a %{name}?"
+        remove: "Eliminar"
+    policies:
+      edit:
+        title: "Políticas de Adopción"
+        adoption_fee: "Tarifa de Adopción ($)"
+        minimum_age: "Edad Mínima del Adoptante"
+        fee_description: "Descripción de la Tarifa"
+        fee_placeholder: "Cubre vacunas, esterilización y microchip"
+        home_visit: "Visita Domiciliaria Requerida"
+        home_visit_desc: "Un miembro del personal visitará el hogar del adoptante antes de la aprobación."
+        fenced_yard: "Patio Cercado Requerido"
+        fenced_yard_desc: "Los adoptantes deben tener un patio debidamente cercado."
+        vet_reference: "Referencia Veterinaria Requerida"
+        vet_reference_desc: "Los adoptantes deben proporcionar una referencia veterinaria."
+        other_requirements: "Otros Requisitos"
+        other_placeholder: "El adoptante debe vivir a menos de 50 km\nEl adoptante debe tener experiencia previa con mascotas\nTodos los miembros del hogar deben estar presentes en la entrevista"
+        one_per_line: "Un requisito por línea."
+        submit: "Guardar Políticas"
+  authentication:
+    registrations:
+      new:
+        title: "Crear una cuenta"
+        subtitle: "Únete a Tovitu para gestionar adopciones de mascotas"
+        name_label: "Nombre completo"
+        email_label: "Correo electrónico"
+        password_label: "Contraseña"
+        password_hint: "Mínimo 8 caracteres"
+        confirm_label: "Confirmar contraseña"
+        submit: "Crear cuenta"
+        login_prompt: "¿Ya tienes una cuenta?"
+        login_link: "Iniciar sesión"
+      check_email:
+        title: "Revisa tu correo"
+        body: "Enviamos un enlace de verificación a tu correo electrónico. Haz clic en el enlace para verificar tu cuenta."
+        didnt_receive: "¿No recibiste el correo?"
+        resend: "Reenviar verificación"
+        back: "Volver al inicio de sesión"
+    sessions:
+      new:
+        title: "Bienvenido de nuevo"
+        subtitle: "Inicia sesión en tu cuenta de Tovitu"
+        email_label: "Correo electrónico"
+        password_label: "Contraseña"
+        forgot_password: "¿Olvidaste tu contraseña?"
+        submit: "Iniciar sesión"
+        signup_prompt: "¿No tienes una cuenta?"
+        signup_link: "Crear cuenta"
+    passwords:
+      new:
+        title: "¿Olvidaste tu contraseña?"
+        subtitle: "Ingresa tu correo y te enviaremos un enlace de restablecimiento"
+        email_label: "Correo electrónico"
+        submit: "Enviar enlace"
+        login_prompt: "¿Recuerdas tu contraseña?"
+        login_link: "Iniciar sesión"
+      check_email:
+        title: "Revisa tu correo"
+        body: "Si existe una cuenta con ese correo, hemos enviado un enlace para restablecer la contraseña. Por favor revisa tu correo."
+        back: "Volver al inicio de sesión"
+      edit:
+        title: "Restablecer tu contraseña"
+        subtitle: "Ingresa tu nueva contraseña a continuación"
+        password_label: "Nueva contraseña"
+        password_hint: "Mínimo 8 caracteres"
+        confirm_label: "Confirmar nueva contraseña"
+        submit: "Restablecer contraseña"
+    profiles:
+      edit:
+        title: "Editar perfil"
+        name_label: "Nombre completo"
+        email_label: "Correo electrónico"
+        verified: "Verificado"
+        pending_verification: "Verificación pendiente"
+        submit: "Actualizar perfil"
+        back: "Volver"
+    verifications:
+      expired:
+        title: "Enlace expirado"
+        body: "Este enlace de verificación ha expirado. Los enlaces de verificación son válidos por 24 horas."
+        resend: "Reenviar correo de verificación"
+        back: "Volver al inicio de sesión"
+      already_verified:
+        title: "Ya verificado"
+        body: "Tu correo electrónico ya ha sido verificado. Puedes iniciar sesión a continuación."
+        login: "Iniciar sesión"
+  authentication_mailer:
+    verification:
+      subject: "Verifica tu dirección de correo electrónico"
+      greeting: "¡Bienvenido a Tovitu, %{name}!"
+      body: "Gracias por crear una cuenta. Por favor verifica tu dirección de correo electrónico haciendo clic en el botón a continuación:"
+      cta: "Verificar Correo Electrónico"
+      expires: "Este enlace expirará en 24 horas."
+      ignore: "Si no creaste una cuenta, por favor ignora este correo."
+    password_reset:
+      subject: "Restablecer tu contraseña"
+      title: "Restablecer tu contraseña"
+      body: "Recibimos una solicitud para restablecer tu contraseña. Haz clic en el botón a continuación para crear una nueva:"
+      cta: "Restablecer Contraseña"
+      expires: "Este enlace expirará en 1 hora."
+      ignore: "Si no solicitaste un restablecimiento de contraseña, ignora este correo."
+    email_changed:
+      subject: "Tu dirección de correo electrónico ha sido cambiada"
+      title: "Correo electrónico cambiado"
+      body: "Este correo es para confirmar que la dirección de correo electrónico de tu cuenta de Tovitu ha sido cambiada."
+      contact: "Si no realizaste este cambio, por favor contacta al soporte inmediatamente."
+    footer: "© 2026 Tovitu. Todos los derechos reservados."
+  flash:
+    sessions:
+      create:
+        success: "Sesión iniciada correctamente."
+      destroy:
+        success: "Sesión cerrada correctamente."
+      require_authentication: "Por favor inicia sesión para continuar."
+      require_no_authentication: "Ya has iniciado sesión."
+    registrations:
+      create:
+        success: "¡Cuenta creada! Por favor revisa tu correo para verificar tu cuenta."
+    passwords:
+      create:
+        success: "Si tu correo está registrado, recibirás un enlace para restablecer tu contraseña."
+      edit:
+        expired: "Enlace de restablecimiento inválido o expirado. Por favor solicita uno nuevo."
+        already_expired: "El enlace de restablecimiento ha expirado. Por favor solicita uno nuevo."
+      update:
+        success: "Contraseña restablecida correctamente."
+    verifications:
+      show:
+        success: "¡Correo verificado exitosamente! Bienvenido a Tovitu."
+    profiles:
+      update:
+        email_changed: "¡Perfil actualizado! Por favor revisa tu nuevo correo para verificar el cambio."
+        success: "Perfil actualizado correctamente."
+    shelters:
+      create:
+        success: "¡Refugio registrado exitosamente! Bienvenido a Tovitu."
+      update:
+        success: "Perfil del refugio actualizado correctamente."
+    staff:
+      create:
+        success: "Miembro del personal agregado correctamente."
+      destroy:
+        success: "Miembro del personal eliminado correctamente."
+    invitations:
+      create:
+        success: "¡Invitación aceptada! Bienvenido al refugio."
+    policies:
+      update:
+        success: "Políticas de adopción actualizadas correctamente."
+    unauthorized: "No estás autorizado para realizar esta acción."
+    record_not_unique:
+      email: "Este correo ya está registrado. Por favor intenta iniciar sesión o usa un correo diferente."
+      generic: "Se violó una restricción de base de datos. Por favor inténtalo de nuevo."
+  errors:
+    authenticate_user:
+      locked: "Cuenta bloqueada temporalmente. Intenta de nuevo en %{seconds} segundos."
+      unverified: "Por favor verifica tu correo antes de iniciar sesión. Se ha enviado un nuevo correo de verificación."
+      invalid: "Correo o contraseña inválidos"
+    verify_email:
+      invalid: "Enlace de verificación inválido"
+      expired: "El enlace de verificación ha expirado"
+    resend_verification:
+      already_verified: "El usuario ya está verificado"
+    reset_password:
+      invalid: "Enlace de restablecimiento de contraseña inválido"
+      expired: "El enlace de restablecimiento de contraseña ha expirado"
+    register_shelter:
+      unverified: "El correo debe estar verificado antes de crear un refugio"
+      has_shelter: "Ya perteneces a un refugio"
+    update_profile:
+      not_admin: "Solo los administradores del refugio pueden actualizar el perfil"
+      wrong_shelter: "Solo puedes editar tu propio refugio"
+    invite_staff:
+      not_admin: "Solo los administradores del refugio pueden invitar personal"
+      wrong_shelter: "Solo puedes invitar personal a tu propio refugio"
+      invalid_email: "Formato de correo inválido"
+      already_member: "%{email} ya es miembro de este refugio"
+      other_shelter: "%{email} ya pertenece a otro refugio"
+    remove_staff:
+      not_admin: "Solo los administradores del refugio pueden eliminar personal"
+      wrong_shelter: "Solo puedes administrar tu propio refugio"
+      cannot_remove_self: "No puedes eliminarte a ti mismo"
+      not_member: "%{name} no pertenece a este refugio"
+      last_admin: "No se puede eliminar al último administrador. Promueve a otro miembro a administrador primero."
+    accept_invitation:
+      invalid: "Token de invitación inválido"
+      expired: "La invitación ha expirado"
+      accepted: "La invitación ya ha sido aceptada"
+  activerecord:
+    errors:
+      models:
+        shelter:
+          attributes:
+            species_served:
+              must_be_array: "debe ser un arreglo"
+  presenters:
+    shelter:
+      status_active: "Activo"
+      status_inactive: "Inactivo"
+      onboarding:
+        add_pet: "Agrega tu primera mascota"
+        policies: "Configurar políticas de adopción"
+        staff: "Invitar miembros del personal"
+        hours: "Establecer tu horario"
+        profile: "Completar tu perfil"
+        publish: "Publicar tu refugio"

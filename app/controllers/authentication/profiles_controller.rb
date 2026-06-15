@@ -16,9 +16,9 @@ module Authentication
           @user.update!(verified_at: nil)
           Authentication::ResendVerificationEmail.call(user: @user)
           redirect_to edit_profile_path,
-                      notice: "Profile updated! Please check your new email to verify the change."
+                      notice: t("flash.profiles.update.email_changed")
         else
-          redirect_to edit_profile_path, notice: "Profile updated successfully."
+          redirect_to edit_profile_path, notice: t("flash.profiles.update.success")
         end
       else
         render :edit, status: :unprocessable_entity

@@ -6,8 +6,8 @@ module Authentication
 
     def call
       token = EmailVerificationToken.valid_token(@token_string)
-      return Result.failure("Invalid verification link", error_code: :invalid_token) unless token
-      return Result.failure("Verification link has expired", error_code: :expired) if token.expired?
+      return Result.failure(I18n.t("errors.verify_email.invalid"), error_code: :invalid_token) unless token
+      return Result.failure(I18n.t("errors.verify_email.expired"), error_code: :expired) if token.expired?
 
       user = token.user
 

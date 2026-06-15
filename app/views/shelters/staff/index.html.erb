@@ -1,0 +1,76 @@
+<div class="w-full max-w-2xl mx-auto">
+  <div class="flex items-center gap-3 mb-6">
+    <%= link_to shelter_dashboard_path(shelter_id: @shelter), class: "w-10 h-10 bg-white rounded-xl shadow-sm border border-neutral-200 flex items-center justify-center hover:border-neutral-300 transition" do %>
+      <svg class="w-5 h-5 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    <% end %>
+    <h1 class="font-display text-3xl font-bold text-neutral-900"><%= t(".title") %></h1>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6">
+    <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".current_staff") %></h2>
+    <% if @staff_members.any? %>
+      <div class="divide-y divide-neutral-100">
+        <% @staff_members.each do |member| %>
+          <div class="flex items-center justify-between py-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-primary-50 rounded-full flex items-center justify-center">
+                <span class="font-semibold text-primary-600 text-sm"><%= member.name.first.upcase %></span>
+              </div>
+              <div>
+                <p class="font-medium text-neutral-800 text-sm"><%= member.name %></p>
+                <p class="text-xs text-neutral-500"><%= member.email %></p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium <%= member.admin? ? "bg-primary-50 text-primary-600" : "bg-neutral-50 text-neutral-500" %>">
+                <%= member.role.titleize %>
+              </span>
+              <% if member.id != current_user.id %>
+                <%= button_to shelter_staff_path(shelter_id: @shelter, id: member), method: :delete, data: { turbo_confirm: t(".remove_confirm", name: member.name) }, class: "px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 rounded-lg transition" do %>
+                  <%= t(".remove") %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-neutral-500 text-sm"><%= t(".empty_staff") %></p>
+    <% end %>
+  </div>
+
+  <% if @pending_invitations.any? %>
+    <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6">
+      <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".pending_invitations") %></h2>
+      <div class="divide-y divide-neutral-100">
+        <% @pending_invitations.each do |invitation| %>
+          <div class="flex items-center justify-between py-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-amber-50 rounded-full flex items-center justify-center">
+                <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </div>
+              <div>
+                <p class="font-medium text-neutral-800 text-sm"><%= invitation.email %></p>
+                <p class="text-xs text-neutral-500"><%= t(".invited_ago", time: time_ago_in_words(invitation.created_at)) %></p>
+              </div>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium <%= invitation.expired? ? "bg-red-50 text-red-600" : "bg-amber-50 text-amber-600" %>">
+              <%= invitation.expired? ? t(".expired") : t(".pending") %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+    <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".invite_new") %></h2>
+    <%= form_tag shelter_staff_index_path(shelter_id: @shelter), method: :post, class: "flex items-end gap-3" do %>
+      <div class="flex-1">
+        <%= label_tag :email, t(".email_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+        <%= email_field_tag :email, nil, placeholder: t(".email_placeholder"), required: true, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" %>
+      </div>
+      <%= submit_tag t(".send_invitation"), class: "px-6 py-3 bg-primary-500 text-white font-medium rounded-xl hover:bg-primary-600 transition-colors duration-200 shadow-sm cursor-pointer shrink-0" %>
+    <% end %>
+  </div>
+</div>

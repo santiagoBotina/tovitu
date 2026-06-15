@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_15_000004) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_15_000007) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,6 +23,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_15_000004) do
     t.bigint "user_id", null: false
     t.index ["token"], name: "index_email_verification_tokens_on_token"
     t.index ["user_id"], name: "index_email_verification_tokens_on_user_id"
+  end
+
+  create_table "invitations", force: :cascade do |t|
+    t.datetime "accepted_at"
+    t.datetime "created_at", null: false
+    t.bigint "created_by_id", null: false
+    t.string "email", null: false
+    t.datetime "expires_at", null: false
+    t.bigint "shelter_id", null: false
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_invitations_on_created_by_id"
+    t.index ["email"], name: "index_invitations_on_email"
+    t.index ["shelter_id"], name: "index_invitations_on_shelter_id"
+    t.index ["token"], name: "index_invitations_on_token", unique: true
   end
 
   create_table "login_attempts", force: :cascade do |t|
@@ -48,6 +63,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_15_000004) do
     t.index ["user_id"], name: "index_password_reset_tokens_on_user_id"
   end
 
+  create_table "shelters", force: :cascade do |t|
+    t.jsonb "adoption_policies", default: {}, null: false
+    t.string "city", null: false
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.datetime "discarded_at"
+    t.string "hours"
+    t.string "name", null: false
+    t.boolean "onboarding_completed", default: false, null: false
+    t.string "phone", null: false
+    t.jsonb "species_served", default: ["dog"], null: false
+    t.string "state", null: false
+    t.string "status", default: "active", null: false
+    t.string "street", null: false
+    t.datetime "updated_at", null: false
+    t.string "website"
+    t.string "zip", null: false
+    t.index ["city"], name: "index_shelters_on_city"
+    t.index ["discarded_at"], name: "index_shelters_on_discarded_at"
+    t.index ["name"], name: "index_shelters_on_name", unique: true
+    t.index ["species_served"], name: "index_shelters_on_species_served", using: :gin
+    t.index ["state"], name: "index_shelters_on_state"
+    t.index ["status"], name: "index_shelters_on_status"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "discarded_at"
@@ -64,5 +104,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_15_000004) do
   end
 
   add_foreign_key "email_verification_tokens", "users"
+  add_foreign_key "invitations", "shelters"
+  add_foreign_key "invitations", "users", column: "created_by_id"
   add_foreign_key "password_reset_tokens", "users"
+  add_foreign_key "users", "shelters"
 end

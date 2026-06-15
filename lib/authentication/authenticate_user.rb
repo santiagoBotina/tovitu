@@ -11,7 +11,7 @@ module Authentication
       if LoginAttempt.locked_out?(@email)
         remaining = LoginAttempt.lockout_remaining_seconds(@email)
         return Result.failure(
-          "Account temporarily locked. Try again in #{remaining} seconds.",
+          I18n.t("errors.authenticate_user.locked", seconds: remaining),
           error_code: :locked
         )
       end
@@ -32,13 +32,13 @@ module Authentication
         else
           Authentication::ResendVerificationEmail.call(user: user)
           Result.failure(
-            "Please verify your email before logging in. A new verification email has been sent.",
+            I18n.t("errors.authenticate_user.unverified"),
             error_code: :unverified
           )
         end
       else
         log_attempt(success: false)
-        Result.failure("Invalid email or password", error_code: :invalid_credentials)
+        Result.failure(I18n.t("errors.authenticate_user.invalid"), error_code: :invalid_credentials)
       end
     end
 

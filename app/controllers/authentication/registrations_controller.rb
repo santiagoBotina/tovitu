@@ -16,7 +16,7 @@ module Authentication
 
       if result.success?
         redirect_to check_email_registration_path,
-                    notice: "Account created! Please check your email to verify your account."
+                    notice: t("flash.registrations.create.success")
       else
         @user = User.new(
           name: params[:user][:name],

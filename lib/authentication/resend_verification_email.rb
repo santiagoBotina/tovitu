@@ -5,7 +5,7 @@ module Authentication
     end
 
     def call
-      return Result.failure("User is already verified") if @user.verified?
+      return Result.failure(I18n.t("errors.resend_verification.already_verified")) if @user.verified?
 
       verification_token = @user.email_verification_tokens.create!(
         expires_at: 24.hours.from_now

@@ -15,7 +15,7 @@ module Authentication
 
       if result.success?
         session[:user_id] = result.data[:id]
-        redirect_to root_path, notice: "Logged in successfully."
+        redirect_to root_path, notice: t("flash.sessions.create.success")
       else
         flash.now[:alert] = Array(result.errors).join(", ")
         render :new, status: :unprocessable_entity
@@ -24,7 +24,7 @@ module Authentication
 
     def destroy
       reset_session
-      redirect_to new_session_path, notice: "Logged out successfully."
+      redirect_to new_session_path, notice: t("flash.sessions.destroy.success")
     end
   end
 end

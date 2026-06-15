@@ -9,7 +9,7 @@ module Authentication
       Authentication::SendPasswordReset.call(email: params[:password_reset][:email])
 
       redirect_to check_email_password_resets_path,
-                  notice: "If your email is registered, you will receive a password reset link."
+                  notice: t("flash.passwords.create.success")
     end
 
     def edit
@@ -18,10 +18,10 @@ module Authentication
 
       if token_record.nil?
         redirect_to new_password_reset_path,
-                    alert: "Invalid or expired password reset link. Please request a new one."
+                    alert: t("flash.passwords.edit.expired")
       elsif token_record.expired?
         redirect_to new_password_reset_path,
-                    alert: "Password reset link has expired. Please request a new one."
+                    alert: t("flash.passwords.edit.already_expired")
       end
     end
 
@@ -34,7 +34,7 @@ module Authentication
 
       if result.success?
         session[:user_id] = result.data[:id]
-        redirect_to root_path, notice: "Password has been reset successfully."
+        redirect_to root_path, notice: t("flash.passwords.update.success")
       else
         flash.now[:alert] = Array(result.errors).join(", ")
         render :edit, status: :unprocessable_entity

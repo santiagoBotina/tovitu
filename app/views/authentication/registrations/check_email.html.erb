@@ -5,16 +5,16 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
       </svg>
     </div>
-    <h1 class="font-display text-3xl font-bold text-neutral-900 mb-2">Check your email</h1>
+    <h1 class="font-display text-3xl font-bold text-neutral-900 mb-2"><%= t(".title") %></h1>
     <p class="text-neutral-600 mb-6">
-      We sent a verification link to your email address. Please click the link to verify your account.
+      <%= t(".body") %>
     </p>
     <p class="text-sm text-neutral-500">
-      Didn't receive the email?
-      <%= link_to "Resend verification", new_session_path, class: "text-primary-600 hover:text-primary-800 font-medium transition" %>
+      <%= t(".didnt_receive") %>
+      <%= link_to t(".resend"), new_session_path, class: "text-primary-600 hover:text-primary-800 font-medium transition" %>
     </p>
     <p class="text-sm text-neutral-500 mt-2">
-      <%= link_to "Back to login", new_session_path, class: "text-primary-600 hover:text-primary-800 font-medium transition" %>
+      <%= link_to t(".back"), new_session_path, class: "text-primary-600 hover:text-primary-800 font-medium transition" %>
     </p>
   </div>
 </div>

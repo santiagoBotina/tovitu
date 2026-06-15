@@ -1,6 +1,6 @@
 <div class="w-full max-w-2xl mx-auto">
-  <h1 class="font-display text-4xl font-bold text-neutral-900 mb-2">Welcome, <%= current_user.name %></h1>
-  <p class="text-neutral-500 mb-8">You are logged in as <%= current_user.role %>.</p>
+  <h1 class="font-display text-4xl font-bold text-neutral-900 mb-2"><%= t(".welcome", name: current_user.name) %></h1>
+  <p class="text-neutral-500 mb-8"><%= t(".role", role: current_user.role) %></p>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <%= link_to edit_profile_path, class: "block p-6 bg-white rounded-xl shadow-sm border border-neutral-200 hover:shadow-md hover:border-primary-100 transition-all duration-200 group" do %>
@@ -9,8 +9,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
         </svg>
       </div>
-      <h2 class="font-semibold text-lg text-neutral-800 mb-1 group-hover:text-primary-600 transition">Profile</h2>
-      <p class="text-sm text-neutral-500">Update your name and email</p>
+      <h2 class="font-semibold text-lg text-neutral-800 mb-1 group-hover:text-primary-600 transition"><%= t(".profile.title") %></h2>
+      <p class="text-sm text-neutral-500"><%= t(".profile.description") %></p>
     <% end %>
 
     <%= link_to session_path, class: "block p-6 bg-white rounded-xl shadow-sm border border-neutral-200 hover:shadow-md hover:border-danger/20 transition-all duration-200 group", data: { turbo_method: :delete } do %>
@@ -19,8 +19,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
         </svg>
       </div>
-      <h2 class="font-semibold text-lg text-neutral-800 mb-1 group-hover:text-danger transition">Log out</h2>
-      <p class="text-sm text-neutral-500">End your current session</p>
+      <h2 class="font-semibold text-lg text-neutral-800 mb-1 group-hover:text-danger transition"><%= t(".logout.title") %></h2>
+      <p class="text-sm text-neutral-500"><%= t(".logout.description") %></p>
     <% end %>
   </div>
 </div>

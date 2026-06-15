@@ -1,0 +1,89 @@
+<div class="w-full max-w-lg mx-auto">
+  <div class="flex items-center gap-3 mb-6">
+    <%= link_to shelter_path(id: @shelter), class: "w-10 h-10 bg-white rounded-xl shadow-sm border border-neutral-200 flex items-center justify-center hover:border-neutral-300 transition" do %>
+      <svg class="w-5 h-5 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    <% end %>
+    <h1 class="font-display text-3xl font-bold text-neutral-900"><%= t(".title") %></h1>
+  </div>
+
+  <%= render "shared/error_messages", resource: @shelter %>
+
+  <%= form_with model: @shelter, local: true, method: :patch, class: "bg-white rounded-xl shadow-sm border border-neutral-200 p-8" do |f| %>
+    <div class="space-y-5">
+      <div>
+        <%= f.label :name, t(".name_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+        <%= f.text_field :name, required: true, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" %>
+      </div>
+
+      <div>
+        <%= f.label :street, t(".street_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+        <%= f.text_field :street, required: true, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" %>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <%= f.label :city, t(".city_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+          <%= f.text_field :city, required: true, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" %>
+        </div>
+        <div>
+          <%= f.label :state, t(".state_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+          <%= f.select :state, options_for_select(us_states, @shelter.state), {}, required: true, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white" %>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <%= f.label :zip, t(".zip_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+          <%= f.text_field :zip, required: true, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" %>
+        </div>
+        <div>
+          <%= f.label :phone, t(".phone_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+          <%= f.telephone_field :phone, required: true, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :website, t(".website_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+        <%= f.url_field :website, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" %>
+      </div>
+
+      <div>
+        <%= f.label :description, t(".description_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+        <%= f.text_area :description, rows: 4, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" %>
+      </div>
+
+      <div>
+        <span class="block text-sm font-medium text-neutral-700 mb-2"><%= t(".species_label") %></span>
+        <div class="flex gap-6">
+          <% { "dog" => t("shelters.index.dog"), "cat" => t("shelters.index.cat"), "other" => t("shelters.index.other") }.each do |key, label| %>
+            <label class="flex items-center gap-2 text-sm text-neutral-600">
+              <%= f.check_box :species_served, { multiple: true, checked: Array(@shelter.species_served).include?(key), class: "rounded border-neutral-300 text-primary-500 focus:ring-primary-500" }, key, nil %>
+              <%= label %>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :hours, t(".hours_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+        <%= f.text_field :hours, placeholder: t(".hours_placeholder"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" %>
+      </div>
+
+      <div>
+        <span class="block text-sm font-medium text-neutral-700 mb-2"><%= t(".status_label") %></span>
+        <div class="flex gap-6">
+          <% [[t(".active"), "active"], [t(".inactive"), "inactive"]].each do |label, value| %>
+            <label class="flex items-center gap-2 text-sm text-neutral-600">
+              <%= f.radio_button :status, value, class: "border-neutral-300 text-primary-500 focus:ring-primary-500" %>
+              <%= label %>
+            </label>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <%= f.submit t(".submit"), class: "w-full px-6 py-3.5 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 transition-colors duration-200 shadow-sm cursor-pointer" %>
+    </div>
+  <% end %>
+</div>

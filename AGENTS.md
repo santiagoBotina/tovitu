@@ -25,6 +25,7 @@ Business logic is organized by domain under `lib/`:
 - **AI vendor-agnostic:** Adapt around Anthropic; never couple business logic to a provider API.
 - **Messaging vendor-agnostic:** Isolate WhatsApp behind `Messaging::*` service objects.
 - **Prompts in `config/prompts/`:** Never hardcode prompts inline.
+- **i18n:** All user-facing strings go in `config/locales/*.yml`. Use `t()` in views/controllers/mailers, `I18n.t()` in service objects/presenters. No hardcoded user-facing strings.
 - **Request specs over controller specs.**
 - **Pundit for authorization** — never check auth in views.
 - **Form/Query/Service/Presenter/Value objects** for separation of concerns (detailed per agent in `.opencode/agents/*.md`).

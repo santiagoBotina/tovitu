@@ -62,7 +62,7 @@ RSpec.describe "Password Resets" do
       let!(:token) { create(:password_reset_token, user: user) }
 
       it "renders the reset form" do
-        get edit_password_reset_path(token.token)
+        get edit_password_reset_path(id: token.token)
         expect(response).to have_http_status(:ok)
         expect(response.body).to include("Reset your password")
       end
@@ -74,7 +74,7 @@ RSpec.describe "Password Resets" do
 
       it "redirects to the new password reset page" do
         travel_to 1.hour.from_now do
-          get edit_password_reset_path(token.token)
+          get edit_password_reset_path(id: token.token)
           expect(response).to redirect_to(new_password_reset_path)
         end
       end
@@ -82,7 +82,7 @@ RSpec.describe "Password Resets" do
 
     context "with an invalid token" do
       it "redirects to the new password reset page" do
-        get edit_password_reset_path("invalid-token")
+        get edit_password_reset_path(id: "invalid-token")
         expect(response).to redirect_to(new_password_reset_path)
       end
     end
@@ -94,28 +94,28 @@ RSpec.describe "Password Resets" do
       let!(:token) { create(:password_reset_token, user: user) }
 
       it "updates the password" do
-        patch password_reset_path(token.token), params: {
+        patch password_reset_path(id: token.token), params: {
           user: { password: "newpassword1", password_confirmation: "newpassword1" }
         }
         expect(user.reload.authenticate("newpassword1")).to be_truthy
       end
 
       it "logs the user in" do
-        patch password_reset_path(token.token), params: {
+        patch password_reset_path(id: token.token), params: {
           user: { password: "newpassword1", password_confirmation: "newpassword1" }
         }
         expect(session[:user_id]).to eq(user.id)
       end
 
       it "consumes the token" do
-        patch password_reset_path(token.token), params: {
+        patch password_reset_path(id: token.token), params: {
           user: { password: "newpassword1", password_confirmation: "newpassword1" }
         }
         expect(token.reload).to be_consumed
       end
 
       it "redirects to root" do
-        patch password_reset_path(token.token), params: {
+        patch password_reset_path(id: token.token), params: {
           user: { password: "newpassword1", password_confirmation: "newpassword1" }
         }
         expect(response).to redirect_to(root_path)
@@ -127,14 +127,14 @@ RSpec.describe "Password Resets" do
       let!(:token) { create(:password_reset_token, user: user) }
 
       it "re-renders the form when password is too short" do
-        patch password_reset_path(token.token), params: {
+        patch password_reset_path(id: token.token), params: {
           user: { password: "short", password_confirmation: "short" }
         }
         expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "re-renders the form when passwords don't match" do
-        patch password_reset_path(token.token), params: {
+        patch password_reset_path(id: token.token), params: {
           user: { password: "newpassword1", password_confirmation: "different" }
         }
         expect(response).to have_http_status(:unprocessable_entity)

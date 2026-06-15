@@ -8,8 +8,8 @@ module Authentication
 
     def call
       token = PasswordResetToken.valid_token(@token_string)
-      return Result.failure("Invalid password reset link", error_code: :invalid_token) unless token
-      return Result.failure("Password reset link has expired", error_code: :expired) if token.expired?
+      return Result.failure(I18n.t("errors.reset_password.invalid"), error_code: :invalid_token) unless token
+      return Result.failure(I18n.t("errors.reset_password.expired"), error_code: :expired) if token.expired?
 
       user = token.user
 

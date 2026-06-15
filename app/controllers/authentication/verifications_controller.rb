@@ -5,7 +5,7 @@ module Authentication
 
       if result.success?
         session[:user_id] = result.data[:id]
-        redirect_to root_path, notice: "Email verified successfully! Welcome to Tovitu."
+        redirect_to root_path, notice: t("flash.verifications.show.success")
       elsif result.error_code == :expired
         render :expired, status: :unprocessable_entity
       elsif result.error_code == :invalid_token

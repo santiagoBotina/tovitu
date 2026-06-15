@@ -3,6 +3,8 @@ class User < ApplicationRecord
 
   has_secure_password
 
+  belongs_to :shelter, optional: true
+
   has_many :email_verification_tokens, dependent: :destroy
   has_many :password_reset_tokens, dependent: :destroy
 
@@ -19,6 +21,8 @@ class User < ApplicationRecord
   scope :unverified, -> { where(verified_at: nil) }
   scope :discarded, -> { where.not(discarded_at: nil) }
   scope :undiscarded, -> { where(discarded_at: nil) }
+  scope :admin, -> { where(role: "admin") }
+  scope :staff, -> { where(role: "staff") }
 
   def verified?
     verified_at.present?
@@ -30,6 +34,10 @@ class User < ApplicationRecord
 
   def admin?
     role == "admin"
+  end
+
+  def shelter_admin?
+    admin? && shelter_id.present?
   end
 
   def discard
