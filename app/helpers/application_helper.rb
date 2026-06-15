@@ -6,6 +6,15 @@ module ApplicationHelper
     presenter_class.new(model)
   end
 
+  def safe_url(url)
+    return "" unless url.present?
+
+    uri = URI.parse(url)
+    uri.scheme.in?(%w[http https]) ? url : ""
+  rescue URI::InvalidURIError
+    ""
+  end
+
   def us_states
     [
       %w[AL Alabama], %w[AK Alaska], %w[AZ Arizona], %w[AR Arkansas],

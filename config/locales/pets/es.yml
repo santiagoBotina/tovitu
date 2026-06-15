@@ -1,0 +1,235 @@
+es:
+  pets:
+    species:
+      dog: Perro
+      cat: Gato
+      other: Otro
+
+    age_categories:
+      baby: Bebé
+      young: Joven
+      adult: Adulto
+      senior: Senior
+
+    sizes:
+      small: Pequeño
+      medium: Mediano
+      large: Grande
+      giant: Gigante
+
+    sex:
+      male: Macho
+      female: Hembra
+      unknown: Desconocido
+
+    status:
+      available: Disponible
+      on_hold: En espera
+      adopted: Adoptado
+      not_available: No disponible
+      removed: Eliminado
+
+    attributes:
+      name: Nombre
+      species: Especie
+      breed: Raza
+      age_category: Edad
+      birth_date: Fecha de nacimiento
+      size: Tamaño
+      sex: Sexo
+      description: Descripción
+      personality_traits: Personalidad
+      medical_notes: Notas médicas
+      spayed_neutered: Esterilizado/Castrado
+      vaccinated: Vacunado
+      special_needs: Necesidades especiales
+      good_with_children: Bueno con niños
+      good_with_dogs: Bueno con perros
+      good_with_cats: Bueno con gatos
+      requirements: Requisitos del hogar
+      status: Estado
+      photos: Fotos
+      adopted_at: Fecha de adopción
+
+    errors:
+      no_photos: Se requiere al menos una foto
+      too_many_photos: Una mascota puede tener como máximo 10 fotos
+      adopted_at_required: Debe establecerse al marcar una mascota como adoptada
+      birth_date_mismatch: La fecha de nacimiento no coincide con la categoría de edad seleccionada (%{category})
+      invalid_transition: No se puede cambiar el estado de '%{from}' a '%{to}'
+
+      photos:
+        invalid_type: La foto debe ser JPEG, PNG o WebP
+        too_large: La foto debe ser menor de 10 MB
+        max_count: Esta mascota ya tiene el máximo de 10 fotos
+        not_found: Foto no encontrada
+        invalid_order: El orden de las fotos no coincide con las fotos existentes
+
+      bulk:
+        no_ids: No se seleccionaron mascotas
+        invalid_status: Estado de destino no válido para actualización masiva
+        not_found: No se encontraron mascotas en tu refugio
+
+    notices:
+      created: La mascota fue creada exitosamente.
+      updated: La mascota fue actualizada exitosamente.
+      destroyed: La mascota fue eliminada exitosamente.
+      status_changed: Estado de la mascota cambiado a '%{status}'.
+      photos_attached: Foto adjuntada exitosamente.
+      photo_detached: Foto eliminada exitosamente.
+      photos_reordered: Fotos reordenadas exitosamente.
+      bulk_updated: "%{count} mascota(s) fueron actualizadas."
+
+    placeholders:
+      name: Ingresa el nombre de la mascota
+      breed: ej. Labrador Retriever / Mestizo
+      description: Cuéntales a los posibles adoptantes sobre la personalidad, historia y lo que hace especial a esta mascota...
+      medical_notes: Cualquier condición médica conocida, alergias o tratamientos en curso...
+      requirements: ¿Qué tipo de hogar necesita esta mascota? (un requisito por línea)
+
+    not_found: Mascota no encontrada.
+
+    index:
+      title: Encuentra tu Nuevo Mejor Amigo
+      subtitle: Toda mascota merece un hogar amoroso. Explora las mascotas disponibles cerca de ti y encuentra tu compañero perfecto.
+      no_results: Ninguna mascota coincide con tus criterios
+      no_results_body: Intenta ajustar tus filtros para ver más mascotas.
+      clear_filters: Limpiar todos los filtros
+      view_profile: Ver Perfil →
+      showing_count: Mostrando %{count} mascotas
+      photo_alt: "%{name} foto %{index}"
+      filters:
+        species: Especie
+        age: Edad
+        size: Tamaño
+        sex: Sexo
+        search: Buscar
+        search_placeholder: Buscar por nombre, raza...
+        all: Todas
+        apply: Aplicar Filtros
+        clear: Limpiar
+        clear_all: Limpiar todos los filtros
+
+    show:
+      photo_alt: "%{name} foto %{index}"
+      back_to_pets: Volver a todas las mascotas
+      status_banner: "Esta mascota está: %{status}"
+      status_banner_body: Esta mascota no está disponible actualmente para adopción.
+      age_label: Edad
+      size_label: Tamaño
+      sex_label: Sexo
+      species_label: Especie
+      description: Acerca de
+      medical_notes: Notas médicas
+      requirements: Requisitos del hogar
+      compatibility: Compatibilidad
+      good_with_children: Bueno con niños
+      good_with_dogs: Bueno con perros
+      good_with_cats: Bueno con gatos
+      health: Salud y Cuidado
+      spayed_neutered: Esterilizado/Castrado
+      vaccinated: Vacunado
+      special_needs: Necesidades especiales
+      shelter: Refugio
+      apply_title: ¿Listo para adoptar?
+      apply_body: Inicia tu solicitud de adopción y dale a esta mascota un hogar amoroso.
+      apply_to_adopt: Solicitar Adopción
+
+  shelter:
+    pets:
+      index:
+        title: Mis Mascotas
+        subtitle: Administra las listas de mascotas de tu refugio
+        add_pet: Agregar Mascota
+        all: Todas
+        empty_title: Aún no hay mascotas
+        empty_body: Comienza agregando tu primera mascota al refugio.
+        table:
+          name: Nombre
+          species: Especie
+          status: Estado
+          listed: Registrada
+          actions: Acciones
+          view: Ver
+          edit: Editar
+          delete: Eliminar
+          delete_confirm: "¿Estás seguro de que quieres eliminar a %{name}?"
+
+      show:
+        photo_alt: "%{name} foto %{index}"
+        back_to_pets: Volver a Mis Mascotas
+        edit: Editar
+        delete: Eliminar
+        delete_confirm: "¿Estás seguro de que quieres eliminar permanentemente a %{name}?"
+        change_status: Cambiar Estado
+        photos: Fotos
+        add_photo: Agregar Foto
+        no_photos: Aún no hay fotos
+        primary_photo: Principal
+        delete_photo_confirm: "¿Estás seguro de que quieres eliminar esta foto?"
+        details: Detalles
+        species_label: Especie
+        breed_label: Raza
+        age_label: Edad
+        size_label: Tamaño
+        sex_label: Sexo
+        medical: Información Médica
+        medical_notes: Notas Médicas
+        description: Descripción
+        personality: Personalidad
+
+      new:
+        title: Agregar una Nueva Mascota
+        subtitle: Publica una nueva mascota para adopción
+        back: Volver a Mis Mascotas
+
+      edit:
+        title: Editar Mascota
+        subtitle: Actualiza la información de esta mascota
+        back: Volver a la Mascota
+
+      form:
+        basic_info: Información Básica
+        about: Acerca de y Personalidad
+        medical: Información Médica
+        compatibility: Compatibilidad
+        requirements: Requisitos del Hogar
+        photos: Fotos
+        select: Seleccionar...
+        personality_placeholder: ej. Amigable, Juguetón, Tímido, Energético
+        personality_hint: Separa los rasgos con comas
+        requirements_hint: Un requisito por línea
+        photos_hint: Puedes seleccionar múltiples fotos. Máximo 10 fotos. Solo JPEG, PNG o WebP.
+        cancel: Cancelar
+        submit: Guardar Mascota
+
+  activerecord:
+    models:
+      pet:
+        one: Mascota
+        other: Mascotas
+
+    attributes:
+      pet:
+        name: Nombre
+        species: Especie
+        breed: Raza
+        age_category: Edad
+        birth_date: Fecha de nacimiento
+        size: Tamaño
+        sex: Sexo
+        description: Descripción
+        personality_traits: Personalidad
+        medical_notes: Notas médicas
+        spayed_neutered: Esterilizado/Castrado
+        vaccinated: Vacunado
+        special_needs: Necesidades especiales
+        good_with_children: Bueno con niños
+        good_with_dogs: Bueno con perros
+        good_with_cats: Bueno con gatos
+        requirements: Requisitos del hogar
+        status: Estado
+        photos: Fotos
+        adopted_at: Fecha de adopción
+        created_at: Publicada el
+        updated_at: Actualizada el

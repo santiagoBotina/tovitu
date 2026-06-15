@@ -1,0 +1,234 @@
+en:
+  pets:
+    species:
+      dog: Dog
+      cat: Cat
+      other: Other
+
+    age_categories:
+      baby: Baby
+      young: Young
+      adult: Adult
+      senior: Senior
+
+    sizes:
+      small: Small
+      medium: Medium
+      large: Large
+      giant: Giant
+
+    sex:
+      male: Male
+      female: Female
+      unknown: Unknown
+
+    status:
+      available: Available
+      on_hold: On Hold
+      adopted: Adopted
+      not_available: Not Available
+      removed: Removed
+
+    attributes:
+      name: Name
+      species: Species
+      breed: Breed
+      age_category: Age
+      birth_date: Birth Date
+      size: Size
+      sex: Sex
+      description: Description
+      personality_traits: Personality
+      medical_notes: Medical Notes
+      spayed_neutered: Spayed/Neutered
+      vaccinated: Vaccinated
+      special_needs: Special Needs
+      good_with_children: Good with Children
+      good_with_dogs: Good with Dogs
+      good_with_cats: Good with Cats
+      requirements: Home Requirements
+      status: Status
+      photos: Photos
+      adopted_at: Adoption Date
+
+    errors:
+      no_photos: At least one photo is required
+      too_many_photos: A pet can have at most 10 photos
+      adopted_at_required: Must be set when marking a pet as adopted
+      birth_date_mismatch: Birth date does not match the selected age category (%{category})
+      invalid_transition: Cannot change status from '%{from}' to '%{to}'
+
+      photos:
+        invalid_type: Photo must be JPEG, PNG, or WebP
+        too_large: Photo must be smaller than 10 MB
+        max_count: This pet already has the maximum of 10 photos
+        not_found: Photo not found
+        invalid_order: Photo order does not match existing photos
+
+      bulk:
+        no_ids: No pets were selected
+        invalid_status: Invalid target status for bulk update
+        not_found: No matching pets found in your shelter
+
+    notices:
+      created: Pet was successfully created.
+      updated: Pet was successfully updated.
+      destroyed: Pet was successfully removed.
+      status_changed: Pet status changed to '%{status}'.
+      photos_attached: Photo was successfully attached.
+      photo_detached: Photo was successfully removed.
+      photos_reordered: Photos were successfully reordered.
+      bulk_updated: "%{count} pet(s) were updated."
+
+    placeholders:
+      name: Enter the pet's name
+      breed: e.g. Labrador Retriever / Mixed Breed
+      description: Tell potential adopters about this pet's personality, history, and what makes them special...
+      medical_notes: Any known medical conditions, allergies, or ongoing treatments...
+      requirements: What type of home does this pet need? (one requirement per line)
+
+    not_found: Pet not found.
+
+    index:
+      title: Find Your New Best Friend
+      subtitle: Every pet deserves a loving home. Browse available pets near you and find your perfect companion.
+      no_results: No pets match your criteria
+      no_results_body: Try adjusting your filters to see more pets.
+      clear_filters: Clear all filters
+      view_profile: View Profile →
+      showing_count: Showing %{count} pets
+      filters:
+        species: Species
+        age: Age
+        size: Size
+        sex: Sex
+        search: Search
+        search_placeholder: Search by name, breed...
+        all: All
+        apply: Apply Filters
+        clear: Clear
+        clear_all: Clear all filters
+
+    show:
+      photo_alt: "%{name} photo %{index}"
+      back_to_pets: Back to all pets
+      status_banner: "This pet is: %{status}"
+      status_banner_body: This pet is not currently available for adoption.
+      age_label: Age
+      size_label: Size
+      sex_label: Sex
+      species_label: Species
+      description: About
+      medical_notes: Medical Notes
+      requirements: Home Requirements
+      compatibility: Compatibility
+      good_with_children: Good with Children
+      good_with_dogs: Good with Dogs
+      good_with_cats: Good with Cats
+      health: Health & Care
+      spayed_neutered: Spayed/Neutered
+      vaccinated: Vaccinated
+      special_needs: Special Needs
+      shelter: Shelter
+      apply_title: Ready to adopt?
+      apply_body: Start your adoption application and give this pet a loving home.
+      apply_to_adopt: Apply to Adopt
+
+  shelter:
+    pets:
+      index:
+        title: My Pets
+        subtitle: Manage your shelter's pet listings
+        add_pet: Add Pet
+        all: All
+        empty_title: No pets yet
+        empty_body: Start by adding your first pet to the shelter.
+        table:
+          name: Name
+          species: Species
+          status: Status
+          listed: Listed
+          actions: Actions
+          view: View
+          edit: Edit
+          delete: Delete
+          delete_confirm: Are you sure you want to remove %{name}?
+
+      show:
+        photo_alt: "%{name} photo %{index}"
+        back_to_pets: Back to My Pets
+        edit: Edit
+        delete: Delete
+        delete_confirm: Are you sure you want to permanently remove %{name}?
+        change_status: Change Status
+        photos: Photos
+        add_photo: Add Photo
+        no_photos: No photos yet
+        primary_photo: Primary
+        delete_photo_confirm: Are you sure you want to remove this photo?
+        details: Details
+        species_label: Species
+        breed_label: Breed
+        age_label: Age
+        size_label: Size
+        sex_label: Sex
+        medical: Medical Info
+        medical_notes: Medical Notes
+        description: Description
+        personality: Personality
+
+      new:
+        title: Add a New Pet
+        subtitle: List a new pet for adoption
+        back: Back to My Pets
+
+      edit:
+        title: Edit Pet
+        subtitle: Update this pet's information
+        back: Back to Pet
+
+      form:
+        basic_info: Basic Information
+        about: About & Personality
+        medical: Medical Information
+        compatibility: Compatibility
+        requirements: Home Requirements
+        photos: Photos
+        select: Select...
+        personality_placeholder: e.g. Friendly, Playful, Shy, Energetic
+        personality_hint: Separate traits with commas
+        requirements_hint: One requirement per line
+        photos_hint: You can select multiple photos. Maximum 10 photos. JPEG, PNG, or WebP only.
+        cancel: Cancel
+        submit: Save Pet
+
+  activerecord:
+    models:
+      pet:
+        one: Pet
+        other: Pets
+
+    attributes:
+      pet:
+        name: Name
+        species: Species
+        breed: Breed
+        age_category: Age
+        birth_date: Birth Date
+        size: Size
+        sex: Sex
+        description: Description
+        personality_traits: Personality
+        medical_notes: Medical Notes
+        spayed_neutered: Spayed/Neutered
+        vaccinated: Vaccinated
+        special_needs: Special Needs
+        good_with_children: Good with Children
+        good_with_dogs: Good with Dogs
+        good_with_cats: Good with Cats
+        requirements: Home Requirements
+        status: Status
+        photos: Photos
+        adopted_at: Adoption Date
+        created_at: Listed On
+        updated_at: Updated On

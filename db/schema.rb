@@ -10,9 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_15_000007) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_15_150851) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
 
   create_table "email_verification_tokens", force: :cascade do |t|
     t.datetime "consumed_at"
@@ -63,6 +91,40 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_15_000007) do
     t.index ["user_id"], name: "index_password_reset_tokens_on_user_id"
   end
 
+  create_table "pets", force: :cascade do |t|
+    t.datetime "adopted_at"
+    t.string "age_category", null: false
+    t.date "birth_date"
+    t.string "breed"
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.datetime "discarded_at"
+    t.boolean "good_with_cats"
+    t.boolean "good_with_children"
+    t.boolean "good_with_dogs"
+    t.text "medical_notes"
+    t.string "name", null: false
+    t.jsonb "personality_traits", default: []
+    t.jsonb "photo_order", default: []
+    t.text "requirements"
+    t.string "sex", null: false
+    t.bigint "shelter_id", null: false
+    t.string "size"
+    t.boolean "spayed_neutered", default: false
+    t.boolean "special_needs", default: false
+    t.string "species", null: false
+    t.string "status", default: "available", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "vaccinated", default: false
+    t.index ["age_category"], name: "index_pets_on_age_category"
+    t.index ["discarded_at"], name: "index_pets_on_discarded_at"
+    t.index ["sex"], name: "index_pets_on_sex"
+    t.index ["shelter_id"], name: "index_pets_on_shelter_id"
+    t.index ["size"], name: "index_pets_on_size"
+    t.index ["species"], name: "index_pets_on_species"
+    t.index ["status"], name: "index_pets_on_status"
+  end
+
   create_table "shelters", force: :cascade do |t|
     t.jsonb "adoption_policies", default: {}, null: false
     t.string "city", null: false
@@ -103,9 +165,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_15_000007) do
     t.index ["shelter_id"], name: "index_users_on_shelter_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "invitations", "shelters"
   add_foreign_key "invitations", "users", column: "created_by_id"
   add_foreign_key "password_reset_tokens", "users"
+  add_foreign_key "pets", "shelters"
   add_foreign_key "users", "shelters"
 end

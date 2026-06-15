@@ -6,7 +6,7 @@ module Shelters
     def show
       authorize @shelter, :dashboard?
 
-      @total_pets = 0
+      @total_pets = @shelter.pets.undiscarded.count
       @active_applications = 0
       @pending_tasks = []
     end

@@ -9,6 +9,7 @@ class SheltersController < ApplicationController
 
   def show
     authorize @shelter
+    @pets = @shelter.pets.available.recently_added.includes(photos_attachments: :blob).limit(6)
   end
 
   def new

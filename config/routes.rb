@@ -20,6 +20,17 @@ Rails.application.routes.draw do
       resources :invitations, only: [ :create ], controller: "shelters/invitations"
       resource :policies, only: [ :edit, :update ], controller: "shelters/policies"
     end
+
+    resources :pets, only: [ :index, :show ]
+
+    namespace :shelter do
+      resources :pets do
+        member do
+          patch :change_status
+        end
+        resources :photos, only: [ :create, :destroy, :update ]
+      end
+    end
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
