@@ -4,14 +4,30 @@ FactoryBot.define do
     email { Faker::Internet.unique.email }
     password { "password123" }
     password_confirmation { "password123" }
-    role { "staff" }
+    role { "adopter" }
 
     trait :verified do
       verified_at { Time.current }
     end
 
+    trait :onboarding_completed do
+      onboarding_completed_at { Time.current }
+    end
+
     trait :admin do
       role { "admin" }
+    end
+
+    trait :staff do
+      role { "staff" }
+    end
+
+    trait :shelter_admin do
+      role { "shelter_admin" }
+    end
+
+    trait :shelter_staff do
+      role { "shelter_staff" }
     end
 
     trait :discarded do

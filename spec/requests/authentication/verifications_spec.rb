@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "Email Verifications" do
   describe "GET /verification" do
     context "with a valid token" do
-      let(:user) { create(:user) }
+      let(:user) { create(:user, :onboarding_completed) }
       let!(:token) { create(:email_verification_token, user: user) }
 
       it "verifies the user" do
@@ -23,7 +23,7 @@ RSpec.describe "Email Verifications" do
 
       it "redirects to root" do
         get verification_path(token: token.token)
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(pets_path)
       end
     end
 
@@ -53,9 +53,9 @@ RSpec.describe "Email Verifications" do
     end
 
     context "with an invalid token" do
-      it "redirects to login" do
+      it "redirects to root" do
         get verification_path(token: "invalid-token")
-        expect(response).to redirect_to(new_session_path)
+        expect(response).to redirect_to(root_path)
       end
     end
   end

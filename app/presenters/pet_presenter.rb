@@ -31,13 +31,13 @@ class PetPresenter < ApplicationPresenter
 
   def status_badge
     css = case model.status
-          when "available"      then "bg-green-50 text-green-700 ring-1 ring-green-600/20"
-          when "on_hold"        then "bg-yellow-50 text-yellow-700 ring-1 ring-yellow-600/20"
-          when "adopted"        then "bg-blue-50 text-blue-700 ring-1 ring-blue-600/20"
-          when "not_available"  then "bg-red-50 text-red-700 ring-1 ring-red-600/20"
-          when "removed"        then "bg-gray-50 text-gray-500 ring-1 ring-gray-400/20"
-          else                       "bg-gray-50 text-gray-500 ring-1 ring-gray-400/20"
-          end
+    when "available"      then "bg-green-50 text-green-700 ring-1 ring-green-600/20"
+    when "on_hold"        then "bg-yellow-50 text-yellow-700 ring-1 ring-yellow-600/20"
+    when "adopted"        then "bg-blue-50 text-blue-700 ring-1 ring-blue-600/20"
+    when "not_available"  then "bg-red-50 text-red-700 ring-1 ring-red-600/20"
+    when "removed"        then "bg-gray-50 text-gray-500 ring-1 ring-gray-400/20"
+    else                       "bg-gray-50 text-gray-500 ring-1 ring-gray-400/20"
+    end
 
     "<span class=\"inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium #{css}\">" \
       "#{I18n.t("pets.status.#{model.status}")}</span>"
@@ -74,10 +74,10 @@ class PetPresenter < ApplicationPresenter
 
   def variant_dimensions(variant)
     case variant.to_sym
-    when :thumb  then [150, 150]
-    when :medium then [400, 400]
-    when :large  then [1200, 1200]
-    else [400, 400]
+    when :thumb  then [ 150, 150 ]
+    when :medium then [ 400, 400 ]
+    when :large  then [ 1200, 1200 ]
+    else [ 400, 400 ]
     end
   end
 

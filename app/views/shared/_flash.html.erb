@@ -1,5 +1,5 @@
 <% if flash.any? %>
-  <div class="fixed top-4 right-4 z-50 flex flex-col gap-3 max-w-sm">
+  <div class="fixed top-16 right-4 z-40 flex flex-col gap-3 max-w-sm">
     <% flash.each do |type, message| %>
       <% next if message.blank? || type == "timedout" %>
 
@@ -12,7 +12,7 @@
         end
       %>
 
-      <div class="<%= bg_class %> flex items-start gap-3 p-4 rounded-xl shadow-lg" role="alert">
+      <div class="<%= bg_class %> flex items-start gap-3 p-4 rounded-xl shadow-lg" role="alert" data-controller="dismiss">
         <div class="flex-shrink-0 mt-0.5">
           <% case type.to_sym %>
           <% when :notice, :success %>
@@ -34,6 +34,11 @@
           <% end %>
         </div>
         <p class="text-sm font-medium text-white flex-1"><%= message %></p>
+        <button type="button" data-action="click->dismiss#hide" class="flex-shrink-0 text-white/70 hover:text-white transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
       </div>
     <% end %>
   </div>

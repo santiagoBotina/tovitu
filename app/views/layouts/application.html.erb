@@ -26,7 +26,7 @@
 
     <%= render "shared/flash" %>
 
-    <% if signed_in? %>
+    <% if signed_in? && !local_assigns[:hide_nav] && !@hide_nav %>
       <div data-sidebar-target="overlay"
            class="fixed inset-0 z-20 bg-black/20 backdrop-blur-sm hidden md:hidden"
            data-action="click->sidebar#closeMobile"></div>
@@ -36,9 +36,11 @@
 
     <div data-sidebar-target="mainWrapper"
          class="min-h-screen flex flex-col transition-all duration-300 ease-in-out
-                <%= signed_in? ? 'md:ml-16' : '' %>">
+                <%= (signed_in? && !local_assigns[:hide_nav] && !@hide_nav) ? 'md:ml-16' : '' %>">
 
-      <%= render "shared/navbar" %>
+      <% unless local_assigns[:hide_nav] || @hide_nav %>
+        <%= render "shared/navbar" %>
+      <% end %>
 
       <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <%= yield %>

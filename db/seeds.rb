@@ -478,6 +478,135 @@ pets_data.each do |attrs|
   end
 end
 
+# ── Adoptions ───────────────────────────────────────────────────
+return unless defined?(AdoptionApplication)
+
+happy_paws_pets = Pet.where(shelter: happy_paws)
+furry_pets = Pet.where(shelter: furry_friends)
+
+# Helper to create applications
+seed_app = ->(pet:, name:, email:, status:, phone: nil, housing: nil, answers: {}, token: nil, extra: {}) {
+  token ||= Adoptions::TokenGenerator.generate
+  app = AdoptionApplication.find_or_create_by!(pet: pet, applicant_email: email) do |a|
+    a.shelter_id = pet.shelter_id
+    a.applicant_name = name
+    a.applicant_phone = phone || "555-0100"
+    a.applicant_address = "123 Main St, #{pet.shelter.city}, #{pet.shelter.state}"
+    a.housing_type = housing || "house"
+    a.current_pets = "I have a friendly dog at home."
+    a.pet_experience = "I've had pets for over 10 years."
+    a.questionnaire_answers = answers
+    a.token = token
+    a.status = status
+    extra.each { |k, v| a.send(:"#{k}=", v) }
+  end
+  unless app.adoption_timeline_events.exists?(event_type: "created")
+    app.adoption_timeline_events.create!(
+      event_type: "created",
+      metadata: { applicant_email: email, pet_id: pet.id, pet_name: pet.name }
+    )
+  end
+  app
+}
+
+luna = happy_paws_pets.find_by!(name: "Luna")
+buddy = happy_paws_pets.find_by!(name: "Buddy")
+simba = happy_paws_pets.find_by!(name: "Simba")
+daisy = furry_pets.find_by!(name: "Daisy")
+zeus = furry_pets.find_by!(name: "Zeus")
+
+# Pending application for Luna
+app1 = seed_app.call(
+  pet: luna, name: "Alice Johnson", email: "alice@example.com",
+  status: "pending", housing: "house",
+  answers: { interest_reason: "I love labs!", living_environment: "both",
+             hours_alone: "4", previous_pets: "Yes, grew up with dogs",
+             household_agreement: true, landlord_permission: true }
+)
+
+# Under review application for Buddy
+app2 = seed_app.call(
+  pet: buddy, name: "Bob Smith", email: "bob@example.com",
+  status: "under_review", housing: "house",
+  answers: { interest_reason: "Looking for a family dog",
+             living_environment: "both", hours_alone: "2",
+             previous_pets: "Had a beagle for 12 years",
+             household_agreement: true, landlord_permission: true }
+)
+unless app2.adoption_timeline_events.exists?(event_type: "info_received")
+  app2.adoption_timeline_events.create!(
+    event_type: "info_received",
+    metadata: { reviewed_by: shelter_staff.name }
+  )
+end
+
+# Approved application for Simba (on hold)
+app3 = seed_app.call(
+  pet: simba, name: "Carol Davis", email: "carol@example.com",
+  status: "approved", housing: "apartment",
+  answers: { interest_reason: "I love cats and have experience with special needs",
+             living_environment: "indoor", hours_alone: "6",
+             previous_pets: "Had a senior cat before",
+             veterinarian: "Dr. Smith at City Vet",
+             household_agreement: true, landlord_permission: true }
+)
+unless app3.adoption_timeline_events.exists?(event_type: "approved")
+  app3.update!(hold_expires_at: 48.hours.from_now)
+  app3.adoption_timeline_events.create!(
+    event_type: "approved",
+    metadata: { reviewed_by: shelter_staff.name, hold_expires_at: app3.hold_expires_at }
+  )
+end
+
+# Rejected application for Daisy
+app4 = seed_app.call(
+  pet: daisy, name: "David Wilson", email: "david@example.com",
+  status: "rejected", housing: "apartment",
+  answers: { interest_reason: "Want a guard dog", living_environment: "outdoor",
+             hours_alone: "10", previous_pets: "None",
+             household_agreement: false },
+  extra: { rejection_reason: "unsuitable_home_environment" }
+)
+unless app4.adoption_timeline_events.exists?(event_type: "rejected")
+  app4.adoption_timeline_events.create!(
+    event_type: "rejected",
+    metadata: { reviewed_by: "furry.admin@example.com", reason: "unsuitable_home_environment" }
+  )
+end
+
+# Awaiting response for Zeus
+app5 = seed_app.call(
+  pet: zeus, name: "Eve Martinez", email: "eve@example.com",
+  status: "awaiting_response", housing: "house",
+  answers: { interest_reason: "I want an active companion",
+             living_environment: "both", hours_alone: "3",
+             previous_pets: "Had German Shepherds before",
+             household_agreement: true, landlord_permission: true }
+)
+unless app5.adoption_timeline_events.exists?(event_type: "info_requested")
+  app5.adoption_timeline_events.create!(
+    event_type: "info_requested",
+    metadata: { reviewed_by: "furry.admin@example.com",
+                questions: [ "Do you have a fenced yard?", "Can you provide vet references?" ] }
+  )
+end
+
+# A note on the under-review application
+unless app2.adoption_notes.exists?
+  app2.adoption_notes.create!(
+    user: shelter_staff,
+    content: "Spoke with Bob on the phone — seems like a great fit. Schedule meet-and-greet.",
+    pinned: true
+  )
+end
+
+puts ""
+puts "Seeded #{AdoptionApplication.count} adoption applications:"
+AdoptionApplication.includes(pet: :shelter).each do |app|
+  puts "  #{app.applicant_name} → #{app.pet.name} (#{app.pet.shelter.name}) [#{app.status}]"
+end
+
+puts ""
 puts "Seeded #{User.count} users, #{Shelter.count} shelters, and #{Pet.count} pets:"
 puts "  admin@tovitu.com / password123  (admin, verified, Happy Paws Rescue)"
 puts "  staff@tovitu.com / password123  (staff, verified, Happy Paws Rescue)"

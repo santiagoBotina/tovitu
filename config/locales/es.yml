@@ -12,11 +12,20 @@ es:
       pets: "Mascotas"
       adoptions: "Adopciones"
       settings: "Ajustes"
+      complete_profile: "Completa tu perfil"
       sign_out: "Cerrar sesión"
       sign_out_confirm: "¿Estás seguro de que quieres cerrar sesión?"
     navbar:
       sign_in: "Iniciar sesión"
       create_account: "Crear cuenta"
+  landing:
+    index:
+      title: "Encuentra tu Compañero Perfecto"
+      subtitle: "Tovitu ayuda a las mascotas a encontrar hogares amorosos mediante una correspondencia reflexiva"
+      adopter_title: "Iniciar Viaje de Adopción"
+      adopter_desc: "Explora mascotas y encuentra tu nuevo mejor amigo"
+      shelter_title: "Represento a un refugio"
+      shelter_desc: "Gestiona adopciones y conéctate con adoptantes"
   dashboard:
     index:
       welcome: "Bienvenido, %{name}"
@@ -149,6 +158,34 @@ es:
         one_per_line: "Un requisito por línea."
         submit: "Guardar Políticas"
   authentication:
+    sessions:
+      new:
+        title: "Bienvenido de nuevo"
+        subtitle: "Inicia sesión en tu cuenta de Tovitu"
+        email_label: "Correo electrónico"
+        password_label: "Contraseña"
+        forgot_password: "¿Olvidaste tu contraseña?"
+        submit: "Iniciar sesión"
+        signup_prompt: "¿No tienes una cuenta?"
+        signup_link: "Crear cuenta"
+      new_adopter:
+        title: "Bienvenido de nuevo"
+        subtitle: "Inicia sesión para continuar tu viaje de adopción"
+        email_label: "Correo electrónico"
+        password_label: "Contraseña"
+        forgot_password: "¿Olvidaste tu contraseña?"
+        submit: "Iniciar sesión"
+        signup_prompt: "¿No tienes una cuenta?"
+        signup_link: "Crear cuenta"
+      new_shelter:
+        title: "Inicio de Sesión para Refugios"
+        subtitle: "Inicia sesión para gestionar tu refugio"
+        email_label: "Correo electrónico"
+        password_label: "Contraseña"
+        forgot_password: "¿Olvidaste tu contraseña?"
+        submit: "Iniciar sesión"
+        signup_prompt: "¿No tienes una cuenta?"
+        signup_link: "Crear cuenta"
     registrations:
       new:
         title: "Crear una cuenta"
@@ -167,16 +204,6 @@ es:
         didnt_receive: "¿No recibiste el correo?"
         resend: "Reenviar verificación"
         back: "Volver al inicio de sesión"
-    sessions:
-      new:
-        title: "Bienvenido de nuevo"
-        subtitle: "Inicia sesión en tu cuenta de Tovitu"
-        email_label: "Correo electrónico"
-        password_label: "Contraseña"
-        forgot_password: "¿Olvidaste tu contraseña?"
-        submit: "Iniciar sesión"
-        signup_prompt: "¿No tienes una cuenta?"
-        signup_link: "Crear cuenta"
     passwords:
       new:
         title: "¿Olvidaste tu contraseña?"
@@ -205,6 +232,8 @@ es:
         pending_verification: "Verificación pendiente"
         submit: "Actualizar perfil"
         back: "Volver"
+        complete_onboarding: "Completa tu perfil"
+        complete_onboarding_desc: "Cuéntanos más sobre ti para obtener mejores coincidencias"
     verifications:
       expired:
         title: "Enlace expirado"
@@ -282,11 +311,21 @@ es:
     record_not_unique:
       email: "Este correo ya está registrado. Por favor intenta iniciar sesión o usa un correo diferente."
       generic: "Se violó una restricción de base de datos. Por favor inténtalo de nuevo."
+    onboarding:
+      incomplete: "Por favor completa tu perfil antes de continuar."
+      already_complete: "¡Tu perfil ya está completo!"
+      adopter:
+        complete: "¡Perfil completo! Comienza a explorar mascotas."
+        skipped: "Puedes completar tu perfil en cualquier momento desde la configuración de tu perfil."
+      shelter:
+        complete: "¡Perfil completo! Configuremos tu refugio."
+        skipped: "Puedes completar tu perfil en cualquier momento desde la configuración de tu perfil."
   errors:
     authenticate_user:
       locked: "Cuenta bloqueada temporalmente. Intenta de nuevo en %{seconds} segundos."
       unverified: "Por favor verifica tu correo antes de iniciar sesión. Se ha enviado un nuevo correo de verificación."
       invalid: "Correo o contraseña inválidos"
+      role_mismatch: "Esta cuenta no tiene acceso a esa sección. Por favor usa la página de inicio de sesión correcta."
     verify_email:
       invalid: "Enlace de verificación inválido"
       expired: "El enlace de verificación ha expirado"
@@ -317,6 +356,12 @@ es:
       invalid: "Token de invitación inválido"
       expired: "La invitación ha expirado"
       accepted: "La invitación ya ha sido aceptada"
+    register_user:
+      invalid_role: "Selección de rol inválida"
+    onboarding:
+      invalid_question: "Número de pregunta inválido"
+      no_profile: "Perfil no encontrado"
+      incomplete: "Por favor responde todas las preguntas antes de completar. Faltan: %{questions}"
   activerecord:
     errors:
       models:
@@ -335,3 +380,150 @@ es:
         hours: "Establecer tu horario"
         profile: "Completar tu perfil"
         publish: "Publicar tu refugio"
+  onboarding:
+    adopter:
+      title: "Cuéntanos sobre ti"
+      subtitle: "Ayúdanos a encontrar la mascota perfecta para tu estilo de vida"
+      from_profile_subtitle: "Ayúdanos a encontrar la mascota perfecta para tu estilo de vida"
+      progress: "Pregunta %{current} de %{total}"
+      back: "Atrás"
+      next: "Siguiente"
+      complete: "Completar Perfil"
+      skip: "Saltar"
+      questions:
+        q1:
+          text: "¿Cómo se ve un fin de semana típico para ti?"
+          placeholder: "Selecciona todas las que apliquen"
+          options:
+            relaxing_at_home: "Relajarme en casa"
+            going_for_walks: "Salir a caminar"
+            outdoor_adventures: "Aventuras al aire libre"
+            spending_time_with_family: "Pasar tiempo en familia"
+            exercising_or_sports: "Hacer ejercicio o deportes"
+            visiting_friends: "Visitar amigos"
+            exploring_new_places: "Explorar lugares nuevos"
+        q2:
+          text: "¿Qué tan activo te consideras?"
+          placeholder: "Selecciona uno"
+          options:
+            very_calm: "Muy tranquilo"
+            mostly_calm: "Mayormente tranquilo"
+            balanced: "Equilibrado"
+            active: "Activo"
+            very_active: "Muy activo"
+        q3:
+          text: "¿Cuál se parece más a tu compañero ideal?"
+          placeholder: "Selecciona uno"
+          options:
+            calm_friend: "Amigo tranquilo"
+            playful_companion: "Compañero juguetón"
+            affectionate_pet: "Mascota cariñosa"
+            independent_pet: "Mascota independiente"
+            social_pet: "Mascota social"
+        q4:
+          text: "¿Cuánta experiencia tienes con mascotas?"
+          placeholder: "Selecciona uno"
+          options:
+            first_time: "Primera vez"
+            some_experience: "Alguna experiencia"
+            years_of_experience: "Años de experiencia"
+            very_experienced: "Muy experimentado"
+        q5:
+          text: "¿Qué esperas ganar al adoptar?"
+          placeholder: "Selecciona todas las que apliquen"
+          options:
+            daily_companion: "Compañía diaria"
+            more_activity: "Más actividad"
+            emotional_support: "Apoyo emocional"
+            family_pet: "Mascota familiar"
+            friend_for_pet: "Amigo para otra mascota"
+            meaningful_help: "Forma significativa de ayudar"
+        q6:
+          text: "¿Cuánto tiempo puedes dedicar realisticamente a una mascota cada día?"
+          placeholder: "Selecciona uno"
+          options:
+            less_than_1h: "Menos de 1 hora"
+            1_to_2h: "1–2 horas"
+            2_to_4h: "2–4 horas"
+            more_than_4h: "Más de 4 horas"
+        q7:
+          text: "¿Qué personalidad se siente más cercana a la tuya?"
+          placeholder: "Selecciona uno"
+          options:
+            calm_thoughtful: "Tranquilo y reflexivo"
+            friendly_social: "Amigable y social"
+            adventurous_energetic: "Aventurero y enérgico"
+            organized_routine: "Organizado y rutinario"
+            flexible_spontaneous: "Flexible y espontáneo"
+        q8:
+          text: "¿Qué es lo más importante para ti al adoptar una mascota?"
+          placeholder: "Cuéntanos qué es lo más importante para ti al encontrar tu compañero..."
+          max_length: "Máximo 200 caracteres"
+    shelter:
+      title: "Cuéntanos sobre tu organización"
+      subtitle: "Ayúdanos a entender las necesidades de tu refugio"
+      from_profile_subtitle: "Ayúdanos a entender las necesidades de tu refugio"
+      progress: "Pregunta %{current} de %{total}"
+      back: "Atrás"
+      next: "Siguiente"
+      complete: "Completar Perfil"
+      skip: "Saltar"
+      questions:
+        q1:
+          text: "¿Qué describe mejor a tu organización?"
+          placeholder: "Selecciona uno"
+          options:
+            small_rescue: "Grupo de rescate pequeño"
+            independent_shelter: "Refugio independiente"
+            large_shelter: "Refugio grande"
+            ngo_foundation: "ONG / Fundación"
+            foster_based: "Rescate basado en hogares de acogida"
+        q2:
+          text: "¿Aproximadamente cuántas mascotas gestionas actualmente?"
+          placeholder: "Selecciona uno"
+          options:
+            under_20: "Menos de 20"
+            20_to_50: "20–50"
+            50_to_100: "50–100"
+            over_100: "Más de 100"
+        q3:
+          text: "¿Qué tan involucrado estás en el proceso de adopción?"
+          placeholder: "Selecciona uno"
+          options:
+            basic_screening: "Evaluación básica (solicitudes + aprobaciones)"
+            interviews: "Entrevistas y seguimiento"
+            extensive_matching: "Emparejamiento extenso (visitas domiciliarias, revisión veterinaria)"
+            long_term_support: "Apoyo a largo plazo (seguimiento post-adopción)"
+        q4:
+          text: "¿Qué es lo más importante al aprobar un adoptante?"
+          placeholder: "Selecciona todas las que apliquen"
+          options:
+            stable_home: "Hogar estable"
+            pet_experience: "Experiencia previa con mascotas"
+            available_time: "Tiempo disponible"
+            financial_preparedness: "Preparación financiera"
+            family_compatibility: "Compatibilidad familiar"
+            long_term_commitment: "Compromiso a largo plazo"
+        q5:
+          text: "¿Cómo te comunicas usualmente con los adoptantes?"
+          placeholder: "Selecciona todas las que apliquen"
+          options:
+            whatsapp: "WhatsApp"
+            email: "Correo electrónico"
+            phone_calls: "Llamadas telefónicas"
+            in_person: "En persona"
+            social_media: "Redes sociales"
+        q6:
+          text: "¿Cuál es tu mayor desafío hoy?"
+          placeholder: "Selecciona todas las que apliquen"
+          options:
+            finding_qualified_adopters: "Encontrar adoptantes calificados"
+            managing_applications: "Gestionar solicitudes"
+            following_up: "Dar seguimiento a solicitantes"
+            communicating_with_adopters: "Comunicarse con adoptantes"
+            managing_pet_info: "Gestionar información de mascotas"
+            tracking_outcomes: "Rastrear resultados de adopciones"
+        q7:
+          text: "¿Qué es lo más importante para ti al aprobar una adopción?"
+          placeholder: "Comparte tu filosofía sobre lo que hace una adopción exitosa..."
+          max_length: "Máximo 200 caracteres"

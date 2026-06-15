@@ -15,6 +15,52 @@ module ApplicationHelper
     ""
   end
 
+  def question_icon(number)
+    icons = {
+      1 => "\u{1F3E0}",
+      2 => "\u{1F3C3}",
+      3 => "\u{1F431}",
+      4 => "\u{1F393}",
+      5 => "\u{1F497}",
+      6 => "\u{23F0}",
+      7 => "\u{1F9D0}",
+      8 => "\u{1F4AC}"
+    }
+    icons[number] || "\u{1F43E}"
+  end
+
+  def option_icon(question_number, option)
+    icons = {
+      2 => { very_calm: "\u{1F634}", mostly_calm: "\u{1F634}", balanced: "\u{2696}\u{FE0F}", active: "\u{26A1}", very_active: "\u{1F525}" },
+      3 => { calm_friend: "\u{1F43E}", playful_companion: "\u{1F3B6}", affectionate_pet: "\u{1F496}", independent_pet: "\u{1F98E}", social_pet: "\u{1F46B}" },
+      4 => { first_time: "\u{1F331}", some_experience: "\u{1F4DA}", years_of_experience: "\u{1F3DB}\u{FE0F}", very_experienced: "\u{1F3AF}" },
+      6 => { less_than_1h: "\u{23F1}\u{FE0F}", "1_to_2h": "\u{23F1}\u{FE0F}", "2_to_4h": "\u{23F1}\u{FE0F}", more_than_4h: "\u{23F1}\u{FE0F}" },
+      7 => { calm_thoughtful: "\u{1F9D0}", friendly_social: "\u{1F60A}", adventurous_energetic: "\u{1F30D}", organized_routine: "\u{1F4CB}", flexible_spontaneous: "\u{1F300}" }
+    }
+    icons.dig(question_number, option.to_sym) || ""
+  end
+
+  def shelter_question_icon(number)
+    icons = {
+      1 => "\u{1F3E2}",
+      2 => "\u{1F4CA}",
+      3 => "\u{1F91D}",
+      4 => "\u{1F4DD}",
+      5 => "\u{1F4E7}",
+      6 => "\u{1F4A1}",
+      7 => "\u{1F4AD}"
+    }
+    icons[number] || "\u{1F3E2}"
+  end
+
+  def shelter_option_icon(question_number, option)
+    icons = {
+      1 => { small_rescue: "\u{1F43E}", independent_shelter: "\u{1F3E0}", large_shelter: "\u{1F3E2}", ngo_foundation: "\u{1F4CB}", foster_based: "\u{1F3E1}" },
+      3 => { basic_screening: "\u{1F4DD}", interviews: "\u{1F4AC}", extensive_matching: "\u{1F50D}", long_term_support: "\u{1F4AA}" }
+    }
+    icons.dig(question_number, option.to_sym) || ""
+  end
+
   def us_states
     [
       %w[AL Alabama], %w[AK Alaska], %w[AZ Arizona], %w[AR Arkansas],

@@ -1,0 +1,154 @@
+<div class="w-full max-w-lg mx-auto"
+     data-controller="onboarding"
+     data-onboarding-current-step-value="<%= @current_step %>"
+     data-onboarding-total-steps-value="<%= @total_questions %>"
+     data-onboarding-save-url-value="<%= onboarding_shelter_questions_path %>"
+     data-onboarding-complete-url-value="<%= onboarding_shelter_completion_path %>"
+     data-onboarding-role-value="shelter">
+
+  <%= form_with url: onboarding_shelter_completion_path, method: :post,
+                data: { onboarding_target: "completeForm" },
+                class: "hidden" do |f| %>
+    <%= f.hidden_field :skip, value: "false", data: { onboarding_target: "skipField" } %>
+    <% if local_assigns[:from_profile] || @from_profile %>
+      <%= f.hidden_field :redirect_to, value: edit_profile_path %>
+    <% end %>
+  <% end %>
+
+  <div class="text-center mb-8">
+    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background-color: #ECFDF5;">
+      <svg class="w-7 h-7 text-secondary-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+      </svg>
+    </div>
+    <h1 class="font-display text-3xl font-bold text-neutral-900 mb-1"><%= t("onboarding.shelter.title") %></h1>
+    <p class="text-neutral-500"><%= t(@from_profile ? "onboarding.shelter.from_profile_subtitle" : "onboarding.shelter.subtitle") %></p>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 sm:p-8">
+    <div class="mb-6">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm font-medium text-neutral-500" data-onboarding-target="progressText">
+          <%= t("onboarding.shelter.progress", current: @current_step, total: @total_questions) %>
+        </span>
+        <span class="text-xs text-neutral-400" data-onboarding-target="selectedCount"></span>
+      </div>
+      <div class="w-full h-2 bg-neutral-100 rounded-full overflow-hidden">
+        <div class="h-full bg-secondary-500 rounded-full transition-all duration-500 ease-out"
+             data-onboarding-target="progressBar"
+             style="width: <%= ((@current_step - 1).to_f / @total_questions * 100) %>%"></div>
+      </div>
+    </div>
+
+    <div data-onboarding-target="questionContainer" class="min-h-[320px]">
+      <% @questions_data.each_with_index do |question, idx| %>
+        <div data-question="<%= question[:number] %>"
+             data-type="<%= question[:type] %>"
+             data-key="<%= question[:key] %>"
+             data-max-length="<%= question[:max_length] || 0 %>"
+             class="<%= idx + 1 == @current_step ? 'block' : 'hidden' %> question-step transition-all duration-300"
+             data-onboarding-target="question">
+          <div class="flex items-start gap-3 mb-6">
+            <span class="text-2xl"><%= shelter_question_icon(question[:number]) %></span>
+            <div>
+              <p class="font-display text-xl font-bold text-neutral-800 mb-1">
+                <%= t("onboarding.shelter.questions.q#{question[:number]}.text") %>
+              </p>
+              <% if question[:type] == "multi_select" %>
+                <p class="text-xs text-neutral-400"><%= t("onboarding.shelter.questions.q#{question[:number]}.placeholder") %></p>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <% if question[:type] == "multi_select" %>
+              <div data-controller="multi-select"
+                   data-multi-select-selected-value="<%= @profile.send(question[:key]).to_json %>">
+                <div class="flex flex-wrap gap-2.5" data-multi-select-target="container">
+                  <% question[:options].each do |option| %>
+                    <button type="button"
+                            data-action="click->multi-select#toggle"
+                            data-multi-select-target="chip"
+                            data-value="<%= option %>"
+                            class="px-4 py-2.5 rounded-full text-sm font-medium border-2 transition-all duration-150
+                                   <%= @profile.send(question[:key])&.include?(option) ? 'bg-primary-100 border-primary-400 text-primary-700' : 'bg-white border-neutral-200 text-neutral-600 hover:border-primary-300 hover:text-primary-600' %>">
+                      <%= t("onboarding.shelter.questions.q#{question[:number]}.options.#{option}") %>
+                    </button>
+                  <% end %>
+                </div>
+                <p class="text-xs text-danger hidden mt-2" data-multi-select-target="errorMessage">
+                  <%= t("onboarding.shelter.questions.q#{question[:number]}.placeholder") %>
+                </p>
+              </div>
+
+            <% elsif question[:type] == "single_select" %>
+              <div data-controller="single-select"
+                   data-single-select-selected-value="<%= @profile.send(question[:key]) %>">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" data-single-select-target="container">
+                  <% question[:options].each do |option| %>
+                    <button type="button"
+                            data-action="click->single-select#select"
+                            data-single-select-target="option"
+                            data-value="<%= option %>"
+                            class="px-4 py-3.5 rounded-xl text-sm font-medium border-2 text-left transition-all duration-150
+                                   <%= @profile.send(question[:key]) == option ? 'bg-primary-50 border-primary-400 text-primary-700' : 'bg-white border-neutral-200 text-neutral-600 hover:border-primary-300 hover:text-primary-600 hover:bg-primary-50/50' %>">
+                      <span class="option-icon text-lg mr-2"><%= shelter_option_icon(question[:number], option) %></span>
+                      <%= t("onboarding.shelter.questions.q#{question[:number]}.options.#{option}") %>
+                    </button>
+                  <% end %>
+                </div>
+              </div>
+
+            <% elsif question[:type] == "text" %>
+              <div data-controller="character-count"
+                   data-character-count-max-length-value="<%= question[:max_length] || 200 %>">
+                <textarea data-character-count-target="input"
+                          data-action="input->character-count#update"
+                          data-onboarding-target="textInput"
+                          maxlength="<%= question[:max_length] || 200 %>"
+                          rows="4"
+                          placeholder="<%= t("onboarding.shelter.questions.q#{question[:number]}.placeholder") %>"
+                          class="w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-neutral-800 placeholder-neutral-400 transition resize-none"><%= @profile.send(question[:key]) %></textarea>
+                <div class="flex items-center justify-between mt-2">
+                  <span class="text-xs text-neutral-400"><%= t("onboarding.shelter.questions.q#{question[:number]}.max_length") %></span>
+                  <span class="text-xs text-neutral-400 tabular-nums"
+                        data-character-count-target="counter">
+                    <span data-character-count-target="count"><%= @profile.send(question[:key])&.length || 0 %></span>/<%= question[:max_length] || 200 %>
+                  </span>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="flex items-center justify-between mt-8 pt-6 border-t border-neutral-100">
+      <button type="button"
+              data-action="click->onboarding#previousQuestion"
+              data-onboarding-target="backButton"
+              class="px-5 py-2.5 text-sm font-medium text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50 rounded-xl transition <%= @current_step == 1 ? 'invisible' : '' %>">
+        <span class="flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+          <%= t("onboarding.shelter.back") %>
+        </span>
+      </button>
+
+      <div class="flex items-center gap-3">
+        <button type="button"
+                data-action="click->onboarding#skipOnboarding"
+                data-onboarding-target="skipButton"
+                class="px-4 py-2.5 text-sm font-medium text-neutral-400 hover:text-neutral-600 transition rounded-xl">
+          <%= t("onboarding.shelter.skip") %>
+        </button>
+
+        <button type="button"
+                data-action="click->onboarding#nextQuestion"
+                data-onboarding-target="nextButton"
+                class="px-6 py-2.5 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 active:bg-primary-700 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
+          <span data-onboarding-target="nextButtonText"><%= t("onboarding.shelter.next") %></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

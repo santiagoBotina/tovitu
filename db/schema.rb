@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_15_150851) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_16_000003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,76 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_15_150851) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "adopter_profiles", force: :cascade do |t|
+    t.string "activity_level"
+    t.jsonb "adoption_goals", default: []
+    t.string "adoption_priority"
+    t.datetime "created_at", null: false
+    t.string "daily_time_available"
+    t.string "ideal_companion"
+    t.integer "onboarding_step", default: 0, null: false
+    t.string "personality"
+    t.string "pet_experience"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.jsonb "weekend_activity", default: []
+    t.index ["user_id"], name: "index_adopter_profiles_on_user_id", unique: true
+  end
+
+  create_table "adoption_applications", force: :cascade do |t|
+    t.text "applicant_address"
+    t.string "applicant_email", null: false
+    t.string "applicant_name", null: false
+    t.string "applicant_phone"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.text "current_pets"
+    t.datetime "discarded_at"
+    t.datetime "hold_expires_at"
+    t.string "housing_type"
+    t.text "notes"
+    t.text "pet_experience"
+    t.bigint "pet_id", null: false
+    t.jsonb "questionnaire_answers", default: {}
+    t.string "rejection_reason"
+    t.bigint "reviewed_by_id"
+    t.bigint "shelter_id", null: false
+    t.string "status", default: "pending", null: false
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "withdrawn_at"
+    t.index ["discarded_at"], name: "index_adoption_applications_on_discarded_at"
+    t.index ["pet_id", "applicant_email"], name: "idx_applications_on_pet_and_email", unique: true
+    t.index ["pet_id"], name: "index_adoption_applications_on_pet_id"
+    t.index ["reviewed_by_id"], name: "index_adoption_applications_on_reviewed_by_id"
+    t.index ["shelter_id", "status"], name: "idx_applications_on_shelter_and_status"
+    t.index ["shelter_id"], name: "index_adoption_applications_on_shelter_id"
+    t.index ["status"], name: "index_adoption_applications_on_status"
+    t.index ["token"], name: "index_adoption_applications_on_token", unique: true
+  end
+
+  create_table "adoption_notes", force: :cascade do |t|
+    t.bigint "adoption_application_id", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.boolean "pinned", default: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["adoption_application_id", "pinned"], name: "idx_notes_on_application_and_pinned", where: "(pinned = true)"
+    t.index ["adoption_application_id"], name: "index_adoption_notes_on_adoption_application_id"
+    t.index ["user_id"], name: "index_adoption_notes_on_user_id"
+  end
+
+  create_table "adoption_timeline_events", force: :cascade do |t|
+    t.bigint "adoption_application_id", null: false
+    t.datetime "created_at", null: false
+    t.string "event_type", null: false
+    t.jsonb "metadata", default: {}
+    t.index ["adoption_application_id", "created_at"], name: "idx_timeline_on_application_and_date"
+    t.index ["adoption_application_id"], name: "index_adoption_timeline_events_on_adoption_application_id"
+    t.index ["event_type"], name: "index_adoption_timeline_events_on_event_type"
   end
 
   create_table "email_verification_tokens", force: :cascade do |t|
@@ -125,6 +195,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_15_150851) do
     t.index ["status"], name: "index_pets_on_status"
   end
 
+  create_table "shelter_profiles", force: :cascade do |t|
+    t.string "adoption_involvement"
+    t.string "approval_philosophy"
+    t.jsonb "approval_priorities", default: []
+    t.jsonb "biggest_challenges", default: []
+    t.jsonb "communication_channels", default: []
+    t.datetime "created_at", null: false
+    t.integer "onboarding_step", default: 0, null: false
+    t.string "organization_type"
+    t.string "pet_count_range"
+    t.bigint "shelter_id"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["shelter_id"], name: "index_shelter_profiles_on_shelter_id"
+    t.index ["user_id"], name: "index_shelter_profiles_on_user_id", unique: true
+  end
+
   create_table "shelters", force: :cascade do |t|
     t.jsonb "adoption_policies", default: {}, null: false
     t.string "city", null: false
@@ -155,22 +242,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_15_150851) do
     t.datetime "discarded_at"
     t.string "email", null: false
     t.string "name", null: false
+    t.datetime "onboarding_completed_at"
+    t.integer "onboarding_step", default: 0, null: false
     t.string "password_digest", null: false
-    t.string "role", default: "staff", null: false
+    t.string "role", default: "adopter", null: false
     t.bigint "shelter_id"
     t.datetime "updated_at", null: false
     t.datetime "verified_at"
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["shelter_id"], name: "index_users_on_shelter_id"
+    t.check_constraint "role::text = ANY (ARRAY['adopter'::character varying, 'shelter_admin'::character varying, 'shelter_staff'::character varying, 'admin'::character varying, 'staff'::character varying]::text[])", name: "valid_role"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "adopter_profiles", "users"
+  add_foreign_key "adoption_applications", "pets"
+  add_foreign_key "adoption_applications", "shelters"
+  add_foreign_key "adoption_applications", "users", column: "reviewed_by_id"
+  add_foreign_key "adoption_notes", "adoption_applications"
+  add_foreign_key "adoption_notes", "users"
+  add_foreign_key "adoption_timeline_events", "adoption_applications"
   add_foreign_key "email_verification_tokens", "users"
   add_foreign_key "invitations", "shelters"
   add_foreign_key "invitations", "users", column: "created_by_id"
   add_foreign_key "password_reset_tokens", "users"
   add_foreign_key "pets", "shelters"
+  add_foreign_key "shelter_profiles", "shelters"
+  add_foreign_key "shelter_profiles", "users"
   add_foreign_key "users", "shelters"
 end

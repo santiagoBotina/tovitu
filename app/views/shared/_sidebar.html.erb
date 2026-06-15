@@ -51,6 +51,30 @@
       <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.pets") %></span>
     <% end %>
 
+    <% if current_user.adopter? && !current_user.onboarding_completed? %>
+      <%= link_to profile_onboarding_path,
+          class: "#{base_link} #{request.path == profile_onboarding_path ? active_link : inactive_link}" do %>
+        <div class="shrink-0 w-5 h-5 flex items-center justify-center">
+          <svg class="w-5 h-5 #{request.path == profile_onboarding_path ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+        </div>
+        <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.complete_profile") %></span>
+      <% end %>
+    <% end %>
+
+    <% if current_user.shelter_user? && !current_user.onboarding_completed? %>
+      <%= link_to profile_shelter_onboarding_path,
+          class: "#{base_link} #{request.path == profile_shelter_onboarding_path ? active_link : inactive_link}" do %>
+        <div class="shrink-0 w-5 h-5 flex items-center justify-center">
+          <svg class="w-5 h-5 #{request.path == profile_shelter_onboarding_path ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+        </div>
+        <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.complete_profile") %></span>
+      <% end %>
+    <% end %>
+
     <%= link_to "#",
         class: "#{base_link} #{request.path.start_with?('/adoptions') ? active_link : inactive_link}",
         title: "Coming soon" do %>

@@ -13,7 +13,7 @@ module Pets
         ActiveRecord::Base.transaction do
           pet.photos.attach(file)
           blob_id = pet.photos.last.blob_id
-          pet.update!(photo_order: pet.photo_order + [blob_id])
+          pet.update!(photo_order: pet.photo_order + [ blob_id ])
         end
 
         Result.success(pet)
@@ -56,7 +56,7 @@ module Pets
       private
 
       def valid_content_type?(file)
-        ALLOWED_CONTENT_TYPES.include?(file.content_type)
+        ALLOWED_CONTENT_TYPES.include?(Marcel::MimeType.for(file))
       end
 
       def valid_file_size?(file)

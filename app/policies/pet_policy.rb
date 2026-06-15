@@ -4,7 +4,7 @@ class PetPolicy < ApplicationPolicy
   end
 
   def show?
-    return true if record.status_available? && record.undiscarded?
+    return true if record.undiscarded? && (record.status_available? || record.status_on_hold?)
     return false unless user.present? && user.shelter_id.present?
 
     user.shelter_id == record.shelter_id

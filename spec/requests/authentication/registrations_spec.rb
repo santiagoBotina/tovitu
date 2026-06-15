@@ -9,10 +9,10 @@ RSpec.describe "Registrations" do
     end
 
     it "redirects to root if already logged in" do
-      user = create(:user, :verified)
+      user = create(:user, :verified, :onboarding_completed)
       post session_path, params: { session: { email: user.email, password: "password123" } }
       get new_registration_path
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(pets_path)
     end
   end
 
@@ -49,9 +49,9 @@ RSpec.describe "Registrations" do
         expect(response).to redirect_to(check_email_registration_path)
       end
 
-      it "sets staff role by default" do
+      it "sets adopter role by default" do
         post registration_path, params: valid_params
-        expect(User.last.role).to eq("staff")
+        expect(User.last.role).to eq("adopter")
       end
     end
 

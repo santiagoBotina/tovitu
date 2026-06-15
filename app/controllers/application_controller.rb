@@ -1,10 +1,8 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
 
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
-  # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
 
   helper_method :current_user, :signed_in?
@@ -33,16 +31,65 @@ class ApplicationController < ActionController::Base
     current_user.present?
   end
 
-  def require_authentication
+  def require_authentication(role: nil)
     unless signed_in?
-      redirect_to new_session_path, alert: t("flash.sessions.require_authentication")
+      store_location
+      redirect_to root_path, alert: t("flash.sessions.require_authentication") and return
+    end
+
+    if role.present?
+      case role.to_s
+      when "adopter"
+        unless current_user.adopter?
+          redirect_to root_path, alert: t("flash.unauthorized") and return
+        end
+      when "shelter"
+        unless current_user.shelter_user?
+          redirect_to root_path, alert: t("flash.unauthorized") and return
+        end
+      end
     end
   end
 
   def require_no_authentication
     if signed_in?
-      redirect_to root_path, notice: t("flash.sessions.require_no_authentication")
+      redirect_to after_sign_in_path, notice: t("flash.sessions.require_no_authentication")
     end
+  end
+
+  def require_onboarding_complete
+    if signed_in? && !current_user.onboarding_completed?
+      return if params[:from_profile] == "true"
+
+      destination = Onboarding::DetermineDestination.call(user: current_user)
+      redirect_to destination, alert: t("flash.onboarding.incomplete")
+    end
+  end
+
+  def after_sign_in_path
+    if current_user.adopter?
+      if current_user.onboarding_completed?
+        pets_path
+      else
+        onboarding_adopter_questions_path
+      end
+    elsif current_user.shelter_user?
+      if current_user.onboarding_completed?
+        if current_user.shelter_id.present?
+          shelter_dashboard_path(shelter_id: current_user.shelter_id)
+        else
+          new_shelter_path
+        end
+      else
+        onboarding_shelter_questions_path
+      end
+    else
+      root_path
+    end
+  end
+
+  def store_location
+    session[:return_to] = request.fullpath unless request.xhr?
   end
 
   def handle_unauthorized

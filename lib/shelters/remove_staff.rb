@@ -12,7 +12,7 @@ module Shelters
       return Result.failure(I18n.t("errors.remove_staff.cannot_remove_self")) if @user.id == @staff_user.id
       return Result.failure(I18n.t("errors.remove_staff.not_member", name: @staff_user.name)) unless @staff_user.shelter_id == @shelter.id
 
-      if @staff_user.admin? && @shelter.users.admin.count <= 1
+      if @staff_user.shelter_admin? && @shelter.users.shelter_admin.count <= 1
         return Result.failure(I18n.t("errors.remove_staff.last_admin"))
       end
 

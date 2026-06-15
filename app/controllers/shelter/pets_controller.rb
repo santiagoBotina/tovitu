@@ -1,7 +1,7 @@
 module Shelter
   class PetsController < ApplicationController
     before_action :require_authentication
-    before_action :set_shelter_pet, only: [:show, :edit, :update, :destroy]
+    before_action :set_shelter_pet, only: [ :show, :edit, :update, :destroy ]
     before_action :require_shelter
 
     def index
@@ -77,6 +77,22 @@ module Shelter
       end
     end
 
+    def bulk_update
+      authorize Pet
+
+      result = Pets::BulkUpdate.call(
+        shelter: current_shelter,
+        pet_ids: params[:pet_ids],
+        new_status: params[:new_status]
+      )
+
+      if result.success?
+        redirect_to shelter_pets_path, notice: t("pets.notices.bulk_updated", count: result.data[:updated_count])
+      else
+        redirect_to shelter_pets_path, alert: Array(result.errors).join(", ")
+      end
+    end
+
     private
 
     def set_shelter_pet
@@ -101,9 +117,11 @@ module Shelter
         :description, :personality_traits, :medical_notes,
         :spayed_neutered, :vaccinated, :special_needs,
         :good_with_children, :good_with_dogs, :good_with_cats,
-        :requirements, :status,
+        :requirements,
         photos: []
-      )
+      ).tap do |p|
+        p[:personality_traits] = p[:personality_traits].to_s.split(",").map(&:strip).reject(&:blank?) if p[:personality_traits].present?
+      end
     end
   end
 end

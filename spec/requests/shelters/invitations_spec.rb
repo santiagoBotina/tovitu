@@ -2,12 +2,12 @@ require "rails_helper"
 
 RSpec.describe "Shelter Invitations" do
   let(:shelter) { create(:shelter) }
-  let(:admin) { create(:user, :verified, :admin, shelter: shelter) }
+  let(:admin) { create(:user, :verified, :admin, :onboarding_completed, shelter: shelter) }
 
   describe "POST /shelters/:shelter_id/invitations" do
     it "accepts a valid invitation" do
       invitation = create(:invitation, shelter: shelter, created_by: admin)
-      user = create(:user, :verified)
+      user = create(:user, :verified, :onboarding_completed)
 
       post session_path, params: { session: { email: user.email, password: "password123" } }
       post shelter_invitations_path(shelter_id: shelter), params: { token: invitation.token }
@@ -49,7 +49,7 @@ RSpec.describe "Shelter Invitations" do
 
     it "requires authentication" do
       post shelter_invitations_path(shelter_id: shelter), params: { token: "anything" }
-      expect(response).to redirect_to(new_session_path)
+      expect(response).to redirect_to(root_path)
     end
   end
 end

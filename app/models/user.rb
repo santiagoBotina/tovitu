@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  ROLES = %w[admin staff].freeze
+  ROLES = %w[adopter shelter_admin shelter_staff admin staff].freeze
 
   has_secure_password
 
@@ -7,6 +7,9 @@ class User < ApplicationRecord
 
   has_many :email_verification_tokens, dependent: :destroy
   has_many :password_reset_tokens, dependent: :destroy
+
+  has_one :adopter_profile, dependent: :destroy
+  has_one :shelter_profile, dependent: :destroy
 
   validates :email, presence: true,
                     uniqueness: { case_sensitive: false },
@@ -21,11 +24,34 @@ class User < ApplicationRecord
   scope :unverified, -> { where(verified_at: nil) }
   scope :discarded, -> { where.not(discarded_at: nil) }
   scope :undiscarded, -> { where(discarded_at: nil) }
+  scope :adopter, -> { where(role: "adopter") }
+  scope :shelter_admin, -> { where(role: "shelter_admin") }
+  scope :shelter_staff, -> { where(role: "shelter_staff") }
   scope :admin, -> { where(role: "admin") }
   scope :staff, -> { where(role: "staff") }
 
   def verified?
     verified_at.present?
+  end
+
+  def adopter?
+    role == "adopter"
+  end
+
+  def shelter_admin?
+    role == "shelter_admin"
+  end
+
+  def shelter_staff?
+    role == "shelter_staff"
+  end
+
+  def shelter_user?
+    shelter_admin? || shelter_staff? || admin? || staff?
+  end
+
+  def onboarding_completed?
+    onboarding_completed_at.present?
   end
 
   def staff?
@@ -34,10 +60,6 @@ class User < ApplicationRecord
 
   def admin?
     role == "admin"
-  end
-
-  def shelter_admin?
-    admin? && shelter_id.present?
   end
 
   def discard

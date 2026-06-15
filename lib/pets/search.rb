@@ -3,8 +3,7 @@ module Pets
     DEFAULT_PAGE_SIZE = 24
 
     def initialize(params: {})
-      @params             = params
-      @page               = (params[:page] || 1).to_i
+      @page               = [ (params[:page] || 1).to_i, 1 ].max
       @per_page           = (params[:per_page] || DEFAULT_PAGE_SIZE).to_i
       @species            = params[:species]
       @breed              = params[:breed]
@@ -55,6 +54,7 @@ module Pets
       end
 
       scope = scope.order(created_at: :desc)
+      scope = scope.includes(:shelter, photos_attachments: :blob)
 
       offset = (@page - 1) * @per_page
       scope.offset(offset).limit(@per_page)

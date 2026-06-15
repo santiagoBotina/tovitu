@@ -1,6 +1,7 @@
 class Pet < ApplicationRecord
   belongs_to :shelter, touch: true
   has_many_attached :photos
+  has_many :adoption_applications, dependent: :restrict_with_error
 
   SPECIES = %w[dog cat other].freeze
   AGE_CATEGORIES = %w[baby young adult senior].freeze

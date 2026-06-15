@@ -19,7 +19,7 @@ FactoryBot.define do
 
     trait :with_admin do
       after(:create) do |shelter|
-        create(:user, :verified, :admin, shelter: shelter, email: "admin@#{shelter.name.parameterize}.com")
+        create(:user, :verified, :shelter_admin, shelter: shelter, email: "admin@#{shelter.name.parameterize}.com")
       end
     end
 

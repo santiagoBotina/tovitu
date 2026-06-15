@@ -64,11 +64,11 @@ RSpec.describe "Shelters" do
   describe "GET /shelters/new" do
     it "requires authentication" do
       get new_shelter_path
-      expect(response).to redirect_to(new_session_path)
+      expect(response).to redirect_to(root_path)
     end
 
     it "renders the form for verified users without a shelter" do
-      user = create(:user, :verified)
+      user = create(:user, :verified, :staff, :onboarding_completed)
       post session_path, params: { session: { email: user.email, password: "password123" } }
       get new_shelter_path
       expect(response).to have_http_status(:ok)
@@ -76,7 +76,7 @@ RSpec.describe "Shelters" do
 
     it "redirects users who already have a shelter" do
       shelter = create(:shelter)
-      user = create(:user, :verified, :admin, shelter: shelter)
+      user = create(:user, :verified, :shelter_admin, :onboarding_completed, shelter: shelter)
       post session_path, params: { session: { email: user.email, password: "password123" } }
       get new_shelter_path
       expect(response).to have_http_status(:redirect)
@@ -85,7 +85,7 @@ RSpec.describe "Shelters" do
 
   describe "POST /shelters" do
     it "creates a shelter and assigns admin role" do
-      user = create(:user, :verified)
+      user = create(:user, :verified, :onboarding_completed)
       post session_path, params: { session: { email: user.email, password: "password123" } }
 
       expect do
@@ -104,21 +104,21 @@ RSpec.describe "Shelters" do
 
       expect(response).to redirect_to(shelter_dashboard_path(shelter_id: Shelter.last))
       expect(user.reload.shelter).to eq(Shelter.last)
-      expect(user.reload.role).to eq("admin")
+      expect(user.reload.role).to eq("shelter_admin")
     end
 
     it "rejects unverified users" do
-      user = create(:user)
+      user = create(:user, :onboarding_completed)
       post session_path, params: { session: { email: user.email, password: "password123" } }
       post shelters_path, params: {
         shelter: { name: "Test", street: "123 St", city: "City", state: "OR", zip: "97201", phone: "503-555-0123" }
       }
-      expect(response).to redirect_to(new_session_path)
+      expect(response).to redirect_to(root_path)
     end
 
     it "rejects duplicate shelter names" do
       create(:shelter, name: "Happy Paws Rescue")
-      user = create(:user, :verified)
+      user = create(:user, :verified, :onboarding_completed)
       post session_path, params: { session: { email: user.email, password: "password123" } }
 
       post shelters_path, params: {
@@ -137,7 +137,7 @@ RSpec.describe "Shelters" do
     end
 
     it "rejects when required fields are missing" do
-      user = create(:user, :verified)
+      user = create(:user, :verified, :onboarding_completed)
       post session_path, params: { session: { email: user.email, password: "password123" } }
 
       post shelters_path, params: { shelter: { name: "" } }
@@ -157,7 +157,7 @@ RSpec.describe "Shelters" do
 
     it "allows shelter admin to edit" do
       shelter = create(:shelter)
-      admin = create(:user, :verified, :admin, shelter: shelter)
+      admin = create(:user, :verified, :shelter_admin, :onboarding_completed, shelter: shelter)
       post session_path, params: { session: { email: admin.email, password: "password123" } }
 
       get edit_shelter_path(id: shelter)
@@ -168,7 +168,7 @@ RSpec.describe "Shelters" do
   describe "PATCH /shelters/:id" do
     it "updates shelter profile" do
       shelter = create(:shelter)
-      admin = create(:user, :verified, :admin, shelter: shelter)
+      admin = create(:user, :verified, :shelter_admin, :onboarding_completed, shelter: shelter)
       post session_path, params: { session: { email: admin.email, password: "password123" } }
 
       patch shelter_path(id: shelter), params: { shelter: { name: "Updated Name" } }
@@ -179,6 +179,7 @@ RSpec.describe "Shelters" do
     it "rejects non-admin updates" do
       shelter = create(:shelter, :with_staff)
       staff = shelter.users.first
+      staff.update!(onboarding_completed_at: Time.current)
       post session_path, params: { session: { email: staff.email, password: "password123" } }
 
       patch shelter_path(id: shelter), params: { shelter: { name: "Hacked Name" } }

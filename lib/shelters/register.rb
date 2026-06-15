@@ -13,7 +13,7 @@ module Shelters
 
       ActiveRecord::Base.transaction do
         shelter.save!
-        @user.update!(shelter: shelter, role: "admin")
+        @user.update!(shelter: shelter, role: "shelter_admin")
       end
 
       Result.success(shelter)

@@ -143,6 +143,11 @@ en:
         all: All
         empty_title: No pets yet
         empty_body: Start by adding your first pet to the shelter.
+        bulk:
+          selected: Selected
+          prompt: Change status to...
+          apply: Apply
+          applying: Applying...
         table:
           name: Name
           species: Species

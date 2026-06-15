@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "Shelter Staff" do
   let(:shelter) { create(:shelter) }
-  let(:admin) { create(:user, :verified, :admin, shelter: shelter) }
+  let(:admin) { create(:user, :verified, :shelter_admin, :onboarding_completed, shelter: shelter) }
 
   before do
     post session_path, params: { session: { email: admin.email, password: "password123" } }
@@ -10,14 +10,14 @@ RSpec.describe "Shelter Staff" do
 
   describe "GET /shelters/:shelter_id/staff" do
     it "lists staff members" do
-      staff = create(:user, :verified, shelter: shelter)
+      staff = create(:user, :verified, :onboarding_completed, shelter: shelter)
       get shelter_staff_index_path(shelter_id: shelter)
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(staff.name)
     end
 
     it "rejects non-admin access" do
-      staff = create(:user, :verified, shelter: shelter)
+      staff = create(:user, :verified, :onboarding_completed, shelter: shelter)
       delete session_path
       post session_path, params: { session: { email: staff.email, password: "password123" } }
 
@@ -46,7 +46,7 @@ RSpec.describe "Shelter Staff" do
     end
 
     it "rejects if email is already a member" do
-      existing = create(:user, :verified, shelter: shelter)
+      existing = create(:user, :verified, :onboarding_completed, shelter: shelter)
       post shelter_staff_index_path(shelter_id: shelter), params: { email: existing.email }
       expect(response).to redirect_to(shelter_staff_index_path(shelter_id: shelter))
     end
@@ -54,7 +54,7 @@ RSpec.describe "Shelter Staff" do
 
   describe "DELETE /shelters/:shelter_id/staff/:id" do
     it "removes a staff member" do
-      staff = create(:user, :verified, shelter: shelter)
+      staff = create(:user, :verified, :onboarding_completed, shelter: shelter)
       delete shelter_staff_path(shelter_id: shelter, id: staff)
       expect(response).to redirect_to(shelter_staff_index_path(shelter_id: shelter))
       expect(staff.reload.shelter_id).to be_nil
@@ -67,8 +67,8 @@ RSpec.describe "Shelter Staff" do
     end
 
     it "rejects non-admin removal" do
-      staff1 = create(:user, :verified, shelter: shelter)
-      staff2 = create(:user, :verified, shelter: shelter)
+      staff1 = create(:user, :verified, :onboarding_completed, shelter: shelter)
+      staff2 = create(:user, :verified, :onboarding_completed, shelter: shelter)
       delete session_path
       post session_path, params: { session: { email: staff1.email, password: "password123" } }
 

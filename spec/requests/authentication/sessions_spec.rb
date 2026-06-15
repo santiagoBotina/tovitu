@@ -1,28 +1,28 @@
 require "rails_helper"
 
 RSpec.describe "Sessions" do
-  describe "GET /session/new" do
+  describe "GET /login/adopter" do
     it "renders the login form" do
-      get new_session_path
+      get login_adopter_path
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("Log in")
     end
 
     it "redirects to root if already logged in" do
-      user = create(:user, :verified)
+      user = create(:user, :verified, :onboarding_completed)
       post session_path, params: { session: { email: user.email, password: "password123" } }
-      get new_session_path
-      expect(response).to redirect_to(root_path)
+      get login_adopter_path
+      expect(response).to redirect_to(pets_path)
     end
   end
 
   describe "POST /session" do
     context "with valid credentials" do
-      let(:user) { create(:user, :verified) }
+      let(:user) { create(:user, :verified, :onboarding_completed) }
 
       it "logs the user in" do
         post session_path, params: { session: { email: user.email, password: "password123" } }
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(pets_path)
       end
 
       it "sets session user_id" do
@@ -104,7 +104,7 @@ RSpec.describe "Sessions" do
       user = create(:user, :verified)
       post session_path, params: { session: { email: user.email, password: "password123" } }
       delete session_path
-      expect(response).to redirect_to(new_session_path)
+      expect(response).to redirect_to(root_path)
       expect(session[:user_id]).to be_nil
     end
   end

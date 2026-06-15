@@ -37,9 +37,9 @@
           </div>
         </div>
       <% else %>
-        <%= link_to t("shared.navbar.sign_in"), new_session_path,
+        <%= link_to t("shared.navbar.sign_in"), login_adopter_path,
             class: "inline-flex items-center px-4 py-2 text-sm font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-xl transition-colors duration-150" %>
-        <%= link_to t("shared.navbar.create_account"), new_registration_path,
+        <%= link_to t("shared.navbar.create_account"), root_path,
             class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary-500 hover:bg-primary-600 rounded-xl transition-colors duration-150 shadow-sm" %>
       <% end %>
     </div>

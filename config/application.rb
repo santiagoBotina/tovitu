@@ -45,5 +45,8 @@ module Tovitu
 
     # Use Sidekiq for Active Job
     config.active_job.queue_adapter = :sidekiq
+
+    # Permit locale param from routing scope — not user input
+    config.action_controller.always_permitted_parameters = %w[locale]
   end
 end

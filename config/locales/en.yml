@@ -12,11 +12,20 @@ en:
       pets: "Pets"
       adoptions: "Adoptions"
       settings: "Settings"
+      complete_profile: "Complete your profile"
       sign_out: "Sign out"
       sign_out_confirm: "Are you sure you want to sign out?"
     navbar:
       sign_in: "Sign in"
       create_account: "Create account"
+  landing:
+    index:
+      title: "Find Your Perfect Companion"
+      subtitle: "Tovitu helps pets find loving homes through thoughtful matching"
+      adopter_title: "Start Adoption Journey"
+      adopter_desc: "Browse pets and find your new best friend"
+      shelter_title: "I represent a shelter"
+      shelter_desc: "Manage adoptions and connect with adopters"
   dashboard:
     index:
       welcome: "Welcome, %{name}"
@@ -149,6 +158,34 @@ en:
         one_per_line: "One requirement per line."
         submit: "Save Policies"
   authentication:
+    sessions:
+      new:
+        title: "Welcome back"
+        subtitle: "Log in to your Tovitu account"
+        email_label: "Email address"
+        password_label: "Password"
+        forgot_password: "Forgot password?"
+        submit: "Log in"
+        signup_prompt: "Don't have an account?"
+        signup_link: "Create account"
+      new_adopter:
+        title: "Welcome back"
+        subtitle: "Sign in to continue your adoption journey"
+        email_label: "Email address"
+        password_label: "Password"
+        forgot_password: "Forgot password?"
+        submit: "Log in"
+        signup_prompt: "Don't have an account?"
+        signup_link: "Create account"
+      new_shelter:
+        title: "Shelter Login"
+        subtitle: "Sign in to manage your shelter"
+        email_label: "Email address"
+        password_label: "Password"
+        forgot_password: "Forgot password?"
+        submit: "Log in"
+        signup_prompt: "Don't have an account?"
+        signup_link: "Create account"
     registrations:
       new:
         title: "Create an account"
@@ -167,16 +204,6 @@ en:
         didnt_receive: "Didn't receive the email?"
         resend: "Resend verification"
         back: "Back to login"
-    sessions:
-      new:
-        title: "Welcome back"
-        subtitle: "Log in to your Tovitu account"
-        email_label: "Email address"
-        password_label: "Password"
-        forgot_password: "Forgot password?"
-        submit: "Log in"
-        signup_prompt: "Don't have an account?"
-        signup_link: "Create account"
     passwords:
       new:
         title: "Forgot your password?"
@@ -205,6 +232,8 @@ en:
         pending_verification: "Pending verification"
         submit: "Update profile"
         back: "Back"
+        complete_onboarding: "Complete your profile"
+        complete_onboarding_desc: "Tell us more about yourself to get better pet matches"
     verifications:
       expired:
         title: "Link expired"
@@ -282,11 +311,21 @@ en:
     record_not_unique:
       email: "This email is already registered. Please try logging in or use a different email."
       generic: "A database constraint was violated. Please try again."
+    onboarding:
+      incomplete: "Please complete your profile before continuing."
+      already_complete: "Your profile is already complete!"
+      adopter:
+        complete: "Profile complete! Start exploring pets."
+        skipped: "You can complete your profile anytime from your profile settings."
+      shelter:
+        complete: "Profile complete! Let's set up your shelter."
+        skipped: "You can complete your profile anytime from your profile settings."
   errors:
     authenticate_user:
       locked: "Account temporarily locked. Try again in %{seconds} seconds."
       unverified: "Please verify your email before logging in. A new verification email has been sent."
       invalid: "Invalid email or password"
+      role_mismatch: "This account doesn't have access to that section. Please use the correct login page."
     verify_email:
       invalid: "Invalid verification link"
       expired: "Verification link has expired"
@@ -317,6 +356,12 @@ en:
       invalid: "Invalid invitation token"
       expired: "Invitation has expired"
       accepted: "Invitation has already been accepted"
+    register_user:
+      invalid_role: "Invalid role selection"
+    onboarding:
+      invalid_question: "Invalid question number"
+      no_profile: "Profile not found"
+      incomplete: "Please answer all questions before completing. Missing: %{questions}"
   activerecord:
     errors:
       models:
@@ -335,3 +380,150 @@ en:
         hours: "Set your hours"
         profile: "Complete your profile"
         publish: "Publish your shelter"
+  onboarding:
+    adopter:
+      title: "Tell us about yourself"
+      subtitle: "Help us find the perfect pet for your lifestyle"
+      from_profile_subtitle: "Help us find the perfect pet for your lifestyle"
+      progress: "Question %{current} of %{total}"
+      back: "Back"
+      next: "Next"
+      complete: "Complete Profile"
+      skip: "Skip"
+      questions:
+        q1:
+          text: "What does a typical weekend look like for you?"
+          placeholder: "Select all that apply"
+          options:
+            relaxing_at_home: "Relaxing at home"
+            going_for_walks: "Going for walks"
+            outdoor_adventures: "Outdoor adventures"
+            spending_time_with_family: "Spending time with family"
+            exercising_or_sports: "Exercising or sports"
+            visiting_friends: "Visiting friends"
+            exploring_new_places: "Exploring new places"
+        q2:
+          text: "How active would you describe yourself?"
+          placeholder: "Select one"
+          options:
+            very_calm: "Very calm"
+            mostly_calm: "Mostly calm"
+            balanced: "Balanced"
+            active: "Active"
+            very_active: "Very active"
+        q3:
+          text: "Which sounds most like your ideal companion?"
+          placeholder: "Select one"
+          options:
+            calm_friend: "Calm friend"
+            playful_companion: "Playful companion"
+            affectionate_pet: "Affectionate pet"
+            independent_pet: "Independent pet"
+            social_pet: "Social pet"
+        q4:
+          text: "How much experience do you have with pets?"
+          placeholder: "Select one"
+          options:
+            first_time: "First-time"
+            some_experience: "Some experience"
+            years_of_experience: "Years of experience"
+            very_experienced: "Very experienced"
+        q5:
+          text: "What are you hoping to gain from adopting?"
+          placeholder: "Select all that apply"
+          options:
+            daily_companion: "Daily companion"
+            more_activity: "More activity"
+            emotional_support: "Emotional support"
+            family_pet: "Family pet"
+            friend_for_pet: "Friend for another pet"
+            meaningful_help: "Meaningful way to help"
+        q6:
+          text: "How much time can you realistically dedicate to a pet each day?"
+          placeholder: "Select one"
+          options:
+            less_than_1h: "Less than 1 hour"
+            1_to_2h: "1–2 hours"
+            2_to_4h: "2–4 hours"
+            more_than_4h: "More than 4 hours"
+        q7:
+          text: "Which personality feels closest to yours?"
+          placeholder: "Select one"
+          options:
+            calm_thoughtful: "Calm and thoughtful"
+            friendly_social: "Friendly and social"
+            adventurous_energetic: "Adventurous and energetic"
+            organized_routine: "Organized and routine-oriented"
+            flexible_spontaneous: "Flexible and spontaneous"
+        q8:
+          text: "What matters most to you when adopting a pet?"
+          placeholder: "Tell us what's most important to you in finding your companion..."
+          max_length: "Maximum 200 characters"
+    shelter:
+      title: "Tell us about your organization"
+      subtitle: "Help us understand your shelter's needs"
+      from_profile_subtitle: "Help us understand your shelter's needs"
+      progress: "Question %{current} of %{total}"
+      back: "Back"
+      next: "Next"
+      complete: "Complete Profile"
+      skip: "Skip"
+      questions:
+        q1:
+          text: "What best describes your organization?"
+          placeholder: "Select one"
+          options:
+            small_rescue: "Small rescue group"
+            independent_shelter: "Independent shelter"
+            large_shelter: "Large shelter"
+            ngo_foundation: "NGO / Foundation"
+            foster_based: "Foster-based rescue"
+        q2:
+          text: "Approximately how many pets do you currently manage?"
+          placeholder: "Select one"
+          options:
+            under_20: "Fewer than 20"
+            20_to_50: "20–50"
+            50_to_100: "50–100"
+            over_100: "More than 100"
+        q3:
+          text: "How involved are you in the adoption process?"
+          placeholder: "Select one"
+          options:
+            basic_screening: "Basic screening (applications + approvals)"
+            interviews: "Interviews and follow-ups"
+            extensive_matching: "Extensive matching (home visits, vet checks)"
+            long_term_support: "Long-term support (post-adoption follow-ups)"
+        q4:
+          text: "What matters most when approving an adopter?"
+          placeholder: "Select all that apply"
+          options:
+            stable_home: "Stable home"
+            pet_experience: "Previous pet experience"
+            available_time: "Available time"
+            financial_preparedness: "Financial preparedness"
+            family_compatibility: "Family compatibility"
+            long_term_commitment: "Long-term commitment"
+        q5:
+          text: "How do you usually communicate with adopters?"
+          placeholder: "Select all that apply"
+          options:
+            whatsapp: "WhatsApp"
+            email: "Email"
+            phone_calls: "Phone calls"
+            in_person: "In-person"
+            social_media: "Social media"
+        q6:
+          text: "What is your biggest challenge today?"
+          placeholder: "Select all that apply"
+          options:
+            finding_qualified_adopters: "Finding qualified adopters"
+            managing_applications: "Managing applications"
+            following_up: "Following up with applicants"
+            communicating_with_adopters: "Communicating with adopters"
+            managing_pet_info: "Managing pet information"
+            tracking_outcomes: "Tracking adoption outcomes"
+        q7:
+          text: "What matters most to you when approving an adoption?"
+          placeholder: "Share your philosophy on what makes a successful adoption..."
+          max_length: "Maximum 200 characters"

@@ -5,7 +5,14 @@ module Authentication
 
       if result.success?
         session[:user_id] = result.data[:id]
-        redirect_to root_path, notice: t("flash.verifications.show.success")
+        user = current_user
+
+        if user.onboarding_completed?
+          redirect_to after_sign_in_path, notice: t("flash.verifications.show.success")
+        else
+          destination = Onboarding::DetermineDestination.call(user: user)
+          redirect_to destination, notice: t("flash.verifications.show.success")
+        end
       elsif result.error_code == :expired
         render :expired, status: :unprocessable_entity
       elsif result.error_code == :invalid_token
@@ -13,11 +20,11 @@ module Authentication
         if token&.consumed?
           render :already_verified
         else
-          redirect_to new_session_path,
+          redirect_to root_path,
                       alert: Array(result.errors).join(", ")
         end
       else
-        redirect_to new_session_path,
+        redirect_to root_path,
                     alert: Array(result.errors).join(", ")
       end
     end

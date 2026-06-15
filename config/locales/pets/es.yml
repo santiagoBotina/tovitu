@@ -144,6 +144,11 @@ es:
         all: Todas
         empty_title: Aún no hay mascotas
         empty_body: Comienza agregando tu primera mascota al refugio.
+        bulk:
+          selected: Seleccionadas
+          prompt: Cambiar estado a...
+          apply: Aplicar
+          applying: Aplicando...
         table:
           name: Nombre
           species: Especie

@@ -1,0 +1,272 @@
+en:
+  adoptions:
+    statuses:
+      pending: Pending
+      under_review: Under Review
+      approved: Approved
+      rejected: Rejected
+      awaiting_response: Awaiting Response
+      completed: Completed
+      withdrawn: Withdrawn
+      cancelled: Cancelled
+      expired: Expired
+
+    errors:
+      pet_not_available: This pet is not currently available for adoption.
+      duplicate_application: You have already submitted an application for this pet.
+      invalid_action: Invalid action. Please choose approve, reject, request more information, or cancel.
+      invalid_transition: Cannot change status from "%{from}" to "%{to}".
+      rejection_reason_required: A rejection reason is required. Please select or enter a reason.
+      cancellation_reason_required: A cancellation reason is required.
+      info_requests_required: Please specify what additional information you need from the applicant.
+      not_approved: The application must be approved before it can be finalized.
+      cannot_withdraw: Cannot withdraw an application with status "%{status}".
+      note_content_required: Note cannot be blank.
+      invalid_token: Invalid or expired status link. Please check your email for the correct link.
+      application_not_found: Application not found.
+      invalid_email_format: Please provide a valid email address.
+      pet_required: A pet is required to submit an application.
+
+    questionnaire:
+      title: Adoption Application Questionnaire
+      subtitle: Help us find the perfect match by answering a few questions.
+      questions:
+        interest_reason: Why are you interested in this pet?
+        living_environment: Where will the pet live?
+        living_environment_options:
+          indoor: Indoors
+          outdoor: Outdoors
+          both: Both indoors and outdoors
+        hours_alone: How many hours will the pet be alone per day?
+        previous_pets: Have you owned pets before? Tell us about them.
+        veterinarian: Who is your veterinarian (if applicable)?
+        household_agreement: Do all members of your household agree to this adoption?
+        landlord_permission: Have you confirmed with your landlord that pets are allowed?
+
+    timeline:
+      created: Application submitted
+      approved: Application approved — pet placed on hold
+      rejected: Application rejected
+      info_requested: Additional information requested
+      info_received: Additional information received
+      completed: Adoption completed
+      withdrawn: Application withdrawn
+      cancelled: Adoption cancelled
+      expired: Hold period expired
+
+    submit:
+      confirmation_title: Application Submitted!
+      confirmation_body: Your application for %{pet_name} has been submitted. Your reference number is %{reference}.
+      confirmation_email_sent: We have sent a confirmation email with a link to check your application status.
+      review_notice: The shelter will review your application and contact you if they need more information.
+
+    check_status:
+      title: Application Status
+      reference: Reference Number
+      status: Status
+      submitted: Submitted
+      last_updated: Last Updated
+      pet_info: Pet Information
+      pet_name: Pet Name
+      pet_species: Species
+      pet_breed: Breed
+      shelter_info: Shelter Information
+      shelter_name: Shelter
+      shelter_contact: Contact
+      timeline: Timeline
+      rejection_reason: Rejection Reason
+
+    staff:
+      dashboard:
+        title: Adoption Applications
+        subtitle: Review and manage adoption applications for your shelter.
+        filters:
+          all: All
+          active: Active
+          pending: Pending
+          under_review: Under Review
+          approved: Approved
+          rejected: Rejected
+          awaiting_response: Awaiting Response
+          completed: Completed
+          withdrawn: Withdrawn
+          cancelled: Cancelled
+          expired: Expired
+        sort:
+          newest: Newest First
+          oldest: Oldest First
+          pet_name: Pet Name
+          applicant_name: Applicant Name
+        table:
+          applicant: Applicant
+          pet: Pet
+          submitted: Submitted
+          status: Status
+          actions: Actions
+          view: View
+        empty:
+          no_applications: No adoption applications yet.
+          no_matching: No applications match the current filter.
+
+      show:
+        title: "Application for %{pet_name}"
+        applicant_info: Applicant Information
+        name: Name
+        email: Email
+        phone: Phone
+        address: Address
+        housing: Housing Type
+        housing_options:
+          house: House
+          apartment: Apartment
+          condo: Condo
+          other: Other
+        current_pets: Current Pets
+        pet_experience: Pet Experience
+        questionnaire: Questionnaire Answers
+        pet_info: Pet Information
+        review_actions: Review Actions
+        approve: Approve
+        reject: Reject
+        request_info: Request More Info
+        mark_received: Mark Info as Received
+        finalize: Finalize Adoption
+        cancel: Cancel Adoption
+        reject_reason_label: Rejection Reason
+        reject_reason_placeholder: Select or type a reason...
+        reject_reasons:
+          not_a_good_match: Not a good match for this pet
+          incomplete_application: Incomplete application
+          insufficient_experience: Insufficient pet experience
+          unsuitable_home_environment: Unsuitable home environment
+          failed_reference_check: Failed reference check
+          pet_not_available: Pet no longer available
+          other: Other (please specify)
+        cancellation_reason_label: Cancellation Reason
+        cancellation_reason_placeholder: Explain why this adoption is being cancelled...
+        info_request_label: What additional information do you need?
+        info_request_placeholder: Enter your questions for the applicant...
+        notes_section: Notes
+        add_note: Add Note
+        note_placeholder: Write an internal note...
+        pin_note: Pin this note
+        save_note: Save Note
+        no_notes: No notes yet.
+        timeline_section: Timeline
+        back_to_applications: Back to Applications
+
+    forms:
+      application:
+        title: Apply to Adopt %{pet_name}
+        applicant_section: Your Information
+        name_label: Full Name
+        name_placeholder: Enter your full name
+        email_label: Email Address
+        email_placeholder: your@email.com
+        phone_label: Phone Number (optional)
+        phone_placeholder: 555-0123
+        address_label: Address (optional)
+        address_placeholder: Your street address
+        housing_label: Housing Type
+        housing_placeholder: Select...
+        housing_options:
+          house: House
+          apartment: Apartment
+          condo: Condo
+          other: Other
+        current_pets_label: Current Pets (optional)
+        current_pets_placeholder: Tell us about any pets you currently have...
+        pet_experience_label: Pet Experience (optional)
+        pet_experience_placeholder: Describe your experience with pets...
+        questionnaire_section: Questionnaire
+        submit: Submit Application
+        cancel: Cancel
+        processing: Submitting...
+
+    mailer:
+      confirmation:
+        subject: "Adoption Application Confirmed — %{reference}"
+        greeting: Hi %{name},
+        body: Thank you for applying to adopt %{pet_name}! Your application has been received and is being reviewed by the shelter.
+        reference: Your reference number is %{reference}.
+        check_status: Check Application Status
+        shelter_reply: The shelter will review your application and contact you if they need more information.
+        thanks: Thank you for choosing to adopt!
+      approved:
+        subject: "Great news! Your application has been approved!"
+        greeting: Hi %{name},
+        body: Your application to adopt %{pet_name} has been approved! The pet has been placed on hold for you.
+        next_steps: The shelter will contact you to arrange the next steps, including a meet-and-greet.
+        hold_info: Please note that the hold on %{pet_name} will expire in 48 hours.
+      rejected:
+        subject: Update on your adoption application
+        greeting: Hi %{name},
+        body: Unfortunately, your application to adopt %{pet_name} has been reviewed and we are unable to move forward at this time.
+        reason: "Reason: %{reason}"
+        encouragement: We encourage you to explore other pets who might be a great match for you.
+      info_requested:
+        subject: Additional information needed for your application
+        greeting: Hi %{name},
+        body: The shelter has reviewed your application and needs some additional information to proceed.
+        questions: "They have asked the following:"
+        respond: Please respond to the shelter directly with the requested information.
+      info_received:
+        subject: Your response has been received
+        greeting: Hi %{name},
+        body: Thank you for providing the additional information.
+      completed:
+        subject: Congratulations on your adoption!
+        greeting: Congratulations %{name}!
+        body: Your adoption of %{pet_name} has been finalized. Welcome to your new family member!
+      withdrawn:
+        subject: Application withdrawn — %{pet_name}
+        greeting: Hello Shelter Team,
+        body: "%{name} (%{email}) has withdrawn their application for %{pet_name}."
+      cancelled:
+        subject: Update on your adoption application
+        greeting: Hi %{name},
+        body: Unfortunately, your adoption of %{pet_name} has been cancelled.
+        reason: "Reason: %{reason}"
+        contact: If you have questions, please contact the shelter directly.
+      expired:
+        subject: "Adoption hold expired — %{pet_name}"
+        greeting: Hi %{name},
+        body: The hold period for %{pet_name} has expired. The pet is now available for other adopters.
+        contact: If you are still interested, please contact the shelter.
+
+    activerecord:
+      models:
+        adoption_application:
+          one: Adoption Application
+          other: Adoption Applications
+        adoption_note:
+          one: Note
+          other: Notes
+        adoption_timeline_event:
+          one: Timeline Event
+          other: Timeline Events
+
+      attributes:
+        adoption_application:
+          applicant_name: Full Name
+          applicant_email: Email Address
+          applicant_phone: Phone Number
+          applicant_address: Address
+          housing_type: Housing Type
+          current_pets: Current Pets
+          pet_experience: Pet Experience
+          questionnaire_answers: Questionnaire
+          rejection_reason: Rejection Reason
+          status: Status
+          token: Reference Token
+          completed_at: Completed Date
+          withdrawn_at: Withdrawn Date
+          hold_expires_at: Hold Expires
+          reviewed_by: Reviewed By
+        adoption_note:
+          content: Note Content
+          pinned: Pinned
+          user: Author
+        adoption_timeline_event:
+          event_type: Event
+          metadata: Details

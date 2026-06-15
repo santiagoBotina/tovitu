@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "Shelter Policies" do
   let(:shelter) { create(:shelter) }
-  let(:admin) { create(:user, :verified, :admin, shelter: shelter) }
+  let(:admin) { create(:user, :verified, :shelter_admin, :onboarding_completed, shelter: shelter) }
 
   before do
     post session_path, params: { session: { email: admin.email, password: "password123" } }
@@ -15,7 +15,7 @@ RSpec.describe "Shelter Policies" do
     end
 
     it "rejects non-admin access" do
-      staff = create(:user, :verified, shelter: shelter)
+      staff = create(:user, :verified, :onboarding_completed, shelter: shelter)
       delete session_path
       post session_path, params: { session: { email: staff.email, password: "password123" } }
 
@@ -45,7 +45,7 @@ RSpec.describe "Shelter Policies" do
     end
 
     it "rejects non-admin updates" do
-      staff = create(:user, :verified, shelter: shelter)
+      staff = create(:user, :verified, :onboarding_completed, shelter: shelter)
       delete session_path
       post session_path, params: { session: { email: staff.email, password: "password123" } }
 

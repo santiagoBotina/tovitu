@@ -1,19 +1,24 @@
 module Authentication
   class RegisterUser < ApplicationService
-    def initialize(name:, email:, password:, password_confirmation:)
+    VALID_ROLES = %w[adopter shelter_admin shelter_staff].freeze
+
+    def initialize(name:, email:, password:, password_confirmation:, role: "adopter")
       @name = name
       @email = email
       @password = password
       @password_confirmation = password_confirmation
+      @role = role
     end
 
     def call
+      return Result.failure([ I18n.t("errors.register_user.invalid_role") ]) unless VALID_ROLES.include?(@role)
+
       user = User.new(
         name: @name,
         email: @email,
         password: @password,
         password_confirmation: @password_confirmation,
-        role: "staff"
+        role: @role
       )
 
       return Result.failure(user.errors.full_messages) unless user.save

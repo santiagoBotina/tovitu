@@ -4,11 +4,11 @@ RSpec.describe "Profiles" do
   describe "GET /profile/edit" do
     it "redirects to login when not authenticated" do
       get edit_profile_path
-      expect(response).to redirect_to(new_session_path)
+      expect(response).to redirect_to(root_path)
     end
 
     it "renders the edit form when logged in" do
-      user = create(:user, :verified)
+      user = create(:user, :verified, :onboarding_completed)
       post session_path, params: { session: { email: user.email, password: "password123" } }
       get edit_profile_path
       expect(response).to have_http_status(:ok)
@@ -19,11 +19,11 @@ RSpec.describe "Profiles" do
   describe "PATCH /profile" do
     it "redirects to login when not authenticated" do
       patch profile_path, params: { user: { name: "New Name" } }
-      expect(response).to redirect_to(new_session_path)
+      expect(response).to redirect_to(root_path)
     end
 
     context "when logged in" do
-      let(:user) { create(:user, :verified) }
+      let(:user) { create(:user, :verified, :onboarding_completed) }
 
       before do
         post session_path, params: { session: { email: user.email, password: "password123" } }
