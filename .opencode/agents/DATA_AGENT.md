@@ -1,10 +1,8 @@
 ---
 description: Designs data structures and protects data integrity
 mode: subagent
-model: deepseek-v4-pro
 temperature: 0.1
 permission:
-  write: deny
   edit: deny
   bash: deny
 ---

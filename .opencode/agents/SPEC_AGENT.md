@@ -1,11 +1,9 @@
 ---
 description: Transforms specs into implementation-ready technical designs
 mode: subagent
-model: qwen3.7-max
 temperature: 0.1
 permission:
-  write: deny
-  edit: deny
+  edit: allow
   bash: deny
 ---
 

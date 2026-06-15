@@ -1,10 +1,7 @@
 ---
 description: Defines product specifications and user stories
 mode: subagent
-model: glm-5.1
-temperature: 0.1
 permission:
-  write: deny
   edit: deny
   bash: deny
 ---
