@@ -11,6 +11,6 @@ class CreateLoginAttempts < ActiveRecord::Migration[8.0]
     end
 
     add_index :login_attempts, :email
-    add_index :login_attempts, [:email, :attempted_at]
+    add_index :login_attempts, [ :email, :attempted_at ]
   end
 end

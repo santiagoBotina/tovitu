@@ -10,7 +10,7 @@ RSpec.describe "Sessions" do
 
     it "redirects to root if already logged in" do
       user = create(:user, :verified)
-      post session_path, params: { session: { email: user.email, password: "password123" }}
+      post session_path, params: { session: { email: user.email, password: "password123" } }
       get new_session_path
       expect(response).to redirect_to(root_path)
     end
@@ -21,17 +21,17 @@ RSpec.describe "Sessions" do
       let(:user) { create(:user, :verified) }
 
       it "logs the user in" do
-        post session_path, params: { session: { email: user.email, password: "password123" }}
+        post session_path, params: { session: { email: user.email, password: "password123" } }
         expect(response).to redirect_to(root_path)
       end
 
       it "sets session user_id" do
-        post session_path, params: { session: { email: user.email, password: "password123" }}
+        post session_path, params: { session: { email: user.email, password: "password123" } }
         expect(session[:user_id]).to eq(user.id)
       end
 
       it "logs a successful login attempt" do
-        expect { post session_path, params: { session: { email: user.email, password: "password123" }} }
+        expect { post session_path, params: { session: { email: user.email, password: "password123" } } }
           .to change(LoginAttempt, :count).by(1)
         expect(LoginAttempt.last).to be_success
       end
@@ -41,17 +41,17 @@ RSpec.describe "Sessions" do
       let(:user) { create(:user) }
 
       it "does not log the user in" do
-        post session_path, params: { session: { email: user.email, password: "password123" }}
+        post session_path, params: { session: { email: user.email, password: "password123" } }
         expect(session[:user_id]).to be_nil
       end
 
       it "shows an error message" do
-        post session_path, params: { session: { email: user.email, password: "password123" }}
+        post session_path, params: { session: { email: user.email, password: "password123" } }
         expect(flash[:alert]).to include("verify your email")
       end
 
       it "resends verification email" do
-        expect { post session_path, params: { session: { email: user.email, password: "password123" }} }
+        expect { post session_path, params: { session: { email: user.email, password: "password123" } } }
           .to have_enqueued_mail(AuthenticationMailer, :verification)
       end
     end
@@ -60,17 +60,17 @@ RSpec.describe "Sessions" do
       let(:user) { create(:user, :verified) }
 
       it "does not log the user in" do
-        post session_path, params: { session: { email: user.email, password: "wrongpassword" }}
+        post session_path, params: { session: { email: user.email, password: "wrongpassword" } }
         expect(session[:user_id]).to be_nil
       end
 
       it "shows a generic error" do
-        post session_path, params: { session: { email: user.email, password: "wrongpassword" }}
+        post session_path, params: { session: { email: user.email, password: "wrongpassword" } }
         expect(flash[:alert]).to include("Invalid email or password")
       end
 
       it "logs a failed login attempt" do
-        expect { post session_path, params: { session: { email: user.email, password: "wrongpassword" }} }
+        expect { post session_path, params: { session: { email: user.email, password: "wrongpassword" } } }
           .to change(LoginAttempt, :count).by(1)
         expect(LoginAttempt.last).not_to be_success
       end
@@ -82,10 +82,10 @@ RSpec.describe "Sessions" do
 
       it "locks account after 5 failed attempts" do
         5.times do
-          post session_path, params: { session: { email: email, password: "wrongpassword" }}
+          post session_path, params: { session: { email: email, password: "wrongpassword" } }
         end
 
-        post session_path, params: { session: { email: email, password: "password123" }}
+        post session_path, params: { session: { email: email, password: "password123" } }
         expect(session[:user_id]).to be_nil
         expect(flash[:alert]).to include("locked")
       end
@@ -93,7 +93,7 @@ RSpec.describe "Sessions" do
 
     context "with non-existent email" do
       it "shows generic error" do
-        post session_path, params: { session: { email: "nonexistent@example.com", password: "password123" }}
+        post session_path, params: { session: { email: "nonexistent@example.com", password: "password123" } }
         expect(flash[:alert]).to include("Invalid email or password")
       end
     end
@@ -102,7 +102,7 @@ RSpec.describe "Sessions" do
   describe "DELETE /session" do
     it "logs the user out" do
       user = create(:user, :verified)
-      post session_path, params: { session: { email: user.email, password: "password123" }}
+      post session_path, params: { session: { email: user.email, password: "password123" } }
       delete session_path
       expect(response).to redirect_to(new_session_path)
       expect(session[:user_id]).to be_nil

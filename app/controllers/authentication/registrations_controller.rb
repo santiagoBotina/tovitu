@@ -1,6 +1,6 @@
 module Authentication
   class RegistrationsController < ApplicationController
-    before_action :require_no_authentication, only: [:new, :create]
+    before_action :require_no_authentication, only: [ :new, :create ]
 
     def new
       @user = User.new

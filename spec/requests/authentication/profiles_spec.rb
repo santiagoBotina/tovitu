@@ -9,7 +9,7 @@ RSpec.describe "Profiles" do
 
     it "renders the edit form when logged in" do
       user = create(:user, :verified)
-      post session_path, params: { session: { email: user.email, password: "password123" }}
+      post session_path, params: { session: { email: user.email, password: "password123" } }
       get edit_profile_path
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("Edit profile")
@@ -26,7 +26,7 @@ RSpec.describe "Profiles" do
       let(:user) { create(:user, :verified) }
 
       before do
-        post session_path, params: { session: { email: user.email, password: "password123" }}
+        post session_path, params: { session: { email: user.email, password: "password123" } }
       end
 
       it "updates the name" do

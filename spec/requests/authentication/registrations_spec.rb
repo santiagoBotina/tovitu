@@ -10,7 +10,7 @@ RSpec.describe "Registrations" do
 
     it "redirects to root if already logged in" do
       user = create(:user, :verified)
-      post session_path, params: { session: { email: user.email, password: "password123" }}
+      post session_path, params: { session: { email: user.email, password: "password123" } }
       get new_registration_path
       expect(response).to redirect_to(root_path)
     end
