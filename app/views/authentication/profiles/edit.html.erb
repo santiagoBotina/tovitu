@@ -1,4 +1,5 @@
-<div class="w-full max-w-md mx-auto">
+<div class="w-full max-w-md mx-auto space-y-6">
+  <%# --- Account Info Card --- %>
   <div class="bg-white rounded-xl shadow-md p-8">
     <h1 class="font-display text-4xl font-bold text-center text-neutral-900 mb-8"><%= t(".title") %></h1>
 
@@ -40,7 +41,33 @@
     <% end %>
   </div>
 
-  <div class="mt-8 text-center">
+  <%# --- Preferences Card (always visible when onboarding completed) --- %>
+  <% if current_user.onboarding_completed? %>
+    <div class="bg-white rounded-xl shadow-md p-8">
+      <h2 class="font-display text-2xl font-bold text-neutral-900 mb-2"><%= t(".edit_preferences_title") %></h2>
+      <p class="text-neutral-500 text-sm mb-4"><%= t(".edit_preferences_desc") %></p>
+      <% if current_user.adopter? %>
+        <%= link_to t(".edit_preferences"), profile_onboarding_path(from_profile: true),
+            class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-primary-700 bg-primary-50 hover:bg-primary-100 active:bg-primary-200 rounded-xl transition shadow-sm" %>
+      <% elsif current_user.shelter_user? %>
+        <%= link_to t(".edit_preferences"), profile_shelter_onboarding_path(from_profile: true),
+            class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-primary-700 bg-primary-50 hover:bg-primary-100 active:bg-primary-200 rounded-xl transition shadow-sm" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# --- Shelter Information Card (shelter users only) --- %>
+  <% if current_user.shelter_user? && current_user.shelter_id.present? %>
+    <div class="bg-white rounded-xl shadow-md p-8">
+      <h2 class="font-display text-2xl font-bold text-neutral-900 mb-2"><%= t(".shelter_info_title") %></h2>
+      <p class="text-neutral-500 text-sm mb-4"><%= t(".shelter_info_desc") %></p>
+      <%= link_to t(".edit_shelter_info"), edit_shelter_path(id: current_user.shelter_id),
+          class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-primary-700 bg-primary-50 hover:bg-primary-100 active:bg-primary-200 rounded-xl transition shadow-sm" %>
+    </div>
+  <% end %>
+
+  <%# --- Back link --- %>
+  <div class="text-center">
     <%= link_to t(".back"), root_path, class: "text-sm text-neutral-500 hover:text-neutral-700 transition" %>
   </div>
 </div>

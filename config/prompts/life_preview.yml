@@ -7,6 +7,9 @@ prompt: |
   Lifestyle: {{lifestyle_info}}
   Pet details: {{pet_info}}
 
+  ## Shelter Policy Context (for reference)
+  {{shelter_policy_context}}
+
   Provide a detailed analysis covering:
   1. Daily routine with this pet
   2. Space and environment considerations

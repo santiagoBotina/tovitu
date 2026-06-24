@@ -5,6 +5,11 @@ module Onboarding
       before_action :ensure_shelter_role
 
       def create
+        if current_user.onboarding_completed? && params[:from_profile] == "true"
+          redirect_to edit_profile_path, notice: t("flash.onboarding.preferences_updated")
+          return
+        end
+
         skip = params[:skip] == "true"
         zero_answers = current_user.shelter_profile.nil? ||
                        current_user.shelter_profile.onboarding_step.to_i == 0

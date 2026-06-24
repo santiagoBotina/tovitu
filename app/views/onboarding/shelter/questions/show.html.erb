@@ -12,11 +12,12 @@
     <%= f.hidden_field :skip, value: "false", data: { onboarding_target: "skipField" } %>
     <% if local_assigns[:from_profile] || @from_profile %>
       <%= f.hidden_field :redirect_to, value: edit_profile_path %>
+      <%= f.hidden_field :from_profile, value: "true" %>
     <% end %>
   <% end %>
 
   <div class="text-center mb-8">
-    <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background-color: #ECFDF5;">
+      <div class="w-14 h-14 rounded-2xl bg-secondary-50 flex items-center justify-center mx-auto mb-4">
       <svg class="w-7 h-7 text-secondary-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
       </svg>
@@ -31,7 +32,7 @@
         <span class="text-sm font-medium text-neutral-500" data-onboarding-target="progressText">
           <%= t("onboarding.shelter.progress", current: @current_step, total: @total_questions) %>
         </span>
-        <span class="text-xs text-neutral-400" data-onboarding-target="selectedCount"></span>
+        <span class="text-xs text-neutral-500" data-onboarding-target="selectedCount"></span>
       </div>
       <div class="w-full h-2 bg-neutral-100 rounded-full overflow-hidden">
         <div class="h-full bg-secondary-500 rounded-full transition-all duration-500 ease-out"
@@ -55,7 +56,7 @@
                 <%= t("onboarding.shelter.questions.q#{question[:number]}.text") %>
               </p>
               <% if question[:type] == "multi_select" %>
-                <p class="text-xs text-neutral-400"><%= t("onboarding.shelter.questions.q#{question[:number]}.placeholder") %></p>
+                <p class="text-xs text-neutral-500"><%= t("onboarding.shelter.questions.q#{question[:number]}.placeholder") %></p>
               <% end %>
             </div>
           </div>
@@ -110,8 +111,8 @@
                           placeholder="<%= t("onboarding.shelter.questions.q#{question[:number]}.placeholder") %>"
                           class="w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-neutral-800 placeholder-neutral-400 transition resize-none"><%= @profile.send(question[:key]) %></textarea>
                 <div class="flex items-center justify-between mt-2">
-                  <span class="text-xs text-neutral-400"><%= t("onboarding.shelter.questions.q#{question[:number]}.max_length") %></span>
-                  <span class="text-xs text-neutral-400 tabular-nums"
+                  <span class="text-xs text-neutral-500"><%= t("onboarding.shelter.questions.q#{question[:number]}.max_length") %></span>
+                  <span class="text-xs text-neutral-500 tabular-nums"
                         data-character-count-target="counter">
                     <span data-character-count-target="count"><%= @profile.send(question[:key])&.length || 0 %></span>/<%= question[:max_length] || 200 %>
                   </span>
@@ -135,12 +136,14 @@
       </button>
 
       <div class="flex items-center gap-3">
-        <button type="button"
-                data-action="click->onboarding#skipOnboarding"
-                data-onboarding-target="skipButton"
-                class="px-4 py-2.5 text-sm font-medium text-neutral-400 hover:text-neutral-600 transition rounded-xl">
-          <%= t("onboarding.shelter.skip") %>
-        </button>
+        <% unless @from_profile %>
+          <button type="button"
+                  data-action="click->onboarding#skipOnboarding"
+                  data-onboarding-target="skipButton"
+                  class="px-4 py-2.5 text-sm font-medium text-neutral-500 hover:text-neutral-700 transition rounded-xl">
+            <%= t("onboarding.shelter.skip") %>
+          </button>
+        <% end %>
 
         <button type="button"
                 data-action="click->onboarding#nextQuestion"

@@ -12,6 +12,7 @@
     <%= f.hidden_field :skip, value: "false", data: { onboarding_target: "skipField" } %>
     <% if local_assigns[:from_profile] || @from_profile %>
       <%= f.hidden_field :redirect_to, value: edit_profile_path %>
+      <%= f.hidden_field :from_profile, value: "true" %>
     <% end %>
   <% end %>
 
@@ -31,7 +32,7 @@
         <span class="text-sm font-medium text-neutral-500" data-onboarding-target="progressText">
           <%= t("onboarding.adopter.progress", current: @current_step, total: @total_questions) %>
         </span>
-        <span class="text-xs text-neutral-400" data-onboarding-target="selectedCount"></span>
+        <span class="text-xs text-neutral-500" data-onboarding-target="selectedCount"></span>
       </div>
       <div class="w-full h-2 bg-neutral-100 rounded-full overflow-hidden">
         <div class="h-full bg-primary-500 rounded-full transition-all duration-500 ease-out"
@@ -55,7 +56,7 @@
                 <%= t("onboarding.adopter.questions.q#{question[:number]}.text") %>
               </p>
               <% if question[:type] == "multi_select" %>
-                <p class="text-xs text-neutral-400"><%= t("onboarding.adopter.questions.q#{question[:number]}.placeholder") %></p>
+                <p class="text-xs text-neutral-500"><%= t("onboarding.adopter.questions.q#{question[:number]}.placeholder") %></p>
               <% end %>
             </div>
           </div>
@@ -110,8 +111,8 @@
                           placeholder="<%= t("onboarding.adopter.questions.q#{question[:number]}.placeholder") %>"
                           class="w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-neutral-800 placeholder-neutral-400 transition resize-none"><%= @profile.send(question[:key]) %></textarea>
                 <div class="flex items-center justify-between mt-2">
-                  <span class="text-xs text-neutral-400"><%= t("onboarding.adopter.questions.q#{question[:number]}.max_length") %></span>
-                  <span class="text-xs text-neutral-400 tabular-nums"
+                  <span class="text-xs text-neutral-500"><%= t("onboarding.adopter.questions.q#{question[:number]}.max_length") %></span>
+                  <span class="text-xs text-neutral-500 tabular-nums"
                         data-character-count-target="counter">
                     <span data-character-count-target="count"><%= @profile.send(question[:key])&.length || 0 %></span>/<%= question[:max_length] || 200 %>
                   </span>
@@ -135,12 +136,14 @@
       </button>
 
       <div class="flex items-center gap-3">
-        <button type="button"
-                data-action="click->onboarding#skipOnboarding"
-                data-onboarding-target="skipButton"
-                class="px-4 py-2.5 text-sm font-medium text-neutral-400 hover:text-neutral-600 transition rounded-xl">
-          <%= t("onboarding.adopter.skip") %>
-        </button>
+        <% unless @from_profile %>
+          <button type="button"
+                  data-action="click->onboarding#skipOnboarding"
+                  data-onboarding-target="skipButton"
+                  class="px-4 py-2.5 text-sm font-medium text-neutral-500 hover:text-neutral-700 transition rounded-xl">
+            <%= t("onboarding.adopter.skip") %>
+          </button>
+        <% end %>
 
         <button type="button"
                 data-action="click->onboarding#nextQuestion"

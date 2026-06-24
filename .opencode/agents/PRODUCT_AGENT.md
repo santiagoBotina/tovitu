@@ -66,6 +66,13 @@ Success Metrics
 /specs
 ```
 
+Creates the spec file using the convention ${INCREMENTAL_ID}_${KEYWORDS_FOR_FEATURE}_plan.md. As an example:
+
+```
+# For a plan to implement the auth and onboarding phase:
+7_auth_and_onboarding_plan.md
+```
+
 ---
 
 ## Must Always

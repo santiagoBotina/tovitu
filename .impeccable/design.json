@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-24T00:00:00Z",
+  "title": "Design System: Tovitu",
+  "extensions": {
+    "colorMeta": {
+      "primary-500": { "role": "primary", "displayName": "Playful Purple", "canonical": "oklch(0.53 0.31 280)", "tonalRamp": ["oklch(0.92 0.08 280)", "oklch(0.85 0.12 280)", "oklch(0.76 0.18 280)", "oklch(0.67 0.24 280)", "oklch(0.58 0.28 280)", "oklch(0.53 0.31 280)", "oklch(0.44 0.26 280)", "oklch(0.35 0.22 280)", "oklch(0.28 0.14 280)"] },
+      "secondary-500": { "role": "secondary", "displayName": "Tide Teal", "canonical": "oklch(0.72 0.21 175)", "tonalRamp": ["oklch(0.95 0.04 170)", "oklch(0.90 0.08 172)", "oklch(0.84 0.13 174)", "oklch(0.78 0.17 175)", "oklch(0.72 0.21 175)", "oklch(0.62 0.18 175)", "oklch(0.52 0.15 175)", "oklch(0.42 0.12 175)", "oklch(0.30 0.08 170)"] },
+      "neutral-50": { "role": "neutral", "displayName": "Cool Slate 50", "canonical": "oklch(0.98 0.003 260)", "tonalRamp": ["oklch(0.98 0.003 260)", "oklch(0.96 0.005 260)", "oklch(0.91 0.007 260)", "oklch(0.83 0.01 260)", "oklch(0.68 0.015 260)", "oklch(0.54 0.018 260)", "oklch(0.45 0.02 260)", "oklch(0.38 0.02 260)", "oklch(0.30 0.02 260)", "oklch(0.20 0.01 260)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headlines, page titles, the logo. Baloo 2 only." },
+      "headline": { "displayName": "Headline", "purpose": "Section headings, modal titles, dashboard welcome." },
+      "title": { "displayName": "Title", "purpose": "Card titles, feature names, list item headings." },
+      "body": { "displayName": "Body", "purpose": "Primary reading text. Capped at 70ch line length." },
+      "label": { "displayName": "Label", "purpose": "Form labels, nav items, button text, metadata." }
+    },
+    "shadows": [
+      { "name": "card-hover", "value": "0 4px 16px rgba(108, 48, 255, 0.08)", "purpose": "Subtle purple-tinted elevation for interactive cards on hover." },
+      { "name": "modal", "value": "0 8px 32px rgba(108, 48, 255, 0.10)", "purpose": "Deeper elevation for modals, dropdowns, and popovers." },
+      { "name": "toast", "value": "0 8px 32px rgba(0, 0, 0, 0.15)", "purpose": "Neutral shadow for flash notifications and toasts." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Default easing for state transitions (hover, focus, color shifts)." },
+      { "name": "duration-fast", "value": "150ms", "purpose": "Quick transitions: color, background, border changes." },
+      { "name": "duration-normal", "value": "200ms", "purpose": "Standard transitions: hover card lift, button states." },
+      { "name": "duration-slow", "value": "300ms", "purpose": "Layout transitions: sidebar expand/collapse, page transitions." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary call-to-action button. Full-bleed purple background, white text, generously rounded.",
+      "html": "<button class=\"ds-btn-primary\">Get Started</button>",
+      "css": ".ds-btn-primary { background: #6C30FF; color: #fff; font-family: Poppins, sans-serif; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.02em; padding: 12px 24px; border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 2px 8px rgba(108,48,255,0.06); transition: background 150ms, transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background: #5A25E8; } .ds-btn-primary:active { transform: scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid #6C30FF; outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary text button. Transparent background with purple text. Hover reveals a tinted background.",
+      "html": "<button class=\"ds-btn-ghost\">Sign in</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: #6C30FF; font-family: Poppins, sans-serif; font-size: 0.875rem; font-weight: 600; padding: 8px 16px; border: none; border-radius: 12px; cursor: pointer; transition: background 150ms, color 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-ghost:hover { background: #F3EEFF; } .ds-btn-ghost:focus-visible { outline: 2px solid #6C30FF; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Standard text input with white background, gray border, and purple focus ring.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Placeholder text\">",
+      "css": ".ds-input { width: 100%; padding: 12px 16px; font-family: Poppins, sans-serif; font-size: 1rem; color: #1F2937; background: #fff; border: 1px solid #D1D4DD; border-radius: 12px; box-shadow: 0 2px 8px rgba(108,48,255,0.06); outline: none; transition: border-color 150ms, box-shadow 150ms cubic-bezier(0.4,0,0.2,1); } .ds-input::placeholder { color: #A0A6B4; } .ds-input:focus { border-color: #6C30FF; box-shadow: 0 0 0 2px #6C30FF; } .ds-input:focus-visible { border-color: #6C30FF; box-shadow: 0 0 0 2px #6C30FF; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Standard content card. Flat white surface with subtle border and shadow.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Card Title</h3><p class=\"ds-card-body\">Body text goes here. Generous padding and clear hierarchy.</p></div>",
+      "css": ".ds-card { background: #fff; border: 1px solid #E7E8EF; border-radius: 16px; padding: 24px; box-shadow: 0 2px 8px rgba(108,48,255,0.06); transition: box-shadow 200ms, border-color 200ms cubic-bezier(0.4,0,0.2,1); } .ds-card:hover { box-shadow: 0 4px 16px rgba(108,48,255,0.08); } .ds-card-title { font-family: 'Baloo 2', system-ui, sans-serif; font-size: 1.25rem; font-weight: 700; color: #111827; margin: 0 0 8px 0; } .ds-card-body { font-family: Poppins, sans-serif; font-size: 1rem; line-height: 1.6; color: #374151; margin: 0; }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Toggleable filter pill. Default: outline style. Active: filled teal background.",
+      "html": "<button class=\"ds-chip ds-chip-active\">Dog</button><button class=\"ds-chip\">Cat</button>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; padding: 4px 12px; font-family: Poppins, sans-serif; font-size: 0.75rem; font-weight: 500; background: #fff; color: #6B7280; border: 1px solid #D1D4DD; border-radius: 9999px; cursor: pointer; transition: all 150ms cubic-bezier(0.4,0,0.2,1); } .ds-chip:hover { border-color: #34D399; color: #00C9A7; } .ds-chip-active { background: #00C9A7; color: #fff; border-color: #00C9A7; } .ds-chip-active:hover { background: #059669; border-color: #059669; }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Sidebar or top navigation link with icon and label. Active state uses tinted background.",
+      "html": "<a class=\"ds-nav-link ds-nav-link-active\" href=\"#\"><svg class=\"ds-nav-icon\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/></svg><span>Dashboard</span></a>",
+      "css": ".ds-nav-link { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; font-family: Poppins, sans-serif; font-size: 0.875rem; font-weight: 500; color: #6B7280; text-decoration: none; transition: all 150ms cubic-bezier(0.4,0,0.2,1); } .ds-nav-link:hover { background: #FAFAFC; color: #374151; } .ds-nav-link-active { background: #F3EEFF; color: #4A1CC3; font-weight: 600; } .ds-nav-icon { width: 20px; height: 20px; flex-shrink: 0; color: #A0A6B4; } .ds-nav-link-active .ds-nav-icon { color: #6C30FF; }"
+    },
+    {
+      "name": "Flash Toast",
+      "kind": "custom",
+      "refersTo": "toast",
+      "description": "Fixed-position notification toast. Solid semantic background, white text, close button.",
+      "html": "<div class=\"ds-toast ds-toast-success\" role=\"alert\"><svg class=\"ds-toast-icon\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"m9 12 2 2 4-4\"/></svg><span class=\"ds-toast-text\">Success message here</span><button class=\"ds-toast-close\" aria-label=\"Close\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg></button></div>",
+      "css": ".ds-toast { display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); max-width: 384px; } .ds-toast-success { background: #00C9A7; } .ds-toast-error { background: #EF4444; } .ds-toast-warning { background: #F59E0B; } .ds-toast-info { background: #6C30FF; } .ds-toast-icon { flex-shrink: 0; color: #fff; } .ds-toast-text { font-family: Poppins, sans-serif; font-size: 0.875rem; font-weight: 500; color: #fff; flex: 1; } .ds-toast-close { flex-shrink: 0; background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; padding: 2px; border-radius: 4px; } .ds-toast-close:hover { color: #fff; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Playground Standard",
+    "overview": "Tovitu's visual system is a refined take on the neubrutalism aesthetic — bold without being raw, playful without being childish. Every interface feels like a well-designed playground: clear boundaries, generous proportions, and a confident sense of joy. The purple primary anchors the system with warmth and energy; the teal secondary brings balance and calm. Together they create a palette that is unmistakably pet-adoption — lively, trustworthy, and approachable. The system explicitly rejects the corporate SaaS vocabulary: muted creams, glass cards, gradient text, and uniform card grids. Instead, surfaces are flat at rest with bold borders, oversized interactive targets, and color that carries the emotional weight. Rounded corners are generous but intentional — they soften the neubrutalist edges without blunting them.",
+    "keyCharacteristics": [
+      "Bold, saturated primary and secondary colors as the dominant visual drivers",
+      "Generous white space and oversized interactive targets for confidence and accessibility",
+      "Flat surfaces at rest; structure comes from borders and color blocks, not shadows",
+      "Rounded corners as the softening agent against the bold color and thick borders",
+      "Playful typography hierarchy: a round display face (Baloo 2) paired with a clean geometric body (Poppins)",
+      "Maximum one decorative element per screen; everything else earns its place through function"
+    ],
+    "rules": [
+      { "name": "The Playground Scale Rule", "body": "Color covers large, deliberate areas — never decorative strips or accent borders. If a card needs emphasis, use a full background tint (primary-50), not a 3px left border. If a button needs attention, make it full-bleed primary-500, not an outlined ghost with a purple stroke. Color is for surfaces, not for stripes.", "section": "colors" },
+      { "name": "The Bold-But-Not-Raw Rule", "body": "Neubrutalism in this system means saturated, confident color — not jarring, clashing, or deliberately ugly. Purple and teal coexist because they're complementary, not because they fight. Push saturation until the color has presence, then stop one step before it shouts.", "section": "colors" },
+      { "name": "The Single-Family Display Rule", "body": "Headlines use Baloo 2 exclusively, not Poppins bolded up. Poppins at large sizes loses its character; Baloo 2 at large sizes becomes energetic. Never use Poppins at display scale.", "section": "typography" },
+      { "name": "The Generous Leading Rule", "body": "Body text line-height is 1.6 minimum. In the playground, nothing is cramped. Every line of text has room to breathe.", "section": "typography" },
+      { "name": "The No-Blur-By-Default Rule", "body": "Backdrop blur is reserved for the navbar only. No glass cards, no frosted panels, no translucent overlays beyond the navigation. Clarity beats atmosphere.", "section": "elevation" }
+    ],
+    "dos": [
+      "Use full-surface color blocks for emphasis — tinted backgrounds (primary-50, secondary-50), not side-stripe borders.",
+      "Make interactive targets generous — minimum 44px tap target, preferably larger. The playground is for everyone.",
+      "Use the multi-color logo as a signature element. The per-letter coloring is the one decorative flourish the system allows.",
+      "Keep body text at neutral-700 or darker for legibility. Test every background/text pair for 4.5:1 WCAG AA contrast.",
+      "Use flat surfaces at rest. Elevation is a response to interaction, not a default state.",
+      "Balance playful with structured. Bold color needs generous white space around it to breathe.",
+      "Pair Baloo 2 (display) with Poppins (body). Never swap or substitute one for the other's role."
+    ],
+    "donts": [
+      "Use glassmorphism, backdrop blur (outside the navbar), or translucent card backgrounds. Clarity beats atmosphere.",
+      "Use side-stripe borders. Use full background tints instead.",
+      "Use gradient text or gradient backgrounds. Solid, flat color only.",
+      "Create identical card grids with icon + heading + body. Vary card content and layout.",
+      "Use the SaaS hero-metric template (big number, small label, supporting stats).",
+      "Use numbered section markers (01 / 02 / 03) as default scaffolding above every section.",
+      "Use tiny uppercase tracked eyebrows as section kickers.",
+      "Make the interface feel corporate, serious, or B2B.",
+      "Overflow headings on narrow viewports. Test at every breakpoint.",
+      "Override the spacing scale with arbitrary values."
+    ]
+  }
+}

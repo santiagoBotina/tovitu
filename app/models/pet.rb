@@ -51,6 +51,10 @@ class Pet < ApplicationRecord
     discarded_at.present?
   end
 
+  def undiscarded?
+    discarded_at.blank?
+  end
+
   def primary_photo
     return photos.first unless photo_order.present? && photo_order.any?
     ordered_photos.first

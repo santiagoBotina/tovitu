@@ -66,4 +66,66 @@ RSpec.describe "Profiles" do
       end
     end
   end
+
+  describe "Profile personalization sections" do
+    context "as an adopter with completed onboarding" do
+      let(:user) { create(:user, :verified, :onboarding_completed) }
+
+      before do
+        post session_path, params: { session: { email: user.email, password: "password123" } }
+        get edit_profile_path
+      end
+
+      it "shows the preferences section" do
+        expect(response.body).to include(I18n.t("authentication.profiles.edit.edit_preferences_title"))
+      end
+
+      it "shows the edit preferences link" do
+        expect(response.body).to include(profile_onboarding_path(from_profile: true))
+      end
+
+      it "does not show shelter information section" do
+        expect(response.body).not_to include(I18n.t("authentication.profiles.edit.shelter_info_title"))
+      end
+    end
+
+    context "as a shelter user with completed onboarding and a shelter" do
+      let(:shelter) { create(:shelter) }
+      let(:user) { create(:user, :verified, :onboarding_completed, :shelter_admin, shelter: shelter) }
+
+      before do
+        post session_path, params: { session: { email: user.email, password: "password123" } }
+        get edit_profile_path
+      end
+
+      it "shows the preferences section" do
+        expect(response.body).to include(I18n.t("authentication.profiles.edit.edit_preferences_title"))
+      end
+
+      it "shows the edit preferences link" do
+        expect(response.body).to include(profile_shelter_onboarding_path(from_profile: true))
+      end
+
+      it "shows the shelter information section" do
+        expect(response.body).to include(I18n.t("authentication.profiles.edit.shelter_info_title"))
+      end
+
+      it "shows the edit shelter info link" do
+        expect(response.body).to include(edit_shelter_path(id: user.shelter_id))
+      end
+    end
+
+    context "as a shelter user without a shelter" do
+      let(:user) { create(:user, :verified, :onboarding_completed, :shelter_admin, shelter: nil) }
+
+      before do
+        post session_path, params: { session: { email: user.email, password: "password123" } }
+        get edit_profile_path
+      end
+
+      it "does not show the shelter information section" do
+        expect(response.body).not_to include(I18n.t("authentication.profiles.edit.shelter_info_title"))
+      end
+    end
+  end
 end

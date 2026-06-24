@@ -44,6 +44,8 @@ module Onboarding
       end
 
       def require_onboarding_not_complete
+        return if params[:from_profile] == "true"
+
         if current_user.onboarding_completed?
           redirect_to after_sign_in_path, notice: t("flash.onboarding.already_complete")
         end

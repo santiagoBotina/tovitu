@@ -87,8 +87,8 @@
       <% if pet.description.present? %>
         <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
           <h2 class="font-display text-lg font-bold text-neutral-800 mb-3"><%= t(".description") %></h2>
-          <div class="prose prose-neutral max-w-none">
-            <p class="text-neutral-600 leading-relaxed whitespace-pre-wrap"><%= pet.description %></p>
+          <div class="text-neutral-700 leading-relaxed text-pretty max-w-none">
+            <p class="whitespace-pre-wrap"><%= pet.description %></p>
           </div>
         </div>
       <% end %>
@@ -119,8 +119,8 @@
       <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
         <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".compatibility") %></h2>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div class="flex items-center gap-3 p-3 rounded-xl <%= pet.good_with_children? ? 'bg-secondary-50' : 'bg-red-50' %>">
-            <div class="w-8 h-8 flex items-center justify-center rounded-full <%= pet.good_with_children? ? 'bg-secondary-100 text-secondary-600' : 'bg-red-100 text-red-500' %>">
+          <div class="flex items-center gap-3 p-3 rounded-xl <%= pet.good_with_children? ? 'bg-secondary-50' : 'bg-danger/10' %>">
+            <div class="w-8 h-8 flex items-center justify-center rounded-full <%= pet.good_with_children? ? 'bg-secondary-100 text-secondary-600' : 'bg-danger/20 text-danger' %>">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <% if pet.good_with_children? %>
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -129,10 +129,10 @@
                 <% end %>
               </svg>
             </div>
-            <span class="text-sm font-medium <%= pet.good_with_children? ? 'text-secondary-700' : 'text-red-700' %>"><%= t(".good_with_children") %></span>
+            <span class="text-sm font-medium <%= pet.good_with_children? ? 'text-secondary-700' : 'text-danger' %>"><%= t(".good_with_children") %></span>
           </div>
-          <div class="flex items-center gap-3 p-3 rounded-xl <%= pet.good_with_dogs? ? 'bg-secondary-50' : 'bg-red-50' %>">
-            <div class="w-8 h-8 flex items-center justify-center rounded-full <%= pet.good_with_dogs? ? 'bg-secondary-100 text-secondary-600' : 'bg-red-100 text-red-500' %>">
+          <div class="flex items-center gap-3 p-3 rounded-xl <%= pet.good_with_dogs? ? 'bg-secondary-50' : 'bg-danger/10' %>">
+            <div class="w-8 h-8 flex items-center justify-center rounded-full <%= pet.good_with_dogs? ? 'bg-secondary-100 text-secondary-600' : 'bg-danger/20 text-danger' %>">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <% if pet.good_with_dogs? %>
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -141,10 +141,10 @@
                 <% end %>
               </svg>
             </div>
-            <span class="text-sm font-medium <%= pet.good_with_dogs? ? 'text-secondary-700' : 'text-red-700' %>"><%= t(".good_with_dogs") %></span>
+            <span class="text-sm font-medium <%= pet.good_with_dogs? ? 'text-secondary-700' : 'text-danger' %>"><%= t(".good_with_dogs") %></span>
           </div>
-          <div class="flex items-center gap-3 p-3 rounded-xl <%= pet.good_with_cats? ? 'bg-secondary-50' : 'bg-red-50' %>">
-            <div class="w-8 h-8 flex items-center justify-center rounded-full <%= pet.good_with_cats? ? 'bg-secondary-100 text-secondary-600' : 'bg-red-100 text-red-500' %>">
+          <div class="flex items-center gap-3 p-3 rounded-xl <%= pet.good_with_cats? ? 'bg-secondary-50' : 'bg-danger/10' %>">
+            <div class="w-8 h-8 flex items-center justify-center rounded-full <%= pet.good_with_cats? ? 'bg-secondary-100 text-secondary-600' : 'bg-danger/20 text-danger' %>">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <% if pet.good_with_cats? %>
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -153,7 +153,7 @@
                 <% end %>
               </svg>
             </div>
-            <span class="text-sm font-medium <%= pet.good_with_cats? ? 'text-secondary-700' : 'text-red-700' %>"><%= t(".good_with_cats") %></span>
+            <span class="text-sm font-medium <%= pet.good_with_cats? ? 'text-secondary-700' : 'text-danger' %>"><%= t(".good_with_cats") %></span>
           </div>
         </div>
       </div>
@@ -174,7 +174,7 @@
             </span>
           <% end %>
           <% if pet.special_needs? %>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 text-sm font-medium rounded-full">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-warning/10 text-warning text-sm font-medium rounded-full">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               <%= t(".special_needs") %>
             </span>

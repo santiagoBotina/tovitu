@@ -43,6 +43,10 @@ html {
   --color-danger: #EF4444;
   --color-info: #3B82F6;
 
+  --color-accent-pink: #FF5DA8;
+  --color-accent-yellow: #FFC83D;
+  --color-accent-orange: #FF7A30;
+
   --font-sans: "Poppins", sans-serif;
   --font-display: "Baloo 2", system-ui, sans-serif;
 
@@ -55,7 +59,30 @@ html {
   --shadow-sm: 0 2px 8px rgba(108, 48, 255, 0.06);
   --shadow-md: 0 4px 16px rgba(108, 48, 255, 0.08);
   --shadow-lg: 0 8px 32px rgba(108, 48, 255, 0.1);
+  --shadow-button-primary: 0 4px 0 #3a1a8e;
+  --shadow-button-primary-hover: 0 2px 0 #3a1a8e;
+  --shadow-button-primary-active: 0 1px 0 #3a1a8e;
+  --shadow-button-secondary: 0 4px 0 #065f46;
+  --shadow-button-secondary-hover: 0 2px 0 #065f46;
+  --shadow-button-secondary-active: 0 1px 0 #065f46;
+  --shadow-hero-card: 8px 8px 0 #3a1a8e;
+
+  --z-dropdown: 30;
+  --z-sticky: 20;
+  --z-modal-backdrop: 90;
+  --z-modal: 100;
+  --z-toast: 40;
+  --z-tooltip: 110;
 }
+
+.full-width {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+
 
 @keyframes pet-pop {
   0% { transform: scale(0) translateY(0); opacity: 0; }
@@ -69,6 +96,6 @@ html {
   pointer-events: none;
   font-size: 24px;
   line-height: 1;
-  z-index: 9999;
+  z-index: var(--z-tooltip);
   animation: pet-pop 600ms ease-out forwards;
 }

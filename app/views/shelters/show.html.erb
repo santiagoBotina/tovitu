@@ -117,6 +117,8 @@
     </div>
   <% end %>
 
+  <%= render "faq", shelter: @shelter if @shelter.ai_documents.ready.any? %>
+
   <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6">
     <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".available_pets") %></h2>
 
@@ -153,7 +155,7 @@
           <svg class="w-7 h-7 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
         <p class="text-neutral-500"><%= t(".pets_coming_soon") %></p>
-        <p class="text-neutral-400 text-sm mt-1"><%= t(".no_pets_yet") %></p>
+        <p class="text-neutral-500 text-sm mt-1"><%= t(".no_pets_yet") %></p>
       </div>
     <% end %>
   </div>

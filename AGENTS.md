@@ -42,3 +42,7 @@ Business logic is organized by domain under `lib/`:
 | Product | `/specs` |
 | Spec | technical design from `/specs/*` |
 | QA | `spec/` |
+
+## Design Context
+
+See [PRODUCT.md](/PRODUCT.md) for strategic context (register, users, brand personality, design principles) and [DESIGN.md](/DESIGN.md) for the visual system (colors, typography, elevation, components, do's and don'ts). Creative North Star: **The Playground Standard** — a refined neubrutalism direction: bold, playful, friendly, with generous targets, flat surfaces, and saturated color blocks. WCAG AA target. All visual decisions must honor DESIGN.md before introducing new tokens.

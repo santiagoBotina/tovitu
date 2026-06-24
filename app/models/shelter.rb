@@ -3,6 +3,7 @@ class Shelter < ApplicationRecord
   has_many :invitations, dependent: :destroy
   has_many :pets, dependent: :restrict_with_error
   has_many :adoption_applications, dependent: :restrict_with_error
+  has_many :ai_documents, class_name: "Ai::Document", dependent: :destroy
 
   accepts_nested_attributes_for :users
 

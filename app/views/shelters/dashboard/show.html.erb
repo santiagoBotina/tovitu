@@ -33,7 +33,7 @@
             <span class="text-sm text-neutral-500 line-through"><%= step[:label] %></span>
           <% else %>
             <div class="w-5 h-5 border-2 border-neutral-300 rounded-full flex items-center justify-center">
-              <span class="text-xs text-neutral-400"><%= shelter.onboarding_steps.index(step) + 1 %></span>
+              <span class="text-xs text-neutral-500"><%= shelter.onboarding_steps.index(step) + 1 %></span>
             </div>
             <%= link_to step[:path], class: "text-sm text-primary-500 hover:text-primary-600 font-medium" do %>
               <%= step[:label] %> &rarr;

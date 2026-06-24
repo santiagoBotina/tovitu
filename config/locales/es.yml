@@ -16,19 +16,51 @@ es:
       adoptions: "Adopciones"
       settings: "Ajustes"
       complete_profile: "Completa tu perfil"
+      my_pets: "Mis Mascotas"
+      staff: "Personal"
+      adoption_policies: "Políticas de Adopción"
+      no_shelter: "Crea o únete a un refugio para comenzar"
+      create_shelter: "Configurar Refugio"
       sign_out: "Cerrar sesión"
       sign_out_confirm: "¿Estás seguro de que quieres cerrar sesión?"
+    confirm_modal:
+      confirm: "Cerrar sesión"
+      cancel: "Cancelar"
     navbar:
       sign_in: "Iniciar sesión"
       create_account: "Crear cuenta"
   landing:
     index:
-      title: "Encuentra tu Compañero Perfecto"
-      subtitle: "Tovitu ayuda a las mascotas a encontrar hogares amorosos mediante una correspondencia reflexiva"
-      adopter_title: "Iniciar Viaje de Adopción"
-      adopter_desc: "Explora mascotas y encuentra tu nuevo mejor amigo"
-      shelter_title: "Represento a un refugio"
-      shelter_desc: "Gestiona adopciones y conéctate con adoptantes"
+      title: "Encuentra tu pareja perfecta. Literalmente."
+      subtitle: "Tovitu usa IA para conectar tu personalidad, estilo de vida y hogar con la mascota ideal — para que tu adopción sea para siempre."
+      adopter_cta: "Explorar mascotas adoptables"
+      shelter_cta: "Represento un refugio"
+      hero_pet_alt: "Un perro feliz mirando hacia arriba con una expresión cálida, listo para ser adoptado"
+      how_it_works:
+        title: "Cómo funciona"
+        subtitle: "Tres pasos simples para encontrar a tu compañero perfecto."
+        step1_title: "Descubre"
+        step1_desc: "Explora mascotas de refugios cercanos. Filtra por especie, edad, tamaño y personalidad."
+        step2_title: "Match con IA"
+        step2_desc: "Nuestra IA analiza tu estilo de vida y preferencias para recomendar las mascotas más compatibles."
+        step3_title: "Adopta"
+        step3_desc: "Conoce a tu compañero, completa el proceso de adopción y dale la bienvenida a un nuevo miembro de la familia."
+      for_shelters:
+        title: "Diseñado para refugios"
+        subtitle: "Herramientas poderosas para gestionar adopciones, comunicarte con solicitantes y encontrar el hogar perfecto."
+        feature1_title: "Match con IA"
+        feature1_desc: "Obtén mejores recomendaciones para cada adoptante basadas en puntajes de compatibilidad."
+        feature2_title: "Gestión de Solicitudes"
+        feature2_desc: "Revisa, aprueba y da seguimiento a las solicitudes de adopción desde un solo panel."
+        feature3_title: "Colaboración en Equipo"
+        feature3_desc: "Invita a tu personal, asigna tareas y coordina decisiones de adopción en equipo."
+        feature4_title: "Analíticas de Éxito"
+        feature4_desc: "Monitorea resultados de adopción, identifica tendencias y mejora tus tasas de colocación."
+      cta:
+        title: "¿Listo para encontrar a tu match?"
+        subtitle: "Ya sea que quieras adoptar o administres un refugio, Tovitu ayuda a que cada adopción sea un éxito."
+        adopter_cta: "Quiero adoptar"
+        shelter_cta: "Represento un refugio"
   dashboard:
     index:
       welcome: "Bienvenido, %{name}"
@@ -165,6 +197,8 @@ es:
       new:
         title: "Bienvenido de nuevo"
         subtitle: "Inicia sesión en tu cuenta de Tovitu"
+        adopter_title: "Quiero adoptar"
+        shelter_title: "Represento un refugio"
         email_label: "Correo electrónico"
         password_label: "Contraseña"
         forgot_password: "¿Olvidaste tu contraseña?"
@@ -237,6 +271,12 @@ es:
         back: "Volver"
         complete_onboarding: "Completa tu perfil"
         complete_onboarding_desc: "Cuéntanos más sobre ti para obtener mejores coincidencias"
+        edit_preferences_title: "Preferencias"
+        edit_preferences_desc: "Actualiza tu información de estilo de vida y preferencias."
+        edit_preferences: "Editar preferencias"
+        shelter_info_title: "Información del Refugio"
+        shelter_info_desc: "Administra los detalles básicos de tu refugio."
+        edit_shelter_info: "Editar Refugio"
     verifications:
       expired:
         title: "Enlace expirado"
@@ -317,6 +357,7 @@ es:
     onboarding:
       incomplete: "Por favor completa tu perfil antes de continuar."
       already_complete: "¡Tu perfil ya está completo!"
+      preferences_updated: "Tus preferencias han sido actualizadas."
       adopter:
         complete: "¡Perfil completo! Comienza a explorar mascotas."
         skipped: "Puedes completar tu perfil en cualquier momento desde la configuración de tu perfil."
@@ -365,6 +406,63 @@ es:
       invalid_question: "Número de pregunta inválido"
       no_profile: "Perfil no encontrado"
       incomplete: "Por favor responde todas las preguntas antes de completar. Faltan: %{questions}"
+  ai:
+    status:
+      processing: "Procesando"
+      ready: "Listo"
+      failed: "Fallido"
+    rag:
+      disclaimer: "Esta respuesta fue generada por IA basada en la información disponible."
+      question_required: "Se requiere una pregunta"
+      no_events: "Sin eventos aún"
+      no_notes: "Sin notas aún"
+  shelters:
+    faq:
+      ask_about_shelter: "Preguntar sobre este Refugio"
+      question_placeholder: "¿Cuál es tu proceso de adopción?"
+      ask: "Preguntar"
+      generating: "Generando respuesta..."
+      error: "Lo sentimos, algo salió mal."
+      retry: "Intentar de nuevo"
+      no_documents: "Este refugio aún no ha subido documentos de políticas."
+  shelter:
+    ai:
+      documents:
+        index:
+          title: "Documentos de Políticas"
+          upload: "Subir Documento"
+          empty: "Aún no hay documentos de políticas"
+          confirm_delete: "¿Estás seguro de que deseas eliminar este documento?"
+        new:
+          title: "Subir Documento de Políticas"
+          back: "Volver a documentos"
+          title_label: "Título del Documento"
+          source_type: "Tipo de Origen"
+          manual: "Escribir texto"
+          pdf: "Subir PDF"
+          content_label: "Contenido de Políticas"
+          content_placeholder: "Pega o escribe el texto de las políticas de tu refugio aquí..."
+          content_hint: "Este texto se dividirá en fragmentos y se usará para responder preguntas de los visitantes sobre tu refugio."
+          file_label: "Archivo PDF"
+          submit: "Subir Documento"
+  adoption_applications:
+    status:
+      show:
+        title: "Estado de la Solicitud"
+        application_status: "Estado de la Solicitud"
+        pet_info: "Información de la Mascota"
+      qa:
+        ask_about_application: "Preguntar sobre tu Solicitud"
+        question_placeholder: "¿Cuál es el estado de mi solicitud?"
+        ask: "Preguntar"
+        generating: "Generando respuesta..."
+        error: "Lo sentimos, algo salió mal."
+        retry: "Intentar de nuevo"
+  flash:
+    ai:
+      document:
+        uploaded: "Documento subido exitosamente. El procesamiento comenzará en breve."
+        destroyed: "Documento eliminado exitosamente."
   activerecord:
     errors:
       models:

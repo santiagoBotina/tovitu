@@ -22,7 +22,9 @@
   </head>
 
   <body class="font-sans bg-neutral-50 text-neutral-800 antialiased min-h-screen"
-        data-controller="sidebar">
+        data-controller="sidebar confirm-modal"
+        data-confirm-modal-confirm-text-value="<%= t('shared.confirm_modal.confirm') %>"
+        data-confirm-modal-cancel-text-value="<%= t('shared.confirm_modal.cancel') %>">
 
     <a href="#main-content"
        class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-white focus:text-primary-600 focus:rounded-xl focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
@@ -53,7 +55,7 @@
         <%= yield %>
       </main>
 
-      <footer class="text-center text-xs text-neutral-400 py-8 border-t border-neutral-100">
+      <footer class="text-center text-xs text-neutral-500 py-8 border-t border-neutral-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 mb-3">
             <%= link_to t("layouts.privacy"), "#", class: "hover:text-neutral-600 transition" %>

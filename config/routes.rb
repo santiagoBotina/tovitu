@@ -47,8 +47,14 @@ Rails.application.routes.draw do
       resource :policies, only: [ :edit, :update ], controller: "shelters/policies"
     end
 
-    resources :adoption_applications, only: [ :new, :create ]
+    resources :adoption_applications, only: [ :new, :create ] do
+      resources :rag_queries, only: [:create], controller: "ai/rag_queries"
+    end
     resource :application_status, only: [ :show ], controller: "adoption_applications/status"
+
+    resources :shelters, only: [] do
+      resources :rag_queries, only: [:create], controller: "ai/rag_queries"
+    end
 
     namespace :shelter do
       resources :pets do
@@ -70,6 +76,10 @@ Rails.application.routes.draw do
           patch :finalize
           patch :cancel
         end
+      end
+
+      namespace :ai do
+        resources :documents, only: [:index, :new, :create, :destroy]
       end
     end
   end
