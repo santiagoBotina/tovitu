@@ -37,7 +37,7 @@
       <div class="flex flex-wrap gap-2">
         <% Pet::STATUSES.each do |status| %>
           <% next if status == pet.status || status == "removed" %>
-          <%= button_to change_status_shelter_pet_path(id: pet.id), method: :patch, params: { status: status }, class: "px-4 py-2 rounded-lg text-sm font-medium border transition-colors #{status == 'available' ? 'border-green-300 text-green-700 hover:bg-green-50' : status == 'on_hold' ? 'border-yellow-300 text-yellow-700 hover:bg-yellow-50' : status == 'adopted' ? 'border-blue-300 text-blue-700 hover:bg-blue-50' : 'border-red-300 text-red-700 hover:bg-red-50'}" do %>
+          <%= button_to change_status_shelter_pet_path(id: pet.id), method: :patch, params: { status: status }, class: "px-4 py-2 rounded-lg text-sm font-medium border transition-colors #{status == 'available' ? 'border-secondary-300 text-secondary-700 hover:bg-secondary-50' : status == 'on_hold' ? 'border-yellow-300 text-yellow-700 hover:bg-yellow-50' : status == 'adopted' ? 'border-blue-300 text-blue-700 hover:bg-blue-50' : 'border-red-300 text-red-700 hover:bg-red-50'}" do %>
             <%= t("pets.status.#{status}") %>
           <% end %>
         <% end %>
@@ -50,7 +50,7 @@
       <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".photos") %></h2>
       <%= form_tag shelter_pet_photos_path(pet), method: :post, multipart: true, class: "inline-flex" do %>
         <%= file_field_tag :file, accept: "image/jpeg,image/png,image/webp", class: "hidden", id: "photo-upload", onchange: "this.form.submit()" %>
-        <%= label_tag "photo-upload", class: "inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer shadow-sm" do %>
+        <%= label_tag "photo-upload", class: "inline-flex items-center gap-2 bg-secondary-500 hover:bg-secondary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer shadow-sm" do %>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
           </svg>
@@ -72,7 +72,7 @@
               <% end %>
             </div>
             <% if index == 0 %>
-              <span class="absolute top-2 left-2 bg-green-600 text-white text-xs font-medium px-2 py-0.5 rounded-full"><%= t(".primary_photo") %></span>
+              <span class="absolute top-2 left-2 bg-secondary-500 text-white text-xs font-medium px-2 py-0.5 rounded-full"><%= t(".primary_photo") %></span>
             <% end %>
           </div>
         <% end %>
@@ -120,7 +120,7 @@
       <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".medical") %></h2>
       <div class="space-y-3">
         <div class="flex items-center gap-2">
-          <div class="w-5 h-5 flex items-center justify-center rounded-full <%= pet.spayed_neutered? ? 'bg-green-100 text-green-600' : 'bg-neutral-100 text-neutral-400' %>">
+          <div class="w-5 h-5 flex items-center justify-center rounded-full <%= pet.spayed_neutered? ? 'bg-secondary-100 text-secondary-600' : 'bg-neutral-100 text-neutral-400' %>">
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <% if pet.spayed_neutered? %>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
@@ -130,7 +130,7 @@
           <span class="text-sm text-neutral-600"><%= t("pets.attributes.spayed_neutered") %></span>
         </div>
         <div class="flex items-center gap-2">
-          <div class="w-5 h-5 flex items-center justify-center rounded-full <%= pet.vaccinated? ? 'bg-green-100 text-green-600' : 'bg-neutral-100 text-neutral-400' %>">
+          <div class="w-5 h-5 flex items-center justify-center rounded-full <%= pet.vaccinated? ? 'bg-secondary-100 text-secondary-600' : 'bg-neutral-100 text-neutral-400' %>">
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <% if pet.vaccinated? %>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
@@ -140,7 +140,7 @@
           <span class="text-sm text-neutral-600"><%= t("pets.attributes.vaccinated") %></span>
         </div>
         <div class="flex items-center gap-2">
-          <div class="w-5 h-5 flex items-center justify-center rounded-full <%= pet.special_needs? ? 'bg-green-100 text-green-600' : 'bg-neutral-100 text-neutral-400' %>">
+          <div class="w-5 h-5 flex items-center justify-center rounded-full <%= pet.special_needs? ? 'bg-secondary-100 text-secondary-600' : 'bg-neutral-100 text-neutral-400' %>">
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <% if pet.special_needs? %>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
@@ -172,7 +172,7 @@
       <h2 class="font-display text-lg font-bold text-neutral-800 mb-3"><%= t(".personality") %></h2>
       <div class="flex flex-wrap gap-2">
         <% pet.personality_traits_list.each do |trait| %>
-          <span class="px-3 py-1.5 bg-pink-50 text-pink-600 text-sm font-medium rounded-full capitalize"><%= trait %></span>
+          <span class="px-3 py-1.5 bg-secondary-50 text-secondary-600 text-sm font-medium rounded-full capitalize"><%= trait %></span>
         <% end %>
       </div>
     </div>

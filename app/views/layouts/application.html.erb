@@ -24,6 +24,13 @@
   <body class="font-sans bg-neutral-50 text-neutral-800 antialiased min-h-screen"
         data-controller="sidebar">
 
+    <a href="#main-content"
+       class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-white focus:text-primary-600 focus:rounded-xl focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+      <%= t("layouts.skip_to_content") %>
+    </a>
+
+    <div class="fixed inset-0 pointer-events-none z-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBudW1PY3RhdmVzPSIzIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjUwMCIgaGVpZ2h0PSI1MDAiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wNCIvPjwvc3ZnPg==')] opacity-50"></div>
+
     <%= render "shared/flash" %>
 
     <% if signed_in? && !local_assigns[:hide_nav] && !@hide_nav %>
@@ -35,24 +42,31 @@
     <% end %>
 
     <div data-sidebar-target="mainWrapper"
-         class="min-h-screen flex flex-col transition-all duration-300 ease-in-out
+         class="min-h-screen flex flex-col transition-all duration-300 ease-in-out relative z-10
                 <%= (signed_in? && !local_assigns[:hide_nav] && !@hide_nav) ? 'md:ml-16' : '' %>">
 
       <% unless local_assigns[:hide_nav] || @hide_nav %>
         <%= render "shared/navbar" %>
       <% end %>
 
-      <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main id="main-content" class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <%= yield %>
       </main>
 
-      <footer class="text-center text-xs text-neutral-400 py-6 border-t border-neutral-100">
-        &copy; <%= Time.current.year %> Tovitu
+      <footer class="text-center text-xs text-neutral-400 py-8 border-t border-neutral-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 mb-3">
+            <%= link_to t("layouts.privacy"), "#", class: "hover:text-neutral-600 transition" %>
+            <%= link_to t("layouts.terms"), "#", class: "hover:text-neutral-600 transition" %>
+            <span class="hidden sm:inline text-neutral-200">·</span>
+            <span>&copy; <%= Time.current.year %> Tovitu</span>
+          </div>
+        </div>
       </footer>
     </div>
 
     <div class="fixed bottom-4 right-4 z-50">
-      <div class="bg-white rounded-full shadow-md border border-neutral-200 px-3 py-1.5">
+      <div class="bg-white/90 backdrop-blur-sm rounded-full shadow-md border border-neutral-200 px-3 py-1.5">
         <% if I18n.locale == :en %>
           <%= link_to "Español", url_for(locale: :es), class: "text-sm font-medium text-primary-500 hover:text-primary-600 transition" %>
         <% else %>

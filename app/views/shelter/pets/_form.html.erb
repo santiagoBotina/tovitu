@@ -15,31 +15,31 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <%= form.label :name, class: "block text-sm font-medium text-neutral-700 mb-1" %>
-        <%= form.text_field :name, placeholder: t("pets.placeholders.name"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm" %>
+        <%= form.text_field :name, placeholder: t("pets.placeholders.name"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 text-sm" %>
       </div>
       <div>
         <%= form.label :species, class: "block text-sm font-medium text-neutral-700 mb-1" %>
-        <%= form.select :species, options_for_select(pet_species_options, pet.species), { include_blank: t(".select") }, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm bg-white" %>
+        <%= form.select :species, options_for_select(pet_species_options, pet.species), { include_blank: t(".select") }, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 text-sm bg-white" %>
       </div>
       <div>
         <%= form.label :breed, class: "block text-sm font-medium text-neutral-700 mb-1" %>
-        <%= form.text_field :breed, placeholder: t("pets.placeholders.breed"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm" %>
+        <%= form.text_field :breed, placeholder: t("pets.placeholders.breed"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 text-sm" %>
       </div>
       <div>
         <%= form.label :age_category, class: "block text-sm font-medium text-neutral-700 mb-1" %>
-        <%= form.select :age_category, options_for_select(pet_age_category_options, pet.age_category), { include_blank: t(".select") }, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm bg-white" %>
+        <%= form.select :age_category, options_for_select(pet_age_category_options, pet.age_category), { include_blank: t(".select") }, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 text-sm bg-white" %>
       </div>
       <div>
         <%= form.label :birth_date, class: "block text-sm font-medium text-neutral-700 mb-1" %>
-        <%= form.date_field :birth_date, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm" %>
+        <%= form.date_field :birth_date, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 text-sm" %>
       </div>
       <div>
         <%= form.label :sex, class: "block text-sm font-medium text-neutral-700 mb-1" %>
-        <%= form.select :sex, options_for_select(pet_sex_options, pet.sex), { include_blank: t(".select") }, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm bg-white" %>
+        <%= form.select :sex, options_for_select(pet_sex_options, pet.sex), { include_blank: t(".select") }, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 text-sm bg-white" %>
       </div>
       <div>
         <%= form.label :size, class: "block text-sm font-medium text-neutral-700 mb-1" %>
-        <%= form.select :size, options_for_select(pet_size_options, pet.size), { include_blank: t(".select") }, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm bg-white" %>
+        <%= form.select :size, options_for_select(pet_size_options, pet.size), { include_blank: t(".select") }, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 text-sm bg-white" %>
       </div>
     </div>
   </div>
@@ -49,11 +49,11 @@
     <div class="space-y-4">
       <div>
         <%= form.label :description, class: "block text-sm font-medium text-neutral-700 mb-1" %>
-        <%= form.text_area :description, rows: 5, placeholder: t("pets.placeholders.description"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm" %>
+        <%= form.text_area :description, rows: 5, placeholder: t("pets.placeholders.description"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 text-sm" %>
       </div>
       <div>
         <%= form.label :personality_traits, class: "block text-sm font-medium text-neutral-700 mb-1" %>
-        <%= form.text_field :personality_traits, placeholder: t(".personality_placeholder"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm" %>
+        <%= form.text_field :personality_traits, placeholder: t(".personality_placeholder"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 text-sm" %>
         <p class="text-xs text-neutral-400 mt-1"><%= t(".personality_hint") %></p>
       </div>
     </div>
@@ -64,19 +64,19 @@
     <div class="space-y-4">
       <div>
         <%= form.label :medical_notes, class: "block text-sm font-medium text-neutral-700 mb-1" %>
-        <%= form.text_area :medical_notes, rows: 3, placeholder: t("pets.placeholders.medical_notes"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm" %>
+        <%= form.text_area :medical_notes, rows: 3, placeholder: t("pets.placeholders.medical_notes"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 text-sm" %>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-green-50 transition-colors">
-          <%= form.check_box :spayed_neutered, class: "w-4 h-4 rounded border-neutral-300 text-green-600 focus:ring-green-500" %>
+        <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-secondary-50 transition-colors">
+          <%= form.check_box :spayed_neutered, class: "w-4 h-4 rounded border-neutral-300 text-secondary-500 focus:ring-secondary-500" %>
           <span class="text-sm font-medium text-neutral-700"><%= t("pets.attributes.spayed_neutered") %></span>
         </label>
-        <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-green-50 transition-colors">
-          <%= form.check_box :vaccinated, class: "w-4 h-4 rounded border-neutral-300 text-green-600 focus:ring-green-500" %>
+        <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-secondary-50 transition-colors">
+          <%= form.check_box :vaccinated, class: "w-4 h-4 rounded border-neutral-300 text-secondary-500 focus:ring-secondary-500" %>
           <span class="text-sm font-medium text-neutral-700"><%= t("pets.attributes.vaccinated") %></span>
         </label>
-        <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-green-50 transition-colors">
-          <%= form.check_box :special_needs, class: "w-4 h-4 rounded border-neutral-300 text-green-600 focus:ring-green-500" %>
+        <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-secondary-50 transition-colors">
+          <%= form.check_box :special_needs, class: "w-4 h-4 rounded border-neutral-300 text-secondary-500 focus:ring-secondary-500" %>
           <span class="text-sm font-medium text-neutral-700"><%= t("pets.attributes.special_needs") %></span>
         </label>
       </div>
@@ -86,16 +86,16 @@
   <div class="border-t border-neutral-200 pt-6">
     <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".compatibility") %></h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-green-50 transition-colors">
-        <%= form.check_box :good_with_children, class: "w-4 h-4 rounded border-neutral-300 text-green-600 focus:ring-green-500" %>
+      <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-secondary-50 transition-colors">
+        <%= form.check_box :good_with_children, class: "w-4 h-4 rounded border-neutral-300 text-secondary-500 focus:ring-secondary-500" %>
         <span class="text-sm font-medium text-neutral-700"><%= t("pets.attributes.good_with_children") %></span>
       </label>
-      <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-green-50 transition-colors">
-        <%= form.check_box :good_with_dogs, class: "w-4 h-4 rounded border-neutral-300 text-green-600 focus:ring-green-500" %>
+      <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-secondary-50 transition-colors">
+        <%= form.check_box :good_with_dogs, class: "w-4 h-4 rounded border-neutral-300 text-secondary-500 focus:ring-secondary-500" %>
         <span class="text-sm font-medium text-neutral-700"><%= t("pets.attributes.good_with_dogs") %></span>
       </label>
-      <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-green-50 transition-colors">
-        <%= form.check_box :good_with_cats, class: "w-4 h-4 rounded border-neutral-300 text-green-600 focus:ring-green-500" %>
+      <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-secondary-50 transition-colors">
+        <%= form.check_box :good_with_cats, class: "w-4 h-4 rounded border-neutral-300 text-secondary-500 focus:ring-secondary-500" %>
         <span class="text-sm font-medium text-neutral-700"><%= t("pets.attributes.good_with_cats") %></span>
       </label>
     </div>
@@ -105,7 +105,7 @@
     <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".requirements") %></h2>
     <div>
       <%= form.label :requirements, class: "block text-sm font-medium text-neutral-700 mb-1" %>
-      <%= form.text_area :requirements, rows: 4, placeholder: t("pets.placeholders.requirements"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm" %>
+      <%= form.text_area :requirements, rows: 4, placeholder: t("pets.placeholders.requirements"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 text-sm" %>
       <p class="text-xs text-neutral-400 mt-1"><%= t(".requirements_hint") %></p>
     </div>
   </div>
@@ -114,13 +114,13 @@
     <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".photos") %></h2>
     <div>
       <%= form.label :photos, class: "block text-sm font-medium text-neutral-700 mb-1" %>
-      <%= form.file_field :photos, multiple: true, accept: "image/jpeg,image/png,image/webp", class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-600 hover:file:bg-green-100" %>
+      <%= form.file_field :photos, multiple: true, accept: "image/jpeg,image/png,image/webp", class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-secondary-50 file:text-secondary-600 hover:file:bg-secondary-100" %>
       <p class="text-xs text-neutral-400 mt-1"><%= t(".photos_hint") %></p>
     </div>
   </div>
 
   <div class="border-t border-neutral-200 pt-6 flex items-center gap-4">
-    <%= form.submit t(".submit"), class: "px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-xl transition-colors duration-200 shadow-sm cursor-pointer" %>
+    <%= form.submit t(".submit"), class: "px-8 py-3 bg-secondary-500 hover:bg-secondary-600 active:bg-secondary-700 text-white font-medium rounded-xl transition-colors duration-200 shadow-sm cursor-pointer" %>
     <%= link_to t(".cancel"), shelter_pets_path, class: "text-sm text-neutral-500 hover:text-neutral-700" %>
   </div>
 <% end %>

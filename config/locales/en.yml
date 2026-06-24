@@ -2,6 +2,9 @@ en:
   layouts:
     application:
       title: "Tovitu"
+    skip_to_content: "Skip to main content"
+    privacy: "Privacy Policy"
+    terms: "Terms of Service"
   shared:
     error_messages:
       one: "%{count} error prohibited this from being saved:"

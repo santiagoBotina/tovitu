@@ -8,10 +8,10 @@
         <p class="text-xs text-primary-500 mb-3"><%= t(".complete_onboarding_desc") %></p>
         <% if current_user.adopter? %>
           <%= link_to t(".complete_onboarding"), profile_onboarding_path,
-              class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary-500 hover:bg-primary-600 rounded-xl transition shadow-sm" %>
+              class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary-500 hover:bg-primary-600 active:bg-primary-700 rounded-xl transition shadow-sm" %>
         <% elsif current_user.shelter_user? %>
           <%= link_to t(".complete_onboarding"), profile_shelter_onboarding_path,
-              class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary-500 hover:bg-primary-600 rounded-xl transition shadow-sm" %>
+              class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary-500 hover:bg-primary-600 active:bg-primary-700 rounded-xl transition shadow-sm" %>
         <% end %>
       </div>
     <% end %>

@@ -2,6 +2,9 @@ es:
   layouts:
     application:
       title: "Tovitu"
+    skip_to_content: "Saltar al contenido principal"
+    privacy: "Política de Privacidad"
+    terms: "Términos del Servicio"
   shared:
     error_messages:
       one: "%{count} error prohibió que esto se guardara:"
