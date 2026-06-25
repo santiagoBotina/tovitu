@@ -10,6 +10,6 @@ class CreateAiDocuments < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :ai_documents, [:shelter_id, :status]
+    add_index :ai_documents, [ :shelter_id, :status ]
   end
 end

@@ -532,7 +532,12 @@ CREATE TABLE public.pets (
     discarded_at timestamp(6) without time zone,
     photo_order jsonb DEFAULT '[]'::jsonb,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    life_preview_data jsonb,
+    life_preview_generated_at timestamp(6) without time zone,
+    life_preview_version integer DEFAULT 0,
+    personality_spec text,
+    adopter_tips text
 );
 
 
@@ -553,6 +558,38 @@ CREATE SEQUENCE public.pets_id_seq
 --
 
 ALTER SEQUENCE public.pets_id_seq OWNED BY public.pets.id;
+
+
+--
+-- Name: saved_pets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.saved_pets (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    pet_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: saved_pets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.saved_pets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: saved_pets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.saved_pets_id_seq OWNED BY public.saved_pets.id;
 
 
 --
@@ -625,7 +662,8 @@ CREATE TABLE public.shelters (
     adoption_policies jsonb DEFAULT '{}'::jsonb NOT NULL,
     onboarding_completed boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    ai_features_enabled boolean DEFAULT true
 );
 
 
@@ -665,7 +703,7 @@ CREATE TABLE public.users (
     verified_at timestamp(6) without time zone,
     onboarding_completed_at timestamp(6) without time zone,
     onboarding_step integer DEFAULT 0 NOT NULL,
-    CONSTRAINT valid_role CHECK (((role)::text = ANY ((ARRAY['adopter'::character varying, 'shelter_admin'::character varying, 'shelter_staff'::character varying, 'admin'::character varying, 'staff'::character varying])::text[])))
+    CONSTRAINT valid_role CHECK (((role)::text = ANY (ARRAY[('adopter'::character varying)::text, ('shelter_admin'::character varying)::text, ('shelter_staff'::character varying)::text, ('admin'::character varying)::text, ('staff'::character varying)::text])))
 );
 
 
@@ -784,6 +822,13 @@ ALTER TABLE ONLY public.password_reset_tokens ALTER COLUMN id SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY public.pets ALTER COLUMN id SET DEFAULT nextval('public.pets_id_seq'::regclass);
+
+
+--
+-- Name: saved_pets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.saved_pets ALTER COLUMN id SET DEFAULT nextval('public.saved_pets_id_seq'::regclass);
 
 
 --
@@ -925,6 +970,14 @@ ALTER TABLE ONLY public.password_reset_tokens
 
 ALTER TABLE ONLY public.pets
     ADD CONSTRAINT pets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: saved_pets saved_pets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.saved_pets
+    ADD CONSTRAINT saved_pets_pkey PRIMARY KEY (id);
 
 
 --
@@ -1240,6 +1293,27 @@ CREATE INDEX index_pets_on_status ON public.pets USING btree (status);
 
 
 --
+-- Name: index_saved_pets_on_pet_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_saved_pets_on_pet_id ON public.saved_pets USING btree (pet_id);
+
+
+--
+-- Name: index_saved_pets_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_saved_pets_on_user_id ON public.saved_pets USING btree (user_id);
+
+
+--
+-- Name: index_saved_pets_on_user_id_and_pet_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_saved_pets_on_user_id_and_pet_id ON public.saved_pets USING btree (user_id, pet_id);
+
+
+--
 -- Name: index_shelter_profiles_on_shelter_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1314,6 +1388,14 @@ CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
 --
 
 CREATE INDEX index_users_on_shelter_id ON public.users USING btree (shelter_id);
+
+
+--
+-- Name: saved_pets fk_rails_0a28c104eb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.saved_pets
+    ADD CONSTRAINT fk_rails_0a28c104eb FOREIGN KEY (pet_id) REFERENCES public.pets(id);
 
 
 --
@@ -1453,6 +1535,14 @@ ALTER TABLE ONLY public.adoption_applications
 
 
 --
+-- Name: saved_pets fk_rails_dffcaaf9cc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.saved_pets
+    ADD CONSTRAINT fk_rails_dffcaaf9cc FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: invitations fk_rails_e95ddf7ddd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1475,6 +1565,8 @@ ALTER TABLE ONLY public.adoption_applications
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260625003506'),
+('20260624000001'),
 ('20260617000003'),
 ('20260617000002'),
 ('20260617000001'),

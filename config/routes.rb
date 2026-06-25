@@ -27,6 +27,10 @@ Rails.application.routes.draw do
                                       as: :profile_shelter_onboarding,
                                       defaults: { from_profile: "true" }
 
+    # ── Dashboard ──────────────────────────────────────────────
+    get "dashboard", to: "dashboard#index", as: :user_dashboard
+    # ────────────────────────────────────────────────────────────
+
     namespace :onboarding do
       namespace :adopter do
         resource :questions, only: [ :show, :update ]
@@ -38,7 +42,12 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :pets, only: [ :index, :show ]
+    resources :pets, only: [ :index, :show ] do
+      resource :save, only: [ :create, :destroy ], controller: "pets/saves"
+      resource :life_preview, only: [ :show ], controller: "life_previews"
+    end
+
+    resources :saved_pets, only: [ :index ]
 
     resources :shelters, only: [ :index, :show, :new, :create, :edit, :update ] do
       resource :dashboard, only: [ :show ], controller: "shelters/dashboard"
@@ -48,12 +57,12 @@ Rails.application.routes.draw do
     end
 
     resources :adoption_applications, only: [ :new, :create ] do
-      resources :rag_queries, only: [:create], controller: "ai/rag_queries"
+      resources :rag_queries, only: [ :create ], controller: "ai/rag_queries"
     end
     resource :application_status, only: [ :show ], controller: "adoption_applications/status"
 
     resources :shelters, only: [] do
-      resources :rag_queries, only: [:create], controller: "ai/rag_queries"
+      resources :rag_queries, only: [ :create ], controller: "ai/rag_queries"
     end
 
     namespace :shelter do
@@ -79,7 +88,7 @@ Rails.application.routes.draw do
       end
 
       namespace :ai do
-        resources :documents, only: [:index, :new, :create, :destroy]
+        resources :documents, only: [ :index, :new, :create, :destroy ]
       end
     end
   end

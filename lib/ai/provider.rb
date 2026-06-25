@@ -1,35 +1,44 @@
 module Ai
   class Provider < ApplicationService
-    ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages".freeze
-    ANTHROPIC_VERSION = "2023-06-01".freeze
+    OPENAI_API_URL = "https://api.openai.com/v1/chat/completions".freeze
 
-    def initialize(prompt:, model: "claude-3-haiku-20240307", max_tokens: 1024)
+    def initialize(prompt:, system_prompt: nil, model: "gpt-4o-mini", max_tokens: 2048)
       @prompt = prompt
+      @system_prompt = system_prompt
       @model = model
       @max_tokens = max_tokens
       super()
     end
 
     def call
+      messages = []
+      messages << { role: "system", content: @system_prompt } if @system_prompt
+      messages << { role: "user", content: @prompt }
+
+      body = {
+        model: @model,
+        max_tokens: @max_tokens,
+        messages: messages,
+        response_format: { type: "json_object" }
+      }
+
       response = HTTParty.post(
-        ANTHROPIC_API_URL,
+        OPENAI_API_URL,
         headers: {
-          "x-api-key" => ENV.fetch("ANTHROPIC_API_KEY"),
-          "anthropic-version" => ANTHROPIC_VERSION,
+          "Authorization" => "Bearer #{ENV.fetch("OPENAI_API_KEY")}",
           "content-type" => "application/json"
         },
-        body: {
-          model: @model,
-          max_tokens: @max_tokens,
-          messages: [{ role: "user", content: @prompt }]
-        }.to_json
+        body: body.to_json
       )
 
-      raise "Anthropic API error: #{response.code} - #{response.body}" unless response.success?
+      unless response.success?
+        error_body = response.parsed_response.dig("error", "message") || response.body
+        raise Ai::ProviderError, "OpenAI API error: #{response.code} - #{error_body}"
+      end
 
-      response.parsed_response.dig("content", 0, "text")
+      response.parsed_response.dig("choices", 0, "message", "content")
     rescue HTTParty::Error => e
-      raise "Anthropic API request failed: #{e.message}"
+      raise Ai::ProviderError, "OpenAI API request failed: #{e.message}"
     end
   end
 end

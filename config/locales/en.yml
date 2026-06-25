@@ -29,6 +29,7 @@ en:
     navbar:
       sign_in: "Sign in"
       create_account: "Create account"
+      saved_pets: "Saved pets"
   landing:
     index:
       title: "Find your perfect match. Literally."
@@ -63,14 +64,56 @@ en:
         shelter_cta: "I run a shelter"
   dashboard:
     index:
-      welcome: "Welcome, %{name}"
-      role: "You are logged in as %{role}"
-      profile:
-        title: "Profile"
-        description: "Update your name and email"
-      logout:
-        title: "Log out"
-        description: "End your current session"
+      welcome:
+        title: "Hey, %{name}! 🐾"
+        title_returning: "Welcome back, %{name}! 🐾"
+        subtitle_new: "Ready to find your perfect match? Let's start by telling us a bit about yourself."
+        subtitle_ready: "Your profile is all set! Start exploring pets that match your lifestyle."
+        subtitle_active: "Let's check on your adoption requests!"
+        cta_browse: "Browse Pets"
+      onboarding:
+        title: "Your Profile"
+        progress: "%{percent}%% complete"
+        description: "Tell us about yourself so we can find better matches!"
+        questions_remaining: "Just %{count} quick question left"
+        questions_remaining_plural: "Just %{count} quick questions left"
+        cta: "Complete Your Profile"
+      requests:
+        title: "My Requests"
+        empty_title: "No requests yet"
+        empty_description: "You haven't requested to adopt any pets yet. Start browsing to find your match!"
+        empty_cta: "Browse Pets"
+        status_pending: "Pending"
+        status_under_review: "In Review"
+        status_approved: "Approved"
+        status_rejected: "Declined"
+        status_completed: "Adopted"
+        status_withdrawn: "Withdrawn"
+        status_cancelled: "Cancelled"
+        status_awaiting_response: "Awaiting Info"
+        status_expired: "Expired"
+        view_all: "View all %{count} requests →"
+        submitted: "Submitted %{time} ago"
+      actions:
+        title: "Quick Actions"
+        browse:
+          title: "Browse Pets"
+          description: "Find your new best friend."
+        profile:
+          title: "My Profile"
+          description: "Update your preferences."
+        requests:
+          title: "My Requests"
+          description: "Track your applications."
+        learn:
+          title: "Learn About Adoption"
+          description: "Tips for a successful adoption."
+      tip:
+        title: "Did you know?"
+        text: "Completing your profile helps us find pets that match your lifestyle — not just any pet, but the right one."
+        text_active: "Adoption applications can take 2–7 days. Shelters review each application carefully to find the best match."
+        text_requests: "Don't put all your hopes in one basket! You can submit requests for multiple pets at different shelters."
+        text_general: "Tovitu uses AI to analyze your lifestyle and recommend pets with the highest compatibility."
   shelters:
     index:
       title: "Find a Shelter"
@@ -105,6 +148,7 @@ en:
       phone_placeholder: "503-555-0123"
       website_label: "Website (optional)"
       website_placeholder: "https://example.com"
+      logo_label: "Logo (optional)"
       description_label: "About Your Shelter (optional)"
       description_placeholder: "Tell potential adopters about your mission..."
       species_label: "Species Served"
@@ -129,6 +173,12 @@ en:
       no_pets_yet: "This shelter hasn't listed any pets yet."
     edit:
       title: "Edit Shelter Profile"
+      logo_label: "Logo"
+      logo_attached: "Logo uploaded"
+      cover_label: "Cover Image"
+      cover_attached: "Cover image uploaded"
+      profile_label: "Profile Picture"
+      profile_attached: "Profile picture uploaded"
       name_label: "Shelter Name"
       street_label: "Street Address"
       city_label: "City"
@@ -147,19 +197,47 @@ en:
     dashboard:
       show:
         title: "%{name} Dashboard"
-        subtitle: "Manage your shelter, pets, and team."
-        onboarding: "Onboarding Checklist"
+        subtitle: "Here's what's happening today."
+        subtitle_new: "Let's get your shelter set up!"
+        alert_bar: "🐾 %{count} new adoption request needs your attention!"
+        alert_bar_plural: "🐾 %{count} new adoption requests need your attention!"
+        alert_cta: "Review Now"
         progress: "%{percent}% complete"
-        total_pets: "Total Pets"
-        active_applications: "Active Applications"
-        pending_tasks: "Pending Tasks"
-        quick_actions: "Quick Actions"
-        add_pet: "Add Pet"
-        add_pet_desc: "List a new pet"
-        manage_staff: "Manage Staff"
-        manage_staff_desc: "Invite team members"
-        adoption_policies: "Adoption Policies"
-        adoption_policies_desc: "Configure requirements"
+        onboarding:
+          title: "Onboarding Checklist"
+        pipeline:
+          adoptable_pets: "Adoptable Pets"
+          pending_requests: "Pending Requests"
+          in_review: "In Review"
+          active_adoptions: "Active Adoptions"
+        activity:
+          title: "Recent Activity"
+          empty: "Once adopters start requesting your pets, their activity will show up here."
+          empty_cta: "Add Your First Pet"
+          view_all: "View all activity →"
+          event_new_application: "New request from %{adopter} for %{pet}"
+          event_status_changed: "Request for %{pet} changed to %{status}"
+          event_new_note: "New note on %{pet}'s request"
+          event_new_staff: "%{name} joined the team"
+          event_pet_status: "%{pet} is now %{status}"
+        quick_actions:
+          title: "Quick Actions"
+          add_pet:
+            title: "Add a Pet"
+            description: "List a new pet for adoption"
+          review_apps:
+            title: "Review Applications"
+            description: "Review and respond to requests"
+          manage_team:
+            title: "Manage Team"
+            description: "Invite and manage staff"
+          policies:
+            title: "Configure Policies"
+            description: "Set adoption requirements"
+        team:
+          title: "Team"
+          manage: "Manage Team"
+          more: "+%{count} more"
     staff:
       index:
         title: "Staff Management"
@@ -192,6 +270,23 @@ en:
         other_placeholder: "Adopter must live within 50 miles\nAdopter must have previous pet experience\nAll household members must be present for meet-and-greet"
         one_per_line: "One requirement per line."
         submit: "Save Policies"
+    errors:
+      logo_invalid_type: "Logo must be a JPEG, PNG, or WebP image"
+      logo_too_large: "Logo must be smaller than 5 MB"
+      cover_image_invalid_type: "Cover image must be a JPEG, PNG, or WebP image"
+      cover_image_too_large: "Cover image must be smaller than 5 MB"
+      profile_picture_invalid_type: "Profile picture must be a JPEG, PNG, or WebP image"
+      profile_picture_too_large: "Profile picture must be smaller than 5 MB"
+      image_invalid_type: "Image must be a JPEG, PNG, or WebP image"
+      image_too_large: "Image must be smaller than 5 MB"
+    faq:
+      ask_about_shelter: "Ask About This Shelter"
+      question_placeholder: "What's your adoption process?"
+      ask: "Ask"
+      generating: "Generating answer..."
+      error: "Sorry, something went wrong."
+      retry: "Try again"
+      no_documents: "This shelter hasn't uploaded policy documents yet."
   authentication:
     sessions:
       new:
@@ -364,6 +459,10 @@ en:
       shelter:
         complete: "Profile complete! Let's set up your shelter."
         skipped: "You can complete your profile anytime from your profile settings."
+    ai:
+      document:
+        uploaded: "Document uploaded successfully. Processing will begin shortly."
+        destroyed: "Document deleted successfully."
   errors:
     authenticate_user:
       locked: "Account temporarily locked. Try again in %{seconds} seconds."
@@ -416,15 +515,6 @@ en:
       question_required: "Question is required"
       no_events: "No events yet"
       no_notes: "No notes yet"
-  shelters:
-    faq:
-      ask_about_shelter: "Ask About This Shelter"
-      question_placeholder: "What's your adoption process?"
-      ask: "Ask"
-      generating: "Generating answer..."
-      error: "Sorry, something went wrong."
-      retry: "Try again"
-      no_documents: "This shelter hasn't uploaded policy documents yet."
   shelter:
     ai:
       documents:
@@ -458,11 +548,6 @@ en:
         generating: "Generating answer..."
         error: "Sorry, something went wrong."
         retry: "Try again"
-  flash:
-    ai:
-      document:
-        uploaded: "Document uploaded successfully. Processing will begin shortly."
-        destroyed: "Document deleted successfully."
   activerecord:
     errors:
       models:

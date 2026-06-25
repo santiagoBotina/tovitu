@@ -10,59 +10,59 @@ RSpec.describe LoginAttempt, type: :model do
     let(:email) { "test@example.com" }
 
     before do
-      travel_to 20.minutes.ago do
-        create(:login_attempt, email: email, success: false)
-      end
-      travel_to 10.minutes.ago do
-        create(:login_attempt, email: email, success: false)
-      end
-      create(:login_attempt, email: email, success: true)
-      create(:login_attempt, email: "other@example.com", success: false)
+      create(:login_attempt, email: email, attempted_at: 1.hour.ago, success: true)
+      create(:login_attempt, email: email, attempted_at: 5.minutes.ago, success: false)
+      create(:login_attempt, email: email, attempted_at: 2.minutes.ago, success: false)
+      create(:login_attempt, email: "other@example.com", attempted_at: 1.minute.ago, success: true)
     end
 
-    describe ".recent" do
-      it "returns attempts within the last 15 minutes" do
-        expect(LoginAttempt.recent.count).to eq(3)
-      end
+    it "recent returns attempts within 15 minutes" do
+      expect(LoginAttempt.recent.count).to eq(3)
     end
 
-    describe ".failed" do
-      it "returns only failed attempts" do
-        expect(LoginAttempt.failed.count).to eq(3)
-      end
+    it "failed returns unsuccessful attempts" do
+      expect(LoginAttempt.failed.count).to eq(2)
     end
 
-    describe ".by_email" do
-      it "returns attempts for a specific email" do
-        expect(LoginAttempt.by_email(email).count).to eq(3)
-      end
+    it "by_email filters by email" do
+      expect(LoginAttempt.by_email(email).count).to eq(3)
     end
+  end
 
-    describe ".recent_failures_for" do
-      it "returns recent failed attempts for the email" do
-        expect(LoginAttempt.recent_failures_for(email).count).to eq(1)
-      end
+  describe ".recent_failures_for" do
+    it "returns recent failed attempts for an email" do
+      email = "test@example.com"
+      create(:login_attempt, email: email, attempted_at: 2.minutes.ago, success: false)
+      create(:login_attempt, email: email, attempted_at: 1.minute.ago, success: true)
+
+      result = LoginAttempt.recent_failures_for(email)
+      expect(result.count).to eq(1)
     end
   end
 
   describe ".locked_out?" do
     let(:email) { "test@example.com" }
 
-    it "returns true when there are 5+ recent failures" do
-      5.times { create(:login_attempt, email: email, success: false) }
+    it "returns false when under 5 failures" do
+      expect(LoginAttempt.locked_out?(email)).to be false
+    end
+
+    it "returns true when 5 or more recent failures" do
+      create_list(:login_attempt, 5, email: email, attempted_at: 1.minute.ago, success: false)
       expect(LoginAttempt.locked_out?(email)).to be true
     end
+  end
 
-    it "returns false when there are fewer than 5 recent failures" do
-      2.times { create(:login_attempt, email: email, success: false) }
-      expect(LoginAttempt.locked_out?(email)).to be false
+  describe ".lockout_ends_at" do
+    let(:email) { "test@example.com" }
+
+    it "returns nil when not locked out" do
+      expect(LoginAttempt.lockout_ends_at(email)).to be_nil
     end
 
-    it "returns false when previous failures are outside the 15 min window" do
-      travel_to 16.minutes.ago do
-        5.times { create(:login_attempt, email: email, success: false) }
-      end
-      expect(LoginAttempt.locked_out?(email)).to be false
+    it "returns time 15 minutes after latest failure when locked out" do
+      create_list(:login_attempt, 5, email: email, attempted_at: 1.minute.ago, success: false)
+      expect(LoginAttempt.lockout_ends_at(email)).to be_within(1.second).of(14.minutes.from_now)
     end
   end
 

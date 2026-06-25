@@ -12,6 +12,11 @@ module Ai
       end
 
       chunks = Ai::Rag::Chunker.call(document.content)
+      if chunks.empty?
+        document.update_columns(status: "ready", error_message: nil)
+        return
+      end
+
       texts = chunks.map { |c| c[:content] }
       embeddings = Ai::Rag::EmbeddingService.call(texts)
 
@@ -20,7 +25,7 @@ module Ai
           document.chunks.create!(
             content: chunk[:content],
             chunk_index: chunk[:index],
-            embedding: embeddings[i]
+            embedding: Pgvector.encode(embeddings[i])
           )
         end
         document.update!(status: "ready")

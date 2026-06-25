@@ -1,9 +1,7 @@
 module Ai
   class RagQueriesController < ApplicationController
-    skip_authorization_check only: :create
-    skip_before_action :require_authentication, only: :create
-
     def create
+      skip_authorization
       if params[:shelter_id]
         handle_shelter_query
       elsif params[:adoption_application_id]
@@ -17,7 +15,6 @@ module Ai
 
     def handle_shelter_query
       @shelter = Shelter.undiscarded.find(params[:shelter_id])
-      authorize @shelter, :show?
 
       question = params[:question]
       return render json: { error: I18n.t("ai.rag.question_required") }, status: :unprocessable_entity if question.blank?
@@ -37,7 +34,6 @@ module Ai
 
     def handle_application_query
       @application = AdoptionApplication.find_by!(token: params[:adoption_application_id])
-      authorize @application, :show?
 
       question = params[:question]
       return render json: { error: I18n.t("ai.rag.question_required") }, status: :unprocessable_entity if question.blank?

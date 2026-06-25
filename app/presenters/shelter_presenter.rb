@@ -1,6 +1,43 @@
 class ShelterPresenter < ApplicationPresenter
   include Rails.application.routes.url_helpers
 
+  def logo_url(variant: :thumb)
+    return nil unless model.logo.attached?
+    variant_url(model.logo, variant)
+  end
+
+  def cover_url(variant: :large)
+    return nil unless model.cover_image.attached?
+    variant_url(model.cover_image, variant)
+  end
+
+  def profile_picture_url(variant: :medium)
+    return nil unless model.profile_picture.attached?
+    variant_url(model.profile_picture, variant)
+  end
+
+  private
+
+  def variant_url(attachment, variant)
+    if attachment.blob.content_type == "image/svg+xml"
+      return rails_blob_path(attachment, only_path: true)
+    end
+
+    dimension = case variant.to_sym
+    when :thumb  then [ 100, 100 ]
+    when :medium then [ 200, 200 ]
+    when :large  then [ 400, 400 ]
+    when :xlarge then [ 1200, 400 ]
+    else [ 200, 200 ]
+    end
+
+    rails_representation_path(attachment.variant(resize_to_limit: dimension), only_path: true)
+  rescue ActiveStorage::FileNotFoundError, ActiveStorage::IntegrityError, ActiveStorage::InvariableError
+    nil
+  end
+
+  public
+
   def address
     "#{model.street}, #{model.city}, #{model.state} #{model.zip}"
   end

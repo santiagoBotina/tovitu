@@ -14,12 +14,14 @@ class ApplicationController < ActionController::Base
 
   private
 
+  LOCALE_WHITELIST = %w[en es].freeze
+
   def set_locale
-    I18n.locale = params[:locale] || I18n.default_locale
+    I18n.locale = params[:locale]&.then { |l| LOCALE_WHITELIST.include?(l) ? l.to_sym : nil } || I18n.default_locale
   end
 
   def default_url_options
-    return {} if I18n.locale == I18n.default_locale
+    return {} if I18n.locale == I18n.default_locale || I18n.locale.to_s.in?(LOCALE_WHITELIST).!
     { locale: I18n.locale }
   end
 
@@ -69,7 +71,7 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path
     if current_user.adopter?
       if current_user.onboarding_completed?
-        pets_path
+        user_dashboard_path
       else
         onboarding_adopter_questions_path
       end

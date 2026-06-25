@@ -31,9 +31,19 @@
         <%= f.email_field :email, required: true, autocomplete: "email",
               class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-neutral-800 placeholder-neutral-400 transition" %>
         <% if current_user.verified? %>
-          <p class="text-xs text-success mt-1 font-medium"><%= t(".verified") %></p>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 mt-2 text-xs font-semibold rounded-full bg-success/10 text-success">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+            </svg>
+            <%= t(".verified") %>
+          </span>
         <% else %>
-          <p class="text-xs text-warning mt-1 font-medium"><%= t(".pending_verification") %></p>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 mt-1.5 text-xs font-semibold rounded-full bg-warning/10 text-warning">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <%= t(".pending_verification") %>
+          </span>
         <% end %>
       </div>
 

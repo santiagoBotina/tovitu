@@ -1,6 +1,7 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help setup run dev docker-up docker-down docker-logs \
+.PHONY: help setup deps run dev docker-up docker-down docker-logs \
+        minio-up minio-down \
         localstack-up localstack-down db-migrate db-seed db-reset \
         test test-verbose lint lint-fix console clean install
 
@@ -8,8 +9,18 @@ help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-setup: .env docker-up install db-setup ## First-time project setup (Docker + gems + DB)
+setup: deps .env docker-up install db-migrate db-setup ## First-time project setup (system deps + Docker + gems + DB)
 	@echo ">>> Setup complete. Run 'make dev' to start."
+	@echo ">>> Set MINIO_ENABLED=true in .env to use MinIO for Active Storage."
+
+deps: ## Install system dependencies (libvips for image processing)
+	@echo ">>> Checking system dependencies..."
+	@if ! brew list vips &>/dev/null; then \
+		echo ">>> Installing libvips (required for image processing)..."; \
+		brew install vips; \
+	else \
+		echo ">>> libvips already installed."; \
+	fi
 
 run: docker-up ## Start all services and the Rails server
 	@echo ">>> Starting Rails server..."
@@ -37,11 +48,15 @@ db-seed: ## Seed the database
 db-reset: ## Reset and reseed the database
 	bin/rails db:reset
 
-docker-up: ## Start Docker services (postgres, redis)
+docker-up: ## Start Docker services (postgres, redis, minio)
 	@echo ">>> Starting Docker services..."
-	docker compose up -d postgres redis
+	docker compose up -d postgres redis minio
 	@echo ">>> Waiting for PostgreSQL..."
 	@timeout 30 sh -c 'until docker compose exec postgres pg_isready -U $$(grep POSTGRES_USER .env 2>/dev/null | cut -d= -f2 || echo "tovitu") 2>/dev/null; do sleep 1; done' || true
+	@echo ">>> Waiting for MinIO..."
+	@timeout 30 sh -c 'until curl -s http://localhost:9000/minio/health/live 2>/dev/null | grep -q "ok"; do sleep 1; done' || true
+	@echo ">>> Initializing MinIO bucket..."
+	docker compose run --rm minio-init
 	@echo ">>> Core services ready."
 
 docker-down: ## Stop all Docker services
@@ -50,6 +65,18 @@ docker-down: ## Stop all Docker services
 
 docker-logs: ## View Docker service logs
 	docker compose logs -f
+
+minio-up: ## Start MinIO (S3-compatible local storage)
+	@echo ">>> Starting MinIO..."
+	docker compose up -d minio
+	@echo ">>> Waiting for MinIO..."
+	@timeout 30 sh -c 'until curl -s http://localhost:9000/minio/health/live 2>/dev/null | grep -q "ok"; do sleep 1; done' || true
+	@echo ">>> Initializing MinIO bucket..."
+	docker compose run --rm minio-init
+	@echo ">>> MinIO ready."
+
+minio-down: ## Stop MinIO
+	docker compose stop minio
 
 localstack-up: ## Start LocalStack (S3-compatible storage for dev)
 	@echo ">>> Starting LocalStack..."

@@ -23,7 +23,7 @@ RSpec.describe "Email Verifications" do
 
       it "redirects to root" do
         get verification_path(token: token.token)
-        expect(response).to redirect_to(pets_path)
+        expect(response).to redirect_to(user_dashboard_path)
       end
     end
 

@@ -1,65 +1,102 @@
 module Ai
   class GenerateLifePreview < ApplicationService
-    def initialize(household_info:, housing_info:, lifestyle_info:, pet_id:, shelter_id:)
-      @household_info = household_info
-      @housing_info = housing_info
-      @lifestyle_info = lifestyle_info
-      @pet_id = pet_id
-      @shelter_id = shelter_id
+    def initialize(pet:, personality_spec: nil, adopter_tips: nil)
+      @pet = pet
+      @personality_spec = personality_spec
+      @adopter_tips = adopter_tips
       super()
     end
 
     def call
-      pet = Pet.find(@pet_id)
-      policy_context = fetch_shelter_policy_context(pet)
-
-      Ai::Provider.call(
-        prompt: Ai::PromptBuilder.call(
-          prompt_name: "life_preview",
-          variables: {
-            household_info: @household_info,
-            housing_info: @housing_info,
-            lifestyle_info: @lifestyle_info,
-            pet_info: format_pet_info(pet),
-            shelter_policy_context: policy_context
-          }
-        )
+      prompt_vars = prompt_variables
+      prompt = Ai::PromptBuilder.call(
+        prompt_name: "life_preview",
+        variables: prompt_vars
       )
+
+      prompt_config = YAML.load_file(Rails.root.join("config/prompts/life_preview.yml"))
+      system_prompt = prompt_config["system_prompt"]
+
+      response = Ai::Provider.call(
+        prompt: prompt,
+        system_prompt: system_prompt
+      )
+
+      parsed = parse_response(response)
+      Result.success(parsed)
+    rescue Ai::ProviderError => e
+      Result.failure(e.message)
+    rescue JSON::ParserError => e
+      Result.failure("Failed to parse AI response: #{e.message}")
     end
 
     private
 
-    attr_reader :household_info, :housing_info, :lifestyle_info
+    attr_reader :pet, :personality_spec, :adopter_tips
 
-    def format_pet_info(pet)
-      [
-        "Name: #{pet.name}",
-        "Species: #{pet.species}",
-        "Breed: #{pet.breed.presence || 'Mixed'}",
-        "Age: #{pet.age_category}",
-        "Size: #{pet.size}",
-        "Description: #{pet.description}",
-        "Personality: #{pet.personality_traits_list.join(', ')}"
-      ].join("\n")
+    def prompt_variables
+      presenter = PetPresenter.new(pet)
+      {
+        pet_name: pet.name,
+        species: pet.species,
+        breed: pet.breed.presence || "Mixed",
+        age: presenter.age_display,
+        size: pet.size.presence || "Unknown",
+        description: pet.description.presence || "No description provided.",
+        personality_traits: presenter.personality_traits_list.join(", "),
+        medical_notes: pet.medical_notes.presence || "None noted.",
+        requirements: presenter.requirements_list.join(", "),
+        good_with_children: pet.good_with_children? ? "Yes" : "No",
+        good_with_dogs: pet.good_with_dogs? ? "Yes" : "No",
+        good_with_cats: pet.good_with_cats? ? "Yes" : "No",
+        spayed_neutered: pet.spayed_neutered? ? "Yes" : "No",
+        vaccinated: pet.vaccinated? ? "Yes" : "No",
+        special_needs: pet.special_needs? ? "Yes" : "No",
+        personality_spec: personality_spec.presence || "Not provided by shelter.",
+        adopter_tips: adopter_tips.presence || "Not provided by shelter."
+      }
     end
 
-    def fetch_shelter_policy_context(pet)
-      query_text = [
-        pet.species,
-        pet.breed,
-        pet.description&.truncate(500),
-        pet.personality_traits_list.join(", ")
-      ].compact.join(" ")
+    def parse_response(response)
+      data = JSON.parse(response)
+      normalize_structure(data)
+      data
+    end
 
-      embedding = Ai::Rag::EmbeddingService.call(query_text)
-      chunks = Ai::Rag::VectorSearch.call(
-        embedding: embedding,
-        scope: Ai::DocumentChunk.joins(:ai_document)
-                                .where(ai_documents: { shelter_id: pet.shelter_id }),
-        limit: 5
-      )
+    def normalize_structure(data)
+      data["plan"] = normalize_plan(data["plan"]) if data["plan"]
+      data["itinerary"] = normalize_itinerary(data["itinerary"]) if data["itinerary"]
+      data["tips"] = normalize_tips(data["tips"]) if data["tips"]
+    end
 
-      chunks.map(&:content).join("\n\n").presence || "None provided."
+    def normalize_plan(plan)
+      case plan
+      when Array
+        plan.map { |w| w.is_a?(Hash) ? { "week" => w["week"].to_s, "items" => Array(w["items"]) } : w }
+      when Hash
+        plan.map { |key, val| { "week" => key.to_s, "items" => Array(val) } }
+      else
+        []
+      end
+    end
+
+    def normalize_itinerary(itinerary)
+      expected = %w[daily_routine feeding_guide exercise_needs grooming vet_schedule]
+      expected.each_with_object({}) do |key, hash|
+        val = itinerary[key]
+        hash[key] = val.is_a?(Hash) ? val.deep_stringify_keys : val.to_s
+      end
+    end
+
+    def normalize_tips(tips)
+      case tips
+      when Hash
+        tips.transform_values { |v| Array(v) }
+      when Array
+        tips.each_with_object({}) { |item, hash| hash[item.to_s] = [] }
+      else
+        {}
+      end
     end
   end
 end

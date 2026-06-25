@@ -21,6 +21,15 @@ local:
 #   credentials: <%= Rails.root.join("path/to/gcs.keyfile") %>
 #   bucket: your_own_bucket-<%= Rails.env %>
 
+minio:
+  service: S3
+  endpoint: http://localhost:9000
+  access_key_id: <%= ENV.fetch("MINIO_ACCESS_KEY", "minioadmin") %>
+  secret_access_key: <%= ENV.fetch("MINIO_SECRET_KEY", "minioadmin") %>
+  region: <%= ENV.fetch("AWS_REGION", "us-east-1") %>
+  bucket: <%= ENV.fetch("MINIO_BUCKET", "tovitu-development") %>
+  force_path_style: true
+
 localstack:
   service: S3
   endpoint: http://localhost:4566

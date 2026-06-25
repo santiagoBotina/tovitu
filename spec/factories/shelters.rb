@@ -17,6 +17,10 @@ FactoryBot.define do
       discarded_at { Time.current }
     end
 
+    trait :with_ai_disabled do
+      ai_features_enabled { false }
+    end
+
     trait :with_admin do
       after(:create) do |shelter|
         create(:user, :verified, :shelter_admin, shelter: shelter, email: "admin@#{shelter.name.parameterize}.com")

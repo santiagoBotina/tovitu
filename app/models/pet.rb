@@ -1,5 +1,7 @@
 class Pet < ApplicationRecord
   belongs_to :shelter, touch: true
+
+  delegate :ai_features_enabled?, to: :shelter, allow_nil: true
   has_many_attached :photos
   has_many :adoption_applications, dependent: :restrict_with_error
 
@@ -23,6 +25,8 @@ class Pet < ApplicationRecord
   validates :size, inclusion: { in: SIZES, allow_blank: true }
   validates :breed, length: { maximum: 100 }, allow_blank: true
 
+  after_update :invalidate_life_preview_if_needed
+
   validate :birth_date_matches_age_category, if: -> { birth_date.present? && age_category.present? }
   validate :photo_count_within_limit
   validate :adopted_at_required_when_adopted, if: -> { status == "adopted" }
@@ -38,6 +42,39 @@ class Pet < ApplicationRecord
   scope :searchable,      -> { available }
   scope :recently_added,  -> { available.order(created_at: :desc) }
   scope :by_shelter,      ->(id) { where(shelter_id: id) }
+
+  LIFE_PREVIEW_INVALIDATING_ATTRIBUTES = %w[
+    description personality_traits medical_notes requirements
+    species breed age_category size
+    spayed_neutered vaccinated special_needs
+    good_with_children good_with_dogs good_with_cats
+    personality_spec adopter_tips
+  ].freeze
+
+  def life_preview_stale?
+    life_preview_data.blank? ||
+      life_preview_version.zero? ||
+      life_preview_version != self.class.current_life_preview_version
+  end
+
+  def mark_life_preview_stale!
+    update_columns(life_preview_version: 0)
+  end
+
+  def clear_life_preview!
+    update_columns(
+      life_preview_data: nil,
+      life_preview_generated_at: nil,
+      life_preview_version: 0
+    )
+  end
+
+  def self.current_life_preview_version
+    path = Rails.root.join("config/prompts/life_preview.yml")
+    YAML.load_file(path)["version"] || 2
+  rescue Errno::ENOENT
+    2
+  end
 
   def discard!
     update!(discarded_at: Time.current, status: "removed")
@@ -67,6 +104,11 @@ class Pet < ApplicationRecord
   end
 
   private
+
+  def invalidate_life_preview_if_needed
+    return unless (LIFE_PREVIEW_INVALIDATING_ATTRIBUTES & saved_changes.keys).any?
+    clear_life_preview!
+  end
 
   def birth_date_matches_age_category
     age = compute_age

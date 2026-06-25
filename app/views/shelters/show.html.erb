@@ -6,22 +6,37 @@
       <%= t(".back") %>
   <% end %>
 
-  <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-8 mb-6">
-    <div class="flex items-start justify-between mb-4">
-      <div>
-        <h1 class="font-display text-3xl font-bold text-neutral-900 mb-2"><%= @shelter.name %></h1>
-        <div class="flex flex-wrap items-center gap-3">
-          <%= shelter.status_badge %>
-          <% @shelter.species_served.each do |species| %>
-            <span class="px-3 py-1 bg-primary-50 text-primary-600 text-xs font-medium rounded-full"><%= t("pets.species.#{species}") %></span>
+  <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden mb-6">
+    <% if @shelter.cover_image.attached? %>
+      <div class="aspect-[3/1] bg-neutral-100">
+        <%= image_tag shelter.cover_url(variant: :xlarge), alt: @shelter.name, class: "w-full h-full object-cover" %>
+      </div>
+    <% end %>
+
+    <div class="p-8 <%= @shelter.cover_image.attached? ? '-mt-16 relative z-10' : '' %>">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center gap-4">
+          <% if @shelter.logo.attached? %>
+            <div class="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-sm shrink-0 bg-white">
+              <%= image_tag shelter.logo_url(variant: :large), alt: @shelter.name, class: "w-full h-full object-cover" %>
+            </div>
           <% end %>
+          <div class="<%= @shelter.logo.attached? ? '' : 'ml-0' %>">
+            <h1 class="font-display text-3xl font-bold text-neutral-900 mb-2"><%= @shelter.name %></h1>
+            <div class="flex flex-wrap items-center gap-3">
+              <%= shelter.status_badge %>
+              <% @shelter.species_served.each do |species| %>
+                <span class="px-3 py-1 bg-primary-50 text-primary-600 text-xs font-medium rounded-full"><%= t("pets.species.#{species}") %></span>
+              <% end %>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <% if @shelter.description.present? %>
-      <p class="text-neutral-600 leading-relaxed"><%= @shelter.description %></p>
-    <% end %>
+      <% if @shelter.description.present? %>
+        <p class="text-neutral-600 leading-relaxed"><%= @shelter.description %></p>
+      <% end %>
+    </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

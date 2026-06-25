@@ -18,8 +18,12 @@ module Shelter
         @document = current_shelter.ai_documents.build(document_params)
         authorize @document
 
+        if @document.source_type == "pdf" && @document.file.attached?
+          @document.content = I18n.t("ai.document.pdf_placeholder")
+        end
+
         if @document.save
-          Ai::ProcessDocumentJob.perform_async(@document.id)
+          Ai::ProcessDocumentJob.perform_later(@document.id)
           redirect_to shelter_ai_documents_path,
                       notice: I18n.t("flash.ai.document.uploaded")
         else

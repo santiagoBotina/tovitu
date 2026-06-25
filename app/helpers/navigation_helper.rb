@@ -1,7 +1,7 @@
 module NavigationHelper
   def dashboard_active?(user)
     if user.adopter?
-      current_page?(root_path) || request.path.start_with?("/pets")
+      current_page?(user_dashboard_path) || request.path.start_with?("/dashboard")
     elsif user.shelter_user?
       request.path.include?("/dashboard") || current_page?(root_path)
     else

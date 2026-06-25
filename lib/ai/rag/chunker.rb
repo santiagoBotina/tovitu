@@ -20,9 +20,9 @@ module Ai
           end_pos = find_chunk_end(start_pos)
           content = @text[start_pos...end_pos].strip
           chunks << { content: content, index: chunks.size, metadata: @metadata } if content.present?
+          break if end_pos >= @text.length || chunks.size >= 100
           start_pos = end_pos - OVERLAP_SIZE
-          start_pos = [start_pos, end_pos].min
-          break if start_pos >= @text.length || chunks.size > 100
+          start_pos = 0 if start_pos < 0
         end
 
         chunks

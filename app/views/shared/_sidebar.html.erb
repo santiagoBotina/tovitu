@@ -22,8 +22,8 @@
 
   <nav class="flex-1 flex flex-col gap-1 px-3 py-4 overflow-y-auto">
     <% if current_user.adopter? %>
-      <%# --- Adopter Dashboard (redirects to pets_path) --- %>
-      <%= link_to pets_path,
+      <%# --- Adopter Dashboard --- %>
+      <%= link_to user_dashboard_path,
           class: "#{base_link} #{dashboard_active?(current_user) ? active_link : inactive_link}",
           aria: { current: dashboard_active?(current_user) ? "page" : nil } do %>
         <div class="shrink-0 w-5 h-5 flex items-center justify-center">
@@ -44,6 +44,18 @@
           </svg>
         </div>
         <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.pets") %></span>
+      <% end %>
+
+      <%# --- Adopter Shelters --- %>
+      <%= link_to shelters_path,
+          class: "#{base_link} #{request.path.start_with?('/shelters') ? active_link : inactive_link}",
+          aria: { current: request.path.start_with?('/shelters') ? "page" : nil } do %>
+        <div class="shrink-0 w-5 h-5 flex items-center justify-center">
+          <svg class="w-5 h-5 #{request.path.start_with?('/shelters') ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M9 21V12h6v9"/>
+          </svg>
+        </div>
+        <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.shelters") %></span>
       <% end %>
 
       <%# --- Adopter Adoptions (placeholder) --- %>

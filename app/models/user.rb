@@ -8,6 +8,8 @@ class User < ApplicationRecord
   has_many :email_verification_tokens, dependent: :destroy
   has_many :password_reset_tokens, dependent: :destroy
 
+  has_many :saved_pets, dependent: :destroy
+
   has_one :adopter_profile, dependent: :destroy
   has_one :shelter_profile, dependent: :destroy
 

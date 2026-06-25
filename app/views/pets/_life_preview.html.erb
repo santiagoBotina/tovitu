@@ -1,0 +1,205 @@
+<%= turbo_frame_tag "life_preview" do %>
+  <% if local_assigns[:preview_data] %>
+    <% itin = preview_data["itinerary"] || {} %>
+    <% tips = preview_data["tips"] || {} %>
+    <% plan = Array(preview_data["plan"]) %>
+
+    <div class="bg-white rounded-xl border border-neutral-200 shadow-md p-6 space-y-5">
+      <style>
+        .lp-chevron { transition: transform 0.2s ease; }
+        details[open] .lp-chevron { transform: rotate(180deg); }
+      </style>
+      <div class="flex items-start gap-4">
+        <span class="flex-shrink-0 w-14 h-14 rounded-full bg-gradient-to-br from-secondary-300 to-primary-400 flex items-center justify-center shadow-sm">
+          <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/>
+          </svg>
+        </span>
+        <div class="min-w-0 pt-0.5">
+          <h2 class="font-display text-lg font-bold text-neutral-800">
+            <%= t("pets.show.life_preview_title", name: pet.name) %>
+          </h2>
+          <p class="text-sm text-neutral-500 mt-0.5">
+            <%= t("pets.show.life_preview_description") %>
+          </p>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <%# Week-by-Week Plan %>
+        <details class="border border-neutral-200 rounded-xl open:border-secondary-200 open:ring-1 open:ring-secondary-100">
+          <summary class="flex items-center justify-between gap-2 px-4 py-3.5 bg-gradient-to-r from-neutral-50 to-white hover:from-neutral-100 transition-colors cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            <span class="flex items-center gap-2.5">
+              <span class="flex-shrink-0 w-7 h-7 rounded-full bg-secondary-100 inline-flex items-center justify-center">
+                <svg class="w-4 h-4 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+              </span>
+              <span class="font-semibold text-neutral-800 text-sm"><%= t("pets.show.life_preview_plan") %></span>
+              <span class="text-xs text-neutral-400 font-medium bg-neutral-100 px-2 py-0.5 rounded-full"><%= plan.length %> <%= "week".pluralize(plan.length) %></span>
+            </span>
+            <svg class="lp-chevron w-4 h-4 text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </summary>
+          <div class="px-4 pb-5 pt-1 border-t border-neutral-100">
+            <div class="space-y-2 mt-2">
+              <% plan.each_with_index do |week, idx| %>
+                <% next unless week.is_a?(Hash) %>
+                <div class="flex gap-3">
+                  <div class="flex flex-col items-center">
+                    <span class="flex-shrink-0 w-7 h-7 rounded-full bg-gradient-to-br from-secondary-400 to-primary-500 text-white text-xs font-bold flex items-center justify-center shadow-sm"><%= idx + 1 %></span>
+                    <% unless idx == plan.length - 1 %>
+                      <div class="w-0.5 flex-1 bg-gradient-to-b from-secondary-200 to-transparent mt-1"></div>
+                    <% end %>
+                  </div>
+                  <div class="flex-1 pb-3">
+                    <h4 class="font-semibold text-neutral-800 text-sm mb-1.5"><%= week["week"] %></h4>
+                    <ul class="space-y-1">
+                      <% Array(week["items"]).each do |item| %>
+                        <li class="flex items-start gap-2 text-sm text-neutral-600">
+                          <span class="text-secondary-400 mt-0.5">✦</span>
+                          <span><%= item %></span>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </details>
+
+        <%# Daily Itinerary %>
+        <details class="border border-neutral-200 rounded-xl open:border-secondary-200 open:ring-1 open:ring-secondary-100">
+          <summary class="flex items-center justify-between gap-2 px-4 py-3.5 bg-gradient-to-r from-neutral-50 to-white hover:from-neutral-100 transition-colors cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            <span class="flex items-center gap-2.5">
+              <span class="flex-shrink-0 w-7 h-7 rounded-full bg-primary-100 inline-flex items-center justify-center">
+                <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </span>
+              <span class="font-semibold text-neutral-800 text-sm"><%= t("pets.show.life_preview_itinerary") %></span>
+            </span>
+            <svg class="lp-chevron w-4 h-4 text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </summary>
+          <div class="px-4 pb-5 pt-1 space-y-4 border-t border-neutral-100">
+            <% daily_routine = parse_daily_routine(itin["daily_routine"]) %>
+            <div class="mt-2">
+              <span class="flex items-center gap-1.5 mb-2.5">
+                <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <h4 class="font-semibold text-neutral-700 text-sm"><%= t("pets.show.daily_routine") %></h4>
+              </span>
+              <% if daily_routine.is_a?(Hash) %>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <% daily_routine.each do |time_period, description| %>
+                    <div class="flex items-start gap-2.5 p-3 rounded-lg bg-gradient-to-br from-neutral-50 to-white border border-neutral-100">
+                      <span class="flex-shrink-0 w-8 h-8 rounded-full bg-primary-100 inline-flex items-center justify-center text-xs font-bold text-primary-700">
+                        <% case time_period.downcase
+                           when /morning|early/ %>☀️
+                        <% when /midday|noon|lunch/ %>🍽️
+                        <% when /afternoon/ %>🌤️
+                        <% when /evening/ %>🌅
+                        <% when /night/ %>🌙
+                        <% else %>⭐
+                        <% end %>
+                      </span>
+                      <div class="min-w-0">
+                        <span class="text-xs font-bold text-primary-600 uppercase tracking-wider block mb-0.5"><%= time_period.humanize %></span>
+                        <p class="text-sm text-neutral-600 leading-snug"><%= description %></p>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              <% elsif daily_routine.present? %>
+                <div class="flex items-start gap-2.5 p-3 rounded-lg bg-gradient-to-br from-neutral-50 to-white border border-neutral-100">
+                  <span class="flex-shrink-0 text-lg">📋</span>
+                  <p class="text-sm text-neutral-600"><%= daily_routine %></p>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <% [
+                { key: "feeding_guide", icon: "🍲", label: t("pets.show.feeding_guide") },
+                { key: "exercise_needs", icon: "🏃", label: t("pets.show.exercise_needs") },
+                { key: "grooming", icon: "✂️", label: t("pets.show.grooming") },
+                { key: "vet_schedule", icon: "🏥", label: t("pets.show.vet_schedule") }
+              ].each do |section| %>
+                <% val = itin[section[:key]] %>
+                <% next if val.blank? %>
+                <div class="flex items-start gap-2.5 p-3 rounded-lg bg-gradient-to-br from-white to-neutral-50 border border-neutral-100">
+                  <span class="flex-shrink-0 text-lg"><%= section[:icon] %></span>
+                  <div class="min-w-0">
+                    <span class="text-xs font-bold text-neutral-500 uppercase tracking-wider block mb-0.5"><%= section[:label] %></span>
+                    <p class="text-sm text-neutral-700 leading-snug"><%= val %></p>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </details>
+
+        <%# Preparation Tips %>
+        <details class="border border-neutral-200 rounded-xl open:border-secondary-200 open:ring-1 open:ring-secondary-100">
+          <summary class="flex items-center justify-between gap-2 px-4 py-3.5 bg-gradient-to-r from-neutral-50 to-white hover:from-neutral-100 transition-colors cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+            <span class="flex items-center gap-2.5">
+              <span class="flex-shrink-0 w-7 h-7 rounded-full bg-amber-100 inline-flex items-center justify-center">
+                <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+              </span>
+              <span class="font-semibold text-neutral-800 text-sm"><%= t("pets.show.life_preview_tips") %></span>
+            </span>
+            <svg class="lp-chevron w-4 h-4 text-neutral-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </summary>
+          <div class="px-4 pb-5 pt-1 border-t border-neutral-100">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+              <% tips.each do |category, items| %>
+                <div class="rounded-xl border border-amber-100 bg-white overflow-hidden shadow-sm">
+                  <div class="flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-amber-50 to-white border-b border-amber-100">
+                    <% icon = case category.to_s.humanize.downcase
+                      when /home|space|environment/ %>🏠
+                    <% when /food|feed|nutrition/ %>🥘
+                    <% when /health|vet|medical/ %>💊
+                    <% when /train|behavior|social/ %>🎯
+                    <% when /safe|safety/ %>🛡️
+                    <% when /supplies|gear|essentials/ %>🎒
+                    <% when /bond|love|care|affection/ %>💕
+                    <% else %>💡
+                    <% end %>
+                    <span class="text-lg"><%= icon %></span>
+                    <h4 class="font-semibold text-neutral-800 text-sm capitalize"><%= category.to_s.humanize %></h4>
+                  </div>
+                  <div class="p-4">
+                    <ul class="space-y-2">
+                      <% Array(items).each do |item| %>
+                        <li class="flex items-start gap-2.5 text-sm text-neutral-600 leading-relaxed">
+                          <span class="text-amber-400 mt-0.5 shrink-0">▸</span>
+                          <span><%= item %></span>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <p class="text-xs text-neutral-400 text-center pt-3 border-t border-neutral-100 flex items-center justify-center gap-1.5">
+        <span>🤖</span>
+        <span><%= t("pets.show.life_preview_disclaimer") %></span>
+      </p>
+    </div>
+  <% else %>
+    <%= render "pets/life_preview_loading", pet: pet %>
+  <% end %>
+<% end %>

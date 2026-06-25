@@ -1,0 +1,9 @@
+en:
+  saved_pets:
+    index:
+      title: Saved Pets
+      subtitle: Pets you've saved for later. Tap the heart to add or remove.
+      empty_title: No saved pets yet
+      empty_body: Tap the ♡ on any pet to save them here and find them later.
+      browse_pets: Browse Pets
+      pet_photo: Photo of %{name}

@@ -116,10 +116,101 @@ unless User.exists?(email: "critter.admin@example.com")
   )
 end
 
-# ── Pets ──────────────────────────────────────────────────────────
-# Photos are not seeded here. Attach them via the UI or console:
-#   pet.photos.attach(io: File.open("path/to/photo.jpg"), filename: "photo.jpg")
+adopter = User.find_or_create_by!(email: "adopter@tovitu.com") do |u|
+  u.name = "Alex Adopter"
+  u.password = "password123"
+  u.password_confirmation = "password123"
+  u.role = "adopter"
+  u.verified_at = Time.current
+  u.onboarding_completed_at = Time.current
+end
 
+unless AdopterProfile.exists?(user: adopter)
+  AdopterProfile.create!(
+    user: adopter,
+    activity_level: "active",
+    ideal_companion: "playful_companion",
+    pet_experience: "years_of_experience",
+    daily_time_available: "2_to_4h",
+    personality: "friendly_social",
+    adoption_priority: "Looking for an active dog to join me on hikes and runs."
+  )
+end
+
+# ── Image helpers ──────────────────────────────────────────────────
+def fetch_image(url)
+  uri = URI(url)
+  response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https", open_timeout: 5, read_timeout: 10) do |http|
+    req = Net::HTTP::Get.new(uri)
+    http.request(req)
+  end
+  return nil unless response.is_a?(Net::HTTPOK)
+
+  ext = File.extname(URI.parse(url).path).presence || ".png"
+  filename = "seed#{ext}"
+  { io: StringIO.new(response.body), filename: filename }
+rescue StandardError => e
+  Rails.logger.warn "  ! Failed to download #{url}: #{e.message}"
+  nil
+end
+
+def generate_svg_logo(text, bg_color:)
+  svg = <<~SVG
+    <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+      <rect width="400" height="400" fill="#{bg_color}"/>
+      <text x="200" y="200" dominant-baseline="central" text-anchor="middle"
+            fill="white" font-family="system-ui,sans-serif" font-size="120" font-weight="bold">#{text}</text>
+    </svg>
+  SVG
+  { io: StringIO.new(svg), filename: "logo.svg" }
+end
+
+def generate_svg_pet_photo(text, bg_color: "#6366f1")
+  svg = <<~SVG
+    <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+      <rect width="800" height="600" fill="#{bg_color}" opacity="0.15"/>
+      <circle cx="400" cy="250" r="100" fill="#{bg_color}" opacity="0.3"/>
+      <path d="M200 450 Q400 300 600 450" fill="none" stroke="#{bg_color}" stroke-width="4" opacity="0.3"/>
+      <text x="400" y="500" dominant-baseline="central" text-anchor="middle"
+            fill="#{bg_color}" font-family="system-ui,sans-serif" font-size="36" font-weight="bold">#{text}</text>
+    </svg>
+  SVG
+  { io: StringIO.new(svg), filename: "pet.svg" }
+end
+
+def attach_with_key!(record, attachment_name, image, key)
+  return unless image
+
+  image[:io].rewind
+  content_type = Marcel::MimeType.for(image[:io])
+  image[:io].rewind
+
+  blob = ActiveStorage::Blob.create_and_upload!(
+    io: image[:io],
+    filename: image[:filename],
+    content_type: content_type,
+    key: key
+  )
+  record.send(attachment_name).attach(blob)
+end
+
+# ── Attach shelter logos ─────────────────────────────────────────
+shelter_logos = {
+  happy_paws => { url: "https://placehold.co/400x400/3b82f6/ffffff.png?text=HPR", bg: "#3b82f6", text: "HPR" },
+  furry_friends => { url: "https://placehold.co/400x400/10b981/ffffff.png?text=FF", bg: "#10b981", text: "FF" },
+  critter_corner => { url: "https://placehold.co/400x400/f59e0b/ffffff.png?text=CC", bg: "#f59e0b", text: "CC" }
+}
+
+shelter_logos.each do |shelter, opts|
+  next if shelter.logo.attached?
+
+  image = fetch_image(opts[:url]) || generate_svg_logo(opts[:text], bg_color: opts[:bg])
+  key = StorageKeyGenerator.shelter_logo(shelter.name)
+  attach_with_key!(shelter, :logo, image, key)
+  puts "  Attached logo to #{shelter.name}"
+end
+
+# ── Pets ──────────────────────────────────────────────────────────
 pets_data = [
   # ── Happy Paws Rescue (Portland, OR) ──────────────────────────
   {
@@ -478,6 +569,46 @@ pets_data.each do |attrs|
   end
 end
 
+# ── Attach pet photos ────────────────────────────────────────────
+pet_image_urls = {
+  %w[Luna]   => [ "https://placehold.co/800x600/6366f1/ffffff.png?text=Luna+1", "https://placehold.co/800x600/4f46e5/ffffff.png?text=Luna+2" ],
+  %w[Simba]  => [ "https://placehold.co/800x600/f97316/ffffff.png?text=Simba+1", "https://placehold.co/800x600/ea580c/ffffff.png?text=Simba+2" ],
+  %w[Buddy]  => [ "https://placehold.co/600x600/8b5cf6/ffffff.png?text=Buddy+1", "https://placehold.co/600x600/7c3aed/ffffff.png?text=Buddy+2" ],
+  %w[Mittens] => [ "https://placehold.co/800x600/ec4899/ffffff.png?text=Mittens" ],
+  %w[Rocky]  => [ "https://placehold.co/800x800/6b7280/ffffff.png?text=Rocky" ],
+  %w[Daisy]  => [ "https://placehold.co/800x600/10b981/ffffff.png?text=Daisy+1", "https://placehold.co/800x600/059669/ffffff.png?text=Daisy+2" ],
+  %w[Zeus]   => [ "https://placehold.co/800x800/3b82f6/ffffff.png?text=Zeus" ],
+  %w[Coco]   => [ "https://placehold.co/600x600/d97706/ffffff.png?text=Coco" ],
+  %w[Bear]   => [ "https://placehold.co/800x600/1f2937/ffffff.png?text=Bear+1", "https://placehold.co/800x600/374151/ffffff.png?text=Bear+2" ],
+  %w[Molly]  => [ "https://placehold.co/600x600/f472b6/ffffff.png?text=Molly" ],
+  %w[Shadow] => [ "https://placehold.co/800x600/78716c/ffffff.png?text=Shadow" ],
+  %w[Whiskers] => [ "https://placehold.co/800x600/92400e/ffffff.png?text=Whiskers" ],
+  %w[Lily]     => [ "https://placehold.co/800x600/a855f7/ffffff.png?text=Lily+1", "https://placehold.co/800x600/9333ea/ffffff.png?text=Lily+2" ],
+  %w[Oscar]    => [ "https://placehold.co/800x600/eab308/ffffff.png?text=Oscar" ],
+  %w[Pepper]   => [ "https://placehold.co/800x600/10b981/ffffff.png?text=Pepper+the+Rabbit" ],
+  %w[Salem]    => [ "https://placehold.co/800x600/1e293b/ffffff.png?text=Salem" ],
+  %w[Pancake]  => [ "https://placehold.co/800x600/f59e0b/ffffff.png?text=Pancake" ]
+}
+
+Pet.find_each do |pet|
+  next if pet.photos.attached?
+  name_key = pet_image_urls.keys.find { |names| names.include?(pet.name) }
+  next unless name_key
+
+  url_list = pet_image_urls[name_key]
+  url_list.each do |url|
+    image = fetch_image(url)
+    image ||= generate_svg_pet_photo(pet.name)
+    key = StorageKeyGenerator.pet_photo(pet.shelter.name, pet.name)
+    attach_with_key!(pet, :photos, image, key)
+  end
+
+  if pet.photos.attached?
+    pet.update_column(:photo_order, pet.photos.map(&:blob_id))
+    puts "  Attached #{pet.photos.count} photo(s) to #{pet.name}"
+  end
+end
+
 # ── Adoptions ───────────────────────────────────────────────────
 return unless defined?(AdoptionApplication)
 
@@ -609,10 +740,11 @@ end
 puts ""
 puts "Seeded #{User.count} users, #{Shelter.count} shelters, and #{Pet.count} pets:"
 puts "  admin@tovitu.com / password123  (admin, verified, Happy Paws Rescue)"
-puts "  staff@tovitu.com / password123  (staff, verified, Happy Paws Rescue)"
-puts "  furry.admin@example.com / password123  (admin, Furry Friends)"
-puts "  critter.admin@example.com / password123  (admin, Critter Corner)"
-puts "  unverified@tovitu.com / password123  (staff, unverified)"
+  puts "  staff@tovitu.com / password123  (staff, verified, Happy Paws Rescue)"
+  puts "  furry.admin@example.com / password123  (admin, Furry Friends)"
+  puts "  critter.admin@example.com / password123  (admin, Critter Corner)"
+  puts "  unverified@tovitu.com / password123  (staff, unverified)"
+  puts "  adopter@tovitu.com / password123  (adopter, verified, onboarding completed)"
 puts ""
 puts "Pets:"
 Pet.includes(:shelter).each do |pet|

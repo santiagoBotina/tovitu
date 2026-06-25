@@ -11,9 +11,15 @@ module Pets
         return Result.failure(I18n.t("pets.errors.photos.max_count"))   if pet.photos.count >= MAX_PHOTOS
 
         ActiveRecord::Base.transaction do
-          pet.photos.attach(file)
-          blob_id = pet.photos.last.blob_id
-          pet.update!(photo_order: pet.photo_order + [ blob_id ])
+          key = StorageKeyGenerator.pet_photo(pet.shelter.name, pet.name)
+          blob = ActiveStorage::Blob.create_and_upload!(
+            io: file,
+            filename: file.respond_to?(:original_filename) ? file.original_filename : File.basename(file),
+            content_type: Marcel::MimeType.for(file),
+            key: key
+          )
+          pet.photos.attach(blob)
+          pet.update!(photo_order: pet.photo_order + [ blob.id ])
         end
 
         Result.success(pet)

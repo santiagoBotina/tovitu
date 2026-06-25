@@ -29,6 +29,7 @@ es:
     navbar:
       sign_in: "Iniciar sesión"
       create_account: "Crear cuenta"
+      saved_pets: "Mascotas guardadas"
   landing:
     index:
       title: "Encuentra tu pareja perfecta. Literalmente."
@@ -63,14 +64,56 @@ es:
         shelter_cta: "Represento un refugio"
   dashboard:
     index:
-      welcome: "Bienvenido, %{name}"
-      role: "Has iniciado sesión como %{role}"
-      profile:
-        title: "Perfil"
-        description: "Actualiza tu nombre y correo electrónico"
-      logout:
-        title: "Cerrar sesión"
-        description: "Finaliza tu sesión actual"
+      welcome:
+        title: "¡Hola, %{name}! 🐾"
+        title_returning: "¡Bienvenido de nuevo, %{name}! 🐾"
+        subtitle_new: "¿Listo para encontrar tu compañero perfecto? Empieza por contarnos un poco sobre ti."
+        subtitle_ready: "¡Tu perfil está listo! Comienza a explorar mascotas que se adapten a tu estilo de vida."
+        subtitle_active: "¡Revisemos tus solicitudes de adopción!"
+        cta_browse: "Explorar Mascotas"
+      onboarding:
+        title: "Tu Perfil"
+        progress: "%{percent}%% completo"
+        description: "Cuéntanos sobre ti para encontrar mejores coincidencias."
+        questions_remaining: "Solo %{count} pregunta rápida restante"
+        questions_remaining_plural: "Solo %{count} preguntas rápidas restantes"
+        cta: "Completar tu Perfil"
+      requests:
+        title: "Mis Solicitudes"
+        empty_title: "Sin solicitudes aún"
+        empty_description: "Aún no has solicitado adoptar ninguna mascota. ¡Empieza a explorar para encontrar a tu compañero!"
+        empty_cta: "Explorar Mascotas"
+        status_pending: "Pendiente"
+        status_under_review: "En Revisión"
+        status_approved: "Aprobada"
+        status_rejected: "Rechazada"
+        status_completed: "Adoptada"
+        status_withdrawn: "Retirada"
+        status_cancelled: "Cancelada"
+        status_awaiting_response: "Esperando Info"
+        status_expired: "Expirada"
+        view_all: "Ver todas las %{count} solicitudes →"
+        submitted: "Enviada hace %{time}"
+      actions:
+        title: "Acciones Rápidas"
+        browse:
+          title: "Explorar Mascotas"
+          description: "Encuentra a tu nuevo mejor amigo."
+        profile:
+          title: "Mi Perfil"
+          description: "Actualiza tus preferencias."
+        requests:
+          title: "Mis Solicitudes"
+          description: "Da seguimiento a tus aplicaciones."
+        learn:
+          title: "Aprende sobre Adopción"
+          description: "Consejos para una adopción exitosa."
+      tip:
+        title: "¿Sabías que?"
+        text: "Completar tu perfil nos ayuda a encontrar mascotas que se adapten a tu estilo de vida, no cualquier mascota, sino la adecuada."
+        text_active: "Las solicitudes de adopción pueden tardar de 2 a 7 días. Los refugios revisan cada solicitud cuidadosamente para encontrar la mejor coincidencia."
+        text_requests: "¡No pongas todos los huevos en una sola canasta! Puedes enviar solicitudes para múltiples mascotas en diferentes refugios."
+        text_general: "Tovitu usa IA para analizar tu estilo de vida y recomendar mascotas con la mayor compatibilidad."
   shelters:
     index:
       title: "Buscar un Refugio"
@@ -105,6 +148,7 @@ es:
       phone_placeholder: "555-123-4567"
       website_label: "Sitio web (opcional)"
       website_placeholder: "https://ejemplo.com"
+      logo_label: "Logotipo (opcional)"
       description_label: "Acerca de tu Refugio (opcional)"
       description_placeholder: "Cuéntales a los adoptantes sobre tu misión..."
       species_label: "Especies Atendidas"
@@ -129,6 +173,12 @@ es:
       no_pets_yet: "Este refugio aún no ha publicado mascotas."
     edit:
       title: "Editar Perfil del Refugio"
+      logo_label: "Logotipo"
+      logo_attached: "Logotipo subido"
+      cover_label: "Imagen de Portada"
+      cover_attached: "Imagen de portada subida"
+      profile_label: "Foto de Perfil"
+      profile_attached: "Foto de perfil subida"
       name_label: "Nombre del Refugio"
       street_label: "Dirección"
       city_label: "Ciudad"
@@ -147,19 +197,47 @@ es:
     dashboard:
       show:
         title: "Panel de %{name}"
-        subtitle: "Administra tu refugio, mascotas y equipo."
-        onboarding: "Lista de Verificación"
+        subtitle: "Esto es lo que está sucediendo hoy."
+        subtitle_new: "¡Configuremos tu refugio!"
+        alert_bar: "🐾 %{count} nueva solicitud de adopción necesita tu atención."
+        alert_bar_plural: "🐾 %{count} nuevas solicitudes de adopción necesitan tu atención."
+        alert_cta: "Revisar Ahora"
         progress: "%{percent}% completado"
-        total_pets: "Total de Mascotas"
-        active_applications: "Solicitudes Activas"
-        pending_tasks: "Tareas Pendientes"
-        quick_actions: "Acciones Rápidas"
-        add_pet: "Agregar Mascota"
-        add_pet_desc: "Publicar una nueva mascota"
-        manage_staff: "Gestionar Personal"
-        manage_staff_desc: "Invitar miembros del equipo"
-        adoption_policies: "Políticas de Adopción"
-        adoption_policies_desc: "Configurar requisitos"
+        onboarding:
+          title: "Lista de Verificación"
+        pipeline:
+          adoptable_pets: "Mascotas Disponibles"
+          pending_requests: "Solicitudes Pendientes"
+          in_review: "En Revisión"
+          active_adoptions: "Adopciones Activas"
+        activity:
+          title: "Actividad Reciente"
+          empty: "Una vez que los adoptantes comiencen a solicitar tus mascotas, su actividad aparecerá aquí."
+          empty_cta: "Agrega tu Primera Mascota"
+          view_all: "Ver toda la actividad →"
+          event_new_application: "Nueva solicitud de %{adopter} para %{pet}"
+          event_status_changed: "Solicitud para %{pet} cambió a %{status}"
+          event_new_note: "Nueva nota sobre la solicitud de %{pet}"
+          event_new_staff: "%{name} se unió al equipo"
+          event_pet_status: "%{pet} ahora está %{status}"
+        quick_actions:
+          title: "Acciones Rápidas"
+          add_pet:
+            title: "Agregar Mascota"
+            description: "Publicar una nueva mascota"
+          review_apps:
+            title: "Revisar Solicitudes"
+            description: "Revisar y responder solicitudes"
+          manage_team:
+            title: "Gestionar Equipo"
+            description: "Invitar y administrar personal"
+          policies:
+            title: "Configurar Políticas"
+            description: "Establecer requisitos de adopción"
+        team:
+          title: "Equipo"
+          manage: "Gestionar Equipo"
+          more: "+%{count} más"
     staff:
       index:
         title: "Gestión de Personal"
@@ -192,6 +270,23 @@ es:
         other_placeholder: "El adoptante debe vivir a menos de 50 km\nEl adoptante debe tener experiencia previa con mascotas\nTodos los miembros del hogar deben estar presentes en la entrevista"
         one_per_line: "Un requisito por línea."
         submit: "Guardar Políticas"
+    errors:
+      logo_invalid_type: "El logotipo debe ser una imagen JPEG, PNG o WebP"
+      logo_too_large: "El logotipo debe ser menor de 5 MB"
+      cover_image_invalid_type: "La imagen de portada debe ser una imagen JPEG, PNG o WebP"
+      cover_image_too_large: "La imagen de portada debe ser menor de 5 MB"
+      profile_picture_invalid_type: "La foto de perfil debe ser una imagen JPEG, PNG o WebP"
+      profile_picture_too_large: "La foto de perfil debe ser menor de 5 MB"
+      image_invalid_type: "La imagen debe ser JPEG, PNG o WebP"
+      image_too_large: "La imagen debe ser menor de 5 MB"
+    faq:
+      ask_about_shelter: "Preguntar sobre este Refugio"
+      question_placeholder: "¿Cuál es tu proceso de adopción?"
+      ask: "Preguntar"
+      generating: "Generando respuesta..."
+      error: "Lo sentimos, algo salió mal."
+      retry: "Intentar de nuevo"
+      no_documents: "Este refugio aún no ha subido documentos de políticas."
   authentication:
     sessions:
       new:
@@ -364,6 +459,10 @@ es:
       shelter:
         complete: "¡Perfil completo! Configuremos tu refugio."
         skipped: "Puedes completar tu perfil en cualquier momento desde la configuración de tu perfil."
+    ai:
+      document:
+        uploaded: "Documento subido exitosamente. El procesamiento comenzará en breve."
+        destroyed: "Documento eliminado exitosamente."
   errors:
     authenticate_user:
       locked: "Cuenta bloqueada temporalmente. Intenta de nuevo en %{seconds} segundos."
@@ -416,15 +515,6 @@ es:
       question_required: "Se requiere una pregunta"
       no_events: "Sin eventos aún"
       no_notes: "Sin notas aún"
-  shelters:
-    faq:
-      ask_about_shelter: "Preguntar sobre este Refugio"
-      question_placeholder: "¿Cuál es tu proceso de adopción?"
-      ask: "Preguntar"
-      generating: "Generando respuesta..."
-      error: "Lo sentimos, algo salió mal."
-      retry: "Intentar de nuevo"
-      no_documents: "Este refugio aún no ha subido documentos de políticas."
   shelter:
     ai:
       documents:
@@ -458,11 +548,6 @@ es:
         generating: "Generando respuesta..."
         error: "Lo sentimos, algo salió mal."
         retry: "Intentar de nuevo"
-  flash:
-    ai:
-      document:
-        uploaded: "Documento subido exitosamente. El procesamiento comenzará en breve."
-        destroyed: "Documento eliminado exitosamente."
   activerecord:
     errors:
       models:

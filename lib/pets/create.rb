@@ -21,7 +21,16 @@ module Pets
 
       ActiveRecord::Base.transaction do
         pet.save!
-        @photos.each { |photo| pet.photos.attach(photo) }
+        @photos.each do |photo|
+          key = StorageKeyGenerator.pet_photo(@shelter.name, pet.name)
+          blob = ActiveStorage::Blob.create_and_upload!(
+            io: photo,
+            filename: photo.respond_to?(:original_filename) ? photo.original_filename : "photo",
+            content_type: Marcel::MimeType.for(photo),
+            key: key
+          )
+          pet.photos.attach(blob)
+        end
         pet.update!(photo_order: pet.photos.map(&:blob_id))
       end
 

@@ -1,0 +1,9 @@
+es:
+  saved_pets:
+    index:
+      title: Mascotas Guardadas
+      subtitle: Mascotas que has guardado para después. Toca el corazón para agregar o quitar.
+      empty_title: Sin mascotas guardadas
+      empty_body: Toca el ♡ en cualquier mascota para guardarla aquí y encontrarla después.
+      browse_pets: Explorar Mascotas
+      pet_photo: Foto de %{name}

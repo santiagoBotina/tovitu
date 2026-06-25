@@ -12,7 +12,7 @@ RSpec.describe "Sessions" do
       user = create(:user, :verified, :onboarding_completed)
       post session_path, params: { session: { email: user.email, password: "password123" } }
       get login_adopter_path
-      expect(response).to redirect_to(pets_path)
+      expect(response).to redirect_to(user_dashboard_path)
     end
   end
 
@@ -22,12 +22,12 @@ RSpec.describe "Sessions" do
 
       it "logs the user in" do
         post session_path, params: { session: { email: user.email, password: "password123" } }
-        expect(response).to redirect_to(pets_path)
-      end
+      expect(response).to redirect_to(user_dashboard_path)
+    end
 
-      it "sets session user_id" do
-        post session_path, params: { session: { email: user.email, password: "password123" } }
-        expect(session[:user_id]).to eq(user.id)
+    it "sets session user_id" do
+      post session_path, params: { session: { email: user.email, password: "password123" } }
+      expect(session[:user_id]).to eq(user.id)
       end
 
       it "logs a successful login attempt" do

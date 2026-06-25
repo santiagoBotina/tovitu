@@ -92,10 +92,12 @@ es:
     index:
       title: Encuentra tu Nuevo Mejor Amigo
       subtitle: Toda mascota merece un hogar amoroso. Explora las mascotas disponibles cerca de ti y encuentra tu compañero perfecto.
+      pet_photo: Foto de %{name}
       no_results: Ninguna mascota coincide con tus criterios
       no_results_body: Intenta ajustar tus filtros para ver más mascotas.
       clear_filters: Limpiar todos los filtros
-      view_profile: Ver Perfil →
+      save: Guardar mascota
+      unsave: Quitar guardado
       showing_count: Mostrando %{count} mascotas
       photo_alt: "%{name} foto %{index}"
       filters:
@@ -134,6 +136,22 @@ es:
       apply_title: ¿Listo para adoptar?
       apply_body: Inicia tu solicitud de adopción y dale a esta mascota un hogar amoroso.
       apply_to_adopt: Solicitar Adopción
+      life_preview_title: "Vida con %{name}"
+      life_preview_description: "Su futuro juntos, planificado semana a semana"
+      life_preview_plan: Plan Semanal
+      life_preview_itinerary: Itinerario Diario
+      life_preview_tips: Consejos de Preparación
+      life_preview_disclaimer: Este contenido fue generado por IA y puede no ser 100%% preciso. Siempre consulta con el personal del refugio.
+      life_preview_loading: Generando vista previa...
+      life_preview_error: No pudimos generar una vista previa de vida en este momento.
+      life_preview_retry: Intentar de nuevo
+      life_preview_unavailable: Vista previa no disponible
+      life_preview_stale: Esta vista previa puede estar desactualizada
+      daily_routine: Rutina Diaria
+      feeding_guide: Guía de Alimentación
+      exercise_needs: Necesidades de Ejercicio
+      grooming: Aseo
+      vet_schedule: Calendario Veterinario
 
   shelter:
     pets:
@@ -203,6 +221,11 @@ es:
         select: Seleccionar...
         personality_placeholder: ej. Amigable, Juguetón, Tímido, Energético
         personality_hint: Separa los rasgos con comas
+        personality_spec: Especificación de Personalidad
+        personality_spec_placeholder: Evaluación detallada de la personalidad, peculiaridades, miedos, actividades favoritas...
+        adopter_tips: Consejos para el Adoptante
+        adopter_tips_placeholder: Consejos para posibles adoptantes (ej. necesita un hogar tranquilo, ama las caricias en la panza pero no que lo levanten)
+        ai_preview: Vista Previa de IA
         requirements_hint: Un requisito por línea
         photos_hint: Puedes seleccionar múltiples fotos. Máximo 10 fotos. Solo JPEG, PNG o WebP.
         cancel: Cancelar

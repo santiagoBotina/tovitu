@@ -12,7 +12,7 @@ RSpec.describe "Registrations" do
       user = create(:user, :verified, :onboarding_completed)
       post session_path, params: { session: { email: user.email, password: "password123" } }
       get new_registration_path
-      expect(response).to redirect_to(pets_path)
+      expect(response).to redirect_to(user_dashboard_path)
     end
   end
 
