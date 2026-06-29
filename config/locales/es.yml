@@ -288,6 +288,10 @@ es:
       retry: "Intentar de nuevo"
       no_documents: "Este refugio aún no ha subido documentos de políticas."
   authentication:
+    role_toggle:
+      aria_label: "Seleccionar tipo de cuenta"
+      adopter: "Adoptante"
+      shelter: "Refugio"
     sessions:
       new:
         title: "Bienvenido de nuevo"
@@ -320,8 +324,10 @@ es:
         signup_link: "Crear cuenta"
     registrations:
       new:
-        title: "Crear una cuenta"
-        subtitle: "Únete a Tovitu para gestionar adopciones de mascotas"
+        title_adopter: "Crea tu cuenta"
+        subtitle_adopter: "Comienza tu viaje de adopción con Tovitu"
+        title_shelter: "Crea tu cuenta de refugio"
+        subtitle_shelter: "Únete a Tovitu para gestionar adopciones de mascotas"
         name_label: "Nombre completo"
         email_label: "Correo electrónico"
         password_label: "Contraseña"
@@ -372,6 +378,10 @@ es:
         shelter_info_title: "Información del Refugio"
         shelter_info_desc: "Administra los detalles básicos de tu refugio."
         edit_shelter_info: "Editar Refugio"
+        language_title: "Idioma"
+        language_desc: "Elige tu idioma preferido para la aplicación."
+        language_label: "Idioma"
+        language_save: "Guardar preferencia de idioma"
     verifications:
       expired:
         title: "Enlace expirado"

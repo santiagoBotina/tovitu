@@ -10,6 +10,9 @@ class User < ApplicationRecord
 
   has_many :saved_pets, dependent: :destroy
 
+  has_many :adoption_requests, foreign_key: :adopter_id, dependent: :destroy
+  has_many :reviewed_adoption_requests, class_name: "AdoptionRequest", foreign_key: :reviewed_by_id, dependent: :nullify
+
   has_one :adopter_profile, dependent: :destroy
   has_one :shelter_profile, dependent: :destroy
 

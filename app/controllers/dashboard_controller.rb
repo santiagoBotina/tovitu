@@ -8,14 +8,14 @@ class DashboardController < ApplicationController
 
     @onboarding_complete = current_user.onboarding_completed?
 
-    @adoption_applications = AdoptionApplication
-      .where(applicant_email: current_user.email)
-      .includes(pet: [ :shelter, { photos_attachments: :blob } ])
+    @adoption_requests = AdoptionRequest
+      .where(adopter_id: current_user.id)
+      .includes(:pet, :shelter)
       .order(updated_at: :desc)
       .limit(3)
 
-    @total_applications_count = AdoptionApplication
-      .where(applicant_email: current_user.email)
+    @total_requests_count = AdoptionRequest
+      .where(adopter_id: current_user.id)
       .count
 
     @show_onboarding = !@onboarding_complete

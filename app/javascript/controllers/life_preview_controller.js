@@ -15,7 +15,13 @@ export default class extends Controller {
 
   connect() {
     this.messageIndex = 0
+    this.pollCount = 0
+    this.maxPolls = 30
+    this.fallbackShown = false
+    this.cycleTimeout = null
+
     this.updateMessage()
+
     this.messageInterval = setInterval(() => this.cycleMessage(), 3500)
     this.pollInterval = setInterval(() => this.poll(), 4000)
   }
@@ -23,11 +29,25 @@ export default class extends Controller {
   disconnect() {
     clearInterval(this.messageInterval)
     clearInterval(this.pollInterval)
+    if (this.cycleTimeout) {
+      clearTimeout(this.cycleTimeout)
+      this.cycleTimeout = null
+    }
   }
 
   cycleMessage() {
-    this.messageIndex = (this.messageIndex + 1) % this.messages.length
-    this.updateMessage()
+    if (this.hasMessageTarget) {
+      this.messageTarget.classList.add("opacity-0")
+    }
+
+    this.cycleTimeout = setTimeout(() => {
+      if (!this.hasMessageTarget) return
+
+      this.messageIndex = (this.messageIndex + 1) % this.messages.length
+      this.updateMessage()
+
+      this.messageTarget.classList.remove("opacity-0")
+    }, 300)
   }
 
   updateMessage() {
@@ -40,24 +60,48 @@ export default class extends Controller {
     const src = this.hasUrlValue ? this.urlValue : null
     if (!src) return
 
+    this.pollCount++
+    if (this.pollCount > this.maxPolls) {
+      this.handlePollTimeout()
+      return
+    }
+
     const separator = src.includes("?") ? "&" : "?"
 
     fetch(`${src}${separator}_poll=${Date.now()}`)
-      .then(r => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`)
-        return r.text()
-      })
+      .then(r => r.ok ? r.text() : Promise.reject())
       .then(html => {
-        if (html.includes("life-preview-loading")) return
+        if (!html || html.includes("life-preview-loading")) return
 
         clearInterval(this.messageInterval)
         clearInterval(this.pollInterval)
+        if (this.cycleTimeout) {
+          clearTimeout(this.cycleTimeout)
+          this.cycleTimeout = null
+        }
 
-        const currentFrame = this.element.closest("turbo-frame#life_preview")
-        if (!currentFrame) return
+        const frame = document.getElementById("life_preview")
+        if (!frame) return
 
-        currentFrame.outerHTML = `<turbo-frame id="life_preview" src="${src}${separator}_t=${Date.now()}"></turbo-frame>`
+        frame.setAttribute("src", `${src}${separator}_t=${Date.now()}`)
       })
       .catch(() => {})
+  }
+
+  handlePollTimeout() {
+    if (this.fallbackShown) return
+    this.fallbackShown = true
+
+    clearInterval(this.messageInterval)
+    clearInterval(this.pollInterval)
+    if (this.cycleTimeout) {
+      clearTimeout(this.cycleTimeout)
+      this.cycleTimeout = null
+    }
+
+    if (this.hasMessageTarget) {
+      this.messageTarget.textContent = "Taking longer than expected — refresh the page to try again."
+      this.messageTarget.classList.remove("opacity-0")
+    }
   }
 }

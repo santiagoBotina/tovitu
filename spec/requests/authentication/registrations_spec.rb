@@ -5,7 +5,7 @@ RSpec.describe "Registrations" do
     it "renders the registration form" do
       get new_registration_path
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Create an account")
+      expect(response.body).to include("Create account")
     end
 
     it "redirects to root if already logged in" do

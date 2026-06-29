@@ -25,6 +25,14 @@ module PetsHelper
     Pet::SEXES.map { |s| [ t("pets.sex.#{s}"), s ] }
   end
 
+  def life_preview_icon_path(pet)
+    case pet.species
+    when "dog" then "/icons/dog.svg"
+    when "cat" then "/icons/cat.svg"
+    else "/icons/balloon.svg"
+    end
+  end
+
   def pet_saved?(pet)
     if signed_in?
       return false unless current_user.respond_to?(:saved_pets)

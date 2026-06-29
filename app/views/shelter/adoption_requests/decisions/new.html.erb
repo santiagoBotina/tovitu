@@ -1,0 +1,52 @@
+<div class="w-full max-w-2xl mx-auto">
+  <%= link_to shelter_adoption_request_path(@request), class: "inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-700 text-sm mb-6 transition" do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+    </svg>
+    <%= t(".back") %>
+  <% end %>
+
+  <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+    <h1 class="font-display text-xl font-bold text-neutral-900 mb-2"><%= t(".title") %></h1>
+    <p class="text-neutral-500 text-sm mb-6"><%= t(".subtitle", pet_name: @request.pet.name, adopter_name: @request.adopter.name) %></p>
+
+    <%= form_tag shelter_adoption_request_decision_path(@request), method: :post, class: "space-y-6" do %>
+      <%= hidden_field_tag :decision, params[:decision] %>
+
+      <div class="space-y-3">
+        <p class="font-medium text-neutral-800 text-sm"><%= t(".select_reasons") %></p>
+        <% default_reasons = [
+              t("adoptions.requests.decline_reasons.profile_mismatch"),
+              t("adoptions.requests.decline_reasons.requirements_mismatch"),
+              t("adoptions.requests.decline_reasons.better_match"),
+              t("adoptions.requests.decline_reasons.pet_unavailable"),
+              t("adoptions.requests.decline_reasons.additional_info")
+            ] %>
+        <% default_reasons.each do |reason| %>
+          <label class="flex items-start gap-3 p-3 rounded-xl border border-neutral-200 hover:bg-neutral-50 cursor-pointer transition-colors">
+            <%= check_box_tag "decline_reasons[]", reason, false, class: "mt-0.5 rounded border-neutral-300 text-red-500 focus:ring-red-500 cursor-pointer" %>
+            <span class="text-sm text-neutral-700"><%= reason %></span>
+          </label>
+        <% end %>
+      </div>
+
+      <div>
+        <%= label_tag :custom_reason, t(".custom_reason_label"), class: "block text-sm font-medium text-neutral-800 mb-2" %>
+        <%= text_area_tag :custom_reason, nil, rows: 3,
+                          placeholder: t(".custom_reason_placeholder"),
+                          class: "w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm" %>
+        <p class="text-xs text-neutral-400 mt-1"><%= t(".custom_reason_hint") %></p>
+      </div>
+
+      <div class="flex items-center gap-3 pt-2">
+        <%= submit_tag t(".#{params[:decision]}_submit", default: t(".submit")),
+                       class: "px-8 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-colors duration-200 cursor-pointer",
+                       data: { disable_with: t(".processing") } %>
+        <%= link_to shelter_adoption_request_path(@request),
+                    class: "px-8 py-3 text-neutral-600 font-medium rounded-xl border border-neutral-300 hover:bg-neutral-50 transition-colors" do %>
+          <%= t(".cancel") %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

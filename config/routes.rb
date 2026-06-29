@@ -1,10 +1,13 @@
 Rails.application.routes.draw do
-  scope "(:locale)", locale: /en|es/ do
+  # Bare domain redirects to default locale
+  get "/", to: redirect("/en")
+
+  scope ":locale", locale: /en|es/ do
     root "landing#index"
 
     get "login/adopter", to: "authentication/sessions#new_adopter"
     get "login/shelter",  to: "authentication/sessions#new_shelter"
-    get "login", to: redirect("/"), as: :new_session
+    get "login", to: "authentication/sessions#new", as: :new_session
 
     resource :session, only: [ :create, :destroy ], controller: "authentication/sessions"
 
@@ -61,6 +64,8 @@ Rails.application.routes.draw do
     end
     resource :application_status, only: [ :show ], controller: "adoption_applications/status"
 
+    resources :adoption_requests, only: [ :index, :show, :new, :create ]
+
     resources :shelters, only: [] do
       resources :rag_queries, only: [ :create ], controller: "ai/rag_queries"
     end
@@ -85,6 +90,10 @@ Rails.application.routes.draw do
           patch :finalize
           patch :cancel
         end
+      end
+
+      resources :adoption_requests, only: [ :index, :show ] do
+        resource :decision, only: [ :new, :create ], controller: "adoption_requests/decisions"
       end
 
       namespace :ai do

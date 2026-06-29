@@ -11,7 +11,7 @@ module Authentication
       old_email = @user.email
       new_email = params[:user][:email]&.downcase&.strip
 
-      if @user.update(name: params[:user][:name], email: new_email)
+      if @user.update(name: params[:user][:name], email: new_email, locale: params[:user][:locale])
         if @user.email != old_email
           @user.update!(verified_at: nil)
           Authentication::ResendVerificationEmail.call(user: @user)

@@ -2,12 +2,13 @@ module Authentication
   class RegisterUser < ApplicationService
     VALID_ROLES = %w[adopter shelter_admin shelter_staff].freeze
 
-    def initialize(name:, email:, password:, password_confirmation:, role: "adopter")
+    def initialize(name:, email:, password:, password_confirmation:, role: "adopter", locale: nil)
       @name = name
       @email = email
       @password = password
       @password_confirmation = password_confirmation
       @role = role
+      @locale = locale
     end
 
     def call
@@ -18,7 +19,8 @@ module Authentication
         email: @email,
         password: @password,
         password_confirmation: @password_confirmation,
-        role: @role
+        role: @role,
+        locale: @locale
       )
 
       return Result.failure(user.errors.full_messages) unless user.save

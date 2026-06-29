@@ -1,0 +1,85 @@
+<div class="w-full max-w-5xl mx-auto">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="font-display text-3xl font-bold text-neutral-900"><%= t(".title") %></h1>
+      <p class="text-neutral-500 mt-1"><%= t(".subtitle") %></p>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-2 mb-6">
+    <%= link_to shelter_adoption_requests_path, class: "px-4 py-2 rounded-full text-sm font-medium transition-colors #{params[:status].blank? ? 'bg-secondary-500 text-white' : 'bg-white text-neutral-600 border border-neutral-300 hover:border-secondary-300'}" do %>
+      <%= t(".filters.all") %>
+    <% end %>
+    <% AdoptionRequest.statuses.keys.each do |status| %>
+      <%= link_to shelter_adoption_requests_path(status: status), class: "px-4 py-2 rounded-full text-sm font-medium transition-colors #{params[:status] == status ? 'bg-secondary-500 text-white' : 'bg-white text-neutral-600 border border-neutral-300 hover:border-secondary-300'}" do %>
+        <%= t("adoptions.requests.statuses.#{status}") %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if @requests.any? %>
+    <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
+      <table class="w-full">
+        <thead>
+          <tr class="border-b border-neutral-200 bg-neutral-50">
+            <th class="text-left px-6 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider"><%= t(".table.pet") %></th>
+            <th class="text-left px-6 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider"><%= t(".table.adopter") %></th>
+            <th class="text-left px-6 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider"><%= t(".table.status") %></th>
+            <th class="text-left px-6 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider"><%= t(".table.submitted") %></th>
+            <th class="text-right px-6 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider"><%= t(".table.actions") %></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-neutral-100">
+          <% @requests.each do |request| %>
+            <tr class="hover:bg-neutral-50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-neutral-100 overflow-hidden shrink-0">
+                    <% if request.pet.primary_photo.present? %>
+                      <%= image_tag request.pet.primary_photo.url(variant: :thumb), alt: "", class: "w-full h-full object-cover" %>
+                    <% else %>
+                      <div class="w-full h-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div>
+                    <p class="font-medium text-neutral-900"><%= request.pet.name %></p>
+                    <p class="text-xs text-neutral-500"><%= request.pet.species.humanize %></p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-sm text-neutral-600"><%= request.adopter.name %></td>
+              <td class="px-6 py-4">
+                <%= render "adoption_requests/status_badge", status: request.status %>
+              </td>
+              <td class="px-6 py-4 text-sm text-neutral-500"><%= l(request.created_at.to_date, format: :long) rescue request.created_at.to_date %></td>
+              <td class="px-6 py-4 text-right">
+                <%= link_to shelter_adoption_request_path(request), class: "text-secondary-500 hover:text-secondary-600 font-medium text-sm transition-colors" do %>
+                  <%= t(".table.view") %> →
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="text-center py-16 bg-white rounded-xl shadow-sm border border-neutral-200">
+      <div class="w-16 h-16 bg-secondary-50 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <% if params[:status].present? %>
+        <h3 class="font-display text-xl font-bold text-neutral-800 mb-2"><%= t(".empty_filter_title") %></h3>
+        <p class="text-neutral-500 mb-6"><%= t(".empty_filter_body") %></p>
+      <% else %>
+        <h3 class="font-display text-xl font-bold text-neutral-800 mb-2"><%= t(".empty_title") %></h3>
+        <p class="text-neutral-500 mb-6"><%= t(".empty_body") %></p>
+      <% end %>
+    </div>
+  <% end %>
+</div>

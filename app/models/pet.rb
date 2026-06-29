@@ -4,6 +4,7 @@ class Pet < ApplicationRecord
   delegate :ai_features_enabled?, to: :shelter, allow_nil: true
   has_many_attached :photos
   has_many :adoption_applications, dependent: :restrict_with_error
+  has_many :adoption_requests, dependent: :restrict_with_error
 
   SPECIES = %w[dog cat other].freeze
   AGE_CATEGORIES = %w[baby young adult senior].freeze

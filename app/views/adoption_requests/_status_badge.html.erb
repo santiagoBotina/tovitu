@@ -1,0 +1,11 @@
+<% status = local_assigns[:status] %>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
+  <%= case status
+      when "pending" then 'bg-yellow-50 text-yellow-700'
+      when "in_validation" then 'bg-blue-50 text-blue-700'
+      when "accepted" then 'bg-green-50 text-green-700'
+      when "declined" then 'bg-red-50 text-red-700'
+      else 'bg-neutral-100 text-neutral-600'
+      end %>">
+  <%= t("adoptions.requests.statuses.#{status}") %>
+</span>

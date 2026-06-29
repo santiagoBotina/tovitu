@@ -21,8 +21,12 @@ class ApplicationController < ActionController::Base
   end
 
   def default_url_options
-    return {} if I18n.locale == I18n.default_locale || I18n.locale.to_s.in?(LOCALE_WHITELIST).!
-    { locale: I18n.locale }
+    locale = if signed_in? && current_user.locale.present?
+      current_user.locale.to_sym
+    else
+      I18n.locale
+    end
+    { locale: locale }
   end
 
   def current_user

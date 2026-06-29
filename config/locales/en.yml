@@ -288,6 +288,10 @@ en:
       retry: "Try again"
       no_documents: "This shelter hasn't uploaded policy documents yet."
   authentication:
+    role_toggle:
+      aria_label: "Select account type"
+      adopter: "Adopter"
+      shelter: "Shelter"
     sessions:
       new:
         title: "Welcome back"
@@ -320,8 +324,10 @@ en:
         signup_link: "Create account"
     registrations:
       new:
-        title: "Create an account"
-        subtitle: "Join Tovitu to manage pet adoptions"
+        title_adopter: "Create your account"
+        subtitle_adopter: "Start your adoption journey with Tovitu"
+        title_shelter: "Create your shelter account"
+        subtitle_shelter: "Join Tovitu to manage pet adoptions"
         name_label: "Full name"
         email_label: "Email address"
         password_label: "Password"
@@ -372,6 +378,10 @@ en:
         shelter_info_title: "Shelter Information"
         shelter_info_desc: "Manage your shelter's basic details."
         edit_shelter_info: "Edit Shelter Info"
+        language_title: "Language"
+        language_desc: "Choose your preferred language for the app."
+        language_label: "Language"
+        language_save: "Save language preference"
     verifications:
       expired:
         title: "Link expired"

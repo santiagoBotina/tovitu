@@ -251,6 +251,78 @@ ALTER SEQUENCE public.adoption_notes_id_seq OWNED BY public.adoption_notes.id;
 
 
 --
+-- Name: adoption_request_timeline_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.adoption_request_timeline_events (
+    id bigint NOT NULL,
+    adoption_request_id bigint NOT NULL,
+    from_status character varying,
+    to_status character varying NOT NULL,
+    actor_id bigint,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: adoption_request_timeline_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.adoption_request_timeline_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: adoption_request_timeline_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.adoption_request_timeline_events_id_seq OWNED BY public.adoption_request_timeline_events.id;
+
+
+--
+-- Name: adoption_requests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.adoption_requests (
+    id bigint NOT NULL,
+    pet_id bigint NOT NULL,
+    adopter_id bigint NOT NULL,
+    shelter_id bigint NOT NULL,
+    status character varying DEFAULT 'pending'::character varying NOT NULL,
+    decline_reasons jsonb,
+    reviewed_by_id bigint,
+    reviewed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: adoption_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.adoption_requests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: adoption_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.adoption_requests_id_seq OWNED BY public.adoption_requests.id;
+
+
+--
 -- Name: adoption_timeline_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -703,6 +775,7 @@ CREATE TABLE public.users (
     verified_at timestamp(6) without time zone,
     onboarding_completed_at timestamp(6) without time zone,
     onboarding_step integer DEFAULT 0 NOT NULL,
+    locale character varying,
     CONSTRAINT valid_role CHECK (((role)::text = ANY (ARRAY[('adopter'::character varying)::text, ('shelter_admin'::character varying)::text, ('shelter_staff'::character varying)::text, ('admin'::character varying)::text, ('staff'::character varying)::text])))
 );
 
@@ -766,6 +839,20 @@ ALTER TABLE ONLY public.adoption_applications ALTER COLUMN id SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY public.adoption_notes ALTER COLUMN id SET DEFAULT nextval('public.adoption_notes_id_seq'::regclass);
+
+
+--
+-- Name: adoption_request_timeline_events id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adoption_request_timeline_events ALTER COLUMN id SET DEFAULT nextval('public.adoption_request_timeline_events_id_seq'::regclass);
+
+
+--
+-- Name: adoption_requests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adoption_requests ALTER COLUMN id SET DEFAULT nextval('public.adoption_requests_id_seq'::regclass);
 
 
 --
@@ -901,6 +988,22 @@ ALTER TABLE ONLY public.adoption_notes
 
 
 --
+-- Name: adoption_request_timeline_events adoption_request_timeline_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adoption_request_timeline_events
+    ADD CONSTRAINT adoption_request_timeline_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: adoption_requests adoption_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adoption_requests
+    ADD CONSTRAINT adoption_requests_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: adoption_timeline_events adoption_timeline_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1010,6 +1113,13 @@ ALTER TABLE ONLY public.shelters
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: idx_adoption_requests_active_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_adoption_requests_active_unique ON public.adoption_requests USING btree (adopter_id, pet_id) WHERE ((status)::text <> 'declined'::text);
 
 
 --
@@ -1129,6 +1239,55 @@ CREATE INDEX index_adoption_notes_on_adoption_application_id ON public.adoption_
 --
 
 CREATE INDEX index_adoption_notes_on_user_id ON public.adoption_notes USING btree (user_id);
+
+
+--
+-- Name: index_adoption_request_timeline_events_on_actor_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_adoption_request_timeline_events_on_actor_id ON public.adoption_request_timeline_events USING btree (actor_id);
+
+
+--
+-- Name: index_adoption_request_timeline_events_on_adoption_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_adoption_request_timeline_events_on_adoption_request_id ON public.adoption_request_timeline_events USING btree (adoption_request_id);
+
+
+--
+-- Name: index_adoption_requests_on_adopter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_adoption_requests_on_adopter_id ON public.adoption_requests USING btree (adopter_id);
+
+
+--
+-- Name: index_adoption_requests_on_pet_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_adoption_requests_on_pet_id ON public.adoption_requests USING btree (pet_id);
+
+
+--
+-- Name: index_adoption_requests_on_reviewed_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_adoption_requests_on_reviewed_by_id ON public.adoption_requests USING btree (reviewed_by_id);
+
+
+--
+-- Name: index_adoption_requests_on_shelter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_adoption_requests_on_shelter_id ON public.adoption_requests USING btree (shelter_id);
+
+
+--
+-- Name: index_adoption_requests_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_adoption_requests_on_status ON public.adoption_requests USING btree (status);
 
 
 --
@@ -1423,6 +1582,14 @@ ALTER TABLE ONLY public.invitations
 
 
 --
+-- Name: adoption_request_timeline_events fk_rails_1f09f19158; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adoption_request_timeline_events
+    ADD CONSTRAINT fk_rails_1f09f19158 FOREIGN KEY (actor_id) REFERENCES public.users(id);
+
+
+--
 -- Name: adoption_notes fk_rails_2342c927c8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1436,6 +1603,14 @@ ALTER TABLE ONLY public.adoption_notes
 
 ALTER TABLE ONLY public.adoption_applications
     ADD CONSTRAINT fk_rails_32b55b905c FOREIGN KEY (pet_id) REFERENCES public.pets(id);
+
+
+--
+-- Name: adoption_requests fk_rails_33a38f182a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adoption_requests
+    ADD CONSTRAINT fk_rails_33a38f182a FOREIGN KEY (shelter_id) REFERENCES public.shelters(id);
 
 
 --
@@ -1460,6 +1635,22 @@ ALTER TABLE ONLY public.shelter_profiles
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT fk_rails_542555d3fe FOREIGN KEY (shelter_id) REFERENCES public.shelters(id);
+
+
+--
+-- Name: adoption_requests fk_rails_63b246b5b6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adoption_requests
+    ADD CONSTRAINT fk_rails_63b246b5b6 FOREIGN KEY (pet_id) REFERENCES public.pets(id);
+
+
+--
+-- Name: adoption_request_timeline_events fk_rails_649dee7fbd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adoption_request_timeline_events
+    ADD CONSTRAINT fk_rails_649dee7fbd FOREIGN KEY (adoption_request_id) REFERENCES public.adoption_requests(id);
 
 
 --
@@ -1519,6 +1710,14 @@ ALTER TABLE ONLY public.adoption_notes
 
 
 --
+-- Name: adoption_requests fk_rails_c3429fd4f6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adoption_requests
+    ADD CONSTRAINT fk_rails_c3429fd4f6 FOREIGN KEY (reviewed_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: active_storage_attachments fk_rails_c3b3935057; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1532,6 +1731,14 @@ ALTER TABLE ONLY public.active_storage_attachments
 
 ALTER TABLE ONLY public.adoption_applications
     ADD CONSTRAINT fk_rails_d7b317add5 FOREIGN KEY (reviewed_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: adoption_requests fk_rails_d9eb300c0d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adoption_requests
+    ADD CONSTRAINT fk_rails_d9eb300c0d FOREIGN KEY (adopter_id) REFERENCES public.users(id);
 
 
 --
@@ -1565,6 +1772,8 @@ ALTER TABLE ONLY public.adoption_applications
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260630000001'),
+('20260629030136'),
 ('20260625003506'),
 ('20260624000001'),
 ('20260617000003'),

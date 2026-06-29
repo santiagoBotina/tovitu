@@ -1,10 +1,42 @@
-<div class="w-full max-w-md mx-auto">
+<div class="w-full max-w-md mx-auto"
+     data-controller="role-toggle"
+     data-role-toggle-role="<%= @role %>">
+
   <div class="bg-white rounded-xl shadow-md p-8">
-    <h1 class="font-display text-3xl font-bold text-center text-neutral-900 mb-1"><%= t(".title") %></h1>
-    <p class="text-neutral-500 text-center mb-8"><%= t(".subtitle") %></p>
+    <div class="mb-8">
+      <%= render "authentication/role_toggle", current_role: @role %>
+    </div>
+
+    <h1 class="font-display text-3xl font-bold text-center text-neutral-900 mb-1">
+      <span data-role-toggle-target="toggleable"
+            data-role="adopter"
+            class="<%= @role == 'adopter' ? '' : 'hidden' %>">
+        <%= t(".title_adopter") %>
+      </span>
+      <span data-role-toggle-target="toggleable"
+            data-role="shelter"
+            class="<%= @role == 'shelter' ? '' : 'hidden' %>">
+        <%= t(".title_shelter") %>
+      </span>
+    </h1>
+
+    <p class="text-neutral-500 text-center mb-8">
+      <span data-role-toggle-target="toggleable"
+            data-role="adopter"
+            class="<%= @role == 'adopter' ? '' : 'hidden' %>">
+        <%= t(".subtitle_adopter") %>
+      </span>
+      <span data-role-toggle-target="toggleable"
+            data-role="shelter"
+            class="<%= @role == 'shelter' ? '' : 'hidden' %>">
+        <%= t(".subtitle_shelter") %>
+      </span>
+    </p>
 
     <%= form_with model: @user, url: registration_path, class: "space-y-5" do |f| %>
-      <%= f.hidden_field :role, value: @role %>
+      <%= f.hidden_field :role,
+            value: @role,
+            data: { role_toggle_role_field: true } %>
       <%= render "shared/error_messages", resource: @user %>
 
       <div>
@@ -32,12 +64,12 @@
               class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-neutral-800 placeholder-neutral-400 transition" %>
       </div>
 
-      <%= f.submit t(".submit"), class: "w-full bg-primary-500 text-white font-semibold py-3 px-4 rounded-xl hover:bg-primary-600 active:bg-primary-700 transition cursor-pointer shadow-sm" %>
+      <%= f.submit t(".submit"), class: "w-full bg-primary-500 text-white font-semibold py-3 px-4 rounded-xl hover:bg-primary-600 active:bg-primary-700 active:scale-[0.98] transition cursor-pointer shadow-sm" %>
     <% end %>
   </div>
 
   <p class="text-center text-sm text-neutral-500 mt-8">
     <%= t(".login_prompt") %>
-    <%= link_to t(".login_link"), @role == "shelter" ? login_shelter_path : login_adopter_path, class: "text-primary-600 hover:text-primary-800 font-medium transition" %>
+    <%= link_to t(".login_link"), new_session_path, class: "text-primary-600 hover:text-primary-800 font-medium transition" %>
   </p>
 </div>

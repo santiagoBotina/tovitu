@@ -20,7 +20,7 @@
       <p class="text-sm font-medium text-secondary-700">
         <%= t(@pending_count == 1 ? ".alert_bar" : ".alert_bar_plural", count: @pending_count) %>
       </p>
-      <%= link_to shelter_adoption_applications_path,
+      <%= link_to shelter_adoption_requests_path,
           class: "inline-flex items-center gap-1.5 px-4 py-2 bg-secondary-500 text-white text-sm font-medium rounded-xl hover:bg-secondary-600 focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 transition-all duration-150 active:scale-[0.97]" do %>
         <%= t(".alert_cta") %>
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -95,7 +95,7 @@
           <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
         </svg>
       </div>
-      <p class="font-display text-3xl font-bold text-neutral-900"><%= @pending_applications %></p>
+      <p class="font-display text-3xl font-bold text-neutral-900"><%= @pending_requests %></p>
       <p class="text-neutral-500 text-sm mt-1"><%= t(".pipeline.pending_requests") %></p>
     </div>
 
@@ -105,7 +105,7 @@
           <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
       </div>
-      <p class="font-display text-3xl font-bold text-neutral-900"><%= @in_review_applications %></p>
+      <p class="font-display text-3xl font-bold text-neutral-900"><%= @in_review_requests %></p>
       <p class="text-neutral-500 text-sm mt-1"><%= t(".pipeline.in_review") %></p>
     </div>
 
@@ -211,7 +211,7 @@
             </div>
           <% end %>
 
-          <%= link_to shelter_adoption_applications_path,
+          <%= link_to shelter_adoption_requests_path,
               class: "group flex items-center gap-3 p-3.5 bg-neutral-50 rounded-xl hover:bg-primary-50 transition-colors duration-200 border border-neutral-100 hover:border-primary-100" do %>
             <div class="w-9 h-9 bg-primary-50 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
               <svg class="w-4.5 h-4.5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">

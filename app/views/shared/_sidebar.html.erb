@@ -58,12 +58,12 @@
         <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.shelters") %></span>
       <% end %>
 
-      <%# --- Adopter Adoptions (placeholder) --- %>
-      <%= link_to "#",
-          class: "#{base_link} #{inactive_link}",
-          title: "Coming soon" do %>
+      <%# --- Adopter Adoptions --- %>
+      <%= link_to adoption_requests_path,
+          class: "#{base_link} #{request.path.start_with?('/adoption_requests') ? active_link : inactive_link}",
+          aria: { current: request.path.start_with?('/adoption_requests') ? "page" : nil } do %>
         <div class="shrink-0 w-5 h-5 flex items-center justify-center">
-          <svg class="w-5 h-5 #{icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="w-5 h-5 #{request.path.start_with?('/adoption_requests') ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 14c1.5-2.5 2-5.5 2-8 0-3-2-5-5-5-1.8 0-3.4.9-4.3 2.3C10.4 1.9 8.8 1 7 1 4 1 2 3 2 6c0 2.5.5 5.5 2 8M12 23c-4-3-8-6-8-10a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 4-4 7-8 10Z"/>
           </svg>
         </div>
@@ -97,11 +97,11 @@
         <% end %>
 
         <%# --- Shelter Adoptions --- %>
-        <%= link_to shelter_adoption_applications_path,
-            class: "#{base_link} #{request.path.start_with?('/shelter/adoption_applications') ? active_link : inactive_link}",
-            aria: { current: request.path.start_with?('/shelter/adoption_applications') ? "page" : nil } do %>
+        <%= link_to shelter_adoption_requests_path,
+            class: "#{base_link} #{request.path.start_with?('/shelter/adoption_requests') ? active_link : inactive_link}",
+            aria: { current: request.path.start_with?('/shelter/adoption_requests') ? "page" : nil } do %>
           <div class="shrink-0 w-5 h-5 flex items-center justify-center">
-            <svg class="w-5 h-5 #{request.path.start_with?('/shelter/adoption_applications') ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="w-5 h-5 #{request.path.start_with?('/shelter/adoption_requests') ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 14c1.5-2.5 2-5.5 2-8 0-3-2-5-5-5-1.8 0-3.4.9-4.3 2.3C10.4 1.9 8.8 1 7 1 4 1 2 3 2 6c0 2.5.5 5.5 2 8M12 23c-4-3-8-6-8-10a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 4-4 7-8 10Z"/>
             </svg>
           </div>

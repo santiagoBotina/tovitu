@@ -1,0 +1,19 @@
+<h1><%= t(".greeting", name: @adopter.name) %></h1>
+
+<% case @status %>
+<% when "in_validation" %>
+  <p><%= t(".in_validation_body", pet_name: @pet.name, shelter_name: @shelter.name) %></p>
+<% when "accepted" %>
+  <p><%= t(".accepted_body", pet_name: @pet.name, shelter_name: @shelter.name) %></p>
+<% when "declined" %>
+  <p><%= t(".declined_body", pet_name: @pet.name) %></p>
+  <% if @request.decline_reasons.present? %>
+    <ul>
+      <% @request.decline_reasons.each do |reason| %>
+        <li><%= reason %></li>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>
+
+<p><%= t(".contact", shelter_name: @shelter.name) %></p>

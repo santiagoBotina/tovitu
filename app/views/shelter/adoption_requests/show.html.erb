@@ -1,0 +1,171 @@
+<div class="w-full max-w-5xl mx-auto">
+  <%= link_to shelter_adoption_requests_path, class: "inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-700 text-sm mb-6 transition" do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+    </svg>
+    <%= t(".back_to_requests") %>
+  <% end %>
+
+  <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6">
+    <div class="flex items-start justify-between">
+      <div>
+        <h1 class="font-display text-2xl font-bold text-neutral-900"><%= t(".title", pet_name: @pet.name) %></h1>
+        <p class="text-neutral-500 text-sm mt-1"><%= t(".submitted", date: l(@request.created_at.to_date, format: :long)) %></p>
+      </div>
+      <%= render "adoption_requests/status_badge", status: @request.status %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+      <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".pet_section") %></h2>
+      <div class="space-y-3">
+        <div class="flex items-center gap-4">
+          <div class="w-16 h-16 rounded-xl bg-neutral-100 overflow-hidden shrink-0">
+            <% if @pet.primary_photo.present? %>
+              <%= image_tag @pet.primary_photo.url(variant: :medium), alt: @pet.name, class: "w-full h-full object-cover" %>
+            <% else %>
+              <div class="w-full h-full flex items-center justify-center bg-primary-50">
+                <svg class="w-8 h-8 text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+            <% end %>
+          </div>
+          <div>
+            <h3 class="font-bold text-neutral-900"><%= @pet.name %></h3>
+            <p class="text-sm text-neutral-500"><%= @pet.species.humanize %> · <%= @pet.breed.presence || t(".unknown_breed") %></p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-sm">
+          <div><span class="text-neutral-500"><%= t(".age") %>:</span> <%= @pet.age_category&.humanize %></div>
+          <div><span class="text-neutral-500"><%= t(".size") %>:</span> <%= @pet.size&.humanize || "—" %></div>
+          <div><span class="text-neutral-500"><%= t(".sex") %>:</span> <%= @pet.sex&.humanize %></div>
+          <div><span class="text-neutral-500"><%= t(".status_label") %>:</span> <%= @pet.status.humanize %></div>
+        </div>
+        <% if @pet.personality_traits.present? && @pet.personality_traits.any? %>
+          <div>
+            <p class="text-sm text-neutral-500 mb-1"><%= t(".personality") %>:</p>
+            <div class="flex flex-wrap gap-1">
+              <% @pet.personality_traits.each do |trait| %>
+                <span class="px-2 py-0.5 bg-primary-50 text-primary-600 text-xs rounded-full"><%= trait %></span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        <%= link_to shelter_pet_path(@pet), class: "text-primary-500 text-sm font-medium hover:underline" do %>
+          <%= t(".view_full_profile") %> →
+        <% end %>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+      <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".adopter_section") %></h2>
+      <div class="space-y-3">
+        <div>
+          <h3 class="font-bold text-neutral-900"><%= @adopter.name %></h3>
+          <% if @profile&.adoption_priority.present? %>
+            <p class="text-sm text-neutral-600 italic mt-1">"<%= @profile.adoption_priority %>"</p>
+          <% end %>
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-sm">
+          <% if @profile&.personality.present? %>
+            <div><span class="text-neutral-500"><%= t(".personality") %>:</span> <%= t("onboarding.adopter.questions.q7.options.#{@profile.personality}") %></div>
+          <% end %>
+          <% if @profile&.activity_level.present? %>
+            <div><span class="text-neutral-500"><%= t(".activity") %>:</span> <%= t("onboarding.adopter.questions.q2.options.#{@profile.activity_level}") %></div>
+          <% end %>
+          <% if @profile&.pet_experience.present? %>
+            <div><span class="text-neutral-500"><%= t(".experience") %>:</span> <%= t("onboarding.adopter.questions.q4.options.#{@profile.pet_experience}") %></div>
+          <% end %>
+          <% if @profile&.daily_time_available.present? %>
+            <div><span class="text-neutral-500"><%= t(".daily_time") %>:</span> <%= t("onboarding.adopter.questions.q6.options.#{@profile.daily_time_available}") %></div>
+          <% end %>
+          <% if @profile&.ideal_companion.present? %>
+            <div><span class="text-neutral-500"><%= t(".ideal_companion") %>:</span> <%= t("onboarding.adopter.questions.q3.options.#{@profile.ideal_companion}") %></div>
+          <% end %>
+        </div>
+        <% if @profile&.adoption_goals.present? && @profile.adoption_goals.any? %>
+          <div>
+            <p class="text-sm text-neutral-500 mb-1"><%= t(".goals") %>:</p>
+            <div class="flex flex-wrap gap-1">
+              <% @profile.adoption_goals.each do |goal| %>
+                <span class="px-2 py-0.5 bg-secondary-50 text-secondary-600 text-xs rounded-full"><%= t("onboarding.adopter.questions.q5.options.#{goal}") %></span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6">
+    <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".timeline_section") %></h2>
+    <% if @timeline.any? %>
+      <div class="space-y-4">
+        <% @timeline.each do |event| %>
+          <div class="flex items-start gap-3">
+            <div class="w-3 h-3 mt-1.5 rounded-full shrink-0
+              <%= case event.to_status
+                  when "pending" then 'bg-yellow-400'
+                  when "in_validation" then 'bg-blue-400'
+                  when "accepted" then 'bg-green-400'
+                  when "declined" then 'bg-red-400'
+                  else 'bg-neutral-300'
+                  end %>">
+            </div>
+            <div>
+              <p class="text-sm font-medium text-neutral-900">
+                <%= t("adoptions.requests.timeline.#{event.to_status}", default: event.to_status.humanize) %>
+              </p>
+              <p class="text-xs text-neutral-500">
+                <%= l(event.created_at, format: :long) %>
+                <% if event.actor.present? %>
+                  · <%= event.actor.name %>
+                <% end %>
+              </p>
+              <% if event.metadata.present? && event.metadata["decline_reasons"].present? %>
+                <div class="mt-2 text-sm text-neutral-600 bg-neutral-50 rounded-lg p-3">
+                  <p class="font-medium text-neutral-700"><%= t(".decline_reasons") %>:</p>
+                  <ul class="list-disc list-inside mt-1">
+                    <% event.metadata["decline_reasons"].each do |reason| %>
+                      <li><%= reason %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-neutral-500 text-sm"><%= t(".no_events") %></p>
+    <% end %>
+  </div>
+
+  <% if @request.available_for_review? %>
+    <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+      <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".actions") %></h2>
+      <div class="flex flex-wrap gap-3">
+        <% unless @request.in_validation? %>
+          <%= button_to shelter_adoption_request_decision_path(@request, decision: "in_validation"),
+                        method: :post,
+                        data: { turbo_confirm: t(".confirm_validation") },
+                        class: "px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-colors" do %>
+            <%= t(".mark_validation") %>
+          <% end %>
+        <% end %>
+        <%= button_to shelter_adoption_request_decision_path(@request, decision: "accepted"),
+                      method: :post,
+                      data: { turbo_confirm: t(".confirm_accept") },
+                      class: "px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-xl transition-colors" do %>
+          <%= t(".accept") %>
+        <% end %>
+        <%= link_to new_shelter_adoption_request_decision_path(@request, decision: "declined"),
+                    class: "px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl transition-colors" do %>
+          <%= t(".decline") %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

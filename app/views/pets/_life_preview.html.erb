@@ -4,16 +4,14 @@
     <% tips = preview_data["tips"] || {} %>
     <% plan = Array(preview_data["plan"]) %>
 
-    <div class="bg-white rounded-xl border border-neutral-200 shadow-md p-6 space-y-5">
+    <div class="bg-white rounded-xl border border-neutral-200 shadow-md p-6 space-y-5 relative overflow-hidden">
       <style>
         .lp-chevron { transition: transform 0.2s ease; }
         details[open] .lp-chevron { transform: rotate(180deg); }
       </style>
-      <div class="flex items-start gap-4">
-        <span class="flex-shrink-0 w-14 h-14 rounded-full bg-gradient-to-br from-secondary-300 to-primary-400 flex items-center justify-center shadow-sm">
-          <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/>
-          </svg>
+      <div class="flex items-start gap-4 lp-fade-in" style="animation-delay: 0s">
+        <span class="flex-shrink-0 w-14 h-14 rounded-full bg-gradient-to-br from-secondary-300 to-primary-400 flex items-center justify-center shadow-sm overflow-hidden lp-glow-pulse">
+          <%= image_tag life_preview_icon_path(pet), class: "w-10 h-10", alt: "" %>
         </span>
         <div class="min-w-0 pt-0.5">
           <h2 class="font-display text-lg font-bold text-neutral-800">
@@ -27,7 +25,7 @@
 
       <div class="space-y-3">
         <%# Week-by-Week Plan %>
-        <details class="border border-neutral-200 rounded-xl open:border-secondary-200 open:ring-1 open:ring-secondary-100">
+        <details class="border border-neutral-200 rounded-xl open:border-secondary-200 open:ring-1 open:ring-secondary-100 lp-fade-in" style="animation-delay: 0.1s">
           <summary class="flex items-center justify-between gap-2 px-4 py-3.5 bg-gradient-to-r from-neutral-50 to-white hover:from-neutral-100 transition-colors cursor-pointer list-none [&::-webkit-details-marker]:hidden">
             <span class="flex items-center gap-2.5">
               <span class="flex-shrink-0 w-7 h-7 rounded-full bg-secondary-100 inline-flex items-center justify-center">
@@ -42,7 +40,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </summary>
-          <div class="px-4 pb-5 pt-1 border-t border-neutral-100">
+          <div class="px-4 pb-5 pt-1 border-t border-neutral-100 lp-panel-body">
             <div class="space-y-2 mt-2">
               <% plan.each_with_index do |week, idx| %>
                 <% next unless week.is_a?(Hash) %>
@@ -71,7 +69,7 @@
         </details>
 
         <%# Daily Itinerary %>
-        <details class="border border-neutral-200 rounded-xl open:border-secondary-200 open:ring-1 open:ring-secondary-100">
+        <details class="border border-neutral-200 rounded-xl open:border-secondary-200 open:ring-1 open:ring-secondary-100 lp-fade-in" style="animation-delay: 0.2s">
           <summary class="flex items-center justify-between gap-2 px-4 py-3.5 bg-gradient-to-r from-neutral-50 to-white hover:from-neutral-100 transition-colors cursor-pointer list-none [&::-webkit-details-marker]:hidden">
             <span class="flex items-center gap-2.5">
               <span class="flex-shrink-0 w-7 h-7 rounded-full bg-primary-100 inline-flex items-center justify-center">
@@ -85,7 +83,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </summary>
-          <div class="px-4 pb-5 pt-1 space-y-4 border-t border-neutral-100">
+          <div class="px-4 pb-5 pt-1 space-y-4 border-t border-neutral-100 lp-panel-body">
             <% daily_routine = parse_daily_routine(itin["daily_routine"]) %>
             <div class="mt-2">
               <span class="flex items-center gap-1.5 mb-2.5">
@@ -145,7 +143,7 @@
         </details>
 
         <%# Preparation Tips %>
-        <details class="border border-neutral-200 rounded-xl open:border-secondary-200 open:ring-1 open:ring-secondary-100">
+        <details class="border border-neutral-200 rounded-xl open:border-secondary-200 open:ring-1 open:ring-secondary-100 lp-fade-in" style="animation-delay: 0.3s">
           <summary class="flex items-center justify-between gap-2 px-4 py-3.5 bg-gradient-to-r from-neutral-50 to-white hover:from-neutral-100 transition-colors cursor-pointer list-none [&::-webkit-details-marker]:hidden">
             <span class="flex items-center gap-2.5">
               <span class="flex-shrink-0 w-7 h-7 rounded-full bg-amber-100 inline-flex items-center justify-center">
@@ -159,22 +157,24 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </summary>
-          <div class="px-4 pb-5 pt-1 border-t border-neutral-100">
+          <div class="px-4 pb-5 pt-1 border-t border-neutral-100 lp-panel-body">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
               <% tips.each do |category, items| %>
                 <div class="rounded-xl border border-amber-100 bg-white overflow-hidden shadow-sm">
                   <div class="flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-amber-50 to-white border-b border-amber-100">
-                    <% icon = case category.to_s.humanize.downcase
-                      when /home|space|environment/ %>🏠
-                    <% when /food|feed|nutrition/ %>🥘
-                    <% when /health|vet|medical/ %>💊
-                    <% when /train|behavior|social/ %>🎯
-                    <% when /safe|safety/ %>🛡️
-                    <% when /supplies|gear|essentials/ %>🎒
-                    <% when /bond|love|care|affection/ %>💕
-                    <% else %>💡
-                    <% end %>
-                    <span class="text-lg"><%= icon %></span>
+                    <%
+                      svg_icon = case category.to_s.humanize.downcase
+                      when /home|space|environment/ then image_tag("/icons/house-with-garden.svg", class: "w-6 h-6", alt: "")
+                      when /food|feed|nutrition/ then image_tag("/icons/blossom.svg", class: "w-6 h-6", alt: "")
+                      when /health|vet|medical/ then image_tag("/icons/petri-dish.svg", class: "w-6 h-6", alt: "")
+                      when /train|behavior|social/ then "🎯"
+                      when /safe|safety/ then "🛡️"
+                      when /supplies|gear|essentials/ then image_tag("/icons/identification-card.svg", class: "w-6 h-6", alt: "")
+                      when /bond|love|care|affection/ then "💕"
+                      else "💡"
+                      end
+                    %>
+                    <span class="flex-shrink-0 flex items-center justify-center w-7 h-7"><%= svg_icon %></span>
                     <h4 class="font-semibold text-neutral-800 text-sm capitalize"><%= category.to_s.humanize %></h4>
                   </div>
                   <div class="p-4">
@@ -194,7 +194,7 @@
         </details>
       </div>
 
-      <p class="text-xs text-neutral-400 text-center pt-3 border-t border-neutral-100 flex items-center justify-center gap-1.5">
+      <p class="text-xs text-neutral-400 text-center pt-3 border-t border-neutral-100 flex items-center justify-center gap-1.5 lp-fade-in" style="animation-delay: 0.4s">
         <span>🤖</span>
         <span><%= t("pets.show.life_preview_disclaimer") %></span>
       </p>

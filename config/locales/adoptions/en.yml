@@ -234,6 +234,173 @@ en:
         body: The hold period for %{pet_name} has expired. The pet is now available for other adopters.
         contact: If you are still interested, please contact the shelter.
 
+    requests:
+      statuses:
+        pending: Pending
+        in_validation: In Validation
+        accepted: Accepted
+        declined: Declined
+
+      decline_reasons:
+        profile_mismatch: We don't think your profile matches with the pet's personality and needs
+        requirements_mismatch: The pet has specific requirements that don't align with your living situation
+        better_match: We've found another adopter who is a better match for this pet
+        pet_unavailable: The pet is no longer available for adoption
+        additional_info: We require additional information to proceed with your request
+
+      errors:
+        onboarding_incomplete: Please complete your onboarding profile before submitting an adoption request.
+        pet_not_available: This pet is not currently available for adoption.
+        duplicate: You have already submitted a request for this pet. You can view its status in your adoption requests.
+        shelter_inactive: This shelter is currently inactive and cannot accept new adoption requests.
+        invalid_transition: Cannot change status from "%{from}" to "%{to}".
+        decline_reason_required: Please provide at least one reason for declining.
+        invalid_action: Invalid action. Please choose a valid decision.
+        not_found: Adoption request not found.
+
+      flash:
+        submitted: Your adoption request has been submitted successfully!
+        updated: The adoption request has been updated.
+        declined: The adoption request has been declined.
+
+      timeline:
+        pending: Request submitted
+        in_validation: Shelter is reviewing the request
+        accepted: Request accepted — pet on hold
+        declined: Request declined
+
+  adoption_mailer:
+    request_confirmation:
+      subject: "Request to adopt %{pet_name} — Confirmation"
+      greeting: Hi %{name},
+      body: Thank you for your interest in adopting %{pet_name}! Your request has been sent to %{shelter_name} for review.
+      next_steps: The shelter will review your profile and get back to you soon.
+      thanks: Thank you for choosing to adopt!
+    status_changed:
+      subject: "Update on your request to adopt %{pet_name}"
+      greeting: Hi %{name},
+      in_validation_body: '%{shelter_name} is reviewing your request for %{pet_name} and may contact you for more information.'
+      accepted_body: 'Congratulations! Your request to adopt %{pet_name} has been accepted by %{shelter_name}. They will contact you to arrange the next steps.'
+      declined_body: Unfortunately, your request to adopt %{pet_name} was not approved at this time.
+      contact: If you have questions, please contact %{shelter_name} directly.
+    new_request_notification:
+      subject: "New adoption request for %{pet_name}"
+      greeting: Hi %{name},
+      body: '%{adopter_name} has submitted an adoption request for %{pet_name}.'
+      review: Review the request and take action in your shelter dashboard.
+
+  adoption_requests:
+    index:
+      title: My Adoption Requests
+      subtitle: Track and manage your adoption requests
+      submitted: Submitted %{time} ago
+      empty_title: No adoption requests yet
+      empty_body: You haven't requested to adopt any pets yet. Browse available pets and find your new companion!
+      browse_cta: Browse Pets
+
+    show:
+      back_to_requests: ← Back to My Requests
+      title: Request for %{pet_name}
+      submitted: Submitted %{date}
+      pet_info: Pet Information
+      shelter_info: Shelter Information
+      timeline: Status Timeline
+      next_steps_title: Next Steps
+      next_steps_pending: The shelter will review your request. You'll be notified when there's an update.
+      next_steps_validation: The shelter is reviewing your profile. They may contact you for more information.
+      next_steps_accepted: Congratulations! The shelter will contact you to arrange the next steps.
+      next_steps_declined: Your request was not approved. You can browse other pets that might be a better match.
+      view_full_profile: View Full Pet Profile
+      unknown_breed: Unknown breed
+      unknown_size: Unknown size
+      decline_reasons_title: Reason
+      no_events: No timeline events yet.
+      events:
+        pending: Request submitted
+        in_validation: Under review
+        accepted: Accepted
+        declined: Declined
+
+    new:
+      title: Confirm Adoption Request
+      subtitle: Review the details before submitting your request
+      pet_section_title: Pet
+      profile_section_title: Your Profile
+      edit_profile: Edit Profile
+      submit: Submit Request
+      cancel: Cancel
+      unknown_breed: Unknown breed
+
+    adopter_profile_summary:
+      no_profile: No profile information available.
+
+    status_badge:
+      pending: Pending
+      in_validation: In Validation
+      accepted: Accepted
+      declined: Declined
+
+  shelter:
+    adoption_requests:
+      index:
+        title: Adoption Requests
+        subtitle: Review and manage adoption requests for your shelter
+        filters:
+          all: All
+        table:
+          pet: Pet
+          adopter: Adopter
+          status: Status
+          submitted: Submitted
+          actions: Actions
+          view: View
+        empty_title: No adoption requests yet
+        empty_body: Adoption requests from potential adopters will appear here.
+        empty_filter_title: No requests match this filter
+        empty_filter_body: Try selecting a different status filter.
+
+      show:
+        back_to_requests: ← Back to Requests
+        title: Request for %{pet_name}
+        submitted: Submitted %{date}
+        pet_section: Pet Information
+        adopter_section: Adopter Profile
+        timeline_section: Timeline
+        actions: Actions
+        mark_validation: Mark as In Validation
+        accept: Accept
+        decline: Decline
+        confirm_validation: Mark this request as in validation? The adopter will be notified.
+        confirm_accept: Accept this adoption request? This will put the pet on hold.
+        unknown_breed: Unknown breed
+        age: Age
+        size: Size
+        sex: Sex
+        status_label: Status
+        personality: Personality
+        activity: Activity Level
+        experience: Pet Experience
+        daily_time: Daily Time Available
+        ideal_companion: Ideal Companion
+        goals: Adoption Goals
+        view_full_profile: View Full Profile
+        decline_reasons: Decline Reasons
+        no_events: No timeline events yet.
+
+      decisions:
+        new:
+          back: ← Back to Request
+          title: Decline Adoption Request
+          subtitle: Provide reason(s) for declining the request from %{adopter_name} for %{pet_name}
+          select_reasons: "Select reason(s):"
+          custom_reason_label: Or add a custom reason
+          custom_reason_placeholder: Enter your reason...
+          custom_reason_hint: This will be shown to the adopter along with any selected reasons.
+          submit: Submit Decline
+          processing: Processing...
+          cancel: Cancel
+          declined_submit: Submit Decline
+
     activerecord:
       models:
         adoption_application:
@@ -270,3 +437,9 @@ en:
         adoption_timeline_event:
           event_type: Event
           metadata: Details
+        adoption_request:
+          one: Adoption Request
+          other: Adoption Requests
+        adoption_request_timeline_event:
+          one: Timeline Event
+          other: Timeline Events

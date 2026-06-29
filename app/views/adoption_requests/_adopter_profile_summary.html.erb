@@ -1,0 +1,42 @@
+<% if profile.present? %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <% if profile.personality.present? %>
+      <div>
+        <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-1"><%= t("onboarding.adopter.questions.q7.text") %></p>
+        <p class="text-sm font-medium text-neutral-800"><%= t("onboarding.adopter.questions.q7.options.#{profile.personality}") %></p>
+      </div>
+    <% end %>
+    <% if profile.activity_level.present? %>
+      <div>
+        <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-1"><%= t("onboarding.adopter.questions.q2.text") %></p>
+        <p class="text-sm font-medium text-neutral-800"><%= t("onboarding.adopter.questions.q2.options.#{profile.activity_level}") %></p>
+      </div>
+    <% end %>
+    <% if profile.pet_experience.present? %>
+      <div>
+        <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-1"><%= t("onboarding.adopter.questions.q4.text") %></p>
+        <p class="text-sm font-medium text-neutral-800"><%= t("onboarding.adopter.questions.q4.options.#{profile.pet_experience}") %></p>
+      </div>
+    <% end %>
+    <% if profile.daily_time_available.present? %>
+      <div>
+        <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-1"><%= t("onboarding.adopter.questions.q6.text") %></p>
+        <p class="text-sm font-medium text-neutral-800"><%= t("onboarding.adopter.questions.q6.options.#{profile.daily_time_available}") %></p>
+      </div>
+    <% end %>
+    <% if profile.ideal_companion.present? %>
+      <div>
+        <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-1"><%= t("onboarding.adopter.questions.q3.text") %></p>
+        <p class="text-sm font-medium text-neutral-800"><%= t("onboarding.adopter.questions.q3.options.#{profile.ideal_companion}") %></p>
+      </div>
+    <% end %>
+    <% if profile.adoption_priority.present? %>
+      <div class="sm:col-span-2">
+        <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-1"><%= t("onboarding.adopter.questions.q8.text") %></p>
+        <p class="text-sm text-neutral-700"><%= profile.adoption_priority %></p>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="text-sm text-neutral-500 italic"><%= t(".no_profile") %></p>
+<% end %>

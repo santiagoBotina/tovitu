@@ -20,13 +20,6 @@ shelter_staff = User.find_or_create_by!(email: "staff@tovitu.com") do |u|
   u.verified_at = Time.current
 end
 
-unverified = User.find_or_create_by!(email: "unverified@tovitu.com") do |u|
-  u.name = "Unverified User"
-  u.password = "password123"
-  u.password_confirmation = "password123"
-  u.role = "staff"
-end
-
 happy_paws = Shelter.find_or_create_by!(name: "Happy Paws Rescue") do |s|
   s.street = "123 Main St"
   s.city = "Portland"
@@ -82,37 +75,6 @@ unless User.exists?(email: "furry.admin@example.com")
     role: "admin",
     verified_at: Time.current,
     shelter: furry_friends
-  )
-end
-
-critter_corner = Shelter.find_or_create_by!(name: "Critter Corner") do |s|
-  s.street = "789 Pine Road"
-  s.city = "Denver"
-  s.state = "CO"
-  s.zip = "80201"
-  s.phone = "303-555-0789"
-  s.description = "Critter Corner is a small, family-run shelter specializing in cats and small animals. We believe every critter deserves a second chance."
-  s.species_served = [ "cat", "other" ]
-  s.hours = "Mon-Sat 10-5"
-  s.status = "active"
-  s.adoption_policies = {
-    adoption_fee: 100,
-    fee_description: "Includes spay/neuter and initial vaccinations",
-    minimum_age: 21,
-    home_visit_required: true
-  }
-  s.onboarding_completed = true
-end
-
-unless User.exists?(email: "critter.admin@example.com")
-  critter_admin = User.create!(
-    name: "Critter Admin",
-    email: "critter.admin@example.com",
-    password: "password123",
-    password_confirmation: "password123",
-    role: "admin",
-    verified_at: Time.current,
-    shelter: critter_corner
   )
 end
 
@@ -197,8 +159,7 @@ end
 # ── Attach shelter logos ─────────────────────────────────────────
 shelter_logos = {
   happy_paws => { url: "https://placehold.co/400x400/3b82f6/ffffff.png?text=HPR", bg: "#3b82f6", text: "HPR" },
-  furry_friends => { url: "https://placehold.co/400x400/10b981/ffffff.png?text=FF", bg: "#10b981", text: "FF" },
-  critter_corner => { url: "https://placehold.co/400x400/f59e0b/ffffff.png?text=CC", bg: "#f59e0b", text: "CC" }
+  furry_friends => { url: "https://placehold.co/400x400/10b981/ffffff.png?text=FF", bg: "#10b981", text: "FF" }
 }
 
 shelter_logos.each do |shelter, opts|
@@ -439,127 +400,6 @@ pets_data = [
     status: "available"
   },
 
-  # ── Critter Corner (Denver, CO) ───────────────────────────────
-  {
-    shelter: critter_corner,
-    name: "Whiskers",
-    species: "cat",
-    breed: "Maine Coon Mix",
-    age_category: "adult",
-    birth_date: Date.new(2021, 2, 28),
-    size: "large",
-    sex: "male",
-    description: "Whiskers is a magnificent floof with a gentle disposition. He's great with children and other cats, and has the most soothing purr you'll ever hear.",
-    personality_traits: [ "gentle", "cuddly", "friendly", "vocal" ],
-    medical_notes: "Fully vaccinated. Neutered. Healthy weight. Regular grooming needed for his long coat.",
-    spayed_neutered: true,
-    vaccinated: true,
-    good_with_children: true,
-    good_with_dogs: false,
-    good_with_cats: true,
-    requirements: "Regular brushing required. Indoor-only home. Cat trees recommended.",
-    status: "available"
-  },
-  {
-    shelter: critter_corner,
-    name: "Lily",
-    species: "cat",
-    breed: "Calico",
-    age_category: "young",
-    birth_date: Date.new(2024, 7, 15),
-    size: "small",
-    sex: "female",
-    description: "Lily is a playful kitten with a beautiful calico coat. She's full of energy, loves wand toys, and will keep you entertained for hours.",
-    personality_traits: [ "playful", "energetic", "curious", "affectionate" ],
-    medical_notes: "Vaccinations current. Spay appointment scheduled. Healthy and active.",
-    spayed_neutered: false,
-    vaccinated: true,
-    good_with_children: true,
-    good_with_dogs: true,
-    good_with_cats: true,
-    requirements: "Active household. Another young cat or dog playmate preferred.",
-    status: "available"
-  },
-  {
-    shelter: critter_corner,
-    name: "Oscar",
-    species: "cat",
-    breed: "Orange Tabby",
-    age_category: "senior",
-    birth_date: Date.new(2017, 5, 8),
-    size: "medium",
-    sex: "male",
-    description: "Oscar is a laid-back orange tabby who just wants a warm lap and regular meal times. He gets along with everyone and is the easiest cat you'll ever meet.",
-    personality_traits: [ "calm", "friendly", "easygoing", "affectionate" ],
-    medical_notes: "Senior wellness check done. Slight dental tartar. On joint supplement.",
-    spayed_neutered: true,
-    vaccinated: true,
-    good_with_children: true,
-    good_with_dogs: true,
-    good_with_cats: true,
-    requirements: "Indoor-only. Regular vet checkups. Soft bedding for senior joints.",
-    status: "available"
-  },
-  {
-    shelter: critter_corner,
-    name: "Pepper",
-    species: "other",
-    breed: "Holland Lop Rabbit",
-    age_category: "baby",
-    birth_date: Date.new(2025, 8, 1),
-    size: "small",
-    sex: "female",
-    description: "Pepper is a friendly, litter-box trained rabbit who loves exploring and being petted. She does little happy jumps (binkies) when she's excited!",
-    personality_traits: [ "friendly", "playful", "curious", "gentle" ],
-    medical_notes: "Spayed. Vaccinated for RHDV2. Nail trim included.",
-    spayed_neutered: true,
-    vaccinated: true,
-    good_with_children: true,
-    good_with_dogs: false,
-    good_with_cats: true,
-    requirements: "Needs a spacious enclosure or rabbit-proofed room. Fresh hay and veggies daily.",
-    status: "available"
-  },
-  {
-    shelter: critter_corner,
-    name: "Salem",
-    species: "cat",
-    breed: "Black Domestic Short Hair",
-    age_category: "adult",
-    birth_date: Date.new(2020, 10, 31),
-    size: "medium",
-    sex: "male",
-    description: "Salem is a sleek black cat with a charming personality. He's a bit shy at first but becomes a velcro cat once he trusts you. Loves window perches and laser pointers.",
-    personality_traits: [ "shy", "affectionate", "playful", "loyal" ],
-    medical_notes: "Fully vaccinated. Neutered. Healthy. No special needs.",
-    spayed_neutered: true,
-    vaccinated: true,
-    good_with_children: false,
-    good_with_dogs: false,
-    good_with_cats: true,
-    requirements: "Quiet, patient home. Indoor-only. Adults or older children recommended.",
-    status: "available"
-  },
-  {
-    shelter: critter_corner,
-    name: "Pancake",
-    species: "other",
-    breed: "Guinea Pig",
-    age_category: "baby",
-    birth_date: Date.new(2026, 4, 5),
-    size: "small",
-    sex: "female",
-    description: "Pancake is a tiny, squeaky guinea pig who will melt your heart. She loves fresh veggies, tunnels, and being gently held.",
-    personality_traits: [ "gentle", "curious", "vocal", "friendly" ],
-    medical_notes: "Healthy. No vaccinations needed. Nail trim included with adoption.",
-    spayed_neutered: false,
-    vaccinated: false,
-    good_with_children: true,
-    good_with_dogs: false,
-    good_with_cats: false,
-    requirements: "Needs at least one guinea pig companion (pairs adopted together or buddy available). Spacious cage with bedding.",
-    status: "available"
-  }
 ]
 
 pets_data.each do |attrs|
@@ -581,13 +421,7 @@ pet_image_urls = {
   %w[Coco]   => [ "https://placehold.co/600x600/d97706/ffffff.png?text=Coco" ],
   %w[Bear]   => [ "https://placehold.co/800x600/1f2937/ffffff.png?text=Bear+1", "https://placehold.co/800x600/374151/ffffff.png?text=Bear+2" ],
   %w[Molly]  => [ "https://placehold.co/600x600/f472b6/ffffff.png?text=Molly" ],
-  %w[Shadow] => [ "https://placehold.co/800x600/78716c/ffffff.png?text=Shadow" ],
-  %w[Whiskers] => [ "https://placehold.co/800x600/92400e/ffffff.png?text=Whiskers" ],
-  %w[Lily]     => [ "https://placehold.co/800x600/a855f7/ffffff.png?text=Lily+1", "https://placehold.co/800x600/9333ea/ffffff.png?text=Lily+2" ],
-  %w[Oscar]    => [ "https://placehold.co/800x600/eab308/ffffff.png?text=Oscar" ],
-  %w[Pepper]   => [ "https://placehold.co/800x600/10b981/ffffff.png?text=Pepper+the+Rabbit" ],
-  %w[Salem]    => [ "https://placehold.co/800x600/1e293b/ffffff.png?text=Salem" ],
-  %w[Pancake]  => [ "https://placehold.co/800x600/f59e0b/ffffff.png?text=Pancake" ]
+  %w[Shadow] => [ "https://placehold.co/800x600/78716c/ffffff.png?text=Shadow" ]
 }
 
 Pet.find_each do |pet|
@@ -739,12 +573,10 @@ end
 
 puts ""
 puts "Seeded #{User.count} users, #{Shelter.count} shelters, and #{Pet.count} pets:"
-puts "  admin@tovitu.com / password123  (admin, verified, Happy Paws Rescue)"
-  puts "  staff@tovitu.com / password123  (staff, verified, Happy Paws Rescue)"
-  puts "  furry.admin@example.com / password123  (admin, Furry Friends)"
-  puts "  critter.admin@example.com / password123  (admin, Critter Corner)"
-  puts "  unverified@tovitu.com / password123  (staff, unverified)"
-  puts "  adopter@tovitu.com / password123  (adopter, verified, onboarding completed)"
+puts "  admin@tovitu.com / password123  (admin, shelter, Happy Paws Rescue)"
+puts "  staff@tovitu.com / password123  (staff, shelter, Happy Paws Rescue)"
+puts "  furry.admin@example.com / password123  (admin, Furry Friends)"
+puts "  adopter@tovitu.com / password123  (adopter, verified, onboarding completed)"
 puts ""
 puts "Pets:"
 Pet.includes(:shelter).each do |pet|

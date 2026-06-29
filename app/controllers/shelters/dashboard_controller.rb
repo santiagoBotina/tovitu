@@ -8,20 +8,19 @@ module Shelters
 
       @total_pets = @shelter.pets.undiscarded.count
       @adoptable_pets = @shelter.pets.undiscarded.where(status: :available).count
-      @pending_applications = AdoptionApplication.by_shelter(@shelter.id).pending.count
-      @in_review_applications = AdoptionApplication.by_shelter(@shelter.id).under_review.count +
-                                AdoptionApplication.by_shelter(@shelter.id).awaiting_response.count
-      @active_adoptions = AdoptionApplication.by_shelter(@shelter.id).approved.count
-      @total_applications_count = AdoptionApplication.by_shelter(@shelter.id).count
+      @pending_requests = @shelter.adoption_requests.where(status: :pending).count
+      @in_review_requests = @shelter.adoption_requests.where(status: :in_validation).count
+      @active_adoptions = @shelter.adoption_requests.where(status: :accepted).count
+      @total_requests_count = @shelter.adoption_requests.count
 
-      @recent_activity = AdoptionApplication.by_shelter(@shelter.id)
-                           .includes(:pet, :user)
+      @recent_activity = @shelter.adoption_requests
+                           .includes(:pet, :adopter)
                            .order(updated_at: :desc)
                            .limit(5)
 
       @staff_count = @shelter.users.undiscarded.count
       @staff_members = @shelter.users.undiscarded.limit(5)
-      @pending_count = @pending_applications
+      @pending_count = @pending_requests
     end
 
     private
