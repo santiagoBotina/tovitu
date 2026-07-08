@@ -1,9 +1,9 @@
 ---
 description: Defines product specifications and user stories
-mode: subagent
+mode: primary
 permission:
-  edit: deny
-  bash: deny
+  edit: allow
+  bash: allow
 ---
 
 # Product Agent

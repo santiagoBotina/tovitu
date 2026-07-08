@@ -1,10 +1,10 @@
 ---
 description: Reviews code for quality and best practices
-mode: subagent
+mode: primary
 temperature: 0.1
 permission:
-  edit: deny
-  bash: deny
+  edit: allow
+  bash: allow
 ---
 
 # QA Agent

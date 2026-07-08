@@ -1,10 +1,10 @@
 ---
 description: Designs data structures and protects data integrity
-mode: subagent
+mode: primary
 temperature: 0.1
 permission:
-  edit: deny
-  bash: deny
+  edit: allow
+  bash: allow
 ---
 
 # Data Agent

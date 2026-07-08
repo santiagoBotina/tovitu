@@ -27,12 +27,12 @@
       <% if pet.photo_gallery.length > 1 %>
         <div class="grid grid-cols-5 gap-1 p-1 bg-neutral-50">
           <% pet.photo_gallery(variant: :thumb).each_with_index do |photo_url, index| %>
-            <%= image_tag photo_url, alt: t(".photo_alt", name: pet.name, index: index + 1), class: "aspect-square object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity #{index == 0 ? 'ring-2 ring-secondary-500' : ''}" %>
+            <%= image_tag photo_url, alt: t(".photo_alt", name: pet.name, index: index + 1), class: "aspect-square object-cover rounded-lg hover:opacity-90 transition-opacity #{index == 0 ? 'ring-2 ring-secondary-500' : ''}" %>
           <% end %>
         </div>
       <% end %>
     <% else %>
-      <div class="aspect-[16/10] bg-gradient-to-br from-secondary-50 to-secondary-100 flex items-center justify-center">
+      <div class="aspect-[16/10] bg-secondary-100 flex items-center justify-center">
         <svg class="w-24 h-24 text-secondary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
@@ -58,19 +58,19 @@
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
           <div class="text-center p-3 bg-neutral-50 rounded-xl">
-            <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-1"><%= t(".age_label") %></p>
+            <p class="text-xs text-neutral-500 font-medium mb-1"><%= t(".age_label") %></p>
             <p class="font-semibold text-neutral-800"><%= pet.age_display %></p>
           </div>
           <div class="text-center p-3 bg-neutral-50 rounded-xl">
-            <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-1"><%= t(".size_label") %></p>
+            <p class="text-xs text-neutral-500 font-medium mb-1"><%= t(".size_label") %></p>
             <p class="font-semibold text-neutral-800"><%= pet.size_label || "—" %></p>
           </div>
           <div class="text-center p-3 bg-neutral-50 rounded-xl">
-            <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-1"><%= t(".sex_label") %></p>
+            <p class="text-xs text-neutral-500 font-medium mb-1"><%= t(".sex_label") %></p>
             <p class="font-semibold text-neutral-800"><%= pet.sex_label %></p>
           </div>
           <div class="text-center p-3 bg-neutral-50 rounded-xl">
-            <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-1"><%= t(".species_label") %></p>
+            <p class="text-xs text-neutral-500 font-medium mb-1"><%= t(".species_label") %></p>
             <p class="font-semibold text-neutral-800"><%= pet.species_label %></p>
           </div>
         </div>
@@ -124,7 +124,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
               </svg>
             </div>
-            <p class="text-neutral-400 text-sm">Loading life preview...</p>
+            <p class="text-neutral-400 text-sm"><%= t(".life_preview_loading") %></p>
           </div>
         </div>
       <% end %>
@@ -219,10 +219,10 @@
         </div>
       </div>
 
-      <div class="bg-gradient-to-br from-secondary-500 to-secondary-700 rounded-xl shadow-sm p-6 text-white">
+      <div class="bg-secondary-500 rounded-xl shadow-sm p-6 text-white">
         <h3 class="font-display text-lg font-bold mb-2"><%= t(".apply_title") %></h3>
         <p class="text-secondary-100 text-sm mb-5"><%= t(".apply_body") %></p>
-        <%= link_to "#", class: "block w-full text-center bg-white text-secondary-600 font-semibold px-6 py-3 rounded-xl hover:bg-secondary-50 active:scale-[0.98] transition-all duration-200 shadow-sm" do %>
+        <%= link_to new_adoption_request_path(pet_id: pet), class: "block w-full text-center bg-white text-secondary-600 font-semibold px-6 py-3 rounded-xl hover:bg-secondary-50 active:scale-[0.98] transition-all duration-200 shadow-sm" do %>
           <%= t(".apply_to_adopt") %>
         <% end %>
       </div>

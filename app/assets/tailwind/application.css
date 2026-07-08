@@ -47,6 +47,11 @@ html {
   --color-accent-yellow: #FFC83D;
   --color-accent-orange: #FF7A30;
 
+  --color-surface-soft: #F0F2FF;
+  --color-mint-light: #E6FFFA;
+  --color-orange-light: #FFF4E5;
+  --color-coral-accent: #FF6B6B;
+
   --font-sans: "Poppins", sans-serif;
   --font-display: "Baloo 2", system-ui, sans-serif;
 
@@ -82,8 +87,113 @@ html {
   overflow-x: hidden;
 }
 
+/* ─── Sidebar Logo Animation ─── */
+@keyframes logo-glow {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(108, 48, 255, 0.3)); }
+  50% { filter: drop-shadow(0 0 12px rgba(108, 48, 255, 0.6)); }
+}
 
+.sidebar-logo-glow {
+  animation: logo-glow 3s ease-in-out infinite;
+}
 
+@keyframes logo-spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Dashboard Bento Entrance Animations ─── */
+@keyframes bento-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.bento-enter {
+  animation: bento-fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.bento-enter-d1 { animation-delay: 0.05s; }
+.bento-enter-d2 { animation-delay: 0.12s; }
+.bento-enter-d3 { animation-delay: 0.20s; }
+.bento-enter-d4 { animation-delay: 0.28s; }
+.bento-enter-d5 { animation-delay: 0.36s; }
+.bento-enter-d6 { animation-delay: 0.44s; }
+.bento-enter-d7 { animation-delay: 0.52s; }
+.bento-enter-d8 { animation-delay: 0.60s; }
+
+/* ─── Progress Bar Gradient Animation ─── */
+@keyframes progress-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.progress-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-primary-500) 0%,
+    var(--color-secondary-400) 40%,
+    var(--color-primary-500) 60%,
+    var(--color-primary-500) 100%
+  );
+  background-size: 200% auto;
+  animation: progress-shimmer 2.5s ease-in-out infinite;
+}
+
+/* ─── Card Hover Lift ─── */
+.card-lift {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(108, 48, 255, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-lift:hover {
+    transform: none;
+  }
+}
+
+/* ─── Notification Pulse ─── */
+@keyframes notification-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.notification-dot {
+  animation: notification-pulse 2s ease-in-out infinite;
+}
+
+/* ─── Pet Card Image Reveal ─── */
+@keyframes image-reveal {
+  from { opacity: 0; transform: scale(1.05); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.image-reveal {
+  animation: image-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Match Score Badge ─── */
+@keyframes score-pop {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.score-pop {
+  animation: score-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Legacy Pet Animations ─── */
 @keyframes pet-pop {
   0% { transform: scale(0) translateY(0); opacity: 0; }
   40% { transform: scale(1.25) translateY(-12px); opacity: 1; }
@@ -142,6 +252,7 @@ html {
   }
 }
 
+/* ─── Life Preview Animations ─── */
 @keyframes lp-border-glow {
   0%, 100% { border-color: #E5D8FF; box-shadow: 0 2px 8px rgba(108, 48, 255, 0.04); }
   50% { border-color: #00C9A7; box-shadow: 0 2px 16px rgba(0, 201, 167, 0.1); }
@@ -184,17 +295,15 @@ details[open] > .lp-panel-body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lp-border-glow {
+  .lp-border-glow,
+  .lp-fade-in,
+  .lp-glow-pulse {
     animation: none;
   }
   .lp-fade-in {
-    animation: none;
     opacity: 1;
   }
   details[open] > .lp-panel-body {
-    animation: none;
-  }
-  .lp-glow-pulse {
     animation: none;
   }
 }

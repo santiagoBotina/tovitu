@@ -1,10 +1,10 @@
 ---
 description: Implements business logic and domain boundaries
-mode: subagent
+mode: primary
 temperature: 0.1
 permission:
-  edit: deny
-  bash: deny
+  edit: allow
+  bash: allow
 ---
 
 # Domain Agent

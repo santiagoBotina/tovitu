@@ -90,8 +90,8 @@
     </div>
 
     <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-5">
-      <div class="w-10 h-10 bg-amber-50 rounded-full flex items-center justify-center mb-3" aria-hidden="true">
-        <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+      <div class="w-10 h-10 bg-warning/10 rounded-full flex items-center justify-center mb-3" aria-hidden="true">
+        <svg class="w-5 h-5 text-warning" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
         </svg>
       </div>
@@ -100,8 +100,8 @@
     </div>
 
     <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-5">
-      <div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center mb-3" aria-hidden="true">
-        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+      <div class="w-10 h-10 bg-info/10 rounded-full flex items-center justify-center mb-3" aria-hidden="true">
+        <svg class="w-5 h-5 text-info" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
       </div>
@@ -133,8 +133,8 @@
         <div class="space-y-0 divide-y divide-neutral-100">
           <% @recent_activity.each do |app| %>
             <% icon_color = case app.status
-              when "pending"   then "text-amber-500 bg-amber-50"
-              when "under_review", "awaiting_response" then "text-blue-500 bg-blue-50"
+              when "pending"   then "text-warning bg-warning/10"
+              when "under_review", "awaiting_response" then "text-info bg-info/10"
               when "approved"  then "text-secondary-500 bg-secondary-50"
               when "rejected"  then "text-neutral-400 bg-neutral-100"
               when "completed" then "text-secondary-500 bg-secondary-50"

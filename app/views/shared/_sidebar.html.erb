@@ -1,15 +1,16 @@
-<% base_link = "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 group active:scale-[0.97]" %>
+<% base_link = "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group active:scale-[0.97]" %>
 <% active_link = "bg-primary-50 text-primary-700 font-semibold" %>
 <% inactive_link = "text-neutral-500 hover:bg-neutral-50 hover:text-neutral-700" %>
 <% icon_active = "text-primary-500" %>
-<% icon_inactive = "text-neutral-400 group-hover:text-neutral-500" %>
+<% icon_inactive = "text-neutral-400 group-hover:text-neutral-500 transition-colors duration-200" %>
 
 <aside data-sidebar-target="sidebar"
-       class="fixed inset-y-0 left-0 z-30 flex flex-col bg-white border-r border-neutral-200
-               transition-all duration-300 ease-in-out overflow-y-auto
+       class="fixed inset-y-0 left-0 z-30 flex flex-col bg-white/95 backdrop-blur-sm border-r border-neutral-200/80
+               transition-all duration-300 ease-in-out overflow-y-auto overflow-x-hidden
                -translate-x-full md:translate-x-0 md:w-16 w-80
               shadow-sm md:shadow-none">
 
+  <%# ─── Mobile Close ─── %>
   <div class="flex items-center justify-end h-16 px-4 md:hidden">
     <button data-action="click->sidebar#closeMobile"
             class="flex items-center justify-center w-8 h-8 rounded-lg text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 transition-colors"
@@ -20,9 +21,35 @@
     </button>
   </div>
 
-  <nav class="flex-1 flex flex-col gap-1 px-3 py-4 overflow-y-auto">
+  <%# ─── Logo + Brand — Always visible ─── %>
+  <div class="flex-shrink-0 px-4 pt-5 pb-4 md:px-3 md:pt-4 md:pb-3">
+    <%= link_to root_path, class: "flex items-center gap-3 group md:justify-center" do %>
+      <div class="shrink-0 sidebar-logo-glow transition-transform duration-300 group-hover:scale-105">
+        <%= render "shared/logo", class_name: "w-9 h-9 md:w-8 md:h-8" %>
+      </div>
+      <span data-sidebar-label class="font-display text-xl font-extrabold tracking-tight text-primary-600 md:hidden whitespace-nowrap">
+        Tovitu
+      </span>
+    <% end %>
+  </div>
+
+  <%# ─── User Profile Card (expanded only) ─── %>
+  <div data-sidebar-label class="md:hidden px-3 mb-3">
+    <div class="flex items-center gap-3 px-3 py-3 rounded-xl bg-gradient-to-r from-primary-50/60 to-secondary-50/40 border border-primary-100/50">
+      <div class="shrink-0 w-10 h-10 rounded-xl bg-primary-500 flex items-center justify-center text-white text-sm font-bold shadow-sm">
+        <%= current_user.name.first.upcase %>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-semibold text-neutral-800 truncate"><%= current_user.name %></p>
+        <p class="text-xs text-primary-500 font-medium">Animal Ally</p>
+      </div>
+    </div>
+  </div>
+
+  <%# ─── Navigation ─── %>
+  <nav class="flex-1 flex flex-col gap-0.5 px-3 pb-3 overflow-y-auto" role="navigation" aria-label="Main navigation">
     <% if current_user.adopter? %>
-      <%# --- Adopter Dashboard --- %>
+      <%# ─── Adopter Dashboard ─── %>
       <%= link_to user_dashboard_path,
           class: "#{base_link} #{dashboard_active?(current_user) ? active_link : inactive_link}",
           aria: { current: dashboard_active?(current_user) ? "page" : nil } do %>
@@ -34,36 +61,39 @@
         <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.dashboard") %></span>
       <% end %>
 
-      <%# --- Adopter Pets --- %>
+      <%# ─── Explorer (was Pets) ─── %>
+      <% pets_active = path_active?('/pets') %>
       <%= link_to pets_path,
-          class: "#{base_link} #{request.path.start_with?('/pets') ? active_link : inactive_link}",
-          aria: { current: request.path.start_with?('/pets') ? "page" : nil } do %>
+          class: "#{base_link} #{pets_active ? active_link : inactive_link}",
+          aria: { current: pets_active ? "page" : nil } do %>
         <div class="shrink-0 w-5 h-5 flex items-center justify-center">
-          <svg class="w-5 h-5 #{request.path.start_with?('/pets') ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
+          <svg class="w-5 h-5 #{pets_active ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
           </svg>
         </div>
         <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.pets") %></span>
       <% end %>
 
-      <%# --- Adopter Shelters --- %>
+      <%# ─── Shelters ─── %>
+      <% shelters_active = path_active?('/shelters') %>
       <%= link_to shelters_path,
-          class: "#{base_link} #{request.path.start_with?('/shelters') ? active_link : inactive_link}",
-          aria: { current: request.path.start_with?('/shelters') ? "page" : nil } do %>
+          class: "#{base_link} #{shelters_active ? active_link : inactive_link}",
+          aria: { current: shelters_active ? "page" : nil } do %>
         <div class="shrink-0 w-5 h-5 flex items-center justify-center">
-          <svg class="w-5 h-5 #{request.path.start_with?('/shelters') ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="w-5 h-5 #{shelters_active ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M9 21V12h6v9"/>
           </svg>
         </div>
         <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.shelters") %></span>
       <% end %>
 
-      <%# --- Adopter Adoptions --- %>
+      <%# ─── Adoptions ─── %>
+      <% adoptions_active = path_active?('/adoption_requests') %>
       <%= link_to adoption_requests_path,
-          class: "#{base_link} #{request.path.start_with?('/adoption_requests') ? active_link : inactive_link}",
-          aria: { current: request.path.start_with?('/adoption_requests') ? "page" : nil } do %>
+          class: "#{base_link} #{adoptions_active ? active_link : inactive_link}",
+          aria: { current: adoptions_active ? "page" : nil } do %>
         <div class="shrink-0 w-5 h-5 flex items-center justify-center">
-          <svg class="w-5 h-5 #{request.path.start_with?('/adoption_requests') ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="w-5 h-5 #{adoptions_active ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 14c1.5-2.5 2-5.5 2-8 0-3-2-5-5-5-1.8 0-3.4.9-4.3 2.3C10.4 1.9 8.8 1 7 1 4 1 2 3 2 6c0 2.5.5 5.5 2 8M12 23c-4-3-8-6-8-10a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 4-4 7-8 10Z"/>
           </svg>
         </div>
@@ -72,7 +102,7 @@
 
     <% elsif current_user.shelter_user? %>
       <% if current_user.shelter_id.present? %>
-        <%# --- Shelter Dashboard --- %>
+        <%# ─── Shelter Dashboard ─── %>
         <%= link_to shelter_dashboard_path(shelter_id: current_user.shelter_id),
             class: "#{base_link} #{dashboard_active?(current_user) ? active_link : inactive_link}",
             aria: { current: dashboard_active?(current_user) ? "page" : nil } do %>
@@ -84,48 +114,52 @@
           <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.dashboard") %></span>
         <% end %>
 
-        <%# --- Shelter My Pets --- %>
+        <%# ─── My Pets ─── %>
+        <% shelter_pets_active = path_active?('/shelter/pets') %>
         <%= link_to shelter_pets_path,
-            class: "#{base_link} #{request.path.start_with?('/shelter/pets') ? active_link : inactive_link}",
-            aria: { current: request.path.start_with?('/shelter/pets') ? "page" : nil } do %>
+            class: "#{base_link} #{shelter_pets_active ? active_link : inactive_link}",
+            aria: { current: shelter_pets_active ? "page" : nil } do %>
           <div class="shrink-0 w-5 h-5 flex items-center justify-center">
-            <svg class="w-5 h-5 #{request.path.start_with?('/shelter/pets') ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
+            <svg class="w-5 h-5 #{shelter_pets_active ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
             </svg>
           </div>
           <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.my_pets") %></span>
         <% end %>
 
-        <%# --- Shelter Adoptions --- %>
+        <%# ─── Adoptions ─── %>
+        <% shelter_adoptions_active = path_active?('/shelter/adoption_requests') %>
         <%= link_to shelter_adoption_requests_path,
-            class: "#{base_link} #{request.path.start_with?('/shelter/adoption_requests') ? active_link : inactive_link}",
-            aria: { current: request.path.start_with?('/shelter/adoption_requests') ? "page" : nil } do %>
+            class: "#{base_link} #{shelter_adoptions_active ? active_link : inactive_link}",
+            aria: { current: shelter_adoptions_active ? "page" : nil } do %>
           <div class="shrink-0 w-5 h-5 flex items-center justify-center">
-            <svg class="w-5 h-5 #{request.path.start_with?('/shelter/adoption_requests') ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="w-5 h-5 #{shelter_adoptions_active ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 14c1.5-2.5 2-5.5 2-8 0-3-2-5-5-5-1.8 0-3.4.9-4.3 2.3C10.4 1.9 8.8 1 7 1 4 1 2 3 2 6c0 2.5.5 5.5 2 8M12 23c-4-3-8-6-8-10a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 4-4 7-8 10Z"/>
             </svg>
           </div>
           <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.adoptions") %></span>
         <% end %>
 
-        <%# --- Shelter Staff --- %>
+        <%# ─── Staff ─── %>
+        <% staff_active = path_active?('/shelter/staff') || path_active?('/staff') %>
         <%= link_to shelter_staff_index_path(shelter_id: current_user.shelter_id),
-            class: "#{base_link} #{request.path.include?('/staff') ? active_link : inactive_link}",
-            aria: { current: request.path.include?('/staff') ? "page" : nil } do %>
+            class: "#{base_link} #{staff_active ? active_link : inactive_link}",
+            aria: { current: staff_active ? "page" : nil } do %>
           <div class="shrink-0 w-5 h-5 flex items-center justify-center">
-            <svg class="w-5 h-5 #{request.path.include?('/staff') ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="w-5 h-5 #{staff_active ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 4.354a4 4 0 1 1 0 5.292M15 21H3v-1a6 6 0 0 1 12 0v1Zm0 0h6v-1a6 6 0 0 0-9-5.197"/>
             </svg>
           </div>
           <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.staff") %></span>
         <% end %>
 
-        <%# --- Shelter Adoption Policies --- %>
+        <%# ─── Adoption Policies ─── %>
+        <% policies_active = path_active?('/shelter/policies') || path_active?('/policies') %>
         <%= link_to edit_shelter_policies_path(shelter_id: current_user.shelter_id),
-            class: "#{base_link} #{request.path.include?('/policies') ? active_link : inactive_link}",
-            aria: { current: request.path.include?('/policies') ? "page" : nil } do %>
+            class: "#{base_link} #{policies_active ? active_link : inactive_link}",
+            aria: { current: policies_active ? "page" : nil } do %>
           <div class="shrink-0 w-5 h-5 flex items-center justify-center">
-            <svg class="w-5 h-5 #{request.path.include?('/policies') ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="w-5 h-5 #{policies_active ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
           </div>
@@ -133,7 +167,6 @@
         <% end %>
 
       <% else %>
-        <%# --- Shelter user without a shelter --- %>
         <div class="<%= base_link %> <%= inactive_link %> opacity-50 cursor-not-allowed" title="<%= t("shared.sidebar.no_shelter") %>">
           <div class="shrink-0 w-5 h-5 flex items-center justify-center">
             <svg class="w-5 h-5 <%= icon_inactive %>" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -156,23 +189,26 @@
     <% end %>
   </nav>
 
-  <div class="border-t border-neutral-100 px-3 py-3 flex flex-col gap-1">
+  <%# ─── Bottom Actions ─── %>
+  <div class="border-t border-neutral-100/80 px-3 py-3 flex flex-col gap-0.5">
+    <%# Settings %>
     <%= link_to edit_profile_path,
         class: "#{base_link} #{current_page?(edit_profile_path) ? active_link : inactive_link}",
         aria: { current: current_page?(edit_profile_path) ? "page" : nil } do %>
       <div class="shrink-0 w-5 h-5 flex items-center justify-center">
         <svg class="w-5 h-5 #{current_page?(edit_profile_path) ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-7 8-7s8 3 8 7"/>
+          <circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
         </svg>
       </div>
       <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.settings") %></span>
     <% end %>
 
+    <%# Sign Out %>
     <%= link_to session_path,
         data: { turbo_method: :delete, turbo_confirm: t("shared.sidebar.sign_out_confirm") },
         class: "#{base_link} text-neutral-500 hover:bg-danger/5 hover:text-danger transition-colors duration-150" do %>
       <div class="shrink-0 w-5 h-5 flex items-center justify-center">
-        <svg class="w-5 h-5 text-neutral-400 group-hover:text-danger" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="w-5 h-5 text-neutral-400 group-hover:text-danger transition-colors duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
         </svg>
       </div>

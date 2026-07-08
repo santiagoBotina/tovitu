@@ -1,6 +1,6 @@
 ---
 description: Transforms specs into implementation-ready technical designs
-mode: subagent
+mode: primary
 temperature: 0.1
 permission:
   edit: allow

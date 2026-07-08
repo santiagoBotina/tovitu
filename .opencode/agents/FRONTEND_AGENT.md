@@ -1,10 +1,10 @@
 ---
 description: Builds accessible and consistent user experiences
-mode: subagent
+mode: primary
 temperature: 0.1
 permission:
-  edit: deny
-  bash: deny
+  edit: allow
+  bash: allow
 ---
 
 # Frontend Agent

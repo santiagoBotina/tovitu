@@ -65,19 +65,51 @@ en:
   dashboard:
     index:
       welcome:
-        title: "Hey, %{name}! 🐾"
-        title_returning: "Welcome back, %{name}! 🐾"
-        subtitle_new: "Ready to find your perfect match? Let's start by telling us a bit about yourself."
-        subtitle_ready: "Your profile is all set! Start exploring pets that match your lifestyle."
-        subtitle_active: "Let's check on your adoption requests!"
+        title: "Welcome back, %{name}!"
+        subtitle: "You're on your way to finding your new best friend. Keep up the great momentum!"
+        subtitle_onboarding: "Your profile is the key to great matches. Let's get it ready!"
+        subtitle_active: "You have active adoption requests. Let's check on them!"
         cta_browse: "Browse Pets"
-      onboarding:
-        title: "Your Profile"
-        progress: "%{percent}%% complete"
-        description: "Tell us about yourself so we can find better matches!"
-        questions_remaining: "Just %{count} quick question left"
-        questions_remaining_plural: "Just %{count} quick questions left"
-        cta: "Complete Your Profile"
+        cta_profile: "Complete Profile"
+      readiness:
+        title: "Adoption Readiness"
+        percent: "%{percent}%%"
+        next_milestone: "Next milestone: Complete your profile"
+        next_milestone_requests: "Next milestone: Awaiting shelter review"
+        next_milestone_complete: "You're all set! Start browsing pets."
+      preview:
+        title: "Life Preview"
+        description: "See how your favorite pets fit into your daily routine. The best way to know if they're the one."
+        cta: "Simulate Life"
+        active: "Active Experiences"
+        count: "%{count}/3 Previews"
+      matches:
+        title: "Your Top Matches"
+        subtitle: "Based on your lifestyle and preferences"
+        view_all: "View all favorites"
+        match_percent: "%{percent}%% Match"
+        preview: "Preview Life with %{name}"
+        saved: "Saved"
+        empty_title: "Start saving pets"
+        empty_description: "Browse pets and save your favorites to see your top matches here."
+        empty_cta: "Browse Pets"
+        age_years: "%{years}y"
+      activity:
+        title: "Recent Activity"
+        mark_all_read: "Mark all as read"
+        empty: "Once you start interacting with pets, your activity will show up here."
+        open_chat: "Open Chat"
+        request_update: "Request %{status} for %{name}"
+        a_pet: "a pet"
+        pets_saved: "%{count} pets saved to your favorites"
+        top_matches_ready: "Your top matches are ready"
+        tovitu_tip: "Tovitu tip"
+        time_ago: "%{time} ago"
+      home_prep:
+        title: "Ready to introduce a pet?"
+        description: "Use our Augmented Reality tool to see how a crate or bed fits in your home."
+        cta: "Launch AR Placement"
+        coming_soon: "Coming soon"
       requests:
         title: "My Requests"
         empty_title: "No requests yet"
@@ -92,22 +124,16 @@ en:
         status_cancelled: "Cancelled"
         status_awaiting_response: "Awaiting Info"
         status_expired: "Expired"
+        unknown_pet: "Unknown Pet"
         view_all: "View all %{count} requests →"
         submitted: "Submitted %{time} ago"
-      actions:
-        title: "Quick Actions"
-        browse:
-          title: "Browse Pets"
-          description: "Find your new best friend."
-        profile:
-          title: "My Profile"
-          description: "Update your preferences."
-        requests:
-          title: "My Requests"
-          description: "Track your applications."
-        learn:
-          title: "Learn About Adoption"
-          description: "Tips for a successful adoption."
+      onboarding:
+        title: "Your Profile"
+        progress: "%{percent}%% complete"
+        description: "Tell us about yourself so we can find better matches!"
+        questions_remaining: "Just %{count} quick question left"
+        questions_remaining_plural: "Just %{count} quick questions left"
+        cta: "Complete Your Profile"
       tip:
         title: "Did you know?"
         text: "Completing your profile helps us find pets that match your lifestyle — not just any pet, but the right one."

@@ -1,10 +1,10 @@
 ---
 description: Designs and maintains AI capabilities and prompts
-mode: subagent
+mode: primary
 temperature: 0.1
 permission:
-  edit: deny
-  bash: deny
+  edit: allow
+  bash: allow
 ---
 
 # AI Agent

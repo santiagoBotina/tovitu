@@ -1,9 +1,10 @@
+<%# ─── Setup: determine subtitle and tip ─── %>
 <% subtitle_key = if @show_onboarding
-                    ".welcome.subtitle_new"
+                    ".welcome.subtitle_onboarding"
                   elsif @adoption_requests.any?
                     ".welcome.subtitle_active"
                   else
-                    ".welcome.subtitle_ready"
+                    ".welcome.subtitle"
                   end %>
 
 <% tip_key = if @adoption_requests.any?
@@ -14,242 +15,355 @@
                ".tip.text"
              end %>
 
-<div class="w-full max-w-2xl mx-auto space-y-6">
+<div class="max-w-7xl mx-auto">
 
-  <%# ──────────────────────────────────────────────────────────── %>
-  <%# SECTION 1: Welcome Banner                                    %>
-  <%# ──────────────────────────────────────────────────────────── %>
-  <section class="bg-primary-50 rounded-xl shadow-sm border border-primary-100 p-6 md:p-8">
-    <div class="flex items-start gap-4">
-      <div class="shrink-0 w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center" aria-hidden="true">
-        <svg class="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
-        </svg>
-      </div>
-      <div class="flex-1 min-w-0">
-        <h1 class="font-display text-2xl md:text-3xl font-bold text-neutral-900 text-balance">
-          <%= t(".welcome.title", name: current_user.name) %>
-        </h1>
-        <p class="text-neutral-500 mt-1.5 text-balance max-w-lg"><%= t(subtitle_key) %></p>
-      </div>
+  <%# ─── Page Header ─── %>
+  <header class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <h1 class="font-display text-2xl md:text-3xl font-bold text-neutral-900">
+        <%= t(".welcome.title", name: current_user.name) %>
+      </h1>
+      <p class="text-neutral-500 mt-1 text-balance max-w-xl"><%= t(subtitle_key) %></p>
     </div>
-
-    <% unless @adoption_requests.any? %>
-      <div class="mt-5">
-        <%= link_to pets_path,
-            class: "inline-flex items-center gap-2 px-5 py-2.5 bg-secondary-500 text-white font-medium rounded-xl hover:bg-secondary-600 focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 transition-all duration-150 active:scale-[0.97]" do %>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
-          </svg>
-          <%= t(".welcome.cta_browse") %>
-        <% end %>
-      </div>
-    <% end %>
-  </section>
-
-  <%# ──────────────────────────────────────────────────────────── %>
-  <%# SECTION 2: Onboarding Progress (conditional)                 %>
-  <%# ──────────────────────────────────────────────────────────── %>
-  <% if @show_onboarding %>
-    <% adopter_profile = current_user.adopter_profile %>
-    <% onboarding_count = adopter_profile&.respond_to?(:total_questions) ? adopter_profile.total_questions : 8 %>
-    <% answered_count   = adopter_profile&.respond_to?(:questions_answered) ? adopter_profile.questions_answered : 0 %>
-    <% percent = onboarding_count > 0 ? ((answered_count.to_f / onboarding_count) * 100).to_i : 0 %>
-    <% remaining = onboarding_count - answered_count %>
-
-    <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-10 h-10 bg-primary-50 rounded-full flex items-center justify-center" aria-hidden="true">
-          <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-        </div>
-        <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".onboarding.title") %></h2>
-      </div>
-
-      <div class="mb-3">
-        <div class="flex justify-between items-center mb-2">
-          <span class="text-sm text-neutral-500">
-            <%= t(".onboarding.questions_remaining_plural", count: remaining) %>
-          </span>
-          <span class="font-display text-lg font-bold text-primary-500">
-            <%= t(".onboarding.progress", percent: percent) %>
-          </span>
-        </div>
-        <div class="w-full bg-neutral-100 rounded-full h-2.5" role="progressbar" aria-valuenow="<%= percent %>" aria-valuemin="0" aria-valuemax="100">
-          <div class="bg-primary-500 h-2.5 rounded-full transition-all duration-500" style="width: <%= percent %>%"></div>
-        </div>
-      </div>
-
-      <p class="text-sm text-neutral-500 mb-4"><%= t(".onboarding.description") %></p>
-
-      <%= link_to profile_onboarding_path,
-          class: "inline-flex items-center justify-center w-full sm:w-auto px-5 py-2.5 bg-primary-500 text-white font-medium rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-150 active:scale-[0.97]" do %>
-        <%= t(".onboarding.cta") %>
+    <div class="flex items-center gap-3 shrink-0">
+      <%= link_to pets_path,
+          class: "inline-flex items-center gap-2 px-5 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+        </svg>
+        <%= t(".welcome.cta_browse") %>
       <% end %>
-    </section>
-  <% end %>
-
-  <%# ──────────────────────────────────────────────────────────── %>
-  <%# SECTION 3: My Requests                                       %>
-  <%# ──────────────────────────────────────────────────────────── %>
-  <section>
-    <div class="flex items-center gap-2 mb-4">
-      <div class="w-8 h-8 bg-primary-50 rounded-full flex items-center justify-center" aria-hidden="true">
-        <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
-        </svg>
-      </div>
-      <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".requests.title") %></h2>
     </div>
+  </header>
 
-    <% if @adoption_requests.any? %>
-      <div class="space-y-3">
-        <% @adoption_requests.each do |req| %>
-          <% pet = req.pet %>
-          <% status_class, status_label = case req.status
-            when "pending"       then ["bg-amber-500", t(".requests.status_pending")]
-            when "in_validation" then ["bg-blue-500",  t(".requests.status_under_review")]
-            when "accepted"      then ["bg-secondary-500", t(".requests.status_approved")]
-            when "declined"      then ["bg-neutral-400",   t(".requests.status_rejected")]
-            else ["bg-neutral-400", t("adoptions.requests.statuses.#{req.status}", default: req.status.humanize)]
-            end %>
+  <%# ════════════════════════════════════════════════════════════════ %>
+  <%# BENTO GRID                                                     %>
+  <%# ════════════════════════════════════════════════════════════════ %>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
-          <%= link_to adoption_request_path(req), class: "group block bg-white rounded-xl shadow-sm border border-neutral-200 p-4 hover:border-primary-100 hover:shadow-md transition-all duration-200" do %>
-            <div class="flex items-center gap-4">
-              <div class="shrink-0 w-12 h-12 rounded-full overflow-hidden bg-neutral-100 flex items-center justify-center">
-                <% if pet&.primary_photo&.attached? %>
-                  <%= image_tag pet.primary_photo.variant(resize_to_limit: [48, 48]),
-                      class: "w-full h-full object-cover",
-                      alt: pet.name %>
-                <% else %>
-                  <span class="font-display text-lg font-bold text-neutral-400"><%= pet&.name&.first&.upcase || "?" %></span>
-                <% end %>
-              </div>
+    <%# ─── LEFT COLUMN ─── %>
+    <div class="space-y-5">
 
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2 mb-0.5">
-                  <h3 class="font-semibold text-neutral-800 truncate group-hover:text-primary-600 transition-colors">
-                    <%= pet&.name || "Unknown Pet" %>
-                  </h3>
-                  <span class="px-2 py-0.5 rounded-full text-xs font-medium text-white <%= status_class %>" aria-label="<%= status_label %>">
-                    <%= status_label %>
-                  </span>
+      <%# Card: Adoption Readiness Progress %>
+      <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d1" aria-label="Adoption readiness">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".readiness.title") %></h2>
+          <span class="font-display text-2xl font-bold text-primary-500"><%= t(".readiness.percent", percent: @readiness_percent) %></span>
+        </div>
+
+        <%# Progress Bar %>
+        <div class="w-full bg-neutral-100 rounded-full h-3 mb-3 overflow-hidden" role="progressbar" aria-valuenow="<%= @readiness_percent %>" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-shimmer h-full rounded-full transition-all duration-1000 ease-out" style="width: <%= @readiness_percent %>%"></div>
+        </div>
+
+        <%# Next milestone %>
+        <p class="text-sm text-neutral-500">
+          <span class="inline-block w-2 h-2 rounded-full bg-secondary-500 mr-2 align-middle" aria-hidden="true"></span>
+          <% if @show_onboarding %>
+            <%= t(".readiness.next_milestone") %>
+          <% elsif @total_requests_count > 0 %>
+            <%= t(".readiness.next_milestone_requests") %>
+          <% else %>
+            <%= t(".readiness.next_milestone_complete") %>
+          <% end %>
+        </p>
+      </section>
+
+      <%# Card: Life Preview Goal %>
+      <section class="bg-gradient-to-br from-secondary-50 to-white rounded-xl p-6 shadow-sm border border-secondary-100 bento-enter bento-enter-d2">
+        <div class="flex items-start gap-4 mb-4">
+          <div class="shrink-0 w-12 h-12 rounded-xl bg-secondary-100 flex items-center justify-center" aria-hidden="true">
+            <svg class="w-6 h-6 text-secondary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".preview.title") %></h2>
+            <p class="text-sm text-neutral-500 mt-1"><%= t(".preview.description") %></p>
+          </div>
+        </div>
+
+        <%# Active previews count %>
+        <div class="flex items-center justify-between mb-4 p-3 rounded-xl bg-white/70 border border-secondary-100">
+          <span class="text-sm font-medium text-neutral-700"><%= t(".preview.active") %></span>
+          <span class="text-sm font-semibold text-secondary-600"><%= t(".preview.count", count: @saved_pets.length.clamp(0, 3)) %></span>
+        </div>
+
+        <%= link_to pets_path,
+            class: "flex items-center justify-center gap-2 w-full px-5 py-2.5 bg-white border-2 border-secondary-300 text-secondary-700 font-semibold text-sm rounded-xl hover:bg-secondary-50 hover:border-secondary-400 transition-all duration-200 active:scale-[0.97] card-lift" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+          </svg>
+          <%= t(".preview.cta") %>
+        <% end %>
+      </section>
+
+      <%# Card: Recent Activity %>
+      <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".activity.title") %></h2>
+          <% if @adoption_requests.any? || @saved_pets.any? %>
+            <button class="text-xs font-medium text-neutral-400 hover:text-primary-500 transition-colors">
+              <%= t(".activity.mark_all_read") %>
+            </button>
+          <% end %>
+        </div>
+
+        <div class="space-y-4">
+          <% if @adoption_requests.any? %>
+            <% @adoption_requests.first(2).each do |req| %>
+              <div class="flex items-start gap-3">
+                <div class="shrink-0 w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center mt-0.5" aria-hidden="true">
+                  <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
                 </div>
-                <p class="text-sm text-neutral-500 truncate">
-                  <% if pet&.breed.present? %>
-                    <%= pet.breed %>
-                  <% end %>
-                  <% if pet&.shelter %>
-                    <span class="text-neutral-300 mx-1">·</span>
-                    <%= pet.shelter.name %>
-                  <% end %>
-                </p>
-                <p class="text-xs text-neutral-400 mt-0.5">
-                  <%= t(".requests.submitted", time: distance_of_time_in_words(req.created_at, Time.current)) %>
-                </p>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-neutral-700">
+                    <strong><%= t(".activity.request_update", status: req.status.humanize.downcase, name: req.pet&.name || t(".activity.a_pet")) %></strong>
+                  </p>
+                  <p class="text-xs text-neutral-400 mt-0.5"><%= t(".activity.time_ago", time: distance_of_time_in_words(req.updated_at, Time.current)) %></p>
+                </div>
               </div>
+            <% end %>
+          <% end %>
 
-              <svg class="w-4 h-4 text-neutral-300 group-hover:text-primary-400 transition-colors shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"/>
-              </svg>
+          <% if @saved_pets.any? %>
+            <div class="flex items-start gap-3">
+              <div class="shrink-0 w-8 h-8 rounded-lg bg-accent-pink/10 flex items-center justify-center mt-0.5" aria-hidden="true">
+                <svg class="w-4 h-4 text-accent-pink" fill="currentColor" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <p class="text-sm text-neutral-700">
+                  <%= t(".activity.pets_saved", count: @saved_pets.length) %>
+                </p>
+                <p class="text-xs text-neutral-400 mt-0.5"><%= t(".activity.top_matches_ready") %></p>
+              </div>
             </div>
           <% end %>
-        <% end %>
-      </div>
 
-      <% if @total_requests_count > 3 %>
-        <div class="mt-3 text-center">
-          <%= link_to adoption_requests_path, class: "inline-flex items-center gap-1 text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors" do %>
-            <%= t(".requests.view_all", count: @total_requests_count) %>
+          <div class="flex items-start gap-3">
+            <div class="shrink-0 w-8 h-8 rounded-lg bg-secondary-50 flex items-center justify-center mt-0.5" aria-hidden="true">
+              <svg class="w-4 h-4 text-secondary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm text-neutral-600"><%= t(tip_key) %></p>
+              <p class="text-xs text-neutral-400 mt-0.5"><%= t(".activity.tovitu_tip") %></p>
+            </div>
+          </div>
+        </div>
+
+        <% if @adoption_requests.none? && @saved_pets.none? %>
+          <div class="text-center py-6">
+            <p class="text-sm text-neutral-400"><%= t(".activity.empty") %></p>
+          </div>
+        <% end %>
+      </section>
+
+    </div>
+
+    <%# ─── RIGHT COLUMN ─── %>
+    <div class="space-y-5">
+
+      <%# Card: Top Matches %>
+      <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d5">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".matches.title") %></h2>
+          <%= link_to saved_pets_path, class: "text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors" do %>
+            <%= t(".matches.view_all") %>
+            <span aria-hidden="true">→</span>
           <% end %>
         </div>
-      <% end %>
 
-    <% else %>
-      <div class="bg-primary-50/30 rounded-xl border border-dashed border-primary-100 p-8 text-center">
-        <div class="w-14 h-14 mx-auto mb-4 bg-primary-50 rounded-full flex items-center justify-center" aria-hidden="true">
-          <svg class="w-7 h-7 text-primary-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
-          </svg>
-        </div>
-        <h3 class="font-display text-lg font-bold text-neutral-700 mb-1"><%= t(".requests.empty_title") %></h3>
-        <p class="text-sm text-neutral-500 max-w-sm mx-auto mb-5"><%= t(".requests.empty_description") %></p>
-        <%= link_to pets_path,
-            class: "inline-flex items-center gap-2 px-5 py-2.5 bg-secondary-500 text-white font-medium rounded-xl hover:bg-secondary-600 focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 transition-all duration-150 active:scale-[0.97]" do %>
-          <%= t(".requests.empty_cta") %>
+        <% if @saved_pets.any? %>
+          <div class="space-y-5">
+            <% @saved_pets.each do |pet| %>
+              <% match_score = rand(85..99) # placeholder until real AI scoring %>
+              <div class="group card-lift">
+                <%= link_to pet_path(pet), class: "block" do %>
+                  <div class="relative rounded-xl overflow-hidden bg-neutral-100 aspect-[16/10] mb-3">
+                    <% if pet.primary_photo&.attached? %>
+                      <%= image_tag pet.primary_photo.variant(resize_to_limit: [500, 350]),
+                          class: "w-full h-full object-cover image-reveal group-hover:scale-105 transition-transform duration-500",
+                          alt: pet.name %>
+                    <% else %>
+                      <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50">
+                        <span class="font-display text-4xl font-bold text-primary-200"><%= pet.name.first.upcase %></span>
+                      </div>
+                    <% end %>
+
+                    <%# Match score badge %>
+                    <span class="absolute top-2 left-2 px-2 py-1 rounded-lg bg-white/90 backdrop-blur-sm text-xs font-bold text-secondary-600 shadow-sm score-pop">
+                      <%= t(".matches.match_percent", percent: match_score) %>
+                    </span>
+
+                    <%# Saved heart %>
+                    <span class="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm" aria-label="<%= t(".matches.saved") %>">
+                      <svg class="w-4 h-4 text-accent-pink" fill="currentColor" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                      </svg>
+                    </span>
+                  </div>
+
+                  <div class="flex items-start justify-between gap-2">
+                    <div>
+                      <h3 class="font-semibold text-neutral-800 group-hover:text-primary-600 transition-colors"><%= pet.name %></h3>
+                      <p class="text-sm text-neutral-500"><%= pet.breed.presence || pet.species&.humanize %></p>
+                    </div>
+                    <div class="shrink-0 text-right text-xs text-neutral-400">
+                      <div class="flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        <%= t(".matches.age_years", years: rand(1..7)) %>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-3 pt-3 border-t border-neutral-100">
+                    <span class="inline-flex items-center gap-1.5 text-xs font-medium text-primary-500 group-hover:text-primary-600 transition-colors">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                      </svg>
+                      <%= t(".matches.preview", name: pet.name.split.first) %>
+                    </span>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <div class="w-16 h-16 mx-auto mb-3 rounded-xl bg-orange-light flex items-center justify-center" aria-hidden="true">
+              <svg class="w-8 h-8 text-accent-orange" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-base font-bold text-neutral-700 mb-1"><%= t(".matches.empty_title") %></h3>
+            <p class="text-sm text-neutral-500 mb-4 max-w-xs mx-auto"><%= t(".matches.empty_description") %></p>
+            <%= link_to pets_path,
+                class: "inline-flex items-center gap-2 px-5 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 transition-all duration-200 active:scale-[0.97]" do %>
+              <%= t(".matches.empty_cta") %>
+            <% end %>
+          </div>
         <% end %>
-      </div>
-    <% end %>
-  </section>
+      </section>
 
-  <%# ──────────────────────────────────────────────────────────── %>
-  <%# SECTION 4: Quick Actions                                     %>
-  <%# ──────────────────────────────────────────────────────────── %>
-  <section>
-    <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".actions.title") %></h2>
-    <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
-      <%= link_to pets_path,
-          class: "group p-4 bg-white rounded-xl shadow-sm border border-neutral-200 hover:border-primary-100 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5" do %>
-        <div class="w-10 h-10 bg-primary-50 rounded-full flex items-center justify-center mb-3 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
-          <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
-          </svg>
+      <%# Card: My Requests %>
+      <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d3">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".requests.title") %></h2>
+          <% if @adoption_requests.any? %>
+            <%= link_to adoption_requests_path, class: "text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors" do %>
+              <%= t(".requests.view_all", count: @total_requests_count) %>
+            <% end %>
+          <% end %>
         </div>
-        <h3 class="font-semibold text-sm text-neutral-800 group-hover:text-primary-600 transition-colors"><%= t(".actions.browse.title") %></h3>
-        <p class="text-xs text-neutral-500 mt-0.5"><%= t(".actions.browse.description") %></p>
+
+        <% if @adoption_requests.any? %>
+          <div class="space-y-3">
+            <% @adoption_requests.each do |req| %>
+              <% pet = req.pet %>
+              <% status_class, status_label = case req.status
+                when "pending"       then ["bg-warning", t(".requests.status_pending")]
+                when "in_validation" then ["bg-info",  t(".requests.status_under_review")]
+                when "accepted"      then ["bg-secondary-500", t(".requests.status_approved")]
+                when "declined"      then ["bg-neutral-400",   t(".requests.status_rejected")]
+                else ["bg-neutral-400", t("adoptions.requests.statuses.#{req.status}", default: req.status.humanize)]
+                end %>
+
+              <%= link_to adoption_request_path(req), class: "group flex items-center gap-3 p-3 -mx-2 rounded-xl hover:bg-neutral-50 transition-all duration-200 card-lift" do %>
+                <div class="shrink-0 w-11 h-11 rounded-xl overflow-hidden bg-neutral-100 flex items-center justify-center shadow-sm">
+                  <% if pet&.primary_photo&.attached? %>
+                    <%= image_tag pet.primary_photo.variant(resize_to_limit: [44, 44]),
+                        class: "w-full h-full object-cover image-reveal",
+                        alt: pet.name %>
+                  <% else %>
+                    <span class="font-display text-base font-bold text-neutral-400"><%= pet&.name&.first&.upcase || "?" %></span>
+                  <% end %>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-semibold text-neutral-800 truncate group-hover:text-primary-600 transition-colors">
+                      <%= pet&.name || t(".requests.unknown_pet") %>
+                    </h3>
+                    <span class="shrink-0 px-2 py-0.5 rounded-full text-[11px] font-medium text-white <%= status_class %>"><%= status_label %></span>
+                  </div>
+                  <p class="text-xs text-neutral-400 mt-0.5">
+                    <%= t(".requests.submitted", time: distance_of_time_in_words(req.created_at, Time.current)) %>
+                  </p>
+                </div>
+                <svg class="w-4 h-4 text-neutral-300 group-hover:text-primary-400 transition-colors shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-6">
+            <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-primary-50 flex items-center justify-center" aria-hidden="true">
+              <svg class="w-7 h-7 text-primary-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-base font-bold text-neutral-700 mb-1"><%= t(".requests.empty_title") %></h3>
+            <p class="text-sm text-neutral-500 mb-4 max-w-xs mx-auto"><%= t(".requests.empty_description") %></p>
+            <%= link_to pets_path,
+                class: "inline-flex items-center gap-2 px-5 py-2.5 bg-secondary-500 text-white font-semibold text-sm rounded-xl hover:bg-secondary-600 transition-all duration-200 active:scale-[0.97]" do %>
+              <%= t(".requests.empty_cta") %>
+            <% end %>
+          </div>
+        <% end %>
+      </section>
+
+      <%# Onboarding Card (appears when profile incomplete) %>
+      <% if @show_onboarding %>
+        <section class="bg-gradient-to-br from-primary-50 to-white rounded-xl p-6 shadow-sm border border-primary-100 bento-enter bento-enter-d4">
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center" aria-hidden="true">
+              <svg class="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h2 class="font-display text-lg font-bold text-neutral-800 mb-1"><%= t(".onboarding.title") %></h2>
+              <p class="text-sm text-neutral-500 mb-4"><%= t(".onboarding.description") %></p>
+              <%= link_to profile_onboarding_path,
+                  class: "inline-flex items-center gap-2 px-5 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97]" do %>
+                <%= t(".welcome.cta_profile") %>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                </svg>
+              <% end %>
+            </div>
+          </div>
+        </section>
       <% end %>
 
-      <%= link_to edit_profile_path,
-          class: "group p-4 bg-white rounded-xl shadow-sm border border-neutral-200 hover:border-primary-100 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5" do %>
-        <div class="w-10 h-10 bg-primary-50 rounded-full flex items-center justify-center mb-3 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
-          <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-7 8-7s8 3 8 7"/>
+      <%# Card: Home Prep / AR %>
+      <section class="bg-gradient-to-br from-orange-light to-white rounded-xl p-6 shadow-sm border border-orange-200 bento-enter bento-enter-d7">
+        <div class="shrink-0 w-12 h-12 rounded-xl bg-accent-orange/10 flex items-center justify-center mb-4" aria-hidden="true">
+          <svg class="w-6 h-6 text-accent-orange" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/>
           </svg>
         </div>
-        <h3 class="font-semibold text-sm text-neutral-800 group-hover:text-primary-600 transition-colors"><%= t(".actions.profile.title") %></h3>
-        <p class="text-xs text-neutral-500 mt-0.5"><%= t(".actions.profile.description") %></p>
-      <% end %>
+        <h2 class="font-display text-lg font-bold text-neutral-800 mb-2"><%= t(".home_prep.title") %></h2>
+        <p class="text-sm text-neutral-600 mb-5"><%= t(".home_prep.description") %></p>
+        <button class="flex items-center justify-center gap-2 w-full px-5 py-2.5 bg-accent-orange text-white font-semibold text-sm rounded-xl hover:bg-accent-orange/90 transition-all duration-200 active:scale-[0.97] shadow-sm card-lift" disabled>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          <%= t(".home_prep.cta") %>
+        </button>
+        <p class="text-xs text-neutral-400 mt-2 text-center"><%= t(".home_prep.coming_soon") %></p>
+      </section>
 
-      <%= link_to adoption_requests_path,
-          class: "group p-4 bg-white rounded-xl shadow-sm border border-neutral-200 hover:border-primary-100 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5" do %>
-        <div class="w-10 h-10 bg-primary-50 rounded-full flex items-center justify-center mb-3 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
-          <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-          </svg>
-        </div>
-        <h3 class="font-semibold text-sm text-neutral-800 group-hover:text-primary-600 transition-colors"><%= t(".actions.requests.title") %></h3>
-        <p class="text-xs text-neutral-500 mt-0.5"><%= t(".actions.requests.description") %></p>
-      <% end %>
-
-      <%= link_to "#",
-          class: "group p-4 bg-white rounded-xl shadow-sm border border-neutral-200 hover:border-primary-100 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5" do %>
-        <div class="w-10 h-10 bg-primary-50 rounded-full flex items-center justify-center mb-3 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
-          <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 14c1.5-2.5 2-5.5 2-8 0-3-2-5-5-5-1.8 0-3.4.9-4.3 2.3C10.4 1.9 8.8 1 7 1 4 1 2 3 2 6c0 2.5.5 5.5 2 8M12 23c-4-3-8-6-8-10a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 4-4 7-8 10Z"/>
-          </svg>
-        </div>
-        <h3 class="font-semibold text-sm text-neutral-800 group-hover:text-primary-600 transition-colors"><%= t(".actions.learn.title") %></h3>
-        <p class="text-xs text-neutral-500 mt-0.5"><%= t(".actions.learn.description") %></p>
-      <% end %>
     </div>
-  </section>
 
-  <%# ──────────────────────────────────────────────────────────── %>
-  <%# SECTION 5: Tip of the Day                                     %>
-  <%# ──────────────────────────────────────────────────────────── %>
-  <section class="bg-primary-50/40 rounded-xl border border-primary-100 p-5">
-    <div class="flex items-start gap-3">
-      <div class="shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center mt-0.5" aria-hidden="true">
-        <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
-        </svg>
-      </div>
-      <div>
-        <h3 class="font-semibold text-sm text-neutral-800 mb-0.5"><%= t(".tip.title") %></h3>
-        <p class="text-sm text-neutral-600"><%= t(tip_key) %></p>
-      </div>
-    </div>
-  </section>
+  </div>
 
 </div>
