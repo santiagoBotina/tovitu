@@ -1,0 +1,56 @@
+<div class="max-w-4xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="font-display text-2xl font-bold text-neutral-900"><%= t(".title") %></h1>
+      <p class="text-neutral-500 text-sm mt-1"><%= t(".subtitle") %></p>
+    </div>
+    <%= link_to new_my_pet_path, class: "inline-flex items-center gap-2 px-5 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+      <%= t(".publish_new") %>
+    <% end %>
+  </div>
+
+  <% if @pets.any? %>
+    <div class="space-y-4">
+      <% @pets.each do |pet| %>
+        <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-4 flex items-center gap-4 hover:shadow-md transition-shadow">
+          <div class="shrink-0 w-16 h-16 rounded-xl overflow-hidden bg-neutral-100">
+            <% if pet.primary_photo&.attached? %>
+              <%= image_tag pet.primary_photo.variant(resize_to_limit: [64, 64]), class: "w-full h-full object-cover", alt: pet.name %>
+            <% else %>
+              <div class="w-full h-full flex items-center justify-center text-neutral-400 text-lg font-bold"><%= pet.name.first.upcase %></div>
+            <% end %>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <h3 class="font-semibold text-neutral-800 truncate"><%= pet.name %></h3>
+              <%= pet.status_badge.html_safe %>
+            </div>
+            <p class="text-sm text-neutral-500"><%= pet.species_label %><%= " · #{pet.breed}" if pet.breed.present? %></p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <%= link_to my_pet_path(pet), class: "px-3 py-1.5 text-sm font-medium text-primary-600 hover:bg-primary-50 rounded-lg transition", title: t(".view") do %>
+              <%= t(".view") %>
+            <% end %>
+            <%= link_to edit_my_pet_path(pet), class: "px-3 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-50 rounded-lg transition", title: t(".edit") do %>
+              <%= t(".edit") %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-16 bg-white rounded-xl border border-neutral-200">
+      <div class="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-primary-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <h3 class="font-display text-xl font-bold text-neutral-800 mb-2"><%= t(".empty_title") %></h3>
+      <p class="text-neutral-600 mb-6"><%= t(".empty_body") %></p>
+      <%= link_to new_my_pet_path, class: "inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 transition" do %>
+        <%= t(".publish_new") %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

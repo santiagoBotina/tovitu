@@ -1,10 +1,15 @@
 <div class="w-full max-w-lg mx-auto"
-     data-controller="onboarding"
+     data-controller="onboarding confetti"
      data-onboarding-current-step-value="<%= @current_step %>"
      data-onboarding-total-steps-value="<%= @total_questions %>"
      data-onboarding-save-url-value="<%= onboarding_shelter_questions_path %>"
      data-onboarding-complete-url-value="<%= onboarding_shelter_completion_path %>"
-     data-onboarding-role-value="shelter">
+     data-onboarding-role-value="shelter"
+     data-action="wizard:complete@document->confetti#fire"
+     data-tip1="<%= t('onboarding.shelter.progress_tips.tip1') %>"
+     data-tip2="<%= t('onboarding.shelter.progress_tips.tip2') %>"
+     data-tip3="<%= t('onboarding.shelter.progress_tips.tip3') %>"
+     data-tip4="<%= t('onboarding.shelter.progress_tips.tip4') %>">
 
   <%= form_with url: onboarding_shelter_completion_path, method: :post,
                 data: { onboarding_target: "completeForm" },
@@ -16,8 +21,40 @@
     <% end %>
   <% end %>
 
+  <%# ─── Mascot Companion ─── %>
+  <div data-onboarding-target="mascot"
+       class="hidden sm:block fixed bottom-6 right-6 z-30 w-16 h-16 pointer-events-none select-none"
+       aria-hidden="true">
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+      <!-- Geometric cat-dog hybrid mascot in Tovitu purple/teal -->
+      <!-- Body -->
+      <circle cx="32" cy="36" r="18" fill="var(--color-primary-100)"/>
+      <!-- Ears -->
+      <path d="M18 22 L14 8 L26 18 Z" fill="var(--color-primary-400)"/>
+      <path d="M46 22 L50 8 L38 18 Z" fill="var(--color-primary-400)"/>
+      <!-- Eyes -->
+      <circle cx="26" cy="32" r="3" fill="var(--color-primary-700)"/>
+      <circle cx="38" cy="32" r="3" fill="var(--color-primary-700)"/>
+      <!-- Eye shine -->
+      <circle cx="27" cy="31" r="1" fill="white" opacity="0.8"/>
+      <circle cx="39" cy="31" r="1" fill="white" opacity="0.8"/>
+      <!-- Nose -->
+      <path d="M30 38 L34 38 L32 41 Z" fill="var(--color-secondary-500)"/>
+      <!-- Mouth -->
+      <path d="M28 42 C30 44, 34 44, 36 42" stroke="var(--color-primary-600)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <!-- Whiskers -->
+      <line x1="12" y1="35" x2="22" y2="36" stroke="var(--color-primary-300)" stroke-width="1" stroke-linecap="round"/>
+      <line x1="12" y1="39" x2="22" y2="38" stroke="var(--color-primary-300)" stroke-width="1" stroke-linecap="round"/>
+      <line x1="52" y1="35" x2="42" y2="36" stroke="var(--color-primary-300)" stroke-width="1" stroke-linecap="round"/>
+      <line x1="52" y1="39" x2="42" y2="38" stroke="var(--color-primary-300)" stroke-width="1" stroke-linecap="round"/>
+      <!-- Paws -->
+      <ellipse cx="22" cy="52" rx="5" ry="3" fill="var(--color-primary-200)"/>
+      <ellipse cx="42" cy="52" rx="5" ry="3" fill="var(--color-primary-200)"/>
+    </svg>
+  </div>
+
   <div class="text-center mb-8">
-      <div class="w-14 h-14 rounded-2xl bg-secondary-50 flex items-center justify-center mx-auto mb-4">
+    <div class="w-14 h-14 rounded-2xl bg-secondary-50 flex items-center justify-center mx-auto mb-4">
       <svg class="w-7 h-7 text-secondary-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
       </svg>
@@ -27,20 +64,41 @@
   </div>
 
   <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 sm:p-8">
+    <%# ─── Enhanced Progress Bar ─── %>
     <div class="mb-6">
       <div class="flex items-center justify-between mb-2">
         <span class="text-sm font-medium text-neutral-500" data-onboarding-target="progressText">
-          <%= t("onboarding.shelter.progress", current: @current_step, total: @total_questions) %>
+          🐾 <%= t("onboarding.shelter.progress", current: @current_step, total: @total_questions) %>
         </span>
         <span class="text-xs text-neutral-500" data-onboarding-target="selectedCount"></span>
       </div>
-      <div class="w-full h-2 bg-neutral-100 rounded-full overflow-hidden">
-        <div class="h-full bg-secondary-500 rounded-full transition-all duration-500 ease-out"
+      <div class="relative w-full h-3 bg-neutral-100 rounded-full overflow-hidden">
+        <div class="h-full rounded-full transition-all duration-600 ease-out progress-shimmer"
              data-onboarding-target="progressBar"
              style="width: <%= ((@current_step - 1).to_f / @total_questions * 100) %>%"></div>
+
+        <%# Milestone dots %>
+        <div class="absolute inset-0 flex items-center justify-between px-0.5 pointer-events-none">
+          <% [25, 50, 75, 100].each do |pct| %>
+            <div data-onboarding-target="milestoneDot"
+                 data-threshold="<%= pct %>"
+                 class="w-3 h-3 rounded-sm bg-neutral-200 border-2 border-white transform rotate-45 transition-all duration-300"
+                 style="<%= "visibility:hidden" if pct == 100 %>">
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <%# Rotating tips %>
+      <div data-onboarding-target="progressTips" class="mt-2 text-center">
+        <p data-tip="1" class="text-xs text-neutral-400 active transition-opacity duration-500"><%= t("onboarding.shelter.progress_tips.tip1") %></p>
+        <p data-tip="2" class="text-xs text-neutral-400 hidden transition-opacity duration-500"><%= t("onboarding.shelter.progress_tips.tip2") %></p>
+        <p data-tip="3" class="text-xs text-neutral-400 hidden transition-opacity duration-500"><%= t("onboarding.shelter.progress_tips.tip3") %></p>
+        <p data-tip="4" class="text-xs text-neutral-400 hidden transition-opacity duration-500"><%= t("onboarding.shelter.progress_tips.tip4") %></p>
       </div>
     </div>
 
+    <%# ─── Questions ─── %>
     <div data-onboarding-target="questionContainer" class="min-h-[320px]">
       <% @questions_data.each_with_index do |question, idx| %>
         <div data-question="<%= question[:number] %>"
@@ -124,6 +182,26 @@
       <% end %>
     </div>
 
+    <%# ─── Personality Card (hidden until completion) ─── %>
+    <div data-onboarding-target="personalityCard"
+         class="hidden mt-6 p-6 bg-gradient-to-br from-primary-50 to-secondary-50 rounded-xl border-2 border-primary-200 text-center">
+      <% profile = @profile %>
+      <% personality = Onboarding::Shelter::Personality.call(profile) rescue nil %>
+      <% if personality %>
+        <p class="text-3xl mb-2"><%= personality[:icon] %></p>
+        <p class="font-display text-xl font-bold text-neutral-800 mb-1"><%= personality[:name] %></p>
+        <p class="text-sm text-neutral-600 mb-4"><%= personality[:description] %></p>
+      <% else %>
+        <p class="text-3xl mb-2">🏆</p>
+        <p class="font-display text-xl font-bold text-neutral-800 mb-1"><%= t("onboarding.shelter.personality.guardian.name") %></p>
+        <p class="text-sm text-neutral-600 mb-4"><%= t("onboarding.shelter.personality.guardian.description") %></p>
+      <% end %>
+      <div class="text-sm text-neutral-500">
+        <%= t("onboarding.shelter.celebration.complete") %>
+      </div>
+    </div>
+
+    <%# ─── Navigation ─── %>
     <div class="flex items-center justify-between mt-8 pt-6 border-t border-neutral-100">
       <button type="button"
               data-action="click->onboarding#previousQuestion"
@@ -148,8 +226,10 @@
         <button type="button"
                 data-action="click->onboarding#nextQuestion"
                 data-onboarding-target="nextButton"
+                data-next-text="<%= t('onboarding.shelter.next') %>"
+                data-complete-text="<%= t('onboarding.shelter.complete') %>"
                 class="px-6 py-2.5 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 active:bg-primary-700 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
-          <span data-onboarding-target="nextButtonText"><%= t("onboarding.shelter.next") %></span>
+          <span><%= t("onboarding.shelter.next") %></span>
         </button>
       </div>
     </div>

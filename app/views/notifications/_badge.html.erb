@@ -1,0 +1,9 @@
+<%# ─── Notification Badge ─── %>
+<% count = local_assigns[:count] || 0 %>
+<% if count > 0 %>
+  <span id="notification_badge" data-notification-bell-target="badge" class="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 rounded-full bg-coral-accent text-white text-[10px] font-bold flex items-center justify-center shadow-sm transition-transform duration-200 hover:scale-110">
+    <%= count > 9 ? '9+' : count %>
+  </span>
+<% else %>
+  <span id="notification_badge" data-notification-bell-target="badge" class="hidden" aria-hidden="true"></span>
+<% end %>

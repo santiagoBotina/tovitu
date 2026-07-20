@@ -18,6 +18,7 @@ module Pets
       @query              = params[:query]
       @shelter_id         = params[:shelter_id]
       @status             = params[:status]
+      @publisher          = params[:publisher]
     end
 
     def call
@@ -35,12 +36,18 @@ module Pets
       scope = scope.where(good_with_dogs:   cast_boolean(@good_with_dogs))       if @good_with_dogs.present?
       scope = scope.where(good_with_cats:   cast_boolean(@good_with_cats))       if @good_with_cats.present?
 
+      if @publisher == "shelter"
+        scope = scope.shelter_listed
+      elsif @publisher == "individual"
+        scope = scope.individual_listed
+      end
+
       if @city.present?
-        scope = scope.joins(:shelter).where("shelters.city ILIKE ?", "%#{sanitize_like(@city)}%")
+        scope = scope.left_joins(:shelter).where("shelters.city ILIKE ?", "%#{sanitize_like(@city)}%")
       end
 
       if @state.present?
-        scope = scope.joins(:shelter).where(shelters: { state: @state.upcase })
+        scope = scope.left_joins(:shelter).where(shelters: { state: @state.upcase })
       end
 
       scope = scope.where(shelter_id: @shelter_id) if @shelter_id.present?

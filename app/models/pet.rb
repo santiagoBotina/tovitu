@@ -1,5 +1,8 @@
 class Pet < ApplicationRecord
-  belongs_to :shelter, touch: true
+  include Discard::Model
+
+  belongs_to :shelter, optional: true
+  belongs_to :publisher, class_name: "User", optional: true
 
   delegate :ai_features_enabled?, to: :shelter, allow_nil: true
   has_many_attached :photos
@@ -25,6 +28,7 @@ class Pet < ApplicationRecord
   validates :status, presence: true, inclusion: { in: STATUSES }
   validates :size, inclusion: { in: SIZES, allow_blank: true }
   validates :breed, length: { maximum: 100 }, allow_blank: true
+  validate :must_have_shelter_or_publisher
 
   after_update :invalidate_life_preview_if_needed
 
@@ -43,6 +47,8 @@ class Pet < ApplicationRecord
   scope :searchable,      -> { available }
   scope :recently_added,  -> { available.order(created_at: :desc) }
   scope :by_shelter,      ->(id) { where(shelter_id: id) }
+  scope :shelter_listed,  -> { where.not(shelter_id: nil) }
+  scope :individual_listed, -> { where.not(publisher_id: nil) }
 
   LIFE_PREVIEW_INVALIDATING_ATTRIBUTES = %w[
     description personality_traits medical_notes requirements
@@ -104,7 +110,21 @@ class Pet < ApplicationRecord
     photos.sort_by { |p| ordered_blob_ids.index(p.blob_id.to_s) || Float::INFINITY }
   end
 
+  def individual_listed?
+    publisher_id.present?
+  end
+
+  def shelter_listed?
+    shelter_id.present?
+  end
+
   private
+
+  def must_have_shelter_or_publisher
+    if shelter_id.blank? && publisher_id.blank?
+      errors.add(:base, :must_have_shelter_or_publisher)
+    end
+  end
 
   def invalidate_life_preview_if_needed
     return unless (LIFE_PREVIEW_INVALIDATING_ATTRIBUTES & saved_changes.keys).any?
@@ -118,7 +138,7 @@ class Pet < ApplicationRecord
 
     errors.add(:birth_date,
                I18n.t("pets.errors.birth_date_mismatch",
-                      category: I18n.t("pets.age_categories.#{expected}")))
+                       category: I18n.t("pets.age_categories.#{expected}")))
   end
 
   def compute_age

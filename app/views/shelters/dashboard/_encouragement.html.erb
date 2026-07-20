@@ -1,0 +1,33 @@
+<%# Encouragement area below the checklist %>
+<% shelter = local_assigns[:shelter] || present(@shelter) %>
+<% steps = shelter.onboarding_steps %>
+<% done_count = steps.count { |s| s[:done] } %>
+<% total_count = steps.size %>
+
+<div id="encouragement" class="mt-4 text-center">
+  <p data-checklist-target="encouragement"
+     data-completed="<%= t("onboarding.shelter.checklist.encouragement.completed") %>"
+     data-all-done="<%= t("onboarding.shelter.checklist.encouragement.all_done") %>"
+     class="text-sm text-neutral-500">
+    <% if done_count >= total_count %>
+      <%= t("onboarding.shelter.checklist.encouragement.all_done") %>
+    <% else %>
+      <%= t("onboarding.shelter.checklist.encouragement.completed", count: done_count, total: total_count) %>
+    <% end %>
+  </p>
+
+  <%# Rotating tips %>
+  <% tips = steps.reject { |s| s[:done] } %>
+  <% if tips.any? %>
+    <div class="mt-2 space-y-1">
+      <% tips.first(2).each_with_index do |step, idx| %>
+        <p data-checklist-target="tip"
+           class="text-xs text-neutral-400 <%= idx == 0 ? 'active' : 'hidden' %> transition-opacity duration-500">
+          <% tip_key = "onboarding.shelter.checklist.step.#{step[:key]}.done_message" %>
+          <% tip = t(tip_key, default: "") %>
+          <%= tip.presence || step[:description] %>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+</div>

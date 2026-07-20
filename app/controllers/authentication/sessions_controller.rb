@@ -1,14 +1,19 @@
 module Authentication
   class SessionsController < ApplicationController
-    before_action :require_no_authentication, only: [ :new, :new_adopter, :new_shelter, :create ]
+    before_action :require_no_authentication, only: [ :new, :new_individual, :new_adopter, :new_shelter, :create ]
 
     def new
-      @role = params[:role] || "adopter"
+      @role = params[:role] || "individual"
+    end
+
+    def new_individual
+      @role = "individual"
+      render :new
     end
 
     def new_adopter
-      @role = "adopter"
-      render :new
+      @role = "individual"
+      redirect_to login_individual_path, status: :moved_permanently
     end
 
     def new_shelter
@@ -17,10 +22,13 @@ module Authentication
     end
 
     def create
+      role_param = params[:session][:role]
+      normalized_role = role_param == "adopter" ? "individual" : role_param
+
       result = Authentication::AuthenticateUser.call(
         email: params[:session][:email],
         password: params[:session][:password],
-        role: params[:session][:role],
+        role: normalized_role,
         ip_address: request.remote_ip,
         user_agent: request.user_agent
       )
@@ -30,7 +38,7 @@ module Authentication
         redirect_to after_sign_in_path, notice: t("flash.sessions.create.success")
       else
         flash.now[:alert] = Array(result.errors).join(", ")
-        @role = params[:session][:role] || "adopter"
+        @role = normalized_role || "individual"
         render :new, status: :unprocessable_entity
       end
     end

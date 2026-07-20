@@ -9,7 +9,9 @@ module NavigationHelper
     if user.adopter?
       current_page?(user_dashboard_path) || locale_aware_path.start_with?("/dashboard")
     elsif user.shelter_user?
-      locale_aware_path.start_with?("/dashboard") || current_page?(root_path)
+      locale_aware_path.start_with?("/dashboard") ||
+        locale_aware_path.match?(%r{^/shelters/\d+/dashboard($|/)}) ||
+        current_page?(root_path)
     else
       false
     end

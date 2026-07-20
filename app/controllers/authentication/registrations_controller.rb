@@ -5,12 +5,12 @@ module Authentication
     before_action :require_no_authentication, only: [ :new, :create ]
 
     def new
-      @role = params[:role] || "adopter"
+      @role = params[:role] || "individual"
       @user = User.new
     end
 
     def create
-      role = params[:user][:role].presence || "adopter"
+      role = params[:user][:role].presence || "individual"
 
       result = Authentication::RegisterUser.call(
         name: params[:user][:name],

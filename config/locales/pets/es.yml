@@ -101,6 +101,7 @@ es:
       showing_count: Mostrando %{count} mascotas
       photo_alt: "%{name} foto %{index}"
       filters:
+        title: Filtros
         species: Especie
         age: Edad
         size: Tamaño

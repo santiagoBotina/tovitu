@@ -37,7 +37,9 @@
 
     <div class="fixed inset-0 pointer-events-none z-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBudW1PY3RhdmVzPSIzIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjUwMCIgaGVpZ2h0PSI1MDAiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wNCIvPjwvc3ZnPg==')] opacity-50"></div>
 
-    <%= render "shared/flash" %>
+    <div id="flash-container">
+      <%= render "shared/flash" %>
+    </div>
 
     <% if signed_in? && !local_assigns[:hide_nav] && !@hide_nav %>
       <div data-sidebar-target="overlay"

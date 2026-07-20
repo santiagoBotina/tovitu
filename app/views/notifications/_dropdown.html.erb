@@ -1,0 +1,47 @@
+<%# ─── Notification Dropdown ─── %>
+<% notifications = local_assigns[:notifications] || [] %>
+<div data-notification-bell-target="dropdown"
+     class="hidden absolute right-0 top-full mt-2 w-80 rounded-xl bg-white shadow-lg border border-neutral-200/80 overflow-hidden opacity-0 scale-95 transition-all duration-150 origin-top-right z-dropdown"
+     role="menu">
+  <div class="p-3 border-b border-neutral-100 flex items-center justify-between">
+    <h3 class="text-sm font-semibold text-neutral-800"><%= t("notifications.dropdown.title") %></h3>
+    <% if notifications.any? { |n| n.read_at.nil? } %>
+      <%= button_to mark_all_read_notifications_path, method: :patch,
+          class: "text-xs font-medium text-primary-500 hover:text-primary-600 transition-colors",
+          data: { action: "click->notification-bell#markAllRead" } do %>
+        <%= t("notifications.dropdown.mark_all_read") %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="max-h-96 overflow-y-auto">
+    <% if notifications.any? %>
+      <% notifications.first(5).each do |notification| %>
+        <%= link_to notification.action_url.presence || "#",
+            class: "flex items-start gap-3 p-3 hover:bg-neutral-50 transition-colors #{'bg-primary-50/30' unless notification.read?}",
+            data: { action: "click->notification-bell#hide" } do %>
+          <div class="w-2 h-2 rounded-full mt-1.5 shrink-0 <%= notification.read? ? 'bg-transparent' : 'bg-primary-500' %>" aria-hidden="true"></div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-neutral-900 line-clamp-1"><%= notification.title %></p>
+            <% if notification.body.present? %>
+              <p class="text-xs text-neutral-500 line-clamp-1"><%= notification.body %></p>
+            <% end %>
+            <p class="text-[11px] text-neutral-400 mt-0.5"><%= time_ago_in_words(notification.created_at) %> ago</p>
+          </div>
+        <% end %>
+      <% end %>
+    <% else %>
+      <div class="p-6 text-center">
+        <p class="text-sm text-neutral-500"><%= t("notifications.dropdown.empty") %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="p-2 border-t border-neutral-100">
+    <%= link_to notifications_path,
+        class: "block w-full text-center py-2 text-sm font-medium text-primary-500 hover:bg-primary-50 rounded-lg transition-colors",
+        data: { action: "click->notification-bell#hide" } do %>
+      <%= t("notifications.dropdown.view_all") %>
+    <% end %>
+  </div>
+</div>

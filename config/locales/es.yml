@@ -14,6 +14,7 @@ es:
       shelters: "Refugios"
       pets: "Mascotas"
       adoptions: "Adopciones"
+      incoming_requests: "Solicitudes Entrantes"
       settings: "Ajustes"
       complete_profile: "Completa tu perfil"
       my_pets: "Mis Mascotas"
@@ -30,6 +31,8 @@ es:
       sign_in: "Iniciar sesión"
       create_account: "Crear cuenta"
       saved_pets: "Mascotas guardadas"
+      user_menu: "Menú de usuario"
+      user_options: "Opciones de usuario"
   landing:
     index:
       title: "Encuentra tu pareja perfecta. Literalmente."
@@ -214,6 +217,7 @@ es:
       no_pets_yet: "Este refugio aún no ha publicado mascotas."
     edit:
       title: "Editar Perfil del Refugio"
+      subtitle: "Actualiza la información de tu refugio y administra tu perfil público."
       logo_label: "Logotipo"
       logo_attached: "Logotipo subido"
       cover_label: "Imagen de Portada"
@@ -246,6 +250,13 @@ es:
         progress: "%{percent}% completado"
         onboarding:
           title: "Lista de Verificación"
+          done_badge: "¡Listo!"
+        welcome:
+          title: "¡Bienvenido a tu Panel de Refugio!"
+          subtitle: "Ahora eres el orgulloso capitán de %{name}. Preparemos tu refugio para los adoptantes."
+          checklist_title: "Completa estos pasos para publicar:"
+          more_steps: "+ %{count} pasos más"
+          cta: "¡Vamos!"
         pipeline:
           adoptable_pets: "Mascotas Disponibles"
           pending_requests: "Solicitudes Pendientes"
@@ -282,6 +293,7 @@ es:
     staff:
       index:
         title: "Gestión de Personal"
+        subtitle: "Invita y administra los miembros de tu equipo del refugio."
         current_staff: "Personal Actual"
         empty_staff: "Aún no hay miembros del personal."
         pending_invitations: "Invitaciones Pendientes"
@@ -297,6 +309,7 @@ es:
     policies:
       edit:
         title: "Políticas de Adopción"
+        subtitle: "Establece los requisitos y tarifas para los adoptantes en tu refugio."
         adoption_fee: "Tarifa de Adopción ($)"
         minimum_age: "Edad Mínima del Adoptante"
         fee_description: "Descripción de la Tarifa"
@@ -404,7 +417,9 @@ es:
         submit: "Restablecer contraseña"
     profiles:
       edit:
-        title: "Editar perfil"
+        title: "Configuración"
+        subtitle: "Administra los detalles de tu cuenta, preferencias y configuración de idioma."
+        account_info_title: "Información de la Cuenta"
         name_label: "Nombre completo"
         email_label: "Correo electrónico"
         verified: "Verificado"
@@ -571,11 +586,15 @@ es:
       documents:
         index:
           title: "Documentos de Políticas"
+          subtitle: "Sube políticas y documentos del refugio para potenciar las preguntas frecuentes con IA para los visitantes."
           upload: "Subir Documento"
           empty: "Aún no hay documentos de políticas"
+          empty_title: "Sin documentos aún"
+          empty_body: "Sube las políticas y documentos de tu refugio para habilitar respuestas impulsadas por IA para los visitantes."
           confirm_delete: "¿Estás seguro de que deseas eliminar este documento?"
         new:
           title: "Subir Documento de Políticas"
+          subtitle: "Agrega un nuevo documento de políticas para potenciar las respuestas de IA para los visitantes."
           back: "Volver a documentos"
           title_label: "Título del Documento"
           source_type: "Tipo de Origen"
@@ -764,3 +783,72 @@ es:
           text: "¿Qué es lo más importante para ti al aprobar una adopción?"
           placeholder: "Comparte tu filosofía sobre lo que hace una adopción exitosa..."
           max_length: "Máximo 200 caracteres"
+      progress_tips:
+        tip1: "¡Casi listo! Tus respuestas nos ayudan a recomendarte las herramientas adecuadas."
+        tip2: "Todo gran refugio comenzó con un plan. ¡Tú estás construyendo el tuyo!"
+        tip3: "Dato curioso: ¡Los refugios con perfiles completos reciben 3x más solicitudes de adopción!"
+        tip4: "¡Lo estás haciendo genial! Solo unas preguntas más."
+      personality:
+        guardian:
+          name: "Guardián Compasivo"
+          description: "Priorizas el compromiso a largo plazo y la evaluación exhaustiva. ¡Increíble!"
+        heart_led:
+          name: "Rescatista de Corazón"
+          description: "Lideras con pasión y corazón. Cada mascota es personal."
+        process_pro:
+          name: "Profesional de Procesos"
+          description: "Eres organizado y eficiente. Tu refugio funciona como un reloj."
+        community_builder:
+          name: "Constructor de Comunidad"
+          description: "Crees en la conexión. La comunidad es tu superpoder."
+        growth_partner:
+          name: "Socio de Crecimiento"
+          description: "Piensas a lo grande. Cada adopción es un paso adelante."
+      celebration:
+        complete: "¡Tu perfil de refugio está listo! Configuremos tu organización."
+      mascot:
+        thinking: "mascota-pensando"
+        happy: "mascota-feliz"
+        celebrate: "mascota-celebración"
+      checklist:
+        level:
+          new_recruit: "Nuevo Recluta"
+          getting_ready: "Preparándose"
+          almost_there: "Casi Listo"
+          ready_to_rescue: "Listo para Rescatar"
+          live_and_active: "Activo y en Vivo"
+        step:
+          add_pet:
+            title: "Agrega tu Primera Mascota"
+            description: "Publica una mascota para adopción y comienza a encontrar su hogar"
+            done_message: "¡Primera mascota publicada! 🎉"
+          policies:
+            title: "Configurar Políticas de Adopción"
+            description: "Define tus requisitos para que los adoptantes sepan qué esperar"
+            done_message: "¡Políticas configuradas! ✅"
+          staff:
+            title: "Invita a tu Equipo"
+            description: "Agrega miembros del personal para ayudarte a gestionar el refugio"
+            done_message: "¡Equipo creciendo! 🎉"
+          hours:
+            title: "Establece tu Horario"
+            description: "Informa a los adoptantes cuándo estás abierto"
+            done_message: "¡Horario establecido! ✅"
+          profile:
+            title: "Completa tu Perfil"
+            description: "Cuéntales a los adoptantes sobre tu misión"
+            done_message: "¡El perfil se ve genial! ✅"
+          publish:
+            title: "Publicar"
+            description: "Activa tu refugio para aparecer en el directorio público"
+            done_message: "¡Estás en vivo! 🎉🐾"
+        encouragement:
+          completed: "¡Completaste %{count} de %{total} pasos! ¡Sigue así!"
+          all_done: "🎉 ¡Increíble! Tu refugio está completamente configurado y listo para adoptantes."
+          level_up: "¡Subiste de Nivel! Has alcanzado: %{level}!"
+      register:
+        journey:
+          step1: "Perfil Completo"
+          step2: "Registrar Refugio"
+          step3: "Configurar Panel"
+        celebration: "¡%{name} está ahora registrado! Vamos a configurarlo."

@@ -1,22 +1,29 @@
+<%# ─── AI Documents Index Page ─── %>
+<%# Design: Dashboard-level bento cards, document list, contextual empty state %>
 <div class="max-w-4xl mx-auto px-4 py-8">
-  <div class="flex items-center justify-between mb-6">
-    <h1 class="font-display text-2xl font-bold text-neutral-900"><%= t(".title") %></h1>
+
+  <%# ─── Page Header ─── %>
+  <header class="flex items-center justify-between mb-6 bento-enter bento-enter-d1">
+    <div>
+      <h1 class="font-display text-2xl font-bold text-neutral-900"><%= t(".title") %></h1>
+      <p class="text-neutral-500 text-sm mt-1"><%= t(".subtitle") %></p>
+    </div>
     <%= link_to t(".upload"), new_shelter_ai_document_path,
-                class: "px-4 py-2 bg-primary-500 text-white text-sm font-medium rounded-lg hover:bg-primary-600 transition" %>
-  </div>
+                class: "inline-flex items-center gap-2 px-5 py-2.5 bg-primary-500 text-white text-sm font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" %>
+  </header>
 
   <% if @documents.any? %>
     <div class="space-y-3">
       <% @documents.each do |document| %>
-        <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-4 flex items-center justify-between">
+        <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-4 flex items-center justify-between bento-enter bento-enter-d2 card-lift hover:border-neutral-300 transition-all duration-200">
           <div class="flex items-center gap-3">
-            <div class="flex-shrink-0">
+            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-neutral-100 flex items-center justify-center">
               <% if document.source_type == "pdf" %>
-                <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                 </svg>
               <% else %>
-                <svg class="w-8 h-8 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
               <% end %>
@@ -39,8 +46,8 @@
             <%= button_to shelter_ai_document_path(document),
                 method: :delete,
                 data: { confirm: t(".confirm_delete") },
-                class: "p-1.5 text-neutral-500 hover:text-danger transition" do %>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class: "p-1.5 text-neutral-500 hover:text-danger transition active:scale-[0.97]" do %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
               </svg>
             <% end %>
@@ -49,15 +56,17 @@
       <% end %>
     </div>
   <% else %>
-    <div class="text-center py-12 bg-white rounded-xl shadow-sm border border-neutral-200">
-      <div class="w-14 h-14 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg class="w-7 h-7 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <%# ─── Empty State ─── %>
+    <div class="text-center py-16 bg-white rounded-xl shadow-sm border border-neutral-200 bento-enter bento-enter-d3">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-neutral-100 flex items-center justify-center" aria-hidden="true">
+        <svg class="w-8 h-8 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
         </svg>
       </div>
-      <p class="text-neutral-500"><%= t(".empty") %></p>
+      <h3 class="font-display text-xl font-bold text-neutral-700 mb-2"><%= t(".empty_title") %></h3>
+      <p class="text-sm text-neutral-500 mb-6 max-w-sm mx-auto"><%= t(".empty_body") %></p>
       <%= link_to t(".upload"), new_shelter_ai_document_path,
-                  class: "mt-3 inline-flex px-4 py-2 bg-primary-500 text-white text-sm font-medium rounded-lg hover:bg-primary-600 transition" %>
+                  class: "inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" %>
     </div>
   <% end %>
 </div>

@@ -1,14 +1,16 @@
 <% pet = @pet %>
 <div class="w-full max-w-4xl mx-auto">
-  <%= link_to pets_path, class: "inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-700 text-sm mb-6 transition" do %>
+  <%# ─── Back link ─── %>
+  <%= link_to pets_path, class: "inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-700 text-sm mb-6 transition bento-enter bento-enter-d1" do %>
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
     </svg>
     <%= t(".back_to_pets") %>
   <% end %>
 
+  <%# ─── Status Banner (if not available) ─── %>
   <% if pet.present? && !pet.status_available? %>
-    <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6 flex items-center gap-3">
+    <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6 flex items-center gap-3 bento-enter bento-enter-d1">
       <svg class="w-5 h-5 text-yellow-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
       </svg>
@@ -19,20 +21,21 @@
     </div>
   <% end %>
 
-  <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden mb-6">
+  <%# ─── Photo Gallery ─── %>
+  <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden mb-6 bento-enter bento-enter-d2">
     <% if pet.primary_photo.present? %>
       <div class="aspect-[16/10] bg-neutral-100">
-        <%= image_tag pet.primary_photo_url(variant: :large), alt: pet.name, class: "w-full h-full object-cover" %>
+        <%= image_tag pet.primary_photo_url(variant: :large), alt: pet.name, class: "w-full h-full object-cover image-reveal" %>
       </div>
       <% if pet.photo_gallery.length > 1 %>
         <div class="grid grid-cols-5 gap-1 p-1 bg-neutral-50">
           <% pet.photo_gallery(variant: :thumb).each_with_index do |photo_url, index| %>
-            <%= image_tag photo_url, alt: t(".photo_alt", name: pet.name, index: index + 1), class: "aspect-square object-cover rounded-lg hover:opacity-90 transition-opacity #{index == 0 ? 'ring-2 ring-secondary-500' : ''}" %>
+            <%= image_tag photo_url, alt: t(".photo_alt", name: pet.name, index: index + 1), class: "aspect-square object-cover rounded-lg hover:opacity-90 transition-opacity #{index == 0 ? 'ring-2 ring-secondary-500' : ''} image-reveal" %>
           <% end %>
         </div>
       <% end %>
     <% else %>
-      <div class="aspect-[16/10] bg-secondary-100 flex items-center justify-center">
+      <div class="aspect-[16/10] bg-gradient-to-br from-secondary-50 to-secondary-100 flex items-center justify-center">
         <svg class="w-24 h-24 text-secondary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
@@ -42,7 +45,8 @@
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="lg:col-span-2 space-y-6">
-      <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+      <%# ─── Pet Info Header Card ─── %>
+      <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d3">
         <div class="flex items-start justify-between mb-4">
           <div>
             <h1 class="font-display text-3xl font-bold text-neutral-900 mb-2"><%= pet.name %></h1>
@@ -82,26 +86,29 @@
             <% end %>
           </div>
         <% end %>
-      </div>
+      </section>
 
+      <%# ─── Description Card ─── %>
       <% if pet.description.present? %>
-        <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+        <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d4">
           <h2 class="font-display text-lg font-bold text-neutral-800 mb-3"><%= t(".description") %></h2>
           <div class="text-neutral-700 leading-relaxed text-pretty max-w-none">
             <p class="whitespace-pre-wrap"><%= pet.description %></p>
           </div>
-        </div>
+        </section>
       <% end %>
 
+      <%# ─── Medical Notes Card ─── %>
       <% if pet.medical_notes.present? %>
-        <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+        <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d5">
           <h2 class="font-display text-lg font-bold text-neutral-800 mb-3"><%= t(".medical_notes") %></h2>
           <p class="text-neutral-600 leading-relaxed whitespace-pre-wrap"><%= pet.medical_notes %></p>
-        </div>
+        </section>
       <% end %>
 
+      <%# ─── Requirements Card ─── %>
       <% if pet.requirements_list.any? %>
-        <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+        <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d5">
           <h2 class="font-display text-lg font-bold text-neutral-800 mb-3"><%= t(".requirements") %></h2>
           <ul class="space-y-2">
             <% pet.requirements_list.each do |req| %>
@@ -113,11 +120,12 @@
               </li>
             <% end %>
           </ul>
-        </div>
+        </section>
       <% end %>
 
-      <%= turbo_frame_tag "life_preview", src: pet_life_preview_path(pet_id: pet), loading: :lazy, class: "block mt-10 min-h-[250px]" do %>
-        <div class="bg-white rounded-xl border border-neutral-200 shadow-sm p-6 text-center">
+      <%# ─── Life Preview ─── %>
+      <%= turbo_frame_tag "life_preview", src: pet_life_preview_path(pet_id: pet), loading: :lazy, class: "block min-h-[250px]" do %>
+        <div class="bg-white rounded-xl border border-neutral-200 shadow-sm p-6 text-center bento-enter bento-enter-d6">
           <div class="flex flex-col items-center gap-3 py-4">
             <div class="w-10 h-10 rounded-full bg-secondary-100 animate-pulse flex items-center justify-center">
               <svg class="w-5 h-5 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -129,7 +137,8 @@
         </div>
       <% end %>
 
-      <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+      <%# ─── Compatibility Card ─── %>
+      <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d6">
         <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".compatibility") %></h2>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="flex items-center gap-3 p-3 rounded-xl <%= pet.good_with_children? ? 'bg-secondary-50' : 'bg-danger/10' %>">
@@ -169,9 +178,10 @@
             <span class="text-sm font-medium <%= pet.good_with_cats? ? 'text-secondary-700' : 'text-danger' %>"><%= t(".good_with_cats") %></span>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+      <%# ─── Health Card ─── %>
+      <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d7">
         <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".health") %></h2>
         <div class="flex flex-wrap gap-3">
           <% if pet.spayed_neutered? %>
@@ -193,11 +203,12 @@
             </span>
           <% end %>
         </div>
-      </div>
+      </section>
     </div>
 
+    <%# ─── Right Sidebar ─── %>
     <div class="space-y-6">
-      <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+      <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d4 card-lift">
         <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".shelter") %></h2>
         <div class="space-y-4">
           <%= link_to shelter_path(pet.shelter), class: "block group" do %>
@@ -219,10 +230,10 @@
         </div>
       </div>
 
-      <div class="bg-secondary-500 rounded-xl shadow-sm p-6 text-white">
+      <div class="bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-xl shadow-sm p-6 text-white bento-enter bento-enter-d5">
         <h3 class="font-display text-lg font-bold mb-2"><%= t(".apply_title") %></h3>
         <p class="text-secondary-100 text-sm mb-5"><%= t(".apply_body") %></p>
-        <%= link_to new_adoption_request_path(pet_id: pet), class: "block w-full text-center bg-white text-secondary-600 font-semibold px-6 py-3 rounded-xl hover:bg-secondary-50 active:scale-[0.98] transition-all duration-200 shadow-sm" do %>
+        <%= link_to new_adoption_request_path(pet_id: pet), class: "block w-full text-center bg-white text-secondary-600 font-semibold px-6 py-3 rounded-xl hover:bg-secondary-50 active:scale-[0.97] transition-all duration-200 shadow-sm card-lift" do %>
           <%= t(".apply_to_adopt") %>
         <% end %>
       </div>

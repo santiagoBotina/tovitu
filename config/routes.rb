@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   scope ":locale", locale: /en|es/ do
     root "landing#index"
 
-    get "login/adopter", to: "authentication/sessions#new_adopter"
+    get "login/individual", to: "authentication/sessions#new_individual"
+    get "login/adopter", to: redirect("login/individual"), status: :moved_permanently
     get "login/shelter",  to: "authentication/sessions#new_shelter"
     get "login", to: "authentication/sessions#new", as: :new_session
 
@@ -23,7 +24,7 @@ Rails.application.routes.draw do
 
     resource :profile, only: [ :edit, :update ], controller: "authentication/profiles"
 
-    get "profile/onboarding", to: "onboarding/adopter/questions#show",
+    get "profile/onboarding", to: "onboarding/individual/questions#show",
                               as: :profile_onboarding,
                               defaults: { from_profile: "true" }
     get "profile/shelter_onboarding", to: "onboarding/shelter/questions#show",
@@ -34,10 +35,28 @@ Rails.application.routes.draw do
     get "dashboard", to: "dashboard#index", as: :user_dashboard
     # ────────────────────────────────────────────────────────────
 
+    # ── Notifications ───────────────────────────────────────────
+    resources :notifications, only: [ :index, :show ] do
+      collection do
+        patch :mark_all_read
+        get :unread_count
+      end
+      member do
+        patch :mark_read
+      end
+    end
+
+    resource :notification_preferences, only: [ :edit, :update ]
+    # ────────────────────────────────────────────────────────────
+
     namespace :onboarding do
-      namespace :adopter do
+      namespace :individual do
         resource :questions, only: [ :show, :update ]
         resource :completion, only: [ :create ]
+      end
+      namespace :adopter, as: :adopter_onboarding do
+        resource :questions, only: [ :show, :update ], controller: "individual/questions"
+        resource :completion, only: [ :create ], controller: "individual/completions"
       end
       namespace :shelter do
         resource :questions, only: [ :show, :update ]
@@ -59,12 +78,14 @@ Rails.application.routes.draw do
       resource :policies, only: [ :edit, :update ], controller: "shelters/policies"
     end
 
-    resources :adoption_applications, only: [ :new, :create ] do
-      resources :rag_queries, only: [ :create ], controller: "ai/rag_queries"
-    end
+    # Legacy anonymous adoption applications (kept for existing data status checks)
     resource :application_status, only: [ :show ], controller: "adoption_applications/status"
 
-    resources :adoption_requests, only: [ :index, :show, :new, :create ]
+    resources :adoption_requests, only: [ :index, :show, :new, :create ] do
+      member do
+        patch :withdraw
+      end
+    end
 
     resources :shelters, only: [] do
       resources :rag_queries, only: [ :create ], controller: "ai/rag_queries"
@@ -81,17 +102,6 @@ Rails.application.routes.draw do
         resources :photos, only: [ :create, :destroy, :update ]
       end
 
-      resources :adoption_applications, only: [ :index, :show, :update ] do
-        resources :notes, only: [ :create ], controller: "adoption_applications/notes"
-        member do
-          patch :approve
-          patch :reject
-          patch :request_info
-          patch :finalize
-          patch :cancel
-        end
-      end
-
       resources :adoption_requests, only: [ :index, :show ] do
         resource :decision, only: [ :new, :create ], controller: "adoption_requests/decisions"
       end
@@ -100,6 +110,20 @@ Rails.application.routes.draw do
         resources :documents, only: [ :index, :new, :create, :destroy ]
       end
     end
+
+    # ── Individual Publisher Routes ─────────────────────────────
+    namespace :my do
+      resources :pets do
+        member do
+          patch :change_status
+        end
+      end
+
+      resources :adoption_requests, only: [ :index, :show ] do
+        resource :decision, only: [ :new, :create ], controller: "adoption_requests/decisions"
+      end
+    end
+    # ────────────────────────────────────────────────────────────
   end
 
   get "up" => "rails/health#show", as: :rails_health_check

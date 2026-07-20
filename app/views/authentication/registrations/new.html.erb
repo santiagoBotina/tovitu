@@ -9,9 +9,9 @@
 
     <h1 class="font-display text-3xl font-bold text-center text-neutral-900 mb-1">
       <span data-role-toggle-target="toggleable"
-            data-role="adopter"
-            class="<%= @role == 'adopter' ? '' : 'hidden' %>">
-        <%= t(".title_adopter") %>
+            data-role="individual"
+            class="<%= @role == 'individual' || @role == 'adopter' ? '' : 'hidden' %>">
+        <%= t(".title_individual") %>
       </span>
       <span data-role-toggle-target="toggleable"
             data-role="shelter"
@@ -22,9 +22,9 @@
 
     <p class="text-neutral-500 text-center mb-8">
       <span data-role-toggle-target="toggleable"
-            data-role="adopter"
-            class="<%= @role == 'adopter' ? '' : 'hidden' %>">
-        <%= t(".subtitle_adopter") %>
+            data-role="individual"
+            class="<%= @role == 'individual' || @role == 'adopter' ? '' : 'hidden' %>">
+        <%= t(".subtitle_individual") %>
       </span>
       <span data-role-toggle-target="toggleable"
             data-role="shelter"

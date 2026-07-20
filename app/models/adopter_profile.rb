@@ -1,4 +1,5 @@
 class AdopterProfile < ApplicationRecord
+  self.table_name = "individual_profiles"
   belongs_to :user
 
   validates :user, presence: true

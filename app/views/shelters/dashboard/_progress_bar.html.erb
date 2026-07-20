@@ -1,0 +1,33 @@
+<%# Gamified progress bar partial for shelter dashboard checklist %>
+<% shelter = local_assigns[:shelter] || present(@shelter) %>
+<% level = shelter.checklist_level %>
+<% steps = shelter.onboarding_steps %>
+<% done_count = steps.count { |s| s[:done] } %>
+<% total_count = steps.size %>
+<% percent = ((done_count.to_f / total_count) * 100).to_i %>
+
+<div id="progress-bar" class="mb-4">
+  <div class="flex items-center justify-between mb-2">
+    <div class="flex items-center gap-2">
+      <%# Level Badge %>
+      <span id="level-badge"
+            data-checklist-target="levelBadge"
+            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border <%= level[:color_class] %>">
+        <% if level[:badge] == :teal %>
+          <svg class="w-3.5 h-3.5 trophy-glow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0016.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.023 6.023 0 01-2.77.896m0 0a6.023 6.023 0 01-2.77-.896"/>
+          </svg>
+        <% end %>
+        <%= level[:title] %>
+      </span>
+    </div>
+    <span class="text-sm text-neutral-500"><%= t("shelters.dashboard.show.progress", percent: percent) %></span>
+  </div>
+
+  <div class="w-full bg-white/60 rounded-full h-3" role="progressbar" aria-valuenow="<%= percent %>" aria-valuemin="0" aria-valuemax="100">
+    <div id="progress-fill"
+         data-checklist-target="progressBar"
+         class="progress-shimmer h-3 rounded-full transition-all duration-500"
+         style="width: <%= percent %>%"></div>
+  </div>
+</div>

@@ -6,6 +6,8 @@ module Adoptions
 
     def call
       shelter = @request.shelter
+      return Result.failure([ "No shelter associated with this request" ]) unless shelter
+
       staff   = shelter.users.undiscarded.where(role: %w[shelter_admin shelter_staff])
 
       admins = staff.select(&:shelter_admin?)

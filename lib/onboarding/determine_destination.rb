@@ -5,8 +5,8 @@ module Onboarding
     end
 
     def call
-      if @user.adopter?
-        adopter_destination
+      if @user.individual?
+        individual_destination
       elsif @user.shelter_user?
         shelter_destination
       else
@@ -16,11 +16,11 @@ module Onboarding
 
     private
 
-    def adopter_destination
+    def individual_destination
       if @user.onboarding_completed?
         "/pets"
       else
-        "/onboarding/adopter/questions"
+        "/onboarding/individual/questions"
       end
     end
 

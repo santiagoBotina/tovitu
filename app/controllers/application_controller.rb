@@ -77,7 +77,7 @@ class ApplicationController < ActionController::Base
       if current_user.onboarding_completed?
         user_dashboard_path
       else
-        onboarding_adopter_questions_path
+        onboarding_adopter_onboarding_questions_path
       end
     elsif current_user.shelter_user?
       if current_user.onboarding_completed?

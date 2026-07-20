@@ -39,6 +39,8 @@
     </div>
   </div>
 
+  <%= render "additional_questions", pet: @pet %>
+
   <%= form_tag adoption_requests_path(pet_id: @pet.id), method: :post, class: "space-y-4" do %>
     <div class="flex items-center gap-3">
       <%= submit_tag t(".submit"), class: "px-8 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 active:bg-primary-700 transition-colors duration-200 cursor-pointer" %>

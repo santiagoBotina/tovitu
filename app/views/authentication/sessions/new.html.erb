@@ -8,9 +8,9 @@
     </div>
 
     <div data-role-toggle-target="toggleable"
-         data-role="adopter"
-         class="<%= @role == 'adopter' ? '' : 'hidden' %>">
-      <%= render "authentication/sessions/adopter_form" %>
+         data-role="individual"
+         class="<%= @role == 'individual' || @role == 'adopter' ? '' : 'hidden' %>">
+      <%= render "authentication/sessions/individual_form" %>
     </div>
 
     <div data-role-toggle-target="toggleable"
@@ -21,11 +21,11 @@
   </div>
 
   <p data-role-toggle-target="toggleable"
-     data-role="adopter"
-     class="text-center text-sm text-neutral-500 mt-8 <%= @role == 'adopter' ? '' : 'hidden' %>">
-    <%= t("authentication.sessions.new_adopter.signup_prompt") %>
-    <%= link_to t("authentication.sessions.new_adopter.signup_link"),
-                new_registration_path(role: "adopter"),
+     data-role="individual"
+     class="text-center text-sm text-neutral-500 mt-8 <%= @role == 'individual' || @role == 'adopter' ? '' : 'hidden' %>">
+    <%= t("authentication.sessions.new_individual.signup_prompt") %>
+    <%= link_to t("authentication.sessions.new_individual.signup_link"),
+                new_registration_path(role: "individual"),
                 class: "text-primary-600 hover:text-primary-800 font-medium transition" %>
   </p>
 

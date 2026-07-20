@@ -1,56 +1,67 @@
+<%# ─── Shelters Index Page ─── %>
+<%# Design: Dashboard-level filter card, bento-enter shelter cards, contextual empty state %>
 <div class="w-full max-w-4xl mx-auto">
-  <div class="text-center mb-10">
-    <h1 class="font-display text-4xl font-bold text-neutral-900 mb-3 text-balance"><%= t(".title") %></h1>
-    <p class="text-neutral-500 text-lg"><%= t(".subtitle") %></p>
-  </div>
 
-  <%= form_tag shelters_path, method: :get, class: "bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-8" do %>
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div>
-        <%= label_tag :city, t(".city"), class: "block text-sm font-medium text-neutral-700 mb-1" %>
-        <%= text_field_tag :city, params[:city], placeholder: t(".city_placeholder"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm" %>
-      </div>
-      <div>
-        <%= label_tag :state, t(".state"), class: "block text-sm font-medium text-neutral-700 mb-1" %>
-        <%= select_tag :state, options_for_select(us_states, params[:state]), include_blank: t(".all_states"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-white" %>
-      </div>
-      <div>
-        <span class="block text-sm font-medium text-neutral-700 mb-1"><%= t(".species") %></span>
-        <div class="flex gap-4 pt-2">
-          <% { "dog" => t(".dog"), "cat" => t(".cat"), "other" => t(".other") }.each do |key, label| %>
-            <label class="flex items-center gap-2 text-sm text-neutral-600">
-              <%= check_box_tag :species, key, params[:species] == key, class: "rounded border-neutral-300 text-primary-500 focus:ring-primary-500" %>
-              <%= label %>
-            </label>
-          <% end %>
+  <%# ─── Page Header ─── %>
+  <header class="text-center mb-8 bento-enter bento-enter-d1">
+    <h1 class="font-display text-3xl md:text-4xl font-bold text-neutral-900 mb-3 text-balance"><%= t(".title") %></h1>
+    <p class="text-neutral-500 text-lg"><%= t(".subtitle") %></p>
+  </header>
+
+  <%# ─── Filter Card (dashboard bento card styling) ─── %>
+  <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 mb-8 bento-enter bento-enter-d2" aria-label="<%= t(".search") %>">
+    <%= form_tag shelters_path, method: :get, class: "space-y-5" do %>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <%= label_tag :city, t(".city"), class: "block text-sm font-semibold text-neutral-700 mb-1.5" %>
+          <%= text_field_tag :city, params[:city], placeholder: t(".city_placeholder"),
+                class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus:outline-none text-sm transition" %>
+        </div>
+        <div>
+          <%= label_tag :state, t(".state"), class: "block text-sm font-semibold text-neutral-700 mb-1.5" %>
+          <%= select_tag :state, options_for_select(us_states, params[:state]), include_blank: t(".all_states"),
+                class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus:outline-none text-sm bg-white transition" %>
+        </div>
+        <div>
+          <span class="block text-sm font-semibold text-neutral-700 mb-1.5"><%= t(".species") %></span>
+          <div class="flex gap-4 pt-2">
+            <% { "dog" => t(".dog"), "cat" => t(".cat"), "other" => t(".other") }.each do |key, label| %>
+              <label class="flex items-center gap-2 text-sm text-neutral-600 cursor-pointer">
+                <%= check_box_tag :species, key, params[:species] == key, class: "rounded border-neutral-300 text-primary-500 focus:ring-primary-500" %>
+                <%= label %>
+              </label>
+            <% end %>
+          </div>
+        </div>
+        <div class="flex items-end">
+          <%= submit_tag t(".search"),
+              class: "w-full px-6 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] cursor-pointer shadow-sm" %>
         </div>
       </div>
-      <div class="flex items-end">
-        <%= submit_tag t(".search"), class: "w-full px-6 py-3 bg-primary-500 text-white font-medium rounded-xl hover:bg-primary-600 active:bg-primary-700 transition-colors duration-200 shadow-sm cursor-pointer" %>
-      </div>
-    </div>
-  <% end %>
+    <% end %>
+  </section>
 
   <% if @shelters.any? %>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <% @shelters.each do |shelter| %>
+      <% @shelters.each_with_index do |shelter, idx| %>
+        <% delay = ((idx % 4) + 3).clamp(3, 7) %>
         <% shelter_presenter = ShelterPresenter.new(shelter) %>
-        <%= link_to shelter_path(id: shelter), class: "block bg-white rounded-xl shadow-sm border border-neutral-200 hover:shadow-md hover:border-primary-100 transition-all duration-200 p-6 group" do %>
+        <%= link_to shelter_path(id: shelter), class: "block bg-white rounded-xl shadow-sm border border-neutral-200 hover:shadow-md hover:border-primary-100 transition-all duration-200 p-6 group card-lift bento-enter bento-enter-d#{delay}" do %>
           <div class="flex items-start gap-4 mb-3">
             <% if shelter.logo.attached? %>
-              <div class="w-14 h-14 rounded-xl overflow-hidden shrink-0 bg-neutral-100">
-                <%= image_tag shelter_presenter.logo_url(variant: :medium), alt: shelter.name, class: "w-full h-full object-cover" %>
+              <div class="w-14 h-14 rounded-xl overflow-hidden shrink-0 bg-neutral-100 shadow-sm">
+                <%= image_tag shelter_presenter.logo_url(variant: :medium), alt: shelter.name, class: "w-full h-full object-cover image-reveal" %>
               </div>
             <% end %>
             <div class="flex-1 min-w-0">
               <h2 class="font-display text-xl font-bold text-neutral-900 group-hover:text-primary-600 transition"><%= shelter.name %></h2>
               <div class="flex items-center gap-1.5 text-neutral-500 text-sm mt-1">
-                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 <span><%= shelter.city %>, <%= shelter.state %></span>
               </div>
             </div>
             <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary-50 text-secondary-700 shrink-0">
-              <span class="w-1.5 h-1.5 rounded-full bg-secondary-500"></span><%= shelter.status.titleize %>
+              <span class="w-1.5 h-1.5 rounded-full bg-secondary-500" aria-hidden="true"></span><%= shelter.status.titleize %>
             </span>
           </div>
           <% if shelter.description.present? %>
@@ -68,13 +79,15 @@
       <% end %>
     </div>
   <% else %>
-    <div class="text-center py-16 bg-white rounded-xl shadow-sm border border-neutral-200">
-      <div class="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">
-        <svg class="w-8 h-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    <%# ─── Empty State (dashboard pattern) ─── %>
+    <div class="text-center py-16 bg-white rounded-xl shadow-sm border border-neutral-200 bento-enter bento-enter-d3">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-primary-50 flex items-center justify-center" aria-hidden="true">
+        <svg class="w-8 h-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
       </div>
-      <h3 class="font-display text-xl font-bold text-neutral-800 mb-2"><%= t(".empty_title") %></h3>
-      <p class="text-neutral-500 mb-6"><%= t(".empty_body") %></p>
-      <%= link_to t(".clear_filters"), shelters_path, class: "inline-flex px-6 py-3 bg-primary-500 text-white font-medium rounded-xl hover:bg-primary-600 active:bg-primary-700 active:scale-[0.98] transition-all duration-200" %>
+      <h3 class="font-display text-xl font-bold text-neutral-700 mb-2"><%= t(".empty_title") %></h3>
+      <p class="text-sm text-neutral-500 mb-6 max-w-sm mx-auto"><%= t(".empty_body") %></p>
+      <%= link_to t(".clear_filters"), shelters_path,
+          class: "inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" %>
     </div>
   <% end %>
 </div>

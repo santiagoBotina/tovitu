@@ -30,7 +30,6 @@ class Shelter::AdoptionRequests::DecisionsController < ApplicationController
     end
 
     if result.success?
-      Adoptions::NotifyAdopter.call(adoption_request: @request)
       flash_key = decision == "declined" ? "declined" : "updated"
       redirect_to shelter_adoption_request_path(@request),
                   notice: t("adoptions.requests.flash.#{flash_key}")

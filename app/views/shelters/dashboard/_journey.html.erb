@@ -1,0 +1,40 @@
+<%# Journey context bar for shelter registration flow %>
+<%# Shows progress: Profile Complete → Register Shelter → Setup Dashboard %>
+<div class="mb-8">
+  <div class="flex items-center justify-center gap-2 sm:gap-4 text-sm">
+    <% steps = [
+      { label: t("onboarding.shelter.register.journey.step1", default: "Profile Complete"), done: true, icon: "check" },
+      { label: t("onboarding.shelter.register.journey.step2", default: "Register Shelter"), done: false, icon: "current" },
+      { label: t("onboarding.shelter.register.journey.step3", default: "Setup Dashboard"), done: false, icon: "next" }
+    ] %>
+
+    <% steps.each_with_index do |step, idx| %>
+      <% unless idx == 0 %>
+        <svg class="w-4 h-4 text-neutral-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+        </svg>
+      <% end %>
+
+      <div class="flex items-center gap-2">
+        <% if step[:done] %>
+          <div class="w-6 h-6 bg-secondary-500 rounded-full flex items-center justify-center">
+            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+            </svg>
+          </div>
+          <span class="font-medium text-secondary-600"><%= step[:label] %></span>
+        <% elsif step[:icon] == "current" %>
+          <div class="w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center journey-step-active">
+            <div class="w-2 h-2 bg-white rounded-full"></div>
+          </div>
+          <span class="font-semibold text-primary-700"><%= step[:label] %></span>
+        <% else %>
+          <div class="w-6 h-6 bg-neutral-200 rounded-full flex items-center justify-center">
+            <span class="text-xs text-neutral-500">3</span>
+          </div>
+          <span class="text-neutral-400"><%= step[:label] %></span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

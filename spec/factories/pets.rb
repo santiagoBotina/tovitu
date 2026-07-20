@@ -21,6 +21,11 @@ FactoryBot.define do
       status { "removed" }
     end
 
+    trait :individual_listed do
+      shelter { nil }
+      association :publisher, factory: [:user, :verified, :onboarding_completed]
+    end
+
     trait :with_life_preview do
       life_preview_data do
         {

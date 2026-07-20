@@ -253,6 +253,61 @@
         <% end %>
       </section>
 
+      <% if current_user.individual? && @published_pets.present? %>
+        <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d3">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".published_pets") %></h2>
+            <%= link_to my_pets_path, class: "text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors" do %>
+              <%= t(".view_all_published") %>
+              <span aria-hidden="true">→</span>
+            <% end %>
+          </div>
+
+          <div class="space-y-3">
+            <% @published_pets.first(3).each do |pet| %>
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-neutral-50">
+                <div class="shrink-0 w-10 h-10 rounded-lg overflow-hidden bg-neutral-200">
+                  <% if pet.primary_photo&.attached? %>
+                    <%= image_tag pet.primary_photo.variant(resize_to_limit: [40, 40]), class: "w-full h-full object-cover", alt: pet.name %>
+                  <% else %>
+                    <div class="w-full h-full flex items-center justify-center text-neutral-500 text-xs font-bold"><%= pet.name.first.upcase %></div>
+                  <% end %>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-neutral-800 truncate"><%= pet.name %></p>
+                  <p class="text-xs text-neutral-500"><%= pet.species_label %></p>
+                </div>
+                <%= pet.status_badge.html_safe %>
+              </div>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+
+      <% if current_user.individual? && @pending_requests.present? %>
+        <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d3">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".incoming_requests") %></h2>
+            <%= link_to my_adoption_requests_path, class: "text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors" do %>
+              <%= t(".view_all_requests") %>
+              <span aria-hidden="true">→</span>
+            <% end %>
+          </div>
+
+          <div class="space-y-3">
+            <% @pending_requests.first(3).each do |req| %>
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-neutral-50">
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-neutral-800 truncate"><%= req.adopter.name %></p>
+                  <p class="text-xs text-neutral-500"><%= t(".for_pet", pet_name: req.pet.name) %></p>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-warning text-white"><%= t(".status_pending") %></span>
+              </div>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+
       <%# Card: My Requests %>
       <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d3">
         <div class="flex items-center justify-between mb-4">

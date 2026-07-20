@@ -240,6 +240,7 @@ en:
         in_validation: In Validation
         accepted: Accepted
         declined: Declined
+        withdrawn: Withdrawn
 
       decline_reasons:
         profile_mismatch: We don't think your profile matches with the pet's personality and needs
@@ -257,37 +258,111 @@ en:
         decline_reason_required: Please provide at least one reason for declining.
         invalid_action: Invalid action. Please choose a valid decision.
         not_found: Adoption request not found.
+        cannot_withdraw: This request cannot be withdrawn in its current state.
+        not_owner: You can only withdraw your own adoption requests.
 
       flash:
         submitted: Your adoption request has been submitted successfully!
         updated: The adoption request has been updated.
         declined: The adoption request has been declined.
+        withdrawn: Your adoption request has been withdrawn successfully.
 
       timeline:
         pending: Request submitted
         in_validation: Shelter is reviewing the request
         accepted: Request accepted — pet on hold
         declined: Request declined
+        withdrawn: Request withdrawn by adopter
+
+  my:
+    adoption_requests:
+      index:
+        title: Incoming Requests
+        subtitle: Adoption requests for your pets
+        from: Request from %{name}
+        for_pet: For %{pet_name}
+        submitted: Submitted %{time} ago
+        view: View
+        empty_title: No incoming requests yet
+        empty_body: When someone requests to adopt one of your pets, you'll see it here.
+        pending_count:
+          one: "%{count} needs your review"
+          other: "%{count} need your review"
+        total_count: "%{count} total"
+        browse_pets: My Pets
+      show:
+        back: ← Back to Requests
+        request_from: Request from %{name}
+        for_pet: For %{pet_name}
+        submitted: Submitted %{time} ago
+        accept: Accept
+        decline: Decline
+        adopter_info: Adopter Information
+        adopter_profile: Adopter Profile
+        pet_details: Pet Details
+        timeline: Status Timeline
+        other_pending:
+          one: You have %{count} other request waiting for your review.
+          other: You have %{count} other requests waiting for your review.
+        view_all_requests: View all →
+        title: Incoming Requests
+        subtitle: Adoption requests for your pets
+        from: Request from %{name}
+        for_pet: For %{pet_name}
+        submitted: Submitted %{time} ago
+        view: View
+        empty_title: No incoming requests yet
+        empty_body: When someone requests to adopt one of your pets, you'll see it here.
+      decisions:
+        new:
+          back: ← Back to Request
+          title: Decline Adoption Request
+          subtitle: Provide reason(s) for declining the request from %{adopter_name} for %{pet_name}
+          accept_title: Accept Adoption Request
+          accept_subtitle: Confirm acceptance of %{adopter_name}'s request for %{pet_name}
+          accept_info: Accepting this request will put the pet on hold for the adopter. They will be notified.
+          select_reasons: "Select reason(s):"
+          custom_reason_label: Or add a custom reason
+          custom_reason_placeholder: Enter your reason...
+          custom_reason_hint: This will be shown to the adopter along with any selected reasons.
+          submit: Submit Decision
+          declined_submit: Submit Decline
+          confirm_accept: Confirm Acceptance
+          processing: Processing...
+          cancel: Cancel
+        create:
+          decision_made: Your decision has been submitted.
 
   adoption_mailer:
     request_confirmation:
       subject: "Request to adopt %{pet_name} — Confirmation"
       greeting: Hi %{name},
-      body: Thank you for your interest in adopting %{pet_name}! Your request has been sent to %{shelter_name} for review.
-      next_steps: The shelter will review your profile and get back to you soon.
+      body: Thank you for your interest in adopting %{pet_name}! Your request has been sent to %{party_name} for review.
+      next_steps: The publisher will review your profile and get back to you soon.
+      view_request: View Your Request
       thanks: Thank you for choosing to adopt!
     status_changed:
       subject: "Update on your request to adopt %{pet_name}"
       greeting: Hi %{name},
-      in_validation_body: '%{shelter_name} is reviewing your request for %{pet_name} and may contact you for more information.'
-      accepted_body: 'Congratulations! Your request to adopt %{pet_name} has been accepted by %{shelter_name}. They will contact you to arrange the next steps.'
+      in_validation_body: '%{party_name} is reviewing your request for %{pet_name} and may contact you for more information.'
+      accepted_body: 'Congratulations! Your request to adopt %{pet_name} has been accepted by %{party_name}. They will contact you to arrange the next steps.'
       declined_body: Unfortunately, your request to adopt %{pet_name} was not approved at this time.
-      contact: If you have questions, please contact %{shelter_name} directly.
+      reasons_title: Reason
+      view_request: View Your Request
+      contact: If you have questions, please contact %{party_name} directly.
     new_request_notification:
       subject: "New adoption request for %{pet_name}"
       greeting: Hi %{name},
       body: '%{adopter_name} has submitted an adoption request for %{pet_name}.'
-      review: Review the request and take action in your shelter dashboard.
+      review: Review the request and respond from your dashboard.
+      view_request: Review Request
+    request_withdrawn:
+      subject: "%{adopter_name} withdrew their request for %{pet_name}"
+      greeting: Hi %{recipient_name},
+      body: '%{adopter_name} has withdrawn their adoption request for %{pet_name}.'
+      next_steps: '%{pet_name} is now available for other adopters. You can check your dashboard for updates.'
+      view_request: View Request
+      thanks: Thank you for using Tovitu!
 
   adoption_requests:
     index:
@@ -315,11 +390,17 @@ en:
       unknown_size: Unknown size
       decline_reasons_title: Reason
       no_events: No timeline events yet.
+      manage: Manage Request
+      withdraw_hint: If you've changed your mind, you can withdraw this request.
+      withdraw: Withdraw Request
+      confirm_withdraw: Are you sure you want to withdraw this adoption request? This action cannot be undone.
+      additional_info: Additional Information
       events:
         pending: Request submitted
         in_validation: Under review
         accepted: Accepted
         declined: Declined
+        withdrawn: Withdrawn
 
     new:
       title: Confirm Adoption Request
@@ -334,11 +415,24 @@ en:
     adopter_profile_summary:
       no_profile: No profile information available.
 
+    additional_questions:
+      title: Tell Us More
+      subtitle: Optional — help the shelter get to know you better
+      interest_reason: "Why are you interested in adopting %{pet_name}?"
+      interest_reason_placeholder: "I've always wanted a %{pet_name}..."
+      home_description: Tell us about your home environment
+      home_description_placeholder: e.g., I live in a house with a fenced yard, apartment with balcony...
+      current_pets_details: Tell us about any pets you currently have
+      current_pets_details_placeholder: e.g., I have a 5-year-old cat who is friendly with other animals...
+      something_else: Anything else you'd like the shelter to know?
+      something_else_placeholder: e.g., I work from home so I'll have plenty of time...
+
     status_badge:
       pending: Pending
       in_validation: In Validation
       accepted: Accepted
       declined: Declined
+      withdrawn: Withdrawn
 
   shelter:
     adoption_requests:
@@ -385,7 +479,12 @@ en:
         goals: Adoption Goals
         view_full_profile: View Full Profile
         decline_reasons: Decline Reasons
-        no_events: No timeline events yet.
+      no_events: No timeline events yet.
+      manage: Manage Request
+      withdraw_hint: If you've changed your mind, you can withdraw this request.
+      withdraw: Withdraw Request
+      confirm_withdraw: Are you sure you want to withdraw this adoption request? This action cannot be undone.
+      additional_info: Additional Information
 
       decisions:
         new:

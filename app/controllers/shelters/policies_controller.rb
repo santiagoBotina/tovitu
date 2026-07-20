@@ -11,7 +11,18 @@ module Shelters
       authorize @shelter, :policies_update?
 
       @shelter.update!(adoption_policies: policy_params)
-      redirect_to edit_shelter_policies_path(shelter_id: @shelter), notice: t("flash.policies.update.success")
+
+      respond_to do |format|
+        format.html { redirect_to edit_shelter_policies_path(shelter_id: @shelter), notice: t("flash.policies.update.success") }
+        format.turbo_stream do
+          shelter_presenter = present(@shelter)
+          render turbo_stream: [
+            turbo_stream.replace("onboarding-checklist", partial: "shelters/dashboard/checklist", locals: { shelter: shelter_presenter }),
+            turbo_stream.replace("progress-bar", partial: "shelters/dashboard/progress_bar", locals: { shelter: shelter_presenter }),
+            turbo_stream.append("flash-container", partial: "shared/flash", locals: { notice: t("flash.policies.update.success") })
+          ]
+        end
+      end
     rescue ActiveRecord::RecordInvalid => e
       flash.now[:alert] = e.record.errors.full_messages.join(", ")
       render :edit, status: :unprocessable_entity

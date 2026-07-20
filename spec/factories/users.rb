@@ -4,7 +4,7 @@ FactoryBot.define do
     email { Faker::Internet.unique.email }
     password { "password123" }
     password_confirmation { "password123" }
-    role { "adopter" }
+    role { "individual" }
 
     trait :verified do
       verified_at { Time.current }

@@ -1,100 +1,170 @@
-<div class="w-full max-w-md mx-auto space-y-6">
-  <%# --- Account Info Card --- %>
-  <div class="bg-white rounded-xl shadow-md p-8">
-    <h1 class="font-display text-4xl font-bold text-center text-neutral-900 mb-8"><%= t(".title") %></h1>
+<%# ─── Profile Settings Page ─── %>
+<%# Design: Dashboard-level bento cards with micro-interactions %>
+<div class="w-full max-w-2xl mx-auto space-y-5">
 
-    <% if !current_user.onboarding_completed? %>
-      <div class="mb-8 p-4 bg-primary-50 border border-primary-200 rounded-xl">
-        <p class="text-sm font-medium text-primary-700 mb-1"><%= t(".complete_onboarding") %></p>
-        <p class="text-xs text-primary-500 mb-3"><%= t(".complete_onboarding_desc") %></p>
-        <% if current_user.adopter? %>
-          <%= link_to t(".complete_onboarding"), profile_onboarding_path,
-              class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary-500 hover:bg-primary-600 active:bg-primary-700 rounded-xl transition shadow-sm" %>
-        <% elsif current_user.shelter_user? %>
-          <%= link_to t(".complete_onboarding"), profile_shelter_onboarding_path,
-              class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary-500 hover:bg-primary-600 active:bg-primary-700 rounded-xl transition shadow-sm" %>
-        <% end %>
+  <%# ─── Page Header ─── %>
+  <header class="bento-enter bento-enter-d1">
+    <h1 class="font-display text-2xl md:text-3xl font-bold text-neutral-900"><%= t(".title") %></h1>
+    <p class="text-neutral-500 mt-1 text-sm"><%= t(".subtitle") %></p>
+  </header>
+
+  <%# ─── Onboarding Completion Banner ─── %>
+  <% if !current_user.onboarding_completed? %>
+    <section class="bg-gradient-to-br from-primary-50 to-white rounded-xl p-6 shadow-sm border border-primary-100 bento-enter bento-enter-d2" aria-label="<%= t(".complete_onboarding") %>">
+      <div class="flex items-start gap-4">
+        <div class="shrink-0 w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center" aria-hidden="true">
+          <svg class="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <h2 class="font-display text-lg font-bold text-neutral-800 mb-1"><%= t(".complete_onboarding") %></h2>
+          <p class="text-sm text-neutral-500 mb-4"><%= t(".complete_onboarding_desc") %></p>
+
+          <%# Dashboard-style progress bar %>
+          <div class="w-full bg-neutral-100 rounded-full h-3 mb-4 overflow-hidden" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-shimmer h-full rounded-full transition-all duration-1000 ease-out" style="width: 50%"></div>
+          </div>
+
+          <% if current_user.adopter? %>
+            <%= link_to profile_onboarding_path,
+                class: "inline-flex items-center gap-2 px-5 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97]" do %>
+              <%= t(".complete_onboarding") %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+              </svg>
+            <% end %>
+          <% elsif current_user.shelter_user? %>
+            <%= link_to profile_shelter_onboarding_path,
+                class: "inline-flex items-center gap-2 px-5 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97]" do %>
+              <%= t(".complete_onboarding") %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+              </svg>
+            <% end %>
+          <% end %>
+        </div>
       </div>
-    <% end %>
+    </section>
+  <% end %>
 
-    <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-6" do |f| %>
+  <%# ─── Account Info Card ─── %>
+  <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d3">
+    <h2 class="font-display text-lg font-bold text-neutral-800 mb-6"><%= t(".account_info_title") %></h2>
+
+    <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-5" do |f| %>
       <%= render "shared/error_messages", resource: @user %>
 
       <div>
-        <%= f.label :name, t(".name_label"), class: "block text-sm font-medium text-neutral-700 mb-1" %>
+        <%= f.label :name, t(".name_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
         <%= f.text_field :name, required: true,
-              class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-neutral-800 placeholder-neutral-400 transition" %>
+              class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 text-neutral-800 placeholder-neutral-400 transition" %>
       </div>
 
       <div>
-        <%= f.label :email, t(".email_label"), class: "block text-sm font-medium text-neutral-700 mb-1" %>
+        <%= f.label :email, t(".email_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
         <%= f.email_field :email, required: true, autocomplete: "email",
-              class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-neutral-800 placeholder-neutral-400 transition" %>
-        <% if current_user.verified? %>
-          <span class="inline-flex items-center gap-1 px-2.5 py-1 mt-2 text-xs font-semibold rounded-full bg-success/10 text-success">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-            </svg>
-            <%= t(".verified") %>
-          </span>
-        <% else %>
-          <span class="inline-flex items-center gap-1 px-2.5 py-1 mt-1.5 text-xs font-semibold rounded-full bg-warning/10 text-warning">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            <%= t(".pending_verification") %>
-          </span>
-        <% end %>
+              class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 text-neutral-800 placeholder-neutral-400 transition" %>
+        <div class="mt-2">
+          <% if current_user.verified? %>
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full bg-success/10 text-success">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+              </svg>
+              <%= t(".verified") %>
+            </span>
+          <% else %>
+            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full bg-warning/10 text-warning">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <%= t(".pending_verification") %>
+            </span>
+          <% end %>
+        </div>
       </div>
 
-      <%= f.submit t(".submit"), class: "w-full bg-primary-500 text-white font-semibold py-3 px-4 rounded-xl hover:bg-primary-600 active:bg-primary-700 transition cursor-pointer shadow-sm" %>
+      <%= f.submit t(".submit"),
+          class: "w-full bg-primary-500 text-white font-semibold py-3 px-4 rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] cursor-pointer shadow-sm" %>
     <% end %>
-  </div>
+  </section>
 
-  <%# --- Preferences Card (always visible when onboarding completed) --- %>
+  <%# ─── Preferences Card ─── %>
   <% if current_user.onboarding_completed? %>
-    <div class="bg-white rounded-xl shadow-md p-8">
-      <h2 class="font-display text-2xl font-bold text-neutral-900 mb-2"><%= t(".edit_preferences_title") %></h2>
-      <p class="text-neutral-500 text-sm mb-4"><%= t(".edit_preferences_desc") %></p>
-      <% if current_user.adopter? %>
-        <%= link_to t(".edit_preferences"), profile_onboarding_path(from_profile: true),
-            class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-primary-700 bg-primary-50 hover:bg-primary-100 active:bg-primary-200 rounded-xl transition shadow-sm" %>
-      <% elsif current_user.shelter_user? %>
-        <%= link_to t(".edit_preferences"), profile_shelter_onboarding_path(from_profile: true),
-            class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-primary-700 bg-primary-50 hover:bg-primary-100 active:bg-primary-200 rounded-xl transition shadow-sm" %>
-      <% end %>
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d4 card-lift">
+      <div class="flex items-start justify-between">
+        <div>
+          <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".edit_preferences_title") %></h2>
+          <p class="text-neutral-500 text-sm mt-1"><%= t(".edit_preferences_desc") %></p>
+        </div>
+        <div class="shrink-0">
+          <% if current_user.adopter? %>
+            <%= link_to profile_onboarding_path(from_profile: true),
+                class: "inline-flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-primary-200 text-primary-700 font-semibold text-sm rounded-xl hover:bg-primary-50 hover:border-primary-300 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97]" do %>
+              <%= t(".edit_preferences") %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+              </svg>
+            <% end %>
+          <% elsif current_user.shelter_user? %>
+            <%= link_to profile_shelter_onboarding_path(from_profile: true),
+                class: "inline-flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-primary-200 text-primary-700 font-semibold text-sm rounded-xl hover:bg-primary-50 hover:border-primary-300 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97]" do %>
+              <%= t(".edit_preferences") %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+              </svg>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
     </div>
   <% end %>
 
-  <%# --- Language Preference Card --- %>
-  <div class="bg-white rounded-xl shadow-md p-8">
-    <h2 class="font-display text-2xl font-bold text-neutral-900 mb-2"><%= t(".language_title") %></h2>
+  <%# ─── Language Preference Card ─── %>
+  <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d5">
+    <h2 class="font-display text-lg font-bold text-neutral-800 mb-2"><%= t(".language_title") %></h2>
     <p class="text-neutral-500 text-sm mb-4"><%= t(".language_desc") %></p>
 
     <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-4" do |f| %>
       <div>
-        <%= f.label :locale, t(".language_label"), class: "block text-sm font-medium text-neutral-700 mb-1" %>
+        <%= f.label :locale, t(".language_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
         <%= f.select :locale,
             options_for_select([["English", "en"], ["Español", "es"]], @user.locale.presence || I18n.locale),
-            {}, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-neutral-800 transition" %>
+            {}, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 text-neutral-800 transition bg-white" %>
       </div>
       <%= f.submit t(".language_save"),
-          class: "w-full bg-primary-500 text-white font-semibold py-3 px-4 rounded-xl hover:bg-primary-600 active:bg-primary-700 transition cursor-pointer shadow-sm" %>
+          class: "w-full bg-primary-500 text-white font-semibold py-3 px-4 rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] cursor-pointer shadow-sm" %>
     <% end %>
-  </div>
+  </section>
 
-  <%# --- Shelter Information Card (shelter users only) --- %>
+  <%# ─── Shelter Information Card (shelter users only) ─── %>
   <% if current_user.shelter_user? && current_user.shelter_id.present? %>
-    <div class="bg-white rounded-xl shadow-md p-8">
-      <h2 class="font-display text-2xl font-bold text-neutral-900 mb-2"><%= t(".shelter_info_title") %></h2>
-      <p class="text-neutral-500 text-sm mb-4"><%= t(".shelter_info_desc") %></p>
-      <%= link_to t(".edit_shelter_info"), edit_shelter_path(id: current_user.shelter_id),
-          class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-primary-700 bg-primary-50 hover:bg-primary-100 active:bg-primary-200 rounded-xl transition shadow-sm" %>
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d6 card-lift">
+      <div class="flex items-start justify-between">
+        <div>
+          <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".shelter_info_title") %></h2>
+          <p class="text-neutral-500 text-sm mt-1"><%= t(".shelter_info_desc") %></p>
+        </div>
+        <div class="shrink-0">
+          <%= link_to edit_shelter_path(id: current_user.shelter_id),
+              class: "inline-flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-primary-200 text-primary-700 font-semibold text-sm rounded-xl hover:bg-primary-50 hover:border-primary-300 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97]" do %>
+            <%= t(".edit_shelter_info") %>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+          <% end %>
+        </div>
+      </div>
     </div>
   <% end %>
 
-  <%# --- Back link --- %>
-  <div class="text-center">
-    <%= link_to t(".back"), root_path, class: "text-sm text-neutral-500 hover:text-neutral-700 transition" %>
+  <%# ─── Back link ─── %>
+  <div class="text-center bento-enter bento-enter-d8">
+    <%= link_to root_path, class: "inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-700 transition-colors" do %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 19l-7-7 7-7"/>
+      </svg>
+      <%= t(".back") %>
+    <% end %>
   </div>
 </div>

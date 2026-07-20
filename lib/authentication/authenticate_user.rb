@@ -1,6 +1,6 @@
 module Authentication
   class AuthenticateUser < ApplicationService
-    ADOPTER_ROLES = %w[adopter].freeze
+    INDIVIDUAL_ROLES = %w[individual].freeze
     SHELTER_ROLES = %w[shelter_admin shelter_staff admin staff].freeze
 
     def initialize(email:, password:, role: nil, ip_address: "0.0.0.0", user_agent: nil)
@@ -57,8 +57,10 @@ module Authentication
     private
 
     def role_matches?(user)
-      if @role == "adopter"
-        ADOPTER_ROLES.include?(user.role)
+      if @role == "individual"
+        INDIVIDUAL_ROLES.include?(user.role)
+      elsif @role == "adopter"
+        INDIVIDUAL_ROLES.include?(user.role)
       elsif @role == "shelter"
         SHELTER_ROLES.include?(user.role)
       else

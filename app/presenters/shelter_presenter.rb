@@ -58,24 +58,98 @@ class ShelterPresenter < ApplicationPresenter
     model.species_served.map(&:capitalize).to_sentence
   end
 
+  STEPS_CONFIG = [
+    {
+      key: :add_pet,
+      icon: "M12 5v14m-7-7h14",
+      category: :pets,
+      path_method: :new_shelter_pet_path,
+      path_args: ->(shelter) { {} },
+      condition: ->(shelter) { shelter.pets.undiscarded.exists? }
+    },
+    {
+      key: :policies,
+      icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
+      category: :operations,
+      path_method: :edit_shelter_policies_path,
+      path_args: ->(shelter) { { shelter_id: shelter } },
+      condition: ->(shelter) { shelter.adoption_policies.values.any?(&:present?) }
+    },
+    {
+      key: :staff,
+      icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z",
+      category: :team,
+      path_method: :shelter_staff_index_path,
+      path_args: ->(shelter) { { shelter_id: shelter } },
+      condition: ->(shelter) { shelter.users.staff.exists? }
+    },
+    {
+      key: :hours,
+      icon: "M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z",
+      category: :operations,
+      path_method: :edit_shelter_path,
+      path_args: ->(shelter) { { id: shelter } },
+      condition: ->(shelter) { shelter.hours.present? }
+    },
+    {
+      key: :profile,
+      icon: "M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z",
+      category: :profile,
+      path_method: :edit_shelter_path,
+      path_args: ->(shelter) { { id: shelter } },
+      condition: ->(shelter) { shelter.description.present? }
+    },
+    {
+      key: :publish,
+      icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
+      category: :visibility,
+      path_method: :edit_shelter_path,
+      path_args: ->(shelter) { { id: shelter } },
+      condition: ->(shelter) { shelter.active? }
+    }
+  ].freeze
+
   def onboarding_progress
-    total = 4
-    done = 0
-    done += 1 if model.description.present?
-    done += 1 if model.hours.present?
-    done += 1 if model.users.staff.exists?
-    done += 1 if model.adoption_policies.values.any?(&:present?)
+    total = STEPS_CONFIG.size
+    done = STEPS_CONFIG.count { |step| step[:condition].call(model) }
     ((done.to_f / total) * 100).to_i
   end
 
   def onboarding_steps
-    [
-      { label: I18n.t("presenters.shelter.onboarding.add_pet"), done: false, path: "#" },
-      { label: I18n.t("presenters.shelter.onboarding.policies"), done: model.adoption_policies.values.any?(&:present?), path: edit_shelter_policies_path(shelter_id: model) },
-      { label: I18n.t("presenters.shelter.onboarding.staff"), done: model.users.staff.exists?, path: shelter_staff_index_path(shelter_id: model) },
-      { label: I18n.t("presenters.shelter.onboarding.hours"), done: model.hours.present?, path: edit_shelter_path(id: model) },
-      { label: I18n.t("presenters.shelter.onboarding.profile"), done: model.description.present?, path: edit_shelter_path(id: model) },
-      { label: I18n.t("presenters.shelter.onboarding.publish"), done: model.active?, path: edit_shelter_path(id: model) }
-    ]
+    STEPS_CONFIG.map do |step|
+      done = step[:condition].call(model)
+      {
+        key: step[:key],
+        label: I18n.t("presenters.shelter.onboarding.#{step[:key]}"),
+        description: I18n.t("onboarding.shelter.checklist.step.#{step[:key]}.description", default: ""),
+        icon: step[:icon],
+        category: step[:category],
+        done: done,
+        path: send(step[:path_method], **step[:path_args].call(model))
+      }
+    end
+  end
+
+  def checklist_level
+    done_count = onboarding_steps.count { |s| s[:done] }
+    case done_count
+    when 0
+      { level: 1, title: I18n.t("onboarding.shelter.checklist.level.new_recruit"), badge: :bronze, color_class: "text-amber-700 bg-amber-50 border-amber-200" }
+    when 1..2
+      { level: 2, title: I18n.t("onboarding.shelter.checklist.level.getting_ready"), badge: :silver, color_class: "text-neutral-600 bg-neutral-100 border-neutral-300" }
+    when 3..4
+      { level: 3, title: I18n.t("onboarding.shelter.checklist.level.almost_there"), badge: :gold, color_class: "text-yellow-700 bg-yellow-50 border-yellow-200" }
+    when 5
+      { level: 4, title: I18n.t("onboarding.shelter.checklist.level.ready_to_rescue"), badge: :purple, color_class: "text-primary-700 bg-primary-50 border-primary-200" }
+    when 6
+      { level: 5, title: I18n.t("onboarding.shelter.checklist.level.live_and_active"), badge: :teal, color_class: "text-secondary-700 bg-secondary-50 border-secondary-200" }
+    end
+  end
+
+  def personality_badge
+    profile = model.owner&.shelter_profile
+    return nil unless profile
+
+    Onboarding::Shelter::Personality.call(profile)
   end
 end

@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  ROLES = %w[adopter shelter_admin shelter_staff admin staff].freeze
+  ROLES = %w[individual shelter_admin shelter_staff admin staff].freeze
 
   has_secure_password
 
@@ -10,11 +10,16 @@ class User < ApplicationRecord
 
   has_many :saved_pets, dependent: :destroy
 
+  has_many :published_pets, class_name: "Pet", foreign_key: :publisher_id, dependent: :destroy
   has_many :adoption_requests, foreign_key: :adopter_id, dependent: :destroy
   has_many :reviewed_adoption_requests, class_name: "AdoptionRequest", foreign_key: :reviewed_by_id, dependent: :nullify
 
+  has_one :individual_profile, dependent: :destroy
   has_one :adopter_profile, dependent: :destroy
   has_one :shelter_profile, dependent: :destroy
+
+  has_many :notifications, foreign_key: :recipient_id, dependent: :destroy
+  has_one :notification_preference, dependent: :destroy
 
   validates :email, presence: true,
                     uniqueness: { case_sensitive: false },
@@ -29,7 +34,7 @@ class User < ApplicationRecord
   scope :unverified, -> { where(verified_at: nil) }
   scope :discarded, -> { where.not(discarded_at: nil) }
   scope :undiscarded, -> { where(discarded_at: nil) }
-  scope :adopter, -> { where(role: "adopter") }
+  scope :individual, -> { where(role: "individual") }
   scope :shelter_admin, -> { where(role: "shelter_admin") }
   scope :shelter_staff, -> { where(role: "shelter_staff") }
   scope :admin, -> { where(role: "admin") }
@@ -39,9 +44,10 @@ class User < ApplicationRecord
     verified_at.present?
   end
 
-  def adopter?
-    role == "adopter"
+  def individual?
+    role == "individual"
   end
+  alias_method :adopter?, :individual?
 
   def shelter_admin?
     role == "shelter_admin"

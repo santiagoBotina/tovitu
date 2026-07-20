@@ -1,19 +1,49 @@
+<%# ─── Adoption Request Status Changed Email ─── %>
+<% party_name = @shelter&.name || @request.responsible_party_name %>
+
 <h1><%= t(".greeting", name: @adopter.name) %></h1>
+
+<div class="pet-card">
+  <p class="pet-name"><%= @pet.name %></p>
+  <p class="pet-detail">
+    <%= @pet.breed.presence || t("adoption_requests.show.unknown_breed") %>
+    · <%= @pet.species&.humanize %>
+  </p>
+</div>
 
 <% case @status %>
 <% when "in_validation" %>
-  <p><%= t(".in_validation_body", pet_name: @pet.name, shelter_name: @shelter.name) %></p>
+  <div class="info-box">
+    <p><%= t(".in_validation_body", pet_name: @pet.name, party_name: party_name) %></p>
+  </div>
 <% when "accepted" %>
-  <p><%= t(".accepted_body", pet_name: @pet.name, shelter_name: @shelter.name) %></p>
+  <div class="info-box success">
+    <p><%= t(".accepted_body", pet_name: @pet.name, party_name: party_name) %></p>
+  </div>
+
+  <div class="email-cta">
+    <a href="<%= adoption_request_url(@request, locale: @locale) %>"><%= t(".view_request") %></a>
+  </div>
 <% when "declined" %>
-  <p><%= t(".declined_body", pet_name: @pet.name) %></p>
+  <div class="info-box warning">
+    <p><%= t(".declined_body", pet_name: @pet.name) %></p>
+  </div>
   <% if @request.decline_reasons.present? %>
-    <ul>
-      <% @request.decline_reasons.each do |reason| %>
-        <li><%= reason %></li>
-      <% end %>
-    </ul>
+    <div style="margin: 16px 0;">
+      <p style="font-size:13px; font-weight:600; color:#374151; margin:0 0 8px 0;"><%= t(".reasons_title") %>:</p>
+      <ul>
+        <% @request.decline_reasons.each do |reason| %>
+          <li><%= reason %></li>
+        <% end %>
+      </ul>
+    </div>
   <% end %>
 <% end %>
 
-<p><%= t(".contact", shelter_name: @shelter.name) %></p>
+<div class="email-divider"></div>
+
+<p><%= t(".contact", party_name: party_name) %></p>
+
+<div class="email-cta">
+  <a href="<%= adoption_request_url(@request, locale: @locale) %>"><%= t(".view_request") %></a>
+</div>

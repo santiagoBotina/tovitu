@@ -14,6 +14,7 @@ en:
       shelters: "Shelters"
       pets: "Pets"
       adoptions: "Adoptions"
+      incoming_requests: "Incoming Requests"
       settings: "Settings"
       complete_profile: "Complete your profile"
       my_pets: "My Pets"
@@ -30,6 +31,8 @@ en:
       sign_in: "Sign in"
       create_account: "Create account"
       saved_pets: "Saved pets"
+      user_menu: "User menu"
+      user_options: "User options"
   landing:
     index:
       title: "Find your perfect match. Literally."
@@ -110,6 +113,12 @@ en:
         description: "Use our Augmented Reality tool to see how a crate or bed fits in your home."
         cta: "Launch AR Placement"
         coming_soon: "Coming soon"
+      published_pets: "My Published Pets"
+      view_all_published: "View all →"
+      incoming_requests: "Incoming Requests"
+      view_all_requests: "View all →"
+      for_pet: "For %{pet_name}"
+      status_pending: "Pending"
       requests:
         title: "My Requests"
         empty_title: "No requests yet"
@@ -199,6 +208,7 @@ en:
       no_pets_yet: "This shelter hasn't listed any pets yet."
     edit:
       title: "Edit Shelter Profile"
+      subtitle: "Update your shelter's information and manage your public profile."
       logo_label: "Logo"
       logo_attached: "Logo uploaded"
       cover_label: "Cover Image"
@@ -231,6 +241,13 @@ en:
         progress: "%{percent}% complete"
         onboarding:
           title: "Onboarding Checklist"
+          done_badge: "Done!"
+        welcome:
+          title: "Welcome to Your Shelter Dashboard!"
+          subtitle: "You are now the proud captain of %{name}. Let's get your shelter ready for adopters."
+          checklist_title: "Complete these steps to go live:"
+          more_steps: "+ %{count} more steps"
+          cta: "Let's Go!"
         pipeline:
           adoptable_pets: "Adoptable Pets"
           pending_requests: "Pending Requests"
@@ -267,6 +284,7 @@ en:
     staff:
       index:
         title: "Staff Management"
+        subtitle: "Invite and manage your shelter team members."
         current_staff: "Current Staff"
         empty_staff: "No staff members yet."
         pending_invitations: "Pending Invitations"
@@ -282,6 +300,7 @@ en:
     policies:
       edit:
         title: "Adoption Policies"
+        subtitle: "Set the requirements and fees for adopters at your shelter."
         adoption_fee: "Adoption Fee ($)"
         minimum_age: "Minimum Adopter Age"
         fee_description: "Fee Description"
@@ -316,12 +335,14 @@ en:
   authentication:
     role_toggle:
       aria_label: "Select account type"
+      individual: "Individual"
       adopter: "Adopter"
       shelter: "Shelter"
     sessions:
       new:
         title: "Welcome back"
         subtitle: "Log in to your Tovitu account"
+        individual_title: "I'm looking to adopt"
         adopter_title: "I'm looking to adopt"
         shelter_title: "I represent a shelter"
         email_label: "Email address"
@@ -331,6 +352,15 @@ en:
         signup_prompt: "Don't have an account?"
         signup_link: "Create account"
       new_adopter:
+        title: "Welcome back"
+        subtitle: "Sign in to continue your adoption journey"
+        email_label: "Email address"
+        password_label: "Password"
+        forgot_password: "Forgot password?"
+        submit: "Log in"
+        signup_prompt: "Don't have an account?"
+        signup_link: "Create account"
+      new_individual:
         title: "Welcome back"
         subtitle: "Sign in to continue your adoption journey"
         email_label: "Email address"
@@ -350,6 +380,8 @@ en:
         signup_link: "Create account"
     registrations:
       new:
+        title_individual: "Create your account"
+        subtitle_individual: "Start your adoption journey with Tovitu"
         title_adopter: "Create your account"
         subtitle_adopter: "Start your adoption journey with Tovitu"
         title_shelter: "Create your shelter account"
@@ -389,7 +421,9 @@ en:
         submit: "Reset password"
     profiles:
       edit:
-        title: "Edit profile"
+        title: "Settings"
+        subtitle: "Manage your account details, preferences, and language settings."
+        account_info_title: "Account Information"
         name_label: "Full name"
         email_label: "Email address"
         verified: "Verified"
@@ -489,6 +523,9 @@ en:
       incomplete: "Please complete your profile before continuing."
       already_complete: "Your profile is already complete!"
       preferences_updated: "Your preferences have been updated."
+      individual:
+        complete: "Profile complete! Start exploring pets."
+        skipped: "You can complete your profile anytime from your profile settings."
       adopter:
         complete: "Profile complete! Start exploring pets."
         skipped: "You can complete your profile anytime from your profile settings."
@@ -556,11 +593,15 @@ en:
       documents:
         index:
           title: "Policy Documents"
+          subtitle: "Upload shelter policies and documents to power AI-powered FAQs for visitors."
           upload: "Upload Document"
           empty: "No policy documents yet"
+          empty_title: "No documents yet"
+          empty_body: "Upload your shelter's policies and documents to enable AI-powered answers for visitors."
           confirm_delete: "Are you sure you want to delete this document?"
         new:
           title: "Upload Policy Document"
+          subtitle: "Add a new policy document to power AI responses for visitors."
           back: "Back to documents"
           title_label: "Document Title"
           source_type: "Source Type"
@@ -603,6 +644,84 @@ en:
         profile: "Complete your profile"
         publish: "Publish your shelter"
   onboarding:
+    individual:
+      title: "Tell us about yourself"
+      subtitle: "Help us find the perfect pet for your lifestyle"
+      from_profile_subtitle: "Help us find the perfect pet for your lifestyle"
+      progress: "Question %{current} of %{total}"
+      back: "Back"
+      next: "Next"
+      complete: "Complete Profile"
+      skip: "Skip"
+      questions:
+        q1:
+          text: "What does a typical weekend look like for you?"
+          placeholder: "Select all that apply"
+          options:
+            relaxing_at_home: "Relaxing at home"
+            going_for_walks: "Going for walks"
+            outdoor_adventures: "Outdoor adventures"
+            spending_time_with_family: "Spending time with family"
+            exercising_or_sports: "Exercising or sports"
+            visiting_friends: "Visiting friends"
+            exploring_new_places: "Exploring new places"
+        q2:
+          text: "How active would you describe yourself?"
+          placeholder: "Select one"
+          options:
+            very_calm: "Very calm"
+            mostly_calm: "Mostly calm"
+            balanced: "Balanced"
+            active: "Active"
+            very_active: "Very active"
+        q3:
+          text: "Which sounds most like your ideal companion?"
+          placeholder: "Select one"
+          options:
+            calm_friend: "Calm friend"
+            playful_companion: "Playful companion"
+            affectionate_pet: "Affectionate pet"
+            independent_pet: "Independent pet"
+            social_pet: "Social pet"
+        q4:
+          text: "How much experience do you have with pets?"
+          placeholder: "Select one"
+          options:
+            first_time: "First-time"
+            some_experience: "Some experience"
+            years_of_experience: "Years of experience"
+            very_experienced: "Very experienced"
+        q5:
+          text: "What are you hoping to gain from adopting?"
+          placeholder: "Select all that apply"
+          options:
+            daily_companion: "Daily companion"
+            more_activity: "More activity"
+            emotional_support: "Emotional support"
+            family_pet: "Family pet"
+            friend_for_pet: "Friend for another pet"
+            meaningful_help: "Meaningful way to help"
+        q6:
+          text: "How much time can you realistically dedicate to a pet each day?"
+          placeholder: "Select one"
+          options:
+            less_than_1h: "Less than 1 hour"
+            1_to_2h: "1–2 hours"
+            2_to_4h: "2–4 hours"
+            more_than_4h: "More than 4 hours"
+        q7:
+          text: "Which personality feels closest to yours?"
+          placeholder: "Select one"
+          options:
+            calm_thoughtful: "Calm and thoughtful"
+            friendly_social: "Friendly and social"
+            adventurous_energetic: "Adventurous and energetic"
+            organized_routine: "Organized and routine-oriented"
+            flexible_spontaneous: "Flexible and spontaneous"
+        q8:
+          text: "What matters most to you when adopting a pet?"
+          placeholder: "Tell us what's most important to you in finding your companion..."
+          max_length: "Maximum 200 characters"
     adopter:
       title: "Tell us about yourself"
       subtitle: "Help us find the perfect pet for your lifestyle"
@@ -686,6 +805,33 @@ en:
       subtitle: "Help us understand your shelter's needs"
       from_profile_subtitle: "Help us understand your shelter's needs"
       progress: "Question %{current} of %{total}"
+      progress_tips:
+        tip1: "Almost there! Your answers help us match you with the right tools."
+        tip2: "Every great shelter started with a plan. You're building yours!"
+        tip3: "Fun fact: Shelters with complete profiles get 3x more adoption requests!"
+        tip4: "You're doing great! Just a few more questions."
+      personality:
+        guardian:
+          name: "Compassionate Guardian"
+          description: "You prioritize long-term commitment and thorough screening. Amazing!"
+        heart_led:
+          name: "Heart-Led Rescuer"
+          description: "You lead with passion and heart. Every pet is personal."
+        process_pro:
+          name: "Process Pro"
+          description: "You're organized and efficient. Your shelter runs like clockwork."
+        community_builder:
+          name: "Community Builder"
+          description: "You believe in connection. Community is your superpower."
+        growth_partner:
+          name: "Growth Partner"
+          description: "You think big picture. Every adoption is a step forward."
+      celebration:
+        complete: "Your shelter profile is ready! Let's set up your organization."
+      mascot:
+        thinking: "mascot-thinking"
+        happy: "mascot-happy"
+        celebrate: "mascot-celebrate"
       back: "Back"
       next: "Next"
       complete: "Complete Profile"
@@ -749,3 +895,45 @@ en:
           text: "What matters most to you when approving an adoption?"
           placeholder: "Share your philosophy on what makes a successful adoption..."
           max_length: "Maximum 200 characters"
+      checklist:
+        level:
+          new_recruit: "New Recruit"
+          getting_ready: "Getting Ready"
+          almost_there: "Almost There"
+          ready_to_rescue: "Ready to Rescue"
+          live_and_active: "Live & Active"
+        step:
+          add_pet:
+            title: "Add Your First Pet"
+            description: "List a pet for adoption and start finding their forever home"
+            done_message: "First pet listed! 🎉"
+          policies:
+            title: "Set Adoption Policies"
+            description: "Define your requirements so adopters know what to expect"
+            done_message: "Policies configured! ✅"
+          staff:
+            title: "Invite Your Team"
+            description: "Add staff members to help manage the shelter"
+            done_message: "Team growing! 🎉"
+          hours:
+            title: "Set Your Hours"
+            description: "Let adopters know when you're open"
+            done_message: "Hours set! ✅"
+          profile:
+            title: "Complete Your Profile"
+            description: "Tell adopters about your mission and what makes you special"
+            done_message: "Profile looks great! ✅"
+          publish:
+            title: "Go Live"
+            description: "Activate your shelter to appear in the public directory"
+            done_message: "You're live! 🎉🐾"
+        encouragement:
+          completed: "You completed %{count} of %{total} steps! Keep going!"
+          all_done: "🎉 Amazing! Your shelter is fully set up and ready for adopters!"
+          level_up: "Level Up! You've reached: %{level}!"
+      register:
+        journey:
+          step1: "Profile Complete"
+          step2: "Register Shelter"
+          step3: "Setup Dashboard"
+        celebration: "%{name} is now registered! Let's get you set up."

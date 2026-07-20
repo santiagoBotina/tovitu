@@ -1,25 +1,31 @@
+<%# ─── Pets Index Page ─── %>
+<%# Design: Dashboard-level bento cards, filter card, micro-interactions %>
 <div class="w-full max-w-6xl mx-auto">
-  <div class="text-center mb-10">
-    <h1 class="font-display text-4xl font-bold text-neutral-900 mb-3 text-balance"><%= t(".title") %></h1>
-    <p class="text-neutral-600 text-lg max-w-2xl mx-auto"><%= t(".subtitle") %></p>
-  </div>
 
-  <div class="bg-primary-50 rounded-xl border border-primary-100 p-6 mb-8">
+  <%# ─── Page Header ─── %>
+  <header class="text-center mb-8 bento-enter bento-enter-d1">
+    <h1 class="font-display text-3xl md:text-4xl font-bold text-neutral-900 mb-3 text-balance"><%= t(".title") %></h1>
+    <p class="text-neutral-600 text-lg max-w-2xl mx-auto"><%= t(".subtitle") %></p>
+  </header>
+
+  <%# ─── Filter Section (Bento Card) ─── %>
+  <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 mb-8 bento-enter bento-enter-d2" aria-label="<%= t(".filters.title") %>">
     <%= form_tag pets_path, method: :get, class: "space-y-5" do %>
+      <%# Species filter chips (dashboard pill style) %>
       <div>
         <span class="block text-sm font-semibold text-neutral-700 mb-3"><%= t(".filters.species") %></span>
         <div class="flex flex-wrap gap-2" role="group" aria-label="<%= t(".filters.species") %>">
           <% %w[dog cat other].each do |species| %>
             <% active = params[:species] == species %>
             <%= link_to url_for(request.params.merge(species: active ? nil : species, page: nil)),
-                        class: "px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 border #{active ? 'bg-primary-500 text-white border-primary-500' : 'bg-white text-neutral-700 border-neutral-300 hover:border-primary-300 hover:text-primary-600'}",
+                        class: "px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 border active:scale-[0.97] #{active ? 'bg-secondary-500 text-white border-secondary-500' : 'bg-white text-neutral-700 border-neutral-300 hover:border-secondary-300 hover:text-secondary-600'}",
                         aria: { current: active ? "page" : nil } do %>
               <%= t("pets.species.#{species}") %>
             <% end %>
           <% end %>
           <% if params[:species].present? %>
             <%= link_to url_for(request.params.merge(species: nil, page: nil)),
-                        class: "px-5 py-2.5 rounded-full text-sm font-medium bg-primary-100 text-primary-600 border border-primary-200 hover:bg-primary-200 transition-all duration-200" do %>
+                        class: "px-5 py-2.5 rounded-full text-sm font-medium bg-primary-100 text-primary-600 border border-primary-200 hover:bg-primary-200 transition-all duration-200 active:scale-[0.97]" do %>
               <svg class="w-3.5 h-3.5 inline shrink-0 -ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
               </svg>
@@ -29,49 +35,58 @@
         </div>
       </div>
 
+      <%# Filter fields grid %>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
           <%= label_tag :query, t(".filters.search"), class: "block text-sm font-semibold text-neutral-700 mb-1.5" %>
-          <%= text_field_tag :query, params[:query], placeholder: t(".filters.search_placeholder"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-white" %>
+          <%= text_field_tag :query, params[:query], placeholder: t(".filters.search_placeholder"),
+                class: "w-full px-4 py-3 border border-neutral-300 rounded-xl focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus:outline-none text-sm bg-white transition" %>
         </div>
 
         <div>
           <%= label_tag :age_category, t(".filters.age"), class: "block text-sm font-semibold text-neutral-700 mb-1.5" %>
-          <%= select_tag :age_category, options_for_select(pet_age_category_options, params[:age_category]), include_blank: t(".filters.all"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-white" %>
+          <%= select_tag :age_category, options_for_select(pet_age_category_options, params[:age_category]), include_blank: t(".filters.all"),
+                class: "w-full px-4 py-3 border border-neutral-300 rounded-xl focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus:outline-none text-sm bg-white transition" %>
         </div>
 
         <div>
           <%= label_tag :size, t(".filters.size"), class: "block text-sm font-semibold text-neutral-700 mb-1.5" %>
-          <%= select_tag :size, options_for_select(pet_size_options, params[:size]), include_blank: t(".filters.all"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-white" %>
+          <%= select_tag :size, options_for_select(pet_size_options, params[:size]), include_blank: t(".filters.all"),
+                class: "w-full px-4 py-3 border border-neutral-300 rounded-xl focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus:outline-none text-sm bg-white transition" %>
         </div>
 
         <div>
           <%= label_tag :sex, t(".filters.sex"), class: "block text-sm font-semibold text-neutral-700 mb-1.5" %>
-          <%= select_tag :sex, options_for_select(pet_sex_options, params[:sex]), include_blank: t(".filters.all"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-white" %>
+          <%= select_tag :sex, options_for_select(pet_sex_options, params[:sex]), include_blank: t(".filters.all"),
+                class: "w-full px-4 py-3 border border-neutral-300 rounded-xl focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus:outline-none text-sm bg-white transition" %>
         </div>
       </div>
 
+      <%# Action row %>
       <div class="flex items-center justify-between pt-1">
-        <%= submit_tag t(".filters.apply"), class: "px-6 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 active:bg-primary-700 transition-colors duration-200 cursor-pointer" %>
+        <%= submit_tag t(".filters.apply"),
+            class: "px-6 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] cursor-pointer shadow-sm" %>
         <% if params[:query].present? || params[:species].present? || params[:age_category].present? || params[:size].present? || params[:sex].present? %>
-          <%= link_to pets_path, class: "text-sm font-medium text-primary-600 hover:text-primary-700 underline" do %>
+          <%= link_to pets_path, class: "text-sm font-medium text-primary-600 hover:text-primary-700 underline transition-colors" do %>
             <%= t(".filters.clear_all") %>
           <% end %>
         <% end %>
       </div>
     <% end %>
-  </div>
+  </section>
 
+  <%# ─── Pet Cards Grid ─── %>
   <% if @presented_pets.any? %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <% @presented_pets.each do |pet| %>
-        <%= link_to pet_path(id: pet.id), class: "block bg-white rounded-xl border border-neutral-200 hover:shadow-md hover:border-primary-200 transition-all duration-200 overflow-hidden group relative" do %>
+      <% @presented_pets.each_with_index do |pet, idx| %>
+        <% delay = ((idx % 6) + 1).clamp(1, 8) %>
+        <%= link_to pet_path(id: pet.id), class: "block bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md hover:border-primary-200 transition-all duration-200 overflow-hidden group relative card-lift bento-enter bento-enter-d#{delay}" do %>
           <div class="aspect-[4/3] bg-neutral-100 overflow-hidden relative">
             <%= render "pets/save_button", pet: pet, saved: pet_saved?(pet) %>
             <% if pet.primary_photo.present? %>
-              <%= image_tag pet.primary_photo_url(variant: :medium), alt: t(".pet_photo", name: pet.name), class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
+              <%= image_tag pet.primary_photo_url(variant: :medium), alt: t(".pet_photo", name: pet.name), class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 image-reveal" %>
             <% else %>
-              <div class="w-full h-full flex items-center justify-center bg-primary-50">
+              <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50">
                 <svg class="w-16 h-16 text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
@@ -122,19 +137,21 @@
       <% end %>
     </div>
 
-    <div class="text-center mt-10 text-sm text-neutral-500">
+    <div class="text-center mt-10 text-sm text-neutral-500 bento-enter bento-enter-d8">
       <%= t(".showing_count", count: @presented_pets.size) %>
     </div>
   <% else %>
-    <div class="text-center py-16 bg-white rounded-xl border border-neutral-200">
-      <div class="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">
+    <%# ─── Empty State (dashboard pattern) ─── %>
+    <div class="text-center py-16 bg-white rounded-xl border border-neutral-200 shadow-sm bento-enter bento-enter-d3">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-primary-50 flex items-center justify-center" aria-hidden="true">
         <svg class="w-8 h-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
       </div>
-      <h3 class="font-display text-xl font-bold text-neutral-800 mb-2"><%= t(".no_results") %></h3>
-      <p class="text-neutral-600 mb-6"><%= t(".no_results_body") %></p>
-      <%= link_to t(".clear_filters"), pets_path, class: "inline-flex px-6 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 active:bg-primary-700 transition-colors duration-200" %>
+      <h3 class="font-display text-xl font-bold text-neutral-700 mb-2"><%= t(".no_results") %></h3>
+      <p class="text-sm text-neutral-500 mb-6 max-w-sm mx-auto"><%= t(".no_results_body") %></p>
+      <%= link_to t(".clear_filters"), pets_path,
+          class: "inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" %>
     </div>
   <% end %>
 </div>

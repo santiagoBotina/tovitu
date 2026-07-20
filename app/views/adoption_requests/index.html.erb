@@ -1,15 +1,20 @@
+<%# ─── Adoption Requests Index Page ─── %>
+<%# Design: Dashboard-level bento cards, status badges, contextual empty states %>
 <div class="w-full max-w-4xl mx-auto">
-  <div class="mb-8">
+
+  <%# ─── Page Header ─── %>
+  <header class="mb-8 bento-enter bento-enter-d1">
     <h1 class="font-display text-3xl font-bold text-neutral-900"><%= t(".title") %></h1>
     <p class="text-neutral-500 mt-1"><%= t(".subtitle") %></p>
-  </div>
+  </header>
 
   <% if @requests.any? %>
     <div class="space-y-4">
-      <% @requests.each do |request| %>
-        <%= link_to adoption_request_path(request), class: "block bg-white rounded-xl border border-neutral-200 hover:shadow-md hover:border-primary-200 transition-all duration-200 p-5" do %>
+      <% @requests.each_with_index do |request, idx| %>
+        <% delay = ((idx % 4) + 2).clamp(2, 6) %>
+        <%= link_to adoption_request_path(request), class: "block bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md hover:border-primary-200 transition-all duration-200 p-5 card-lift bento-enter bento-enter-d#{delay}" do %>
           <div class="flex items-start gap-4">
-            <div class="w-16 h-16 rounded-xl bg-neutral-100 overflow-hidden shrink-0">
+            <div class="w-16 h-16 rounded-xl bg-neutral-100 overflow-hidden shrink-0 shadow-sm">
               <% if request.pet.primary_photo.present? %>
                 <%= image_tag request.pet.primary_photo.url(variant: :thumb), alt: request.pet.name, class: "w-full h-full object-cover" %>
               <% else %>
@@ -23,7 +28,7 @@
             <div class="flex-1 min-w-0">
               <div class="flex items-start justify-between gap-2">
                 <div>
-                  <h3 class="font-display text-lg font-bold text-neutral-900"><%= request.pet.name %></h3>
+                  <h3 class="font-display text-lg font-bold text-neutral-900 group-hover:text-primary-600 transition"><%= request.pet.name %></h3>
                   <p class="text-sm text-neutral-500"><%= request.pet.species.humanize %> · <%= request.shelter.name %></p>
                 </div>
                 <%= render "status_badge", status: request.status %>
@@ -35,15 +40,16 @@
       <% end %>
     </div>
   <% else %>
-    <div class="text-center py-16 bg-white rounded-xl border border-neutral-200">
-      <div class="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">
+    <%# ─── Empty State (dashboard pattern) ─── %>
+    <div class="text-center py-16 bg-white rounded-xl border border-neutral-200 shadow-sm bento-enter bento-enter-d3">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-primary-50 flex items-center justify-center" aria-hidden="true">
         <svg class="w-8 h-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
       </div>
-      <h3 class="font-display text-xl font-bold text-neutral-800 mb-2"><%= t(".empty_title") %></h3>
-      <p class="text-neutral-500 mb-6"><%= t(".empty_body") %></p>
-      <%= link_to pets_path, class: "inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200" do %>
+      <h3 class="font-display text-xl font-bold text-neutral-700 mb-2"><%= t(".empty_title") %></h3>
+      <p class="text-sm text-neutral-500 mb-6 max-w-sm mx-auto"><%= t(".empty_body") %></p>
+      <%= link_to pets_path, class: "inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>

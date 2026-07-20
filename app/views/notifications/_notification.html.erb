@@ -1,0 +1,49 @@
+<%# ─── Single Notification Item ─── %>
+<% notification = local_assigns[:notification] %>
+<div class="<%= notification.read? ? 'bg-white' : 'bg-primary-50/50' %> rounded-xl border border-neutral-200 hover:shadow-sm transition-shadow group">
+  <%= link_to notification.action_url.presence || "#",
+      class: "block p-4",
+      data: { turbo_frame: "_top" } do %>
+    <div class="flex items-start gap-3">
+      <%# Icon %>
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 <%= notification.read? ? 'bg-neutral-100 text-neutral-400' : 'bg-primary-100 text-primary-500' %>">
+        <% case notification.kind %>
+        <% when "request_accepted" %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <% when "request_declined", "request_withdrawn" %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <% when "message_received" %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        <% else %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        <% end %>
+      </div>
+
+      <%# Content %>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-start justify-between gap-2">
+          <p class="text-sm font-medium text-neutral-900 <%= 'font-semibold' unless notification.read? %>">
+            <%= notification.title %>
+          </p>
+          <span class="text-xs text-neutral-400 whitespace-nowrap shrink-0"><%= time_ago_in_words(notification.created_at) %></span>
+        </div>
+        <% if notification.body.present? %>
+          <p class="text-sm text-neutral-500 mt-0.5 line-clamp-2"><%= notification.body %></p>
+        <% end %>
+        <div class="flex items-center gap-2 mt-1.5">
+          <span class="text-[11px] text-neutral-400">
+            <%= t("notifications.kinds.#{notification.kind}", default: notification.kind.humanize) %>
+          </span>
+          <% unless notification.read? %>
+            <span class="w-1.5 h-1.5 rounded-full bg-primary-500" aria-hidden="true"></span>
+          <% end %>
+        </div>
+      </div>
+
+      <%# Unread dot (mobile indicator) %>
+      <% unless notification.read? %>
+        <div class="w-2 h-2 rounded-full bg-primary-500 shrink-0 mt-1.5 md:hidden" aria-hidden="true"></div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

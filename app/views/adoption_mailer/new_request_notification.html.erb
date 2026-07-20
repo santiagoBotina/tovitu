@@ -1,5 +1,26 @@
+<%# ─── New Adoption Request Notification (sent to shelter/publisher) ─── %>
+<% request_url = if @recipient.shelter_user? && @recipient.shelter_id.present?
+     shelter_adoption_request_url(@request, locale: @locale, shelter_id: @recipient.shelter_id)
+   else
+     my_adoption_request_url(@request, locale: @locale)
+   end %>
+
 <h1><%= t(".greeting", name: @recipient.name) %></h1>
 
 <p><%= t(".body", adopter_name: @adopter.name, pet_name: @pet.name) %></p>
 
-<p><%= t(".review") %></p>
+<div class="pet-card">
+  <p class="pet-name"><%= @pet.name %></p>
+  <p class="pet-detail">
+    <%= @pet.breed.presence || t("adoption_requests.show.unknown_breed") %>
+    · <%= @pet.species&.humanize %>
+  </p>
+</div>
+
+<div class="info-box">
+  <p><%= t(".review") %></p>
+</div>
+
+<div class="email-cta">
+  <a href="<%= request_url %>"><%= t(".view_request") %></a>
+</div>

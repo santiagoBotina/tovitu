@@ -22,6 +22,11 @@ en:
       female: Female
       unknown: Unknown
 
+    sexes:
+      male: Male
+      female: Female
+      unknown: Unknown
+
     status:
       available: Available
       on_hold: On Hold
@@ -100,6 +105,7 @@ en:
       unsave: Unsave pet
       showing_count: Showing %{count} pets
       filters:
+        title: Filters
         species: Species
         age: Age
         size: Size
@@ -260,3 +266,106 @@ en:
         adopted_at: Adoption Date
         created_at: Listed On
         updated_at: Updated On
+
+    listed_by:
+      shelter: "Listed by %{shelter_name}"
+      individual: "Listed by an individual"
+    publisher:
+      shelter: "Organization"
+      individual: "Individual"
+
+  my:
+    pets:
+      index:
+        title: "My Published Pets"
+        subtitle: "Manage the pets you've listed for adoption"
+        publish_new: "Publish a Pet"
+        view: "View"
+        edit: "Edit"
+        empty_title: "No published pets yet"
+        empty_body: "Publish a pet you found and help them find a loving home."
+      new:
+        title: "Publish a Pet"
+        subtitle: "List a pet you found for adoption"
+        back: "Back to my pets"
+        name_label: "Pet Name"
+        species_label: "Species"
+        breed_label: "Breed"
+        age_label: "Age Category"
+        size_label: "Size"
+        size_placeholder: "Select size"
+        sex_label: "Sex"
+        description_label: "Description"
+        photos_label: "Photos"
+        photos_hint: "JPEG, PNG, or WebP. Max 10 photos."
+        submit: "Publish Pet"
+        cancel: "Cancel"
+      show:
+        back: "Back to my pets"
+        edit: "Edit"
+        delete: "Delete"
+        delete_confirm: "Are you sure you want to remove this pet?"
+        description: "About"
+        age: "Age"
+        size: "Size"
+        sex: "Sex"
+        status: "Status"
+        incoming_requests: "Incoming Adoption Requests"
+        submitted: "Submitted %{time} ago"
+        review: "Review"
+        change_status: "Change Status"
+        update_status: "Update Status"
+      edit:
+        title: "Edit %{name}"
+        subtitle: "Update this pet's information"
+        back: "Back to pet"
+        name_label: "Pet Name"
+        species_label: "Species"
+        breed_label: "Breed"
+        age_label: "Age Category"
+        size_label: "Size"
+        size_placeholder: "Select size"
+        sex_label: "Sex"
+        description_label: "Description"
+        submit: "Save Changes"
+        cancel: "Cancel"
+    adoption_requests:
+      index:
+        title: "Incoming Adoption Requests"
+        subtitle: "Review and respond to requests for your pets"
+        from: "From %{name}"
+        for_pet: "For %{pet_name}"
+        submitted: "Submitted %{time} ago"
+        view: "View"
+        empty_title: "No requests yet"
+        empty_body: "When someone requests to adopt one of your pets, it will appear here."
+      show:
+        back: "Back to requests"
+        request_from: "Request from %{name}"
+        for_pet: "For %{pet_name}"
+        submitted: "Submitted %{time} ago"
+        accept: "Accept"
+        decline: "Decline"
+        adopter_info: "Adopter Information"
+        adopter_profile: "Adopter Profile"
+        pet_details: "Pet Details"
+      decisions:
+        new:
+          title: "Review Adoption Request"
+          subtitle: "Decide on the request from %{name} for %{pet_name}"
+          decision_label: "Decision"
+          accept: "Accept"
+          decline: "Decline"
+          notes_label: "Notes (optional)"
+          submit: "Submit Decision"
+          cancel: "Cancel"
+
+  flash:
+    my:
+      pets:
+        created: "Pet published successfully!"
+        updated: "Pet updated successfully!"
+        removed: "Pet removed successfully."
+        status_updated: "Pet status updated successfully."
+      adoption_requests:
+        decision_made: "Decision submitted successfully."

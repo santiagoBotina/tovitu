@@ -1,0 +1,78 @@
+en:
+  notifications:
+    kinds:
+      request_submitted: "Request Submitted"
+      request_in_validation: "Under Review"
+      request_accepted: "Request Accepted"
+      request_declined: "Request Declined"
+      request_withdrawn: "Request Withdrawn"
+      info_requested: "More Info Needed"
+      info_received: "Info Received"
+      message_received: "New Message"
+      pet_status_changed: "Pet Status Changed"
+      welcome: "Welcome"
+
+    titles:
+      request_submitted: "Request for %{pet_name}"
+      request_accepted: "Request accepted! 🎉"
+      request_declined: "Request declined"
+      request_withdrawn: "%{adopter_name} withdrew their request"
+      request_in_validation: "Request under review"
+      info_requested: "More information needed"
+      message_received: "New message from %{sender_name}"
+      welcome: "Welcome to Tovitu!"
+
+    bodies:
+      request_submitted: "Your request to adopt %{pet_name} has been sent to %{shelter_name} for review."
+      request_submitted_to_shelter: "%{adopter_name} has submitted an adoption request for %{pet_name}."
+      request_submitted_to_publisher: "%{adopter_name} has submitted an adoption request for %{pet_name}."
+      request_accepted: "Congratulations! Your request to adopt %{pet_name} has been accepted."
+      request_declined: "Unfortunately, your request to adopt %{pet_name} was not approved."
+      request_withdrawn: "%{adopter_name} has withdrawn their adoption request for %{pet_name}."
+      request_in_validation: "%{shelter_name} is reviewing your request for %{pet_name}."
+      info_requested: "%{shelter_name} has requested more information regarding your request for %{pet_name}."
+      message_received: "%{sender_name}: %{preview}"
+      welcome: "Welcome to Tovitu! Start by browsing pets available for adoption."
+
+    preferences:
+      title: "Notification Settings"
+      in_app_label: "In-app notifications"
+      email_label: "Email notifications"
+      whatsapp_label: "WhatsApp notifications"
+      whatsapp_phone: "Phone number for WhatsApp"
+      verify: "Verify"
+      verified: "✓ Verified"
+      save: "Save Preferences"
+      saved: "Notification preferences saved successfully!"
+      whatsapp_hint: "Enter your phone number to receive real-time updates on WhatsApp."
+      opt_in_info: "You'll receive a verification code via WhatsApp."
+      per_kind_title: "Customize by notification type"
+
+    index:
+      title: "Notifications"
+      subtitle: "Stay up to date with your adoption requests"
+      empty: "No notifications yet"
+      empty_body: "You'll see notifications here when there are updates on your adoption requests, messages, and more."
+      mark_all_read: "Mark all as read"
+      mark_read: "Mark as read"
+      view_all: "View All"
+      today: "Today"
+      yesterday: "Yesterday"
+      this_week: "This Week"
+      older: "Older"
+      just_now: "Just now"
+      time_ago: "%{time} ago"
+      filter_all: "All"
+      filter_requests: "Requests"
+      filter_messages: "Messages"
+
+    dropdown:
+      title: "Notifications"
+      empty: "No new notifications"
+      view_all: "View All Notifications"
+      mark_all_read: "Mark all as read"
+
+  notification_preferences:
+    edit:
+      title: "Notification Preferences"
+      subtitle: "Choose how you receive notifications"

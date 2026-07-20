@@ -1,0 +1,54 @@
+<%# ─── Notifications Index Page ─── %>
+<div class="w-full max-w-3xl mx-auto">
+  <div class="flex items-center justify-between mb-6 bento-enter bento-enter-d1">
+    <div>
+      <h1 class="font-display text-2xl font-bold text-neutral-900"><%= t(".title") %></h1>
+      <p class="text-neutral-500 text-sm mt-1"><%= t(".subtitle") %></p>
+    </div>
+    <% if @notifications.any? { |n| n.read_at.nil? } %>
+      <%= button_to mark_all_read_notifications_path, method: :patch,
+          class: "px-4 py-2 text-sm font-medium text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-xl transition-colors" do %>
+        <%= t(".mark_all_read") %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%# ─── Filter Tabs ─── %>
+  <div class="flex gap-2 mb-6 bento-enter bento-enter-d2">
+    <%= link_to notifications_path, class: "px-4 py-2 text-sm font-medium rounded-xl transition-colors #{params[:kind].blank? ? 'bg-primary-500 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'}" do %>
+      <%= t(".filter_all") %>
+    <% end %>
+    <%= link_to notifications_path(kind: "request_submitted"), class: "px-4 py-2 text-sm font-medium rounded-xl transition-colors #{params[:kind] == 'request_submitted' ? 'bg-primary-500 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'}" do %>
+      <%= t(".filter_requests") %>
+    <% end %>
+    <%= link_to notifications_path(kind: "message_received"), class: "px-4 py-2 text-sm font-medium rounded-xl transition-colors #{params[:kind] == 'message_received' ? 'bg-primary-500 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'}" do %>
+      <%= t(".filter_messages") %>
+    <% end %>
+  </div>
+
+  <%# ─── Notification List ─── %>
+  <% if @notifications.any? %>
+    <div class="space-y-1 bento-enter bento-enter-d3">
+      <% @grouped.each do |group_name, notifications| %>
+        <div class="mb-6">
+          <h3 class="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-3 px-1"><%= group_name %></h3>
+          <div class="space-y-1">
+            <% notifications.each do |notification| %>
+              <%= render "notification", notification: notification %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-16 bg-white rounded-xl border border-neutral-200 bento-enter bento-enter-d3">
+      <div class="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-neutral-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/>
+        </svg>
+      </div>
+      <h3 class="font-display text-xl font-bold text-neutral-800 mb-2"><%= t(".empty") %></h3>
+      <p class="text-neutral-600 text-sm max-w-sm mx-auto"><%= t(".empty_body") %></p>
+    </div>
+  <% end %>
+</div>

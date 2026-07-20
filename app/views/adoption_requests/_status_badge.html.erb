@@ -5,6 +5,7 @@
       when "in_validation" then 'bg-blue-50 text-blue-700'
       when "accepted" then 'bg-green-50 text-green-700'
       when "declined" then 'bg-red-50 text-red-700'
+      when "withdrawn" then 'bg-neutral-100 text-neutral-600'
       else 'bg-neutral-100 text-neutral-600'
       end %>">
   <%= t("adoptions.requests.statuses.#{status}") %>

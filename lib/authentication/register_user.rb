@@ -1,8 +1,8 @@
 module Authentication
   class RegisterUser < ApplicationService
-    VALID_ROLES = %w[adopter shelter_admin shelter_staff].freeze
+    VALID_ROLES = %w[individual shelter_admin shelter_staff].freeze
 
-    def initialize(name:, email:, password:, password_confirmation:, role: "adopter", locale: nil)
+    def initialize(name:, email:, password:, password_confirmation:, role: "individual", locale: nil)
       @name = name
       @email = email
       @password = password

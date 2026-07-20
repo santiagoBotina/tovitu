@@ -43,6 +43,8 @@ module Adoptions
         )
       end
 
+      deliver_notifications(@request, old_status)
+
       Result.success(@request)
     rescue ActiveRecord::RecordInvalid => e
       Result.failure(e.record.errors.full_messages)
@@ -52,6 +54,32 @@ module Adoptions
 
     def valid_transition?(from, to)
       VALID_TRANSITIONS.fetch(from, []).include?(to)
+    end
+
+    def deliver_notifications(request, old_status)
+      adopter = request.adopter
+      pet = request.pet
+      party_name = request.responsible_party_name
+
+      kind = "request_#{request.status}".to_sym
+      title_key = "notifications.titles.#{kind}"
+      body_key = "notifications.bodies.#{kind}"
+
+      notification_title = I18n.t(title_key, pet_name: pet.name, shelter_name: party_name.to_s)
+      notification_body = I18n.t(body_key, pet_name: pet.name, shelter_name: party_name.to_s)
+
+      result = Notifications::Deliver.call(
+        recipient: adopter,
+        actor: @actor,
+        kind: kind,
+        notifiable: request,
+        title: notification_title,
+        body: notification_body,
+        action_url: Rails.application.routes.url_helpers.adoption_request_path(id: request.id, locale: I18n.locale),
+        metadata: { pet_name: pet.name, shelter_name: party_name.to_s }
+      )
+
+      Rails.logger.warn("Notification delivery failed for request #{request.id}: #{result.errors}") if result.failure?
     end
   end
 end

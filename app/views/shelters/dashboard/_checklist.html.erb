@@ -1,0 +1,81 @@
+<%# Gamified onboarding checklist partial for shelter dashboard %>
+<% shelter = local_assigns[:shelter] || present(@shelter) %>
+<% steps = shelter.onboarding_steps %>
+<% done_count = steps.count { |s| s[:done] } %>
+<% total_count = steps.size %>
+
+<div id="onboarding-checklist"
+     data-controller="checklist"
+     data-checklist-current-level-value="<%= shelter.checklist_level[:level] %>"
+     data-checklist-completed-count-value="<%= done_count %>"
+     data-checklist-total-steps-value="<%= total_count %>"
+     data-checklist-levels-value='<%= [
+       { level: 1, title: t("onboarding.shelter.checklist.level.new_recruit") },
+       { level: 2, title: t("onboarding.shelter.checklist.level.getting_ready") },
+       { level: 3, title: t("onboarding.shelter.checklist.level.almost_there") },
+       { level: 4, title: t("onboarding.shelter.checklist.level.ready_to_rescue") },
+       { level: 5, title: t("onboarding.shelter.checklist.level.live_and_active") }
+     ].to_json %>'
+>
+
+  <%# Progress Bar %>
+  <%= render "shelters/dashboard/progress_bar", shelter: shelter %>
+
+  <%# Checklist Items %>
+  <div class="space-y-2">
+    <% steps.each_with_index do |step, idx| %>
+      <% if step[:done] %>
+        <div data-checklist-target="item"
+             data-key="<%= step[:key] %>"
+             data-done="true"
+             data-level="<%= idx + 1 %>"
+             data-celebrated="true"
+             class="flex items-center gap-3 p-3.5 bg-white rounded-xl border border-secondary-100 card-complete">
+          <div data-checklist-target="checkmark"
+               class="w-6 h-6 bg-secondary-500 rounded-full flex items-center justify-center shrink-0">
+            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm text-neutral-400 line-through"><%= step[:label] %></p>
+            <% if step[:description].present? %>
+              <p class="text-xs text-neutral-300 truncate"><%= step[:description] %></p>
+            <% end %>
+          </div>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-secondary-50 text-secondary-600">
+            <%= t("shelters.dashboard.show.onboarding.done_badge", default: "Done!") %>
+          </span>
+        </div>
+      <% else %>
+        <% is_next = steps[0...idx].all? { |s| s[:done] } %>
+        <div data-checklist-target="item"
+             data-key="<%= step[:key] %>"
+             data-done="false"
+             class="flex items-center gap-3 p-3.5 bg-white rounded-xl border <%= is_next ? 'border-primary-200 task-pulse' : 'border-neutral-200' %> hover:border-primary-300 transition-colors">
+          <div class="w-9 h-9 <%= is_next ? 'bg-primary-50' : 'bg-neutral-50' %> rounded-xl flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 <%= is_next ? 'text-primary-500' : 'text-neutral-400' %>" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="<%= step[:icon] %>"/>
+            </svg>
+          </div>
+          <%= link_to step[:path], class: "flex-1 min-w-0 flex items-center gap-2 group" do %>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium <%= is_next ? 'text-primary-600' : 'text-neutral-700' %> group-hover:text-primary-600 transition-colors">
+                <%= step[:label] %>
+              </p>
+              <% if step[:description].present? %>
+                <p class="text-xs text-neutral-500 truncate"><%= step[:description] %></p>
+              <% end %>
+            </div>
+            <svg class="w-4 h-4 text-neutral-400 group-hover:text-primary-500 transition-colors shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+            </svg>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%# Encouragement Area %>
+  <%= render "shelters/dashboard/encouragement", shelter: shelter %>
+</div>

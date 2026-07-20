@@ -128,46 +128,6 @@ ALTER SEQUENCE public.active_storage_variant_records_id_seq OWNED BY public.acti
 
 
 --
--- Name: adopter_profiles; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.adopter_profiles (
-    id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    weekend_activity jsonb DEFAULT '[]'::jsonb,
-    activity_level character varying,
-    ideal_companion character varying,
-    pet_experience character varying,
-    adoption_goals jsonb DEFAULT '[]'::jsonb,
-    daily_time_available character varying,
-    personality character varying,
-    adoption_priority character varying,
-    onboarding_step integer DEFAULT 0 NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: adopter_profiles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.adopter_profiles_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: adopter_profiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.adopter_profiles_id_seq OWNED BY public.adopter_profiles.id;
-
-
---
 -- Name: adoption_applications; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -293,13 +253,15 @@ CREATE TABLE public.adoption_requests (
     id bigint NOT NULL,
     pet_id bigint NOT NULL,
     adopter_id bigint NOT NULL,
-    shelter_id bigint NOT NULL,
+    shelter_id bigint,
     status character varying DEFAULT 'pending'::character varying NOT NULL,
     decline_reasons jsonb,
     reviewed_by_id bigint,
     reviewed_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    additional_answers jsonb DEFAULT '{}'::jsonb,
+    withdrawn_at timestamp(6) without time zone
 );
 
 
@@ -471,6 +433,46 @@ ALTER SEQUENCE public.email_verification_tokens_id_seq OWNED BY public.email_ver
 
 
 --
+-- Name: individual_profiles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.individual_profiles (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    weekend_activity jsonb DEFAULT '[]'::jsonb,
+    activity_level character varying,
+    ideal_companion character varying,
+    pet_experience character varying,
+    adoption_goals jsonb DEFAULT '[]'::jsonb,
+    daily_time_available character varying,
+    personality character varying,
+    adoption_priority character varying,
+    onboarding_step integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: individual_profiles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.individual_profiles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: individual_profiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.individual_profiles_id_seq OWNED BY public.individual_profiles.id;
+
+
+--
 -- Name: invitations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -542,6 +544,84 @@ ALTER SEQUENCE public.login_attempts_id_seq OWNED BY public.login_attempts.id;
 
 
 --
+-- Name: notification_preferences; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.notification_preferences (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    in_app boolean DEFAULT true NOT NULL,
+    email boolean DEFAULT true NOT NULL,
+    whatsapp boolean DEFAULT false NOT NULL,
+    whatsapp_phone character varying,
+    whatsapp_verified_at timestamp(6) without time zone,
+    per_kind_overrides jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: notification_preferences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.notification_preferences_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: notification_preferences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.notification_preferences_id_seq OWNED BY public.notification_preferences.id;
+
+
+--
+-- Name: notifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.notifications (
+    id bigint NOT NULL,
+    recipient_id bigint NOT NULL,
+    actor_id bigint,
+    notifiable_type character varying NOT NULL,
+    notifiable_id bigint NOT NULL,
+    kind character varying NOT NULL,
+    title character varying NOT NULL,
+    body text,
+    metadata jsonb DEFAULT '{}'::jsonb,
+    read_at timestamp(6) without time zone,
+    actionable_until timestamp(6) without time zone,
+    action_url character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.notifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
+
+
+--
 -- Name: password_reset_tokens; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -581,7 +661,7 @@ ALTER SEQUENCE public.password_reset_tokens_id_seq OWNED BY public.password_rese
 
 CREATE TABLE public.pets (
     id bigint NOT NULL,
-    shelter_id bigint NOT NULL,
+    shelter_id bigint,
     name character varying NOT NULL,
     species character varying NOT NULL,
     breed character varying,
@@ -609,7 +689,8 @@ CREATE TABLE public.pets (
     life_preview_generated_at timestamp(6) without time zone,
     life_preview_version integer DEFAULT 0,
     personality_spec text,
-    adopter_tips text
+    adopter_tips text,
+    publisher_id bigint
 );
 
 
@@ -769,14 +850,14 @@ CREATE TABLE public.users (
     email character varying NOT NULL,
     name character varying NOT NULL,
     password_digest character varying NOT NULL,
-    role character varying DEFAULT 'adopter'::character varying NOT NULL,
+    role character varying DEFAULT 'individual'::character varying NOT NULL,
     shelter_id bigint,
     updated_at timestamp(6) without time zone NOT NULL,
     verified_at timestamp(6) without time zone,
     onboarding_completed_at timestamp(6) without time zone,
     onboarding_step integer DEFAULT 0 NOT NULL,
     locale character varying,
-    CONSTRAINT valid_role CHECK (((role)::text = ANY (ARRAY[('adopter'::character varying)::text, ('shelter_admin'::character varying)::text, ('shelter_staff'::character varying)::text, ('admin'::character varying)::text, ('staff'::character varying)::text])))
+    CONSTRAINT valid_role CHECK (((role)::text = ANY ((ARRAY['individual'::character varying, 'shelter_admin'::character varying, 'shelter_staff'::character varying, 'admin'::character varying, 'staff'::character varying])::text[])))
 );
 
 
@@ -818,13 +899,6 @@ ALTER TABLE ONLY public.active_storage_blobs ALTER COLUMN id SET DEFAULT nextval
 --
 
 ALTER TABLE ONLY public.active_storage_variant_records ALTER COLUMN id SET DEFAULT nextval('public.active_storage_variant_records_id_seq'::regclass);
-
-
---
--- Name: adopter_profiles id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.adopter_profiles ALTER COLUMN id SET DEFAULT nextval('public.adopter_profiles_id_seq'::regclass);
 
 
 --
@@ -884,6 +958,13 @@ ALTER TABLE ONLY public.email_verification_tokens ALTER COLUMN id SET DEFAULT ne
 
 
 --
+-- Name: individual_profiles id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.individual_profiles ALTER COLUMN id SET DEFAULT nextval('public.individual_profiles_id_seq'::regclass);
+
+
+--
 -- Name: invitations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -895,6 +976,20 @@ ALTER TABLE ONLY public.invitations ALTER COLUMN id SET DEFAULT nextval('public.
 --
 
 ALTER TABLE ONLY public.login_attempts ALTER COLUMN id SET DEFAULT nextval('public.login_attempts_id_seq'::regclass);
+
+
+--
+-- Name: notification_preferences id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notification_preferences ALTER COLUMN id SET DEFAULT nextval('public.notification_preferences_id_seq'::regclass);
+
+
+--
+-- Name: notifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('public.notifications_id_seq'::regclass);
 
 
 --
@@ -961,14 +1056,6 @@ ALTER TABLE ONLY public.active_storage_blobs
 
 ALTER TABLE ONLY public.active_storage_variant_records
     ADD CONSTRAINT active_storage_variant_records_pkey PRIMARY KEY (id);
-
-
---
--- Name: adopter_profiles adopter_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.adopter_profiles
-    ADD CONSTRAINT adopter_profiles_pkey PRIMARY KEY (id);
 
 
 --
@@ -1044,6 +1131,14 @@ ALTER TABLE ONLY public.email_verification_tokens
 
 
 --
+-- Name: individual_profiles individual_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.individual_profiles
+    ADD CONSTRAINT individual_profiles_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: invitations invitations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1057,6 +1152,22 @@ ALTER TABLE ONLY public.invitations
 
 ALTER TABLE ONLY public.login_attempts
     ADD CONSTRAINT login_attempts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notification_preferences notification_preferences_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notification_preferences
+    ADD CONSTRAINT notification_preferences_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notifications notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notifications
+    ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
 
 
 --
@@ -1144,6 +1255,20 @@ CREATE INDEX idx_notes_on_application_and_pinned ON public.adoption_notes USING 
 
 
 --
+-- Name: idx_notification_preferences_user; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_notification_preferences_user ON public.notification_preferences USING btree (user_id);
+
+
+--
+-- Name: idx_notifications_unread; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_notifications_unread ON public.notifications USING btree (recipient_id, read_at, created_at);
+
+
+--
 -- Name: idx_timeline_on_application_and_date; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1176,13 +1301,6 @@ CREATE UNIQUE INDEX index_active_storage_blobs_on_key ON public.active_storage_b
 --
 
 CREATE UNIQUE INDEX index_active_storage_variant_records_uniqueness ON public.active_storage_variant_records USING btree (blob_id, variation_digest);
-
-
---
--- Name: index_adopter_profiles_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_adopter_profiles_on_user_id ON public.adopter_profiles USING btree (user_id);
 
 
 --
@@ -1347,6 +1465,13 @@ CREATE INDEX index_email_verification_tokens_on_user_id ON public.email_verifica
 
 
 --
+-- Name: index_individual_profiles_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_individual_profiles_on_user_id ON public.individual_profiles USING btree (user_id);
+
+
+--
 -- Name: index_invitations_on_created_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1389,6 +1514,41 @@ CREATE INDEX index_login_attempts_on_email_and_attempted_at ON public.login_atte
 
 
 --
+-- Name: index_notification_preferences_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notification_preferences_on_user_id ON public.notification_preferences USING btree (user_id);
+
+
+--
+-- Name: index_notifications_on_actor_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notifications_on_actor_id ON public.notifications USING btree (actor_id);
+
+
+--
+-- Name: index_notifications_on_notifiable; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notifications_on_notifiable ON public.notifications USING btree (notifiable_type, notifiable_id);
+
+
+--
+-- Name: index_notifications_on_notifiable_type_and_notifiable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notifications_on_notifiable_type_and_notifiable_id ON public.notifications USING btree (notifiable_type, notifiable_id);
+
+
+--
+-- Name: index_notifications_on_recipient_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notifications_on_recipient_id ON public.notifications USING btree (recipient_id);
+
+
+--
 -- Name: index_password_reset_tokens_on_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1414,6 +1574,13 @@ CREATE INDEX index_pets_on_age_category ON public.pets USING btree (age_category
 --
 
 CREATE INDEX index_pets_on_discarded_at ON public.pets USING btree (discarded_at);
+
+
+--
+-- Name: index_pets_on_publisher_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pets_on_publisher_id ON public.pets USING btree (publisher_id);
 
 
 --
@@ -1550,6 +1717,14 @@ CREATE INDEX index_users_on_shelter_id ON public.users USING btree (shelter_id);
 
 
 --
+-- Name: notifications fk_rails_06a39bb8cc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notifications
+    ADD CONSTRAINT fk_rails_06a39bb8cc FOREIGN KEY (actor_id) REFERENCES public.users(id);
+
+
+--
 -- Name: saved_pets fk_rails_0a28c104eb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1598,6 +1773,14 @@ ALTER TABLE ONLY public.adoption_notes
 
 
 --
+-- Name: pets fk_rails_2976c2db1b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pets
+    ADD CONSTRAINT fk_rails_2976c2db1b FOREIGN KEY (publisher_id) REFERENCES public.users(id);
+
+
+--
 -- Name: adoption_applications fk_rails_32b55b905c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1627,6 +1810,14 @@ ALTER TABLE ONLY public.email_verification_tokens
 
 ALTER TABLE ONLY public.shelter_profiles
     ADD CONSTRAINT fk_rails_3f5c725229 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: notifications fk_rails_4aea6afa11; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notifications
+    ADD CONSTRAINT fk_rails_4aea6afa11 FOREIGN KEY (recipient_id) REFERENCES public.users(id);
 
 
 --
@@ -1662,10 +1853,10 @@ ALTER TABLE ONLY public.ai_document_chunks
 
 
 --
--- Name: adopter_profiles fk_rails_7a1d0aca47; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: individual_profiles fk_rails_7a1d0aca47; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.adopter_profiles
+ALTER TABLE ONLY public.individual_profiles
     ADD CONSTRAINT fk_rails_7a1d0aca47 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
@@ -1683,6 +1874,14 @@ ALTER TABLE ONLY public.shelter_profiles
 
 ALTER TABLE ONLY public.pets
     ADD CONSTRAINT fk_rails_92fb5d7a05 FOREIGN KEY (shelter_id) REFERENCES public.shelters(id);
+
+
+--
+-- Name: notification_preferences fk_rails_9503aade25; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notification_preferences
+    ADD CONSTRAINT fk_rails_9503aade25 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -1772,6 +1971,12 @@ ALTER TABLE ONLY public.adoption_applications
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260720163141'),
+('20260720163140'),
+('20260720163139'),
+('20260720163138'),
+('20260720163137'),
+('20260720163131'),
 ('20260630000001'),
 ('20260629030136'),
 ('20260625003506'),

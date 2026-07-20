@@ -1,0 +1,54 @@
+<%# ─── Additional Questions for Adoption Request ─── %>
+<%# These are optional questions shown at request time to give shelters/publishers more context %>
+<div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden mb-6">
+  <div class="p-6 border-b border-neutral-100">
+    <h2 class="font-display text-lg font-bold text-neutral-800 mb-1"><%= t(".title") %></h2>
+    <p class="text-sm text-neutral-500"><%= t(".subtitle") %></p>
+  </div>
+
+  <div class="p-6 space-y-5">
+    <%# Interest Reason %>
+    <div>
+      <%= label_tag "additional_answers[interest_reason]",
+          t(".interest_reason", pet_name: @pet.name),
+          class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+      <%= text_area_tag "additional_answers[interest_reason]", nil,
+          rows: 2,
+          placeholder: t(".interest_reason_placeholder", pet_name: @pet.name),
+          class: "w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm resize-none" %>
+    </div>
+
+    <%# Home Description %>
+    <div>
+      <%= label_tag "additional_answers[home_description]",
+          t(".home_description"),
+          class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+      <%= text_area_tag "additional_answers[home_description]", nil,
+          rows: 2,
+          placeholder: t(".home_description_placeholder"),
+          class: "w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm resize-none" %>
+    </div>
+
+    <%# Current Pets Details %>
+    <div>
+      <%= label_tag "additional_answers[current_pets_details]",
+          t(".current_pets_details"),
+          class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+      <%= text_area_tag "additional_answers[current_pets_details]", nil,
+          rows: 2,
+          placeholder: t(".current_pets_details_placeholder"),
+          class: "w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm resize-none" %>
+    </div>
+
+    <%# Something Else %>
+    <div>
+      <%= label_tag "additional_answers[something_else]",
+          t(".something_else"),
+          class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+      <%= text_area_tag "additional_answers[something_else]", nil,
+          rows: 2,
+          placeholder: t(".something_else_placeholder"),
+          class: "w-full px-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm resize-none" %>
+    </div>
+  </div>
+</div>

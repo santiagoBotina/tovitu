@@ -1,23 +1,28 @@
+<%# ─── Shelter Pets Index Page ─── %>
+<%# Design: Dashboard-aligned enhanced table with bento styling, filter chips, micro-interactions %>
 <div class="w-full max-w-5xl mx-auto">
-  <div class="flex items-center justify-between mb-8">
+
+  <%# ─── Page Header ─── %>
+  <header class="flex items-center justify-between mb-6 bento-enter bento-enter-d1">
     <div>
       <h1 class="font-display text-3xl font-bold text-neutral-900"><%= t(".title") %></h1>
       <p class="text-neutral-500 mt-1"><%= t(".subtitle") %></p>
     </div>
-    <%= link_to new_shelter_pet_path, class: "inline-flex items-center gap-2 bg-secondary-500 hover:bg-secondary-600 active:bg-secondary-700 text-white px-5 py-2.5 rounded-xl font-medium transition-all duration-200 shadow-sm" do %>
+    <%= link_to new_shelter_pet_path, class: "inline-flex items-center gap-2 bg-secondary-500 hover:bg-secondary-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 shadow-sm" do %>
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
       </svg>
       <%= t(".add_pet") %>
     <% end %>
-  </div>
+  </header>
 
-  <div class="flex flex-wrap gap-2 mb-6">
-    <%= link_to shelter_pets_path, class: "px-4 py-2 rounded-full text-sm font-medium transition-colors #{params[:status].blank? ? 'bg-secondary-500 text-white' : 'bg-white text-neutral-600 border border-neutral-300 hover:border-secondary-300'}" do %>
+  <%# ─── Filter Chips (dashboard pill pattern) ─── %>
+  <div class="flex flex-wrap gap-2 mb-6 bento-enter bento-enter-d2">
+    <%= link_to shelter_pets_path, class: "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-[0.97] #{params[:status].blank? ? 'bg-secondary-500 text-white shadow-sm' : 'bg-white text-neutral-600 border border-neutral-300 hover:border-secondary-300 hover:text-secondary-600'}" do %>
       <%= t(".all") %>
     <% end %>
     <% Pet::STATUSES.each do |status| %>
-      <%= link_to shelter_pets_path(status: status), class: "px-4 py-2 rounded-full text-sm font-medium transition-colors #{params[:status] == status ? 'bg-secondary-500 text-white' : 'bg-white text-neutral-600 border border-neutral-300 hover:border-secondary-300'}" do %>
+      <%= link_to shelter_pets_path(status: status), class: "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-[0.97] #{params[:status] == status ? 'bg-secondary-500 text-white shadow-sm' : 'bg-white text-neutral-600 border border-neutral-300 hover:border-secondary-300 hover:text-secondary-600'}" do %>
         <%= t("pets.status.#{status}") %>
       <% end %>
     <% end %>
@@ -25,7 +30,7 @@
 
   <% if @presented_pets.any? %>
     <%= form_tag bulk_update_shelter_pets_path, method: :patch, data: { turbo_frame: "_top", controller: "bulk-select" } do %>
-      <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
+      <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden bento-enter bento-enter-d3">
         <table class="w-full">
           <thead>
             <tr class="border-b border-neutral-200 bg-neutral-50">
@@ -40,19 +45,19 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-neutral-100">
-            <% @presented_pets.each do |pet| %>
+            <% @presented_pets.each_with_index do |pet, idx| %>
               <tr class="hover:bg-neutral-50 transition-colors">
                 <td class="px-6 py-4">
                   <%= check_box_tag "pet_ids[]", pet.id, false, id: "pet_#{pet.id}", class: "rounded border-neutral-300 text-secondary-500 focus:ring-secondary-500 cursor-pointer", data: { bulk_select_target: "checkbox", action: "bulk-select#update" } %>
                 </td>
                 <td class="px-6 py-4">
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-neutral-100 overflow-hidden shrink-0">
+                    <div class="w-10 h-10 rounded-lg bg-neutral-100 overflow-hidden shrink-0 shadow-sm">
                       <% if pet.primary_photo.present? %>
                         <%= image_tag pet.primary_photo_url(variant: :thumb), alt: "", class: "w-full h-full object-cover" %>
                       <% else %>
-                        <div class="w-full h-full flex items-center justify-center">
-                          <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-full h-full flex items-center justify-center bg-primary-50">
+                          <svg class="w-5 h-5 text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                           </svg>
                         </div>
@@ -95,22 +100,23 @@
         </table>
       </div>
 
-      <div class="mt-4 flex items-center gap-3 p-4 bg-neutral-50 rounded-xl border border-neutral-200" data-bulk-select-target="bulkActions" style="display: none;">
+      <div class="mt-4 flex items-center gap-3 p-4 bg-neutral-50 rounded-xl border border-neutral-200 shadow-sm" data-bulk-select-target="bulkActions" style="display: none;">
         <span class="text-sm text-neutral-600"><%= t(".bulk.selected") %> <span data-bulk-select-target="count">0</span></span>
         <%= select_tag :new_status, options_for_select(Pet::STATUSES.map { |s| [t("pets.status.#{s}"), s] }), prompt: t(".bulk.prompt"), class: "rounded-lg border-neutral-300 text-sm focus:ring-secondary-500 focus:border-secondary-500" %>
-        <%= submit_tag t(".bulk.apply"), class: "bg-secondary-500 hover:bg-secondary-600 active:bg-secondary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors", data: { disable_with: t(".bulk.applying") } %>
+        <%= submit_tag t(".bulk.apply"), class: "bg-secondary-500 hover:bg-secondary-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors active:scale-[0.97]", data: { disable_with: t(".bulk.applying") } %>
       </div>
     <% end %>
   <% else %>
-    <div class="text-center py-16 bg-white rounded-xl shadow-sm border border-neutral-200">
-      <div class="w-16 h-16 bg-secondary-50 rounded-full flex items-center justify-center mx-auto mb-4">
+    <%# ─── Empty State (dashboard pattern) ─── %>
+    <div class="text-center py-16 bg-white rounded-xl shadow-sm border border-neutral-200 bento-enter bento-enter-d3">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-secondary-50 flex items-center justify-center" aria-hidden="true">
         <svg class="w-8 h-8 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
       </div>
-      <h3 class="font-display text-xl font-bold text-neutral-800 mb-2"><%= t(".empty_title") %></h3>
-      <p class="text-neutral-500 mb-6"><%= t(".empty_body") %></p>
-      <%= link_to new_shelter_pet_path, class: "inline-flex items-center gap-2 bg-secondary-500 hover:bg-secondary-600 active:bg-secondary-700 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-sm" do %>
+      <h3 class="font-display text-xl font-bold text-neutral-700 mb-2"><%= t(".empty_title") %></h3>
+      <p class="text-sm text-neutral-500 mb-6 max-w-sm mx-auto"><%= t(".empty_body") %></p>
+      <%= link_to new_shelter_pet_path, class: "inline-flex items-center gap-2 bg-secondary-500 hover:bg-secondary-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 shadow-sm" do %>
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>

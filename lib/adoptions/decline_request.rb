@@ -25,7 +25,7 @@ module Adoptions
       )
 
       if result.success?
-        @request.update_column(:decline_reasons, all_reasons)
+        # Decline reasons are stored in timeline event metadata via ProcessRequest
         Result.success(@request)
       else
         result

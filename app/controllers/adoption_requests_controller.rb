@@ -1,6 +1,7 @@
 class AdoptionRequestsController < ApplicationController
-  before_action :require_authentication, only: [:index, :show, :new, :create]
+  before_action :require_authentication, only: [:index, :show, :new, :create, :withdraw]
   before_action :require_onboarding_complete, only: [:new, :create]
+  before_action :set_request, only: [:show, :withdraw]
 
   def index
     authorize AdoptionRequest
@@ -9,7 +10,6 @@ class AdoptionRequestsController < ApplicationController
   end
 
   def show
-    @request = AdoptionRequest.includes(:pet, :shelter, :adopter, :timeline_events).find(params[:id])
     authorize @request
     @pet = @request.pet
     @shelter = @request.shelter
@@ -29,17 +29,39 @@ class AdoptionRequestsController < ApplicationController
   def create
     @pet = Pet.undiscarded.find(params[:pet_id])
 
-    result = Adoptions::SubmitRequest.call(adopter: current_user, pet: @pet)
+    result = Adoptions::SubmitRequest.call(
+      adopter: current_user,
+      pet: @pet,
+      additional_answers: params[:additional_answers].presence || {}
+    )
 
     if result.success?
       @request = result.data
-      Adoptions::NotifyAdopter.call(adoption_request: @request)
-      Adoptions::NotifyShelter.call(adoption_request: @request)
       redirect_to adoption_request_path(@request), notice: t("adoptions.requests.flash.submitted")
     else
       redirect_to pet_path(@pet), alert: Array(result.errors).join(", ")
     end
   rescue ActiveRecord::RecordNotFound
     redirect_to pets_path, alert: t("pets.not_found")
+  end
+
+  def withdraw
+    authorize @request, :withdraw?
+
+    result = Adoptions::WithdrawRequest.call(request: @request, adopter: current_user)
+
+    if result.success?
+      redirect_to adoption_request_path(@request), notice: t("adoptions.requests.flash.withdrawn")
+    else
+      redirect_to adoption_request_path(@request), alert: Array(result.errors).join(", ")
+    end
+  end
+
+  private
+
+  def set_request
+    @request = AdoptionRequest.includes(:pet, :shelter, :adopter, :timeline_events).find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to adoption_requests_path, alert: t("adoptions.requests.errors.not_found")
   end
 end

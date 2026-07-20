@@ -6,6 +6,11 @@ module Shelters
     def show
       authorize @shelter, :dashboard?
 
+      # Track welcome overlay dismissal
+      if params[:welcome_dismissed] == "true"
+        session[:welcome_overlay_dismissed] = true
+      end
+
       @total_pets = @shelter.pets.undiscarded.count
       @adoptable_pets = @shelter.pets.undiscarded.where(status: :available).count
       @pending_requests = @shelter.adoption_requests.where(status: :pending).count
