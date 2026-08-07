@@ -1,4 +1,7 @@
 es:
+  adoption_requests:
+    new:
+      transparency_note: Tovitu muestra al refugio un resumen de tu perfil y actividad para ayudarte a encontrar el compañero perfecto.
   shelter:
     adoption_requests:
       index:

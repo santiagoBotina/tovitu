@@ -605,6 +605,55 @@ en:
       question_required: "Question is required"
       no_events: "No events yet"
       no_notes: "No notes yet"
+    adopter_insight:
+      card:
+        title: "Adopter Insight"
+        ai_badge: "AI"
+        archetype_label: "What their activity suggests"
+        self_report_label: "How they describe themselves"
+        divergence_hint: "Worth confirming — their self-report and their activity tell different stories."
+        fit_title: "Fit with this pet"
+        commitment_title: "Commitment signals"
+        summary_title: "Pet-fit summary"
+        verify_title: "Suggested verification questions"
+        confidence_label: "AI confidence"
+        activity_up_to: "based on activity up to %{date}"
+        based_on_label: "Based on"
+        disclaimer: "AI-generated estimate to support your decision — always verify with the applicant before approving."
+        not_enough_activity: "Not enough activity yet"
+        stale_badge: "Updating…"
+        loading: "Preparing the adopter insight…"
+        loading_hint: "This card appears here automatically once it's ready. It never blocks your review."
+        unavailable: "Insight not available for this request."
+        unavailable_hint: "The AI summary couldn't be generated right now. The applicant's profile above remains the source of truth."
+        dimensions:
+          energy: "Energy match"
+          time: "Time match"
+          experience: "Experience match"
+          home_space: "Home/space match"
+          household: "Household compatibility"
+        statuses:
+          strong_fit: "Strong fit"
+          possible_mismatch: "Possible mismatch"
+          unknown: "Unknown"
+        confidence:
+          high: "High"
+          medium: "Medium"
+          low: "Low"
+        signal_labels:
+          follow_through: "Follow-through"
+          responsiveness: "Responsiveness"
+          engagement: "Engagement"
+      archetypes:
+        unknown: "Not enough activity yet"
+        active_outdoors_partner: "Active Outdoors Partner"
+        homebody_companion: "Homebody Companion"
+        first_time_parent: "First-Time Pet Parent"
+        experienced_guardian: "Experienced Guardian"
+        family_builder: "Family Builder"
+        routine_keeper: "Routine Keeper"
+        spontaneous_spirit: "Spontaneous Spirit"
+        social_house: "The Social House"
   shelter:
     ai:
       documents:
@@ -670,6 +719,10 @@ en:
       next: "Next"
       complete: "Complete Profile"
       skip: "Skip"
+      loading:
+        title: "Completing your profile…"
+        body: "Hang tight — we're saving your answers and getting everything ready."
+        button: "Completing…"
       review:
         title: "Review your profile"
         subtitle: "Here's what shelters will see when they review your application."
@@ -781,6 +834,8 @@ en:
       next: "Next"
       complete: "Complete Profile"
       skip: "Skip"
+      loading:
+        button: "Completing…"
       review:
         title: "Review your shelter profile"
         subtitle: "Here's what your profile looks like before you finish onboarding."

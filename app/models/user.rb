@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_one :individual_profile, dependent: :destroy
   has_one :adopter_profile, dependent: :destroy
   has_one :shelter_profile, dependent: :destroy
+  has_one :adopter_insight, foreign_key: :adopter_id, dependent: :destroy
 
   has_many :notifications, foreign_key: :recipient_id, dependent: :destroy
   has_one :notification_preference, dependent: :destroy

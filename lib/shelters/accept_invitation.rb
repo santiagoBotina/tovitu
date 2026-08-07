@@ -12,7 +12,7 @@ module Shelters
       return Result.failure(I18n.t("errors.accept_invitation.accepted")) if invitation.accepted?
 
       ActiveRecord::Base.transaction do
-        @user.update!(shelter: invitation.shelter, role: "staff")
+        @user.update!(shelter: invitation.shelter, role: "shelter_staff")
         invitation.accept!
       end
 

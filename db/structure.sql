@@ -128,6 +128,41 @@ ALTER SEQUENCE public.active_storage_variant_records_id_seq OWNED BY public.acti
 
 
 --
+-- Name: adopter_insights; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.adopter_insights (
+    id bigint NOT NULL,
+    adopter_id bigint NOT NULL,
+    data jsonb DEFAULT '{}'::jsonb,
+    version integer DEFAULT 0 NOT NULL,
+    signal_fingerprint character varying,
+    generated_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: adopter_insights_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.adopter_insights_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: adopter_insights_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.adopter_insights_id_seq OWNED BY public.adopter_insights.id;
+
+
+--
 -- Name: adoption_applications; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -261,7 +296,12 @@ CREATE TABLE public.adoption_requests (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     additional_answers jsonb DEFAULT '{}'::jsonb,
-    withdrawn_at timestamp(6) without time zone
+    withdrawn_at timestamp(6) without time zone,
+    pet_fit_data jsonb DEFAULT '{}'::jsonb,
+    pet_fit_generated_at timestamp(6) without time zone,
+    pet_fit_version integer DEFAULT 0 NOT NULL,
+    pet_fit_fingerprint character varying,
+    pet_fit_signal_fingerprint character varying
 );
 
 
@@ -903,6 +943,13 @@ ALTER TABLE ONLY public.active_storage_variant_records ALTER COLUMN id SET DEFAU
 
 
 --
+-- Name: adopter_insights id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adopter_insights ALTER COLUMN id SET DEFAULT nextval('public.adopter_insights_id_seq'::regclass);
+
+
+--
 -- Name: adoption_applications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1057,6 +1104,14 @@ ALTER TABLE ONLY public.active_storage_blobs
 
 ALTER TABLE ONLY public.active_storage_variant_records
     ADD CONSTRAINT active_storage_variant_records_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: adopter_insights adopter_insights_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adopter_insights
+    ADD CONSTRAINT adopter_insights_pkey PRIMARY KEY (id);
 
 
 --
@@ -1302,6 +1357,13 @@ CREATE UNIQUE INDEX index_active_storage_blobs_on_key ON public.active_storage_b
 --
 
 CREATE UNIQUE INDEX index_active_storage_variant_records_uniqueness ON public.active_storage_variant_records USING btree (blob_id, variation_digest);
+
+
+--
+-- Name: index_adopter_insights_on_adopter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_adopter_insights_on_adopter_id ON public.adopter_insights USING btree (adopter_id);
 
 
 --
@@ -1926,6 +1988,14 @@ ALTER TABLE ONLY public.active_storage_attachments
 
 
 --
+-- Name: adopter_insights fk_rails_ce403e6d7c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adopter_insights
+    ADD CONSTRAINT fk_rails_ce403e6d7c FOREIGN KEY (adopter_id) REFERENCES public.users(id);
+
+
+--
 -- Name: adoption_applications fk_rails_d7b317add5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1972,6 +2042,10 @@ ALTER TABLE ONLY public.adoption_applications
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260806020000'),
+('20260806010002'),
+('20260806010001'),
+('20260806010000'),
 ('20260806000001'),
 ('20260720163141'),
 ('20260720163140'),

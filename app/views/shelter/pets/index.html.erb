@@ -72,7 +72,7 @@
                   </div>
                 </td>
                 <td class="px-6 py-4 text-sm text-neutral-600"><%= pet.species_label %></td>
-                <td class="px-6 py-4"><%= pet.status_badge.html_safe %></td>
+                <td class="px-6 py-4"><%= render "pets/status_badge", status: pet.status %></td>
                 <td class="px-6 py-4 text-sm text-neutral-500"><%= l(pet.created_at.to_date, format: :long) rescue pet.created_at.to_date %></td>
                 <td class="px-6 py-4 text-right">
                   <div class="flex items-center justify-end gap-3">

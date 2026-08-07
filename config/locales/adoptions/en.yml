@@ -411,6 +411,7 @@ en:
       submit: Submit Request
       cancel: Cancel
       unknown_breed: Unknown breed
+      transparency_note: Tovitu shows the shelter a summary of your profile and activity to help you find the right match.
 
     adopter_profile_summary:
       no_profile: No profile information available.

@@ -25,9 +25,15 @@ module My
         .where(status: :pending)
         .where.not(id: @request.id)
         .count
+
+      refresh_stale_insight
     end
 
     private
+
+    def refresh_stale_insight
+      Ai::GenerateAdopterInsightJob.perform_later(request_id: @request.id) if @request.pet_fit_stale?
+    end
 
     def require_individual
       unless current_user.individual?

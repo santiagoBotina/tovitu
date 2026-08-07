@@ -227,4 +227,31 @@ RSpec.describe AdoptionRequest, type: :model do
       expect(request.responsible_party_email).to eq("publisher@example.com")
     end
   end
+
+  describe "#pet_fit_stale?" do
+    let(:adopter) { create(:user, :verified, :onboarding_completed) }
+    let(:pet) { create(:pet) }
+    let!(:request) { create(:adoption_request, adopter: adopter, pet: pet, shelter: pet.shelter) }
+
+    it "is false when the pet-fit was built from the current signal fingerprint" do
+      insight = AdopterInsight.create!(adopter: adopter, signal_fingerprint: "abc", generated_at: Time.current)
+      request.update!(pet_fit_signal_fingerprint: "abc")
+      expect(request.pet_fit_stale?).to be(false)
+    end
+
+    it "is true when the adopter's signals changed after the pet-fit was generated" do
+      AdopterInsight.create!(adopter: adopter, signal_fingerprint: "new-signals", generated_at: Time.current)
+      request.update!(pet_fit_signal_fingerprint: "old-signals")
+      expect(request.pet_fit_stale?).to be(true)
+    end
+
+    it "is false when no pet-fit was ever generated" do
+      expect(request.pet_fit_stale?).to be(false)
+    end
+
+    it "is false when the adopter has no cached insight" do
+      request.update!(pet_fit_signal_fingerprint: "abc")
+      expect(request.pet_fit_stale?).to be(false)
+    end
+  end
 end

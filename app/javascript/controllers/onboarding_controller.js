@@ -6,7 +6,7 @@ export default class extends Controller {
     "backButton", "nextButton", "nextButtonText", "skipButton",
     "selectedCount", "textInput", "completeForm", "skipField",
     "milestoneDot", "mascot", "progressTips", "personalityCard",
-    "confettiTrigger"
+    "confettiTrigger", "loadingOverlay"
   ]
 
   static values = {
@@ -73,7 +73,29 @@ export default class extends Controller {
     this.completeOnboarding(true)
   }
 
+  // Disables the wizard controls and shows the completing overlay so the user
+  // gets immediate feedback that submission is in progress (the form submits a
+  // couple of seconds later, after celebration animations on the shelter flow).
+  showLoadingState() {
+    const completing = this.nextButtonTarget.dataset.completingText || "Completing…"
+
+    this.nextButtonTarget.disabled = true
+    this.nextButtonTarget.setAttribute("aria-disabled", "true")
+    if (this.hasNextButtonTextTarget) {
+      this.nextButtonTextTarget.textContent = completing
+    }
+
+    if (this.hasBackButtonTarget) this.backButtonTarget.disabled = true
+    if (this.hasSkipButtonTarget) this.skipButtonTarget.disabled = true
+
+    if (this.hasLoadingOverlayTarget) {
+      this.loadingOverlayTarget.classList.remove("hidden")
+    }
+  }
+
   async completeOnboarding(skip) {
+    this.showLoadingState()
+
     await Promise.all(this.pendingSaves)
 
     if (this.hasSkipFieldTarget) {
@@ -111,7 +133,7 @@ export default class extends Controller {
     const type = element.dataset.type
     const container = element.querySelector("[data-controller]")
 
-    if (type === "multi-select") {
+    if (type === "multi_select") {
       const selected = element.querySelectorAll("[data-multi-select-target=\"chip\"].bg-primary-100")
       const errorMsg = element.querySelector("[data-multi-select-target=\"errorMessage\"]")
       if (selected.length === 0) {
@@ -128,12 +150,12 @@ export default class extends Controller {
     const type = element.dataset.type
     const key = element.dataset.key
 
-    if (type === "multi-select") {
+    if (type === "multi_select") {
       const selected = element.querySelectorAll("[data-multi-select-target=\"chip\"].bg-primary-100")
       return Array.from(selected).map(chip => chip.dataset.value)
     }
 
-    if (type === "single-select") {
+    if (type === "single_select") {
       const selected = element.querySelector("[data-single-select-target=\"option\"].bg-primary-50")
       return selected ? selected.dataset.value : ""
     }
@@ -214,7 +236,7 @@ export default class extends Controller {
     this.backButtonTarget.classList.toggle("invisible", this.currentStepValue <= 1)
 
     const isLast = this.currentStepValue >= this.totalStepsValue
-    this.nextButtonTarget.querySelector("span").textContent = isLast
+    this.nextButtonTextTarget.textContent = isLast
       ? this.nextButtonTarget.dataset.completeText || "Complete Profile"
       : this.nextButtonTarget.dataset.nextText || "Next"
   }

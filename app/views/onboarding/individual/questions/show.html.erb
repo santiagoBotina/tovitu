@@ -158,10 +158,25 @@
         <button type="button"
                 data-action="click->onboarding#nextQuestion"
                 data-onboarding-target="nextButton"
+                data-next-text="<%= t("onboarding.individual.next") %>"
+                data-complete-text="<%= t("onboarding.individual.complete") %>"
+                data-completing-text="<%= t("onboarding.individual.loading.button") %>"
                 class="px-6 py-2.5 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 active:bg-primary-700 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
           <span data-onboarding-target="nextButtonText"><%= t("onboarding.individual.next") %></span>
         </button>
       </div>
+    </div>
+  </div>
+
+  <%# ─── Completing overlay: immediate feedback while the form submits ─── %>
+  <div data-onboarding-target="loadingOverlay"
+       role="status"
+       aria-live="polite"
+       class="hidden fixed inset-0 z-50 bg-neutral-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl border border-neutral-200 shadow-xl p-8 max-w-sm w-full text-center">
+      <div class="mx-auto w-10 h-10 mb-4 rounded-full border-[3px] border-neutral-200 border-t-primary-500 animate-spin" aria-hidden="true"></div>
+      <p class="font-display text-lg font-bold text-neutral-800"><%= t("onboarding.individual.loading.title") %></p>
+      <p class="text-sm text-neutral-500 mt-1"><%= t("onboarding.individual.loading.body") %></p>
     </div>
   </div>
 </div>

@@ -50,6 +50,13 @@ RSpec.describe "Shelter Dashboard" do
       it "renders the Adoption Policies quick action" do
         expect(response.body).to include(I18n.t("shelters.dashboard.show.quick_actions.policies.title"))
       end
+
+      # Regression (Bug 2.1a): shelter owners must keep access to the
+      # admin-only sidebar sections (Staff, Adoption Policies).
+      it "renders the Staff and Adoption Policies links in the sidebar" do
+        expect(response.body).to include(shelter_staff_index_path(shelter_id: shelter))
+        expect(response.body).to include(edit_shelter_policies_path(shelter_id: shelter))
+      end
     end
 
     context "as shelter staff" do
@@ -73,6 +80,12 @@ RSpec.describe "Shelter Dashboard" do
 
       it "does not render the Adoption Policies quick action" do
         expect(response.body).not_to include(I18n.t("shelters.dashboard.show.quick_actions.policies.title"))
+        expect(response.body).not_to include(edit_shelter_policies_path(shelter_id: shelter))
+      end
+
+      # Staff must not see the admin-only sidebar sections at all.
+      it "does not render Staff or Adoption Policies links in the sidebar" do
+        expect(response.body).not_to include(shelter_staff_index_path(shelter_id: shelter))
         expect(response.body).not_to include(edit_shelter_policies_path(shelter_id: shelter))
       end
     end

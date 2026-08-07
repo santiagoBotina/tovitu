@@ -16,7 +16,7 @@ module Shelters
         return Result.failure(I18n.t("errors.remove_staff.last_admin"))
       end
 
-      @staff_user.update!(shelter: nil, role: "staff")
+      @staff_user.update!(shelter: nil, role: "shelter_staff")
       Result.success(nil)
     rescue ActiveRecord::RecordInvalid => e
       Result.failure(e.record.errors.full_messages)

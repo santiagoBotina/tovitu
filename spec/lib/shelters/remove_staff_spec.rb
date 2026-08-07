@@ -14,7 +14,7 @@ RSpec.describe Shelters::RemoveStaff do
         result = described_class.call(shelter: shelter, user: admin, staff_user: staff)
         expect(result).to be_success
         expect(staff.reload.shelter_id).to be_nil
-        expect(staff.reload.role).to eq("staff")
+        expect(staff.reload.role).to eq("shelter_staff")
       end
     end
 

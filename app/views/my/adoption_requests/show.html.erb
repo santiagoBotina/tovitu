@@ -25,7 +25,7 @@
             <h1 class="font-display text-2xl font-bold text-neutral-900"><%= t(".request_from", name: @request.adopter.name) %></h1>
             <p class="text-neutral-500 text-sm"><%= t(".for_pet", pet_name: @request.pet.name) %></p>
           </div>
-          <%= @request.status_badge.html_safe %>
+          <%= render "adoption_requests/status_badge", status: @request.status %>
         </div>
 
         <p class="text-sm text-neutral-500 mb-6"><%= t(".submitted", time: distance_of_time_in_words(@request.created_at, Time.current)) %></p>
@@ -104,6 +104,10 @@
         <p class="text-sm text-neutral-500"><%= @request.adopter.email %></p>
       </div>
 
+      <%= render "adoption_requests/adopter_insight_card",
+                 insight_request: @request,
+                 insight_adopter: @request.adopter %>
+
       <% if @adopter_profile %>
         <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
           <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".adopter_profile") %></h2>
@@ -123,7 +127,7 @@
           </div>
           <div>
             <p class="font-medium text-neutral-800"><%= @request.pet.name %></p>
-            <p class="text-sm text-neutral-500"><%= @request.pet.species_label %></p>
+            <p class="text-sm text-neutral-500"><%= @request.pet.species.humanize %></p>
           </div>
         </div>
       </div>

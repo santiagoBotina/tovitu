@@ -120,7 +120,7 @@ en:
     show:
       photo_alt: "%{name} photo %{index}"
       back_to_pets: Back to all pets
-      status_banner: "This pet is: %{status}"
+      status_banner: "This pet is:"
       status_banner_body: This pet is not currently available for adoption.
       age_label: Age
       size_label: Size

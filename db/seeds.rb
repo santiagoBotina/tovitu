@@ -50,6 +50,11 @@ end
 # ── Users ─────────────────────────────────────────────────────────
 # Every shelter gets at least one login user so the app can be
 # exercised locally. All seeded users share the same password.
+#
+# NOTE: shelter users use the canonical domain roles "shelter_admin"
+# and "shelter_staff" (see ShelterPolicy#manage? and User#shelter_admin?).
+# The legacy "admin"/"staff" role names are no longer assigned to shelter
+# users — they only remain in ROLES for backward compatibility.
 seed_password = "password123"
 
 ensure_shelter_user = ->(shelter:, email:, name:, role:) do
@@ -65,10 +70,10 @@ ensure_shelter_user = ->(shelter:, email:, name:, role:) do
   end
 end
 
-shelter_admin = ensure_shelter_user.call(shelter: happy_paws, email: "admin@tovitu.com", name: "Shelter Admin", role: "admin")
-shelter_staff = ensure_shelter_user.call(shelter: happy_paws, email: "staff@tovitu.com", name: "Shelter Staff", role: "staff")
-furry_admin   = ensure_shelter_user.call(shelter: furry_friends, email: "furry.admin@example.com", name: "Furry Admin", role: "admin")
-furry_staff   = ensure_shelter_user.call(shelter: furry_friends, email: "furry.staff@example.com", name: "Furry Staff", role: "staff")
+shelter_admin = ensure_shelter_user.call(shelter: happy_paws, email: "admin@tovitu.com", name: "Shelter Admin", role: "shelter_admin")
+shelter_staff = ensure_shelter_user.call(shelter: happy_paws, email: "staff@tovitu.com", name: "Shelter Staff", role: "shelter_staff")
+furry_admin   = ensure_shelter_user.call(shelter: furry_friends, email: "furry.admin@example.com", name: "Furry Admin", role: "shelter_admin")
+furry_staff   = ensure_shelter_user.call(shelter: furry_friends, email: "furry.staff@example.com", name: "Furry Staff", role: "shelter_staff")
 
 # Any other shelter already in the database (including ones created by
 # earlier seed runs) also gets a login user, so every shelter can be
@@ -80,8 +85,16 @@ Shelter.find_each do |shelter|
     shelter: shelter,
     email: "admin-#{shelter.id}@tovitu.com",
     name: "#{shelter.name} Admin",
-    role: "admin"
+    role: "shelter_admin"
   )
+end
+
+# Reconcile records created before the canonical role names were adopted.
+# Shelter-bound users with the legacy roles are upgraded so the admin-only
+# settings sections (Shelter Information, Staff, Adoption Policies) remain
+# visible to owners and hidden for staff.
+User.where.not(shelter_id: nil).where(role: %w[admin staff]).find_each do |u|
+  u.update!(role: u.admin? ? "shelter_admin" : "shelter_staff")
 end
 
 adopter = User.find_or_create_by!(email: "adopter@tovitu.com") do |u|

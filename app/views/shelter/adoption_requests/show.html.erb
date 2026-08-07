@@ -154,6 +154,11 @@
     </section>
   </div>
 
+  <%# ─── Adopter Insight Card ─── %>
+  <%= render "adoption_requests/adopter_insight_card",
+             insight_request: @request,
+             insight_adopter: @adopter %>
+
   <%# ─── Adopter's Answers Card ─── %>
   <% answers = @request.additional_answers.to_h.with_indifferent_access %>
   <% answered = %w[interest_reason home_description current_pets_details something_else].select { |key| answers[key].present? } %>

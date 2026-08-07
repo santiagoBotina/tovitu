@@ -93,6 +93,11 @@ RSpec.describe "AdoptionRequests" do
       expect(form_html).to include('name="additional_answers[something_else]"')
     end
 
+    it "shows the one-line transparency note (zero new required fields)" do
+      get new_adoption_request_path(pet_id: pet.id)
+      expect(response.body).to include(I18n.t("adoption_requests.new.transparency_note"))
+    end
+
     it "redirects for unavailable pets" do
       pet.update!(status: :adopted, adopted_at: Time.current)
       get new_adoption_request_path(pet_id: pet.id)
@@ -114,6 +119,12 @@ RSpec.describe "AdoptionRequests" do
       expect {
         post adoption_requests_path, params: { pet_id: pet.id }
       }.to change(AdoptionRequest, :count).by(1)
+    end
+
+    it "enqueues the async adopter insight generation" do
+      expect {
+        post adoption_requests_path, params: { pet_id: pet.id }
+      }.to have_enqueued_job(Ai::GenerateAdopterInsightJob).with(request_id: an_instance_of(Integer))
     end
 
     it "redirects to the request show page" do

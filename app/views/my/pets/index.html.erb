@@ -24,7 +24,7 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
               <h3 class="font-semibold text-neutral-800 truncate"><%= pet.name %></h3>
-              <%= pet.status_badge.html_safe %>
+              <%= render "pets/status_badge", status: pet.status %>
             </div>
             <p class="text-sm text-neutral-500"><%= pet.species_label %><%= " · #{pet.breed}" if pet.breed.present? %></p>
           </div>

@@ -277,7 +277,7 @@
                   <p class="text-sm font-semibold text-neutral-800 truncate"><%= pet.name %></p>
                   <p class="text-xs text-neutral-500"><%= pet.species_label %></p>
                 </div>
-                <%= pet.status_badge.html_safe %>
+                <%= render "pets/status_badge", status: pet.status %>
               </div>
             <% end %>
           </div>

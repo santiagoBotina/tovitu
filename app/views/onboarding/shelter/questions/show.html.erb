@@ -238,8 +238,9 @@
                 data-onboarding-target="nextButton"
                 data-next-text="<%= t('onboarding.shelter.next') %>"
                 data-complete-text="<%= t('onboarding.shelter.complete') %>"
+                data-completing-text="<%= t('onboarding.shelter.loading.button') %>"
                 class="px-6 py-2.5 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 active:bg-primary-700 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
-          <span><%= t("onboarding.shelter.next") %></span>
+          <span data-onboarding-target="nextButtonText"><%= t("onboarding.shelter.next") %></span>
         </button>
       </div>
     </div>

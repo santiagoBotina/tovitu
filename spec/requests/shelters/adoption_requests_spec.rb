@@ -124,4 +124,112 @@ RSpec.describe "Shelter AdoptionRequests" do
       expect(response).to redirect_to(root_path)
     end
   end
+
+  describe "Adopter Insight Card" do
+    let(:adopter) { create(:user, :verified, :onboarding_completed) }
+    let(:pet) { create(:pet, shelter: shelter) }
+    let!(:request) do
+      create(:adoption_request, pet: pet, adopter: adopter, shelter: shelter)
+    end
+
+    it "renders the Adopter Insight card on the request review page" do
+      get shelter_adoption_request_path(request)
+      expect(response.body).to include("adopter-insight-card")
+      expect(response.body).to include(I18n.t("ai.adopter_insight.card.title"))
+    end
+
+    context "when insights are ready" do
+      before do
+        AdopterInsight.create!(
+          adopter: adopter,
+          data: {
+            "archetype" => "active_outdoors_partner",
+            "self_reported_personality" => "adventurous_energetic",
+            "archetype_diverges" => false,
+            "commitment_signals" => [
+              { "label" => "follow_through", "observation" => "Applied to 1 pet and followed through.", "kind" => "positive" }
+            ],
+            "confidence" => "medium",
+            "provenance" => { "sources" => [ "onboarding answers" ], "based_on" => "onboarding answers", "activity_up_to" => Date.current.iso8601 }
+          },
+          generated_at: Time.current
+        )
+        request.update!(pet_fit_data: {
+          "fit_indicators" => {
+            "energy" => { "status" => "strong_fit", "evidence" => "Active lifestyle." },
+            "time" => { "status" => "unknown", "evidence" => "" },
+            "experience" => { "status" => "unknown", "evidence" => "" },
+            "home_space" => { "status" => "strong_fit", "evidence" => "Fenced yard." },
+            "household" => { "status" => "unknown", "evidence" => "" }
+          },
+          "summary" => "A strong match for an active home.",
+          "verification_questions" => [ "Have you owned a dog before?" ],
+          "confidence" => "medium"
+        })
+      end
+
+      it "renders the archetype badge, fit indicators, commitment signals, and disclaimer" do
+        get shelter_adoption_request_path(request)
+        expect(response.body).to include("Active Outdoors Partner")
+        expect(response.body).to include(I18n.t("ai.adopter_insight.card.fit_title"))
+        expect(response.body).to include("Applied to 1 pet and followed through.")
+        expect(response.body).to include(I18n.t("ai.adopter_insight.card.disclaimer"))
+        expect(response.body).to include(I18n.t("ai.adopter_insight.card.confidence_label"))
+      end
+
+      it "renders a not-enough-activity state instead of fabricating unknown dimensions" do
+        get shelter_adoption_request_path(request)
+        expect(response.body).to include(I18n.t("ai.adopter_insight.card.not_enough_activity"))
+      end
+    end
+
+    context "when the pet-fit summary is stale" do
+      before do
+        AdopterInsight.create!(
+          adopter: adopter,
+          data: { "archetype" => "family_builder", "confidence" => "medium" },
+          signal_fingerprint: "new-signals",
+          generated_at: Time.current
+        )
+        request.update!(
+          pet_fit_data: { "fit_indicators" => {}, "confidence" => "low", "summary" => "Old.", "verification_questions" => [] },
+          pet_fit_signal_fingerprint: "old-signals",
+          pet_fit_fingerprint: "x"
+        )
+      end
+
+      it "enqueues an async refresh on review" do
+        expect {
+          get shelter_adoption_request_path(request)
+        }.to have_enqueued_job(Ai::GenerateAdopterInsightJob).with(request_id: request.id)
+      end
+
+      it "renders the updating badge instead of silently showing outdated evidence" do
+        get shelter_adoption_request_path(request)
+        expect(response.body).to include(I18n.t("ai.adopter_insight.card.stale_badge"))
+      end
+    end
+
+    context "when the pet-fit summary is current" do
+      before do
+        AdopterInsight.create!(
+          adopter: adopter,
+          data: { "archetype" => "family_builder", "confidence" => "medium" },
+          signal_fingerprint: "same",
+          generated_at: Time.current
+        )
+        request.update!(
+          pet_fit_data: { "fit_indicators" => {}, "confidence" => "low", "summary" => "Current.", "verification_questions" => [] },
+          pet_fit_signal_fingerprint: "same",
+          pet_fit_fingerprint: "y"
+        )
+      end
+
+      it "does not enqueue a refresh" do
+        expect {
+          get shelter_adoption_request_path(request)
+        }.not_to have_enqueued_job(Ai::GenerateAdopterInsightJob)
+      end
+    end
+  end
 end

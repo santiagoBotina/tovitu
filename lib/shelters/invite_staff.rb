@@ -17,7 +17,7 @@ module Shelters
         return Result.failure(I18n.t("errors.invite_staff.already_member", email: @email)) if existing_user.shelter_id == @shelter.id
         return Result.failure(I18n.t("errors.invite_staff.other_shelter", email: @email)) if existing_user.shelter_id.present?
 
-        existing_user.update!(shelter: @shelter, role: "staff")
+        existing_user.update!(shelter: @shelter, role: "shelter_staff")
         return Result.success(nil)
       end
 

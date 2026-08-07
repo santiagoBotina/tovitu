@@ -10,7 +10,7 @@ RSpec.describe Shelters::AcceptInvitation do
       it "updates the user" do
         described_class.call(token: invitation.token, user: user)
         expect(user.reload.shelter_id).to eq(shelter.id)
-        expect(user.reload.role).to eq("staff")
+        expect(user.reload.role).to eq("shelter_staff")
       end
 
       it "accepts the invitation" do

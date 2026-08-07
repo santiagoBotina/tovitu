@@ -1,4 +1,31 @@
 module AiProviderStub
+  def default_adopter_insight_response
+    {
+      "archetype" => "active_outdoors_partner",
+      "archetype_diverges" => false,
+      "commitment_signals" => [
+        { "label" => "follow_through", "observation" => "Applied to 1 pet and followed the request to completion.", "kind" => "positive" },
+        { "label" => "responsiveness", "observation" => "Responded to a follow-up within about 2 hours.", "kind" => "positive" }
+      ],
+      "confidence" => "medium",
+      "based_on" => "onboarding answers, 2 saved pets, 1 request"
+    }
+  end
+
+  def default_pet_fit_response
+    {
+      "fit_indicators" => {
+        "energy" => { "status" => "strong_fit", "evidence" => "They report an active lifestyle and save high-energy dogs." },
+        "time" => { "status" => "strong_fit", "evidence" => "They have 2-4 hours available daily." },
+        "experience" => { "status" => "unknown", "evidence" => "" },
+        "home_space" => { "status" => "strong_fit", "evidence" => "They describe a house with a fenced yard." },
+        "household" => { "status" => "unknown", "evidence" => "" }
+      },
+      "summary" => "This applicant looks like a strong match for the pet: an active home with a fenced yard and time for daily exercise. Their pet experience is unknown, so a quick call is worthwhile.",
+      "verification_questions" => [ "Have you owned a dog before?", "Who is home during the day?" ],
+      "confidence" => "medium"
+    }
+  end
   def default_preview_response
     {
       "plan" => [

@@ -116,7 +116,7 @@ es:
     show:
       photo_alt: "%{name} foto %{index}"
       back_to_pets: Volver a todas las mascotas
-      status_banner: "Esta mascota está: %{status}"
+      status_banner: "Esta mascota está:"
       status_banner_body: Esta mascota no está disponible actualmente para adopción.
       age_label: Edad
       size_label: Tamaño

@@ -20,9 +20,15 @@ class Shelter::AdoptionRequestsController < ApplicationController
     @adopter = @request.adopter
     @profile = @adopter.adopter_profile
     @timeline = @request.timeline_events.chronological.includes(:actor)
+
+    refresh_stale_insight
   end
 
   private
+
+  def refresh_stale_insight
+    Ai::GenerateAdopterInsightJob.perform_later(request_id: @request.id) if @request.pet_fit_stale?
+  end
 
   def set_shelter
     @shelter = current_user.shelter

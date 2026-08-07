@@ -13,7 +13,7 @@
       <div>
         <div class="flex items-center gap-3 mb-2">
           <h1 class="font-display text-3xl font-bold text-neutral-900"><%= pet.name %></h1>
-          <%= pet.status_badge.html_safe %>
+          <%= render "pets/status_badge", status: pet.status %>
         </div>
         <p class="text-neutral-500 text-sm"><%= pet.species_label %><% if pet.breed.present? %> · <%= pet.breed %><% end %> · <%= pet.age_display %></p>
       </div>

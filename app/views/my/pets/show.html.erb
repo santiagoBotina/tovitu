@@ -17,7 +17,7 @@
           <h1 class="font-display text-3xl font-bold text-neutral-900"><%= @pet.name %></h1>
           <p class="text-neutral-500"><%= @pet.species_label %><%= " · #{@pet.breed}" if @pet.breed.present? %></p>
         </div>
-        <%= @pet.status_badge.html_safe %>
+        <%= render "pets/status_badge", status: @pet.status %>
       </div>
 
       <div class="flex items-center gap-3 mb-6">
@@ -68,7 +68,7 @@
               <p class="text-sm text-neutral-500"><%= t(".submitted", time: distance_of_time_in_words(req.created_at, Time.current)) %></p>
             </div>
             <div class="flex items-center gap-2">
-              <%= req.status_badge.html_safe %>
+              <%= render "adoption_requests/status_badge", status: req.status %>
               <% if req.available_for_review? %>
                 <%= link_to new_my_adoption_request_decision_path(req), class: "px-3 py-1.5 text-sm font-medium bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition" do %>
                   <%= t(".review") %>

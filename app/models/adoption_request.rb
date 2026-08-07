@@ -9,6 +9,8 @@ class AdoptionRequest < ApplicationRecord
                   accepted: "accepted", declined: "declined",
                   withdrawn: "withdrawn" }
 
+  after_create_commit :enqueue_adopter_insight_generation
+
   validates :adopter_id, uniqueness: { scope: :pet_id,
     message: ->(obj, data) { I18n.t("adoptions.requests.errors.duplicate") },
     conditions: -> { where.not(status: [ :declined, :withdrawn ]) } }
@@ -72,5 +74,23 @@ class AdoptionRequest < ApplicationRecord
 
   def self.pending_for_publisher(publisher)
     joins(:pet).where(pets: { publisher_id: publisher.id }, status: :pending)
+  end
+
+  # True when the pet-fit summary was computed from an older snapshot of the
+  # adopter's signals than the one currently cached. Signals changed after
+  # generation (e.g. new saved pet / request) → the summary is stale.
+  def pet_fit_stale?
+    return false if pet_fit_signal_fingerprint.blank?
+
+    insight = adopter.adopter_insight
+    return false if insight.nil? || insight.signal_fingerprint.blank?
+
+    pet_fit_signal_fingerprint != insight.signal_fingerprint
+  end
+
+  private
+
+  def enqueue_adopter_insight_generation
+    Ai::GenerateAdopterInsightJob.perform_later(request_id: id)
   end
 end

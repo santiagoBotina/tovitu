@@ -17,7 +17,7 @@ RSpec.describe Shelters::InviteStaff do
         result = described_class.call(shelter: shelter, inviter: admin, email: existing_user.email)
         expect(result).to be_success
         expect(existing_user.reload.shelter_id).to eq(shelter.id)
-        expect(existing_user.reload.role).to eq("staff")
+        expect(existing_user.reload.role).to eq("shelter_staff")
       end
 
       it "returns failure if user already belongs to this shelter" do

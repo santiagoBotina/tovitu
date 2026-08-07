@@ -601,6 +601,55 @@ es:
       question_required: "Se requiere una pregunta"
       no_events: "Sin eventos aún"
       no_notes: "Sin notas aún"
+    adopter_insight:
+      card:
+        title: "Resumen del Adoptante"
+        ai_badge: "IA"
+        archetype_label: "Lo que sugiere su actividad"
+        self_report_label: "Cómo se describen"
+        divergence_hint: "Vale la pena confirmar: lo que dicen de sí mismos y su actividad cuentan historias diferentes."
+        fit_title: "Compatibilidad con esta mascota"
+        commitment_title: "Señales de compromiso"
+        summary_title: "Resumen de compatibilidad"
+        verify_title: "Preguntas sugeridas para verificar"
+        confidence_label: "Confianza de la IA"
+        activity_up_to: "según la actividad hasta %{date}"
+        based_on_label: "Basado en"
+        disclaimer: "Estimación generada por IA para apoyar tu decisión: verifica siempre con el solicitante antes de aprobar."
+        not_enough_activity: "Aún no hay suficiente actividad"
+        stale_badge: "Actualizando…"
+        loading: "Preparando el resumen del adoptante…"
+        loading_hint: "Esta tarjeta aparece automáticamente cuando esté lista. Nunca bloquea tu revisión."
+        unavailable: "Resumen no disponible para esta solicitud."
+        unavailable_hint: "El resumen de IA no se pudo generar en este momento. El perfil del solicitante arriba sigue siendo la fuente de verdad."
+        dimensions:
+          energy: "Nivel de energía"
+          time: "Tiempo disponible"
+          experience: "Experiencia"
+          home_space: "Hogar/espacio"
+          household: "Convivencia en el hogar"
+        statuses:
+          strong_fit: "Buena compatibilidad"
+          possible_mismatch: "Posible desajuste"
+          unknown: "Desconocido"
+        confidence:
+          high: "Alta"
+          medium: "Media"
+          low: "Baja"
+        signal_labels:
+          follow_through: "Seguimiento"
+          responsiveness: "Capacidad de respuesta"
+          engagement: "Participación"
+      archetypes:
+        unknown: "Aún no hay suficiente actividad"
+        active_outdoors_partner: "Compañero de Aventuras"
+        homebody_companion: "Compañero de Hogar"
+        first_time_parent: "Primera Vez con Mascota"
+        experienced_guardian: "Guardián Experimentado"
+        family_builder: "Constructor de Familia"
+        routine_keeper: "Fiel a la Rutina"
+        spontaneous_spirit: "Espíritu Espontáneo"
+        social_house: "La Casa Social"
   shelter:
     ai:
       documents:
@@ -666,6 +715,10 @@ es:
       next: "Siguiente"
       complete: "Completar Perfil"
       skip: "Saltar"
+      loading:
+        title: "Completando tu perfil…"
+        body: "Un momento — estamos guardando tus respuestas y preparando todo."
+        button: "Completando…"
       review:
         title: "Revisa tu perfil"
         subtitle: "Esto es lo que los refugios verán al revisar tu solicitud."
@@ -750,6 +803,8 @@ es:
       next: "Siguiente"
       complete: "Completar Perfil"
       skip: "Saltar"
+      loading:
+        button: "Completando…"
       review:
         title: "Revisa el perfil de tu refugio"
         subtitle: "Así se ve tu perfil antes de terminar la incorporación."
