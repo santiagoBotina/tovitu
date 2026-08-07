@@ -51,7 +51,7 @@ module Adoptions
 
     def existing_active_request?
       AdoptionRequest.where(adopter_id: @adopter.id, pet_id: @pet.id)
-                     .where.not(status: [:declined, :withdrawn])
+                     .where.not(status: [ :declined, :withdrawn ])
                      .exists?
     end
 

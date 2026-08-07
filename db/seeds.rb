@@ -4,22 +4,6 @@
 
 return unless Rails.env.local?
 
-shelter_admin = User.find_or_create_by!(email: "admin@tovitu.com") do |u|
-  u.name = "Shelter Admin"
-  u.password = "password123"
-  u.password_confirmation = "password123"
-  u.role = "admin"
-  u.verified_at = Time.current
-end
-
-shelter_staff = User.find_or_create_by!(email: "staff@tovitu.com") do |u|
-  u.name = "Shelter Staff"
-  u.password = "password123"
-  u.password_confirmation = "password123"
-  u.role = "staff"
-  u.verified_at = Time.current
-end
-
 happy_paws = Shelter.find_or_create_by!(name: "Happy Paws Rescue") do |s|
   s.street = "123 Main St"
   s.city = "Portland"
@@ -40,9 +24,6 @@ happy_paws = Shelter.find_or_create_by!(name: "Happy Paws Rescue") do |s|
   }
   s.onboarding_completed = true
 end
-
-shelter_admin.update!(shelter: happy_paws, role: "admin") unless shelter_admin.shelter_id == happy_paws.id
-shelter_staff.update!(shelter: happy_paws) unless shelter_staff.shelter_id == happy_paws.id
 
 furry_friends = Shelter.find_or_create_by!(name: "Furry Friends Animal Shelter") do |s|
   s.street = "456 Oak Avenue"
@@ -66,23 +47,48 @@ furry_friends = Shelter.find_or_create_by!(name: "Furry Friends Animal Shelter")
   s.onboarding_completed = true
 end
 
-unless User.exists?(email: "furry.admin@example.com")
-  furry_admin = User.create!(
-    name: "Furry Admin",
-    email: "furry.admin@example.com",
-    password: "password123",
-    password_confirmation: "password123",
-    role: "admin",
-    verified_at: Time.current,
-    shelter: furry_friends
+# ── Users ─────────────────────────────────────────────────────────
+# Every shelter gets at least one login user so the app can be
+# exercised locally. All seeded users share the same password.
+seed_password = "password123"
+
+ensure_shelter_user = ->(shelter:, email:, name:, role:) do
+  User.find_or_create_by!(email: email) do |u|
+    u.name = name
+    u.password = seed_password
+    u.password_confirmation = seed_password
+    u.role = role
+    u.verified_at = Time.current
+    u.shelter = shelter
+  end.tap do |u|
+    u.update!(shelter: shelter, role: role) unless u.shelter_id == shelter.id && u.role == role
+  end
+end
+
+shelter_admin = ensure_shelter_user.call(shelter: happy_paws, email: "admin@tovitu.com", name: "Shelter Admin", role: "admin")
+shelter_staff = ensure_shelter_user.call(shelter: happy_paws, email: "staff@tovitu.com", name: "Shelter Staff", role: "staff")
+furry_admin   = ensure_shelter_user.call(shelter: furry_friends, email: "furry.admin@example.com", name: "Furry Admin", role: "admin")
+furry_staff   = ensure_shelter_user.call(shelter: furry_friends, email: "furry.staff@example.com", name: "Furry Staff", role: "staff")
+
+# Any other shelter already in the database (including ones created by
+# earlier seed runs) also gets a login user, so every shelter can be
+# exercised locally.
+Shelter.find_each do |shelter|
+  next if shelter.users.exists?
+
+  ensure_shelter_user.call(
+    shelter: shelter,
+    email: "admin-#{shelter.id}@tovitu.com",
+    name: "#{shelter.name} Admin",
+    role: "admin"
   )
 end
 
 adopter = User.find_or_create_by!(email: "adopter@tovitu.com") do |u|
   u.name = "Alex Adopter"
-  u.password = "password123"
-  u.password_confirmation = "password123"
-  u.role = "adopter"
+  u.password = seed_password
+  u.password_confirmation = seed_password
+  u.role = "individual"
   u.verified_at = Time.current
   u.onboarding_completed_at = Time.current
 end
@@ -398,7 +404,7 @@ pets_data = [
     good_with_cats: true,
     requirements: "Patient, quiet household. Adults-only recommended. Another calm dog in home would help his confidence.",
     status: "available"
-  },
+  }
 
 ]
 
@@ -573,10 +579,13 @@ end
 
 puts ""
 puts "Seeded #{User.count} users, #{Shelter.count} shelters, and #{Pet.count} pets:"
-puts "  admin@tovitu.com / password123  (admin, shelter, Happy Paws Rescue)"
-puts "  staff@tovitu.com / password123  (staff, shelter, Happy Paws Rescue)"
-puts "  furry.admin@example.com / password123  (admin, Furry Friends)"
-puts "  adopter@tovitu.com / password123  (adopter, verified, onboarding completed)"
+puts "  Shelter login users (all use password123):"
+Shelter.order(:id).each do |shelter|
+  shelter.users.order(:id).each do |user|
+    puts "  #{user.email} / password123  (#{user.role}, #{shelter.name})"
+  end
+end
+puts "  adopter@tovitu.com / password123  (individual, verified, onboarding completed)"
 puts ""
 puts "Pets:"
 Pet.includes(:shelter).each do |pet|

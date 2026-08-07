@@ -5,6 +5,30 @@ module NavigationHelper
     @locale_aware_path ||= request.path.sub(/\A\/(en|es)/, "").presence || "/"
   end
 
+  # Resolve a "back" link destination. When the page was reached with a
+  # `back_to` query param (e.g. arriving at a pet profile from an adoption
+  # request detail), return that path so the back button leads the user back
+  # to where they came from instead of a hardcoded listing.
+  #
+  # Falls back to +fallback_path+ when `back_to` is absent, malformed, or
+  # points outside the app — never renders an external URL.
+  def safe_back_path(fallback_path)
+    back_to = params[:back_to].to_s
+    return fallback_path if back_to.blank?
+
+    # Only same-origin, internal absolute paths. Reject protocol-relative
+    # (//host) and scheme-prefixed (https://host) URLs, plus backslash tricks
+    # that browsers normalize into protocol-relative URLs.
+    return fallback_path unless back_to.start_with?("/")
+    return fallback_path if back_to.start_with?("//") || back_to.include?("\\")
+
+    path = back_to.split("?").first
+    Rails.application.routes.recognize_path(path, method: :get)
+    back_to
+  rescue ActionController::RoutingError, URI::InvalidURIError, ArgumentError
+    fallback_path
+  end
+
   def dashboard_active?(user)
     if user.adopter?
       current_page?(user_dashboard_path) || locale_aware_path.start_with?("/dashboard")

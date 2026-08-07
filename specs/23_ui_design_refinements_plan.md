@@ -101,6 +101,8 @@ A **custom language selector** consistent with the Tovitu Design System (Playgro
 3. **i18n**: strings under `shared.language_selector.*` (e.g., `aria_label`, `trigger`, `english`, `español`) — note `English`/`Español` may stay as language-native labels per convention.
 4. **Placement**: replaces the `f.select` block inside the Language Preference card; keep the existing save button OR auto-save on selection (choose auto-save-on-select for a cleaner control, matching "selecting a language applies it immediately" mental model — confirm with founder before implementing; default recommendation: auto-save).
 
+   > **Decision (recorded at implementation, Aug 2026):** **Auto-save on selection** was implemented (the plan's default recommendation). With JS active, choosing a language submits the surrounding profile form immediately (PATCH `profile_path`); the native `<select>` + Save button are kept in the DOM as the no-JS fallback and source of truth (see `language_select_controller.js`). Rationale: single-field form, "selecting a language applies it immediately" mental model, trivially reversible. **Founder sign-off still requested** — if rejected, revert to explicit-Save-only by removing the auto-submit (`form.requestSubmit()`) in `selectOption`.
+
 ### Acceptance Criteria (4.2)
 
 - **AC-4.2-1** Language Preference card shows a custom selector, not a native `<select>`.

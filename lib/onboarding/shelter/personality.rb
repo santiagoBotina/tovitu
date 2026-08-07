@@ -78,21 +78,23 @@ module Onboarding
         return false unless rules
 
         rules.all? do |field, expected|
-          value = @profile&.send(field)
-
-          case expected
-          when Array
-            Array(value).any? { |v| expected.include?(v) }
-          when String
-            if field.to_s.end_with?("_include")
-              actual_field = field.to_s.sub("_include", "")
-              actual_value = @profile&.send(actual_field)
-              Array(actual_value).include?(expected)
-            else
-              value.to_s == expected
-            end
+          # Rule keys ending in "_include" (e.g. `biggest_challenges_include`)
+          # mean "check that the profile's `biggest_challenges` array includes
+          # this value". Resolve the real attribute before reading it.
+          if expected.is_a?(String) && field.to_s.end_with?("_include")
+            actual_field = field.to_s.sub("_include", "")
+            Array(@profile&.send(actual_field)).include?(expected)
           else
-            false
+            value = @profile&.send(field)
+
+            case expected
+            when Array
+              Array(value).any? { |v| expected.include?(v) }
+            when String
+              value.to_s == expected
+            else
+              false
+            end
           end
         end
       end

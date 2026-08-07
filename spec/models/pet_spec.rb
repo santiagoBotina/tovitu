@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Pet, type: :model do
   describe "associations" do
-    it { is_expected.to belong_to(:shelter).touch(true) }
+    it { is_expected.to belong_to(:shelter).optional.touch(true) }
     it { is_expected.to have_many(:adoption_applications).dependent(:restrict_with_error) }
     it { is_expected.to have_many_attached(:photos) }
   end

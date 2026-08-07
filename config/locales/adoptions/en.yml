@@ -459,10 +459,17 @@ en:
         submitted: Submitted %{date}
         pet_section: Pet Information
         adopter_section: Adopter Profile
+        member_since: Member since %{date}
+        no_profile: This adopter hasn't completed their profile yet.
+        no_profile_hint: You can still reach out if you have questions before making a decision.
+        answers_title: Their Answers
+        answers_empty: No additional answers were provided with this request.
+        weekend: Typical Weekend
         timeline_section: Timeline
-        actions: Actions
+        actions: Respond to This Request
+        actions_hint: Accepting places the pet on hold. Declining lets you share a reason with the adopter.
         mark_validation: Mark as In Validation
-        accept: Accept
+        accept: Accept Request
         decline: Decline
         confirm_validation: Mark this request as in validation? The adopter will be notified.
         confirm_accept: Accept this adoption request? This will put the pet on hold.

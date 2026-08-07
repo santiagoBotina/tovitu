@@ -24,6 +24,9 @@ node_modules/
 # TailwindCSS build output
 app/assets/builds/
 
+# Precompiled assets (build output — deployment is decoupled, regenerate as needed)
+/public/assets/
+
 # IDE
 .idea/
 .vscode/

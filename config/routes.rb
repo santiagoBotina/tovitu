@@ -99,6 +99,10 @@ Rails.application.routes.draw do
       resources :rag_queries, only: [ :create ], controller: "ai/rag_queries"
     end
 
+    resources :adoption_applications, only: [] do
+      resources :rag_queries, only: [ :create ], controller: "ai/rag_queries"
+    end
+
     namespace :shelter do
       resources :pets do
         member do

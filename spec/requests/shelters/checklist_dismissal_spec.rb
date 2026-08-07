@@ -2,7 +2,9 @@ require "rails_helper"
 
 RSpec.describe "Shelter Dashboard Checklist Dismissal" do
   let(:shelter) { create(:shelter) }
-  let(:user) { create(:user, :verified, :onboarding_completed, shelter: shelter) }
+  # Admin-only: only shelter admins can dismiss/restore the checklist, matching
+  # the admin-only model for shelter-level settings.
+  let(:user) { create(:user, :verified, :onboarding_completed, :shelter_admin, shelter: shelter) }
 
   before do
     post session_path, params: { session: { email: user.email, password: "password123" } }
@@ -49,6 +51,19 @@ RSpec.describe "Shelter Dashboard Checklist Dismissal" do
     end
   end
 
+  describe "dismissing an incomplete checklist" do
+    it "redirects with an alert and does not set the dismissed timestamp" do
+      create(:pet, shelter: shelter) # one step done, five remaining
+
+      expect {
+        post dismiss_checklist_shelter_dashboard_path(shelter_id: shelter)
+      }.not_to change { shelter.reload.checklist_dismissed_at }
+
+      expect(response).to redirect_to(shelter_dashboard_path(shelter_id: shelter))
+      expect(flash[:alert]).to eq(I18n.t("errors.shelters.checklist_not_complete"))
+    end
+  end
+
   describe "restoring the checklist" do
     it "clears dismissal and renders the checklist again" do
       complete_checklist!
@@ -66,6 +81,21 @@ RSpec.describe "Shelter Dashboard Checklist Dismissal" do
     end
   end
 
+  describe "dismissed then incomplete again" do
+    it "keeps the checklist hidden and shows the restore affordance as a nudge" do
+      complete_checklist!
+      shelter.update!(checklist_dismissed_at: Time.current)
+      # Undo the profile step so the shelter is no longer fully onboarded.
+      # Dismissal is sticky (product decision): the checklist stays hidden, but
+      # the restore link remains as the nudge back to completion.
+      shelter.update!(description: nil)
+
+      get shelter_dashboard_path(shelter_id: shelter)
+      expect(response.body).not_to include(I18n.t("shelters.dashboard.show.onboarding.title"))
+      expect(response.body).to include(I18n.t("shelters.dashboard.show.onboarding.restore"))
+    end
+  end
+
   describe "authorization" do
     it "rejects non-members from dismissing the checklist" do
       complete_checklist!
@@ -79,6 +109,31 @@ RSpec.describe "Shelter Dashboard Checklist Dismissal" do
       post dismiss_checklist_shelter_dashboard_path(shelter_id: shelter)
       expect(response).to redirect_to(root_path)
       expect(shelter.reload.checklist_dismissed_at).to be_nil
+    end
+
+    it "rejects staff members from dismissing the checklist" do
+      complete_checklist!
+
+      delete session_path
+      staff = create(:user, :verified, shelter: shelter, role: "staff")
+      post session_path, params: { session: { email: staff.email, password: "password123" } }
+
+      post dismiss_checklist_shelter_dashboard_path(shelter_id: shelter)
+      expect(response).to redirect_to(root_path)
+      expect(shelter.reload.checklist_dismissed_at).to be_nil
+    end
+
+    it "rejects non-members from restoring the checklist" do
+      complete_checklist!
+      shelter.update!(checklist_dismissed_at: Time.current)
+
+      delete session_path
+      outsider = create(:user, :verified)
+      post session_path, params: { session: { email: outsider.email, password: "password123" } }
+
+      delete restore_checklist_shelter_dashboard_path(shelter_id: shelter)
+      expect(response).to redirect_to(root_path)
+      expect(shelter.reload.checklist_dismissed_at).not_to be_nil
     end
   end
 end

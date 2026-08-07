@@ -29,7 +29,7 @@ es:
       sign_out: "Cerrar sesión"
       sign_out_confirm: "¿Estás seguro de que quieres cerrar sesión?"
     confirm_modal:
-      confirm: "Cerrar sesión"
+      confirm: "Confirmar"
       cancel: "Cancelar"
     navbar:
       toggle_sidebar: "Alternar menú lateral"
@@ -536,7 +536,7 @@ es:
       incomplete: "Por favor completa tu perfil antes de continuar."
       already_complete: "¡Tu perfil ya está completo!"
       preferences_updated: "Tus preferencias han sido actualizadas."
-      adopter:
+      individual:
         complete: "¡Perfil completo! Comienza a explorar mascotas."
         skipped: "Puedes completar tu perfil en cualquier momento desde la configuración de tu perfil."
       shelter:
@@ -588,6 +588,7 @@ es:
       checklist_not_complete: "Completa todos los pasos de bienvenida antes de ocultar la lista de verificación."
     onboarding:
       invalid_question: "Número de pregunta inválido"
+      answer_too_long: "La respuesta es demasiado larga (máximo %{max_length} caracteres)"
       no_profile: "Perfil no encontrado"
       incomplete: "Por favor responde todas las preguntas antes de completar. Faltan: %{questions}"
   ai:

@@ -50,7 +50,7 @@ class DashboardController < ApplicationController
     base += 20 if @total_requests_count > 0
     base += 15 if @adoption_requests.any? { |r| %w[pending in_validation].include?(r.status) }
     saved_count = current_user.saved_pets.count
-    base += [saved_count * 8, 25].min
-    [base, 100].min
+    base += [ saved_count * 8, 25 ].min
+    [ base, 100 ].min
   end
 end

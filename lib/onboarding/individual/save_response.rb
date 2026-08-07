@@ -22,6 +22,11 @@ module Onboarding
         field = QUESTION_FIELDS[@question_number]
         return Result.failure([ I18n.t("errors.onboarding.invalid_question") ]) unless field
 
+        question = Onboarding::Individual::QuestionsData.find(@question_number)
+        if question[:type] == "text" && question[:max_length] && @answer.to_s.length > question[:max_length]
+          return Result.failure([ I18n.t("errors.onboarding.answer_too_long", max_length: question[:max_length]) ])
+        end
+
         profile = @user.individual_profile || @user.build_individual_profile
         profile[field] = coerce_answer(field, @answer)
         profile.onboarding_step = [ @question_number, profile.onboarding_step.to_i ].max

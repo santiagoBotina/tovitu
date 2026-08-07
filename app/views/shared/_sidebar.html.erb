@@ -100,7 +100,7 @@
           aria: { current: my_pets_active ? "page" : nil } do %>
         <div class="shrink-0 w-5 h-5 flex items-center justify-center">
           <svg class="w-5 h-5 #{my_pets_active ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
           </svg>
         </div>
         <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.my_pets") %></span>

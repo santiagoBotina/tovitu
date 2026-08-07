@@ -1,7 +1,7 @@
 class AdoptionRequestsController < ApplicationController
-  before_action :require_authentication, only: [:index, :show, :new, :create, :withdraw]
-  before_action :require_onboarding_complete, only: [:new, :create]
-  before_action :set_request, only: [:show, :withdraw]
+  before_action :require_authentication, only: [ :index, :show, :new, :create, :withdraw ]
+  before_action :require_onboarding_complete, only: [ :new, :create ]
+  before_action :set_request, only: [ :show, :withdraw ]
 
   def index
     authorize AdoptionRequest

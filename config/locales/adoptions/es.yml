@@ -1,0 +1,73 @@
+es:
+  shelter:
+    adoption_requests:
+      index:
+        title: Solicitudes de Adopción
+        subtitle: Revisa y gestiona las solicitudes de adopción de tu refugio
+        filters:
+          all: Todas
+        table:
+          pet: Mascota
+          adopter: Adoptante
+          status: Estado
+          submitted: Enviada
+          actions: Acciones
+          view: Ver
+        empty_title: Aún no hay solicitudes de adopción
+        empty_body: Las solicitudes de adopción de posibles adoptantes aparecerán aquí.
+        empty_filter_title: Ninguna solicitud coincide con este filtro
+        empty_filter_body: Intenta seleccionar un filtro de estado diferente.
+
+      show:
+        back_to_requests: ← Volver a Solicitudes
+        title: Solicitud para %{pet_name}
+        submitted: Enviada el %{date}
+        pet_section: Información de la Mascota
+        adopter_section: Perfil del Adoptante
+        member_since: Miembro desde %{date}
+        no_profile: Este adoptante aún no ha completado su perfil.
+        no_profile_hint: Aún puedes contactarlo si tienes preguntas antes de tomar una decisión.
+        answers_title: Sus Respuestas
+        answers_empty: No se proporcionaron respuestas adicionales con esta solicitud.
+        weekend: Fin de Semana Típico
+        timeline_section: Cronología
+        actions: Responder a esta Solicitud
+        actions_hint: Aceptar pone a la mascota en espera. Declinar te permite compartir un motivo con el adoptante.
+        mark_validation: Marcar en Validación
+        accept: Aceptar Solicitud
+        decline: Declinar
+        confirm_validation: ¿Marcar esta solicitud como en validación? Se notificará al adoptante.
+        confirm_accept: ¿Aceptar esta solicitud de adopción? Esto pondrá a la mascota en espera.
+        unknown_breed: Raza desconocida
+        age: Edad
+        size: Tamaño
+        sex: Sexo
+        status_label: Estado
+        personality: Personalidad
+        activity: Nivel de Actividad
+        experience: Experiencia con Mascotas
+        daily_time: Tiempo Diario Disponible
+        ideal_companion: Compañero Ideal
+        goals: Metas de Adopción
+        view_full_profile: Ver Perfil Completo
+        decline_reasons: Motivos de Declinación
+      no_events: Aún no hay eventos en la cronología.
+      manage: Gestionar Solicitud
+      withdraw_hint: Si cambiaste de opinión, puedes retirar esta solicitud.
+      withdraw: Retirar Solicitud
+      confirm_withdraw: ¿Estás seguro de que deseas retirar esta solicitud de adopción? Esta acción no se puede deshacer.
+      additional_info: Información Adicional
+
+      decisions:
+        new:
+          back: ← Volver a la Solicitud
+          title: Declinar Solicitud de Adopción
+          subtitle: Proporciona motivo(s) para declinar la solicitud de %{adopter_name} para %{pet_name}
+          select_reasons: "Selecciona motivo(s):"
+          custom_reason_label: O agrega un motivo personalizado
+          custom_reason_placeholder: Escribe tu motivo...
+          custom_reason_hint: Esto se mostrará al adoptante junto con los motivos seleccionados.
+          submit: Enviar Declinación
+          processing: Procesando...
+          cancel: Cancelar
+          declined_submit: Enviar Declinación

@@ -76,6 +76,33 @@ RSpec.describe Shelters::OnboardingChecklist do
       shelter.update!(checklist_dismissed_at: Time.current)
       expect(checklist).to be_dismissed
     end
+
+    # Product decision: dismissal is sticky. If a fully onboarded shelter later
+    # becomes incomplete again, the checklist stays hidden and the dashboard
+    # keeps the restore affordance as a nudge — we never auto-restore.
+    it "stays dismissed when the shelter later becomes incomplete again" do
+      create(:pet, shelter: shelter)
+      create(:user, :verified, shelter: shelter, role: "staff")
+      shelter.update!(
+        adoption_policies: { "adoption_fee" => "150" },
+        hours: "Mon-Fri 9-5",
+        description: "A great place for pets",
+        checklist_dismissed_at: Time.current
+      )
+      # The only staff member leaves, undoing the staff step.
+      shelter.users.undiscarded.where(role: "staff").delete_all
+
+      expect(checklist).not_to be_completed
+      expect(checklist).to be_dismissed
+    end
+  end
+
+  describe "step key parity with the dashboard presenter" do
+    it "exposes the same step keys as ShelterPresenter::STEPS_CONFIG" do
+      expect(described_class::STEPS.map { |step| step[:key] }).to eq(
+        ShelterPresenter::STEPS_CONFIG.map { |step| step[:key] }
+      )
+    end
   end
 
   describe "unknown step key" do

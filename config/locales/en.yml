@@ -29,7 +29,7 @@ en:
       sign_out: "Sign out"
       sign_out_confirm: "Are you sure you want to sign out?"
     confirm_modal:
-      confirm: "Sign out"
+      confirm: "Confirm"
       cancel: "Cancel"
     navbar:
       toggle_sidebar: "Toggle sidebar"
@@ -543,9 +543,6 @@ en:
       individual:
         complete: "Profile complete! Start exploring pets."
         skipped: "You can complete your profile anytime from your profile settings."
-      adopter:
-        complete: "Profile complete! Start exploring pets."
-        skipped: "You can complete your profile anytime from your profile settings."
       shelter:
         complete: "Profile complete! Let's set up your shelter."
         skipped: "You can complete your profile anytime from your profile settings."
@@ -595,6 +592,7 @@ en:
       checklist_not_complete: "Complete every onboarding step before hiding the checklist."
     onboarding:
       invalid_question: "Invalid question number"
+      answer_too_long: "Answer is too long (maximum %{max_length} characters)"
       no_profile: "Profile not found"
       incomplete: "Please answer all questions before completing. Missing: %{questions}"
   ai:

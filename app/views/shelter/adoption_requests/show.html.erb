@@ -8,7 +8,7 @@
 
   <%# ─── Request Header Card ─── %>
   <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6 bento-enter bento-enter-d2">
-    <div class="flex items-start justify-between">
+    <div class="flex items-start justify-between gap-4 flex-wrap">
       <div>
         <h1 class="font-display text-2xl font-bold text-neutral-900"><%= t(".title", pet_name: @pet.name) %></h1>
         <p class="text-neutral-500 text-sm mt-1"><%= t(".submitted", date: l(@request.created_at.to_date, format: :long)) %></p>
@@ -26,7 +26,7 @@
         <div class="flex items-center gap-4">
           <div class="w-16 h-16 rounded-xl bg-neutral-100 overflow-hidden shrink-0 shadow-sm">
             <% if @pet.primary_photo.present? %>
-              <%= image_tag @pet.primary_photo.url(variant: :medium), alt: @pet.name, class: "w-full h-full object-cover" %>
+              <%= image_tag @pet.primary_photo.variant(resize_to_limit: [400, 400]), alt: @pet.name, class: "w-full h-full object-cover" %>
             <% else %>
               <div class="w-full h-full flex items-center justify-center bg-primary-50">
                 <svg class="w-8 h-8 text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +56,7 @@
             </div>
           </div>
         <% end %>
-        <%= link_to shelter_pet_path(@pet), class: "text-primary-500 text-sm font-medium hover:underline transition-colors" do %>
+        <%= link_to shelter_pet_path(@pet, back_to: shelter_adoption_request_path(@request)), class: "text-primary-500 text-sm font-medium hover:underline transition-colors" do %>
           <%= t(".view_full_profile") %> →
         <% end %>
       </div>
@@ -65,46 +65,118 @@
     <%# ─── Adopter Section Card ─── %>
     <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d4">
       <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".adopter_section") %></h2>
-      <div class="space-y-3">
-        <div>
-          <h3 class="font-bold text-neutral-900"><%= @adopter.name %></h3>
-          <% if @profile&.adoption_priority.present? %>
-            <p class="text-sm text-neutral-600 italic mt-1">"<%= @profile.adoption_priority %>"</p>
-          <% end %>
-        </div>
-        <div class="grid grid-cols-2 gap-2 text-sm pt-2 border-t border-neutral-100">
-          <% if @profile&.personality.present? %>
-            <div><span class="text-neutral-500"><%= t(".personality") %>:</span> <%= t("onboarding.individual.questions.q7.options.#{@profile.personality}") %></div>
-          <% end %>
-          <% if @profile&.activity_level.present? %>
-            <div><span class="text-neutral-500"><%= t(".activity") %>:</span> <%= t("onboarding.individual.questions.q2.options.#{@profile.activity_level}") %></div>
-          <% end %>
-          <% if @profile&.pet_experience.present? %>
-            <div><span class="text-neutral-500"><%= t(".experience") %>:</span> <%= t("onboarding.individual.questions.q4.options.#{@profile.pet_experience}") %></div>
-          <% end %>
-          <% if @profile&.daily_time_available.present? %>
-            <div><span class="text-neutral-500"><%= t(".daily_time") %>:</span> <%= t("onboarding.individual.questions.q6.options.#{@profile.daily_time_available}") %></div>
-          <% end %>
-          <% if @profile&.ideal_companion.present? %>
-            <div><span class="text-neutral-500"><%= t(".ideal_companion") %>:</span> <%= t("onboarding.individual.questions.q3.options.#{@profile.ideal_companion}") %></div>
-          <% end %>
-        </div>
-        <% if @profile&.adoption_goals.present? && @profile.adoption_goals.any? %>
-          <div>
-            <p class="text-sm text-neutral-500 mb-1"><%= t(".goals") %>:</p>
-            <div class="flex flex-wrap gap-1">
-              <% @profile.adoption_goals.each do |goal| %>
-                <span class="px-2 py-0.5 bg-secondary-50 text-secondary-600 text-xs rounded-full"><%= t("onboarding.individual.questions.q5.options.#{goal}") %></span>
-              <% end %>
+
+      <% if @profile.present? %>
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white text-lg font-bold shadow-sm shrink-0" aria-hidden="true">
+              <%= @adopter.name.split.map(&:first).join.upcase[0, 2] %>
+            </div>
+            <div class="min-w-0">
+              <h3 class="font-bold text-neutral-900 truncate"><%= @adopter.name %></h3>
+              <p class="text-sm text-neutral-500 truncate"><%= @adopter.email %></p>
+              <p class="text-xs text-neutral-400"><%= t(".member_since", date: l(@adopter.created_at.to_date, format: :long)) %></p>
             </div>
           </div>
-        <% end %>
-      </div>
+
+          <% if @profile.adoption_priority.present? %>
+            <blockquote class="pl-4 pr-3 py-2 border-l-4 border-primary-200 bg-primary-50/50 rounded-r-xl text-sm text-neutral-700 italic">
+              "<%= @profile.adoption_priority %>"
+            </blockquote>
+          <% end %>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 pt-4 border-t border-neutral-100">
+            <% if @profile.personality.present? %>
+              <div>
+                <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-0.5"><%= t(".personality") %></p>
+                <p class="text-sm font-medium text-neutral-800"><%= t("onboarding.individual.questions.q7.options.#{@profile.personality}") %></p>
+              </div>
+            <% end %>
+            <% if @profile.activity_level.present? %>
+              <div>
+                <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-0.5"><%= t(".activity") %></p>
+                <p class="text-sm font-medium text-neutral-800"><%= t("onboarding.individual.questions.q2.options.#{@profile.activity_level}") %></p>
+              </div>
+            <% end %>
+            <% if @profile.pet_experience.present? %>
+              <div>
+                <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-0.5"><%= t(".experience") %></p>
+                <p class="text-sm font-medium text-neutral-800"><%= t("onboarding.individual.questions.q4.options.#{@profile.pet_experience}") %></p>
+              </div>
+            <% end %>
+            <% if @profile.daily_time_available.present? %>
+              <div>
+                <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-0.5"><%= t(".daily_time") %></p>
+                <p class="text-sm font-medium text-neutral-800"><%= t("onboarding.individual.questions.q6.options.#{@profile.daily_time_available}") %></p>
+              </div>
+            <% end %>
+            <% if @profile.ideal_companion.present? %>
+              <div class="sm:col-span-2">
+                <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-0.5"><%= t(".ideal_companion") %></p>
+                <p class="text-sm font-medium text-neutral-800"><%= t("onboarding.individual.questions.q3.options.#{@profile.ideal_companion}") %></p>
+              </div>
+            <% end %>
+          </div>
+
+          <% if @profile.weekend_activity.present? && @profile.weekend_activity.any? %>
+            <div>
+              <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-1.5"><%= t(".weekend") %></p>
+              <div class="flex flex-wrap gap-1.5">
+                <% @profile.weekend_activity.each do |item| %>
+                  <span class="px-2.5 py-1 bg-primary-50 text-primary-700 text-xs font-medium rounded-full"><%= t("onboarding.individual.questions.q1.options.#{item}") %></span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <% if @profile.adoption_goals.present? && @profile.adoption_goals.any? %>
+            <div>
+              <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-1.5"><%= t(".goals") %></p>
+              <div class="flex flex-wrap gap-1.5">
+                <% @profile.adoption_goals.each do |goal| %>
+                  <span class="px-2.5 py-1 bg-secondary-50 text-secondary-700 text-xs font-medium rounded-full"><%= t("onboarding.individual.questions.q5.options.#{goal}") %></span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-10">
+          <div class="w-12 h-12 mx-auto mb-3 rounded-xl bg-neutral-100 flex items-center justify-center" aria-hidden="true">
+            <svg class="w-6 h-6 text-neutral-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
+            </svg>
+          </div>
+          <p class="text-sm font-medium text-neutral-700"><%= t(".no_profile") %></p>
+          <p class="text-xs text-neutral-500 mt-1 max-w-xs mx-auto"><%= t(".no_profile_hint") %></p>
+        </div>
+      <% end %>
     </section>
   </div>
 
-  <%# ─── Timeline Card ─── %>
+  <%# ─── Adopter's Answers Card ─── %>
+  <% answers = @request.additional_answers.to_h.with_indifferent_access %>
+  <% answered = %w[interest_reason home_description current_pets_details something_else].select { |key| answers[key].present? } %>
   <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6 bento-enter bento-enter-d5">
+    <h2 class="font-display text-lg font-bold text-neutral-800 mb-1"><%= t(".answers_title", name: @adopter.name) %></h2>
+    <% if answered.any? %>
+      <div class="space-y-3 mt-4">
+        <% answered.each do |key| %>
+          <div class="bg-neutral-50 rounded-xl border border-neutral-100 p-4">
+            <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-1.5">
+              <%= t("adoption_requests.additional_questions.#{key}", pet_name: @pet.name) %>
+            </p>
+            <p class="text-sm text-neutral-800 whitespace-pre-wrap"><%= answers[key] %></p>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-sm text-neutral-500 mt-2"><%= t(".answers_empty") %></p>
+    <% end %>
+  </section>
+
+  <%# ─── Timeline Card ─── %>
+  <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6 bento-enter bento-enter-d6">
     <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".timeline_section") %></h2>
     <% if @timeline.any? %>
       <div class="relative">
@@ -160,25 +232,37 @@
 
   <%# ─── Decision Actions Card ─── %>
   <% if @request.available_for_review? %>
-    <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d6">
-      <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".actions") %></h2>
+    <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d7">
+      <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".actions") %></h2>
+      <p class="text-sm text-neutral-500 mt-1 mb-4"><%= t(".actions_hint") %></p>
       <div class="flex flex-wrap gap-3">
         <% unless @request.in_validation? %>
           <%= button_to shelter_adoption_request_decision_path(@request, decision: "in_validation"),
                         method: :post,
                         data: { turbo_confirm: t(".confirm_validation") },
-                        class: "px-6 py-3 bg-info hover:bg-info/90 text-white font-semibold rounded-xl transition-all duration-200 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-info focus-visible:ring-offset-2 shadow-sm" do %>
+                        class: "inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-info/40 text-info font-medium text-sm rounded-xl hover:bg-info hover:border-info hover:text-white transition-all duration-200 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-info focus-visible:ring-offset-2 shadow-sm" do %>
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 12h6m-6 4h3m-8-8.5A2.5 2.5 0 0 1 6.5 5h1.586a1 1 0 0 0 .707-.293l1.414-1.414A1 1 0 0 1 10.914 3h2.172a1 1 0 0 1 .707.293l1.414 1.414A1 1 0 0 0 15.914 5h1.586A2.5 2.5 0 0 1 20 7.5v0A2.5 2.5 0 0 1 17.5 10H6.5A2.5 2.5 0 0 1 4 7.5v0A2.5 2.5 0 0 1 6.5 5Z"/>
+              <path d="M4 10v8.5A2.5 2.5 0 0 0 6.5 21h11a2.5 2.5 0 0 0 2.5-2.5V10"/>
+              <path d="m9.25 15.5 1.5 1.5 3-3.5"/>
+            </svg>
             <%= t(".mark_validation") %>
           <% end %>
         <% end %>
         <%= button_to shelter_adoption_request_decision_path(@request, decision: "accepted"),
                       method: :post,
                       data: { turbo_confirm: t(".confirm_accept") },
-                      class: "px-6 py-3 bg-secondary-500 hover:bg-secondary-600 text-white font-semibold rounded-xl transition-all duration-200 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 shadow-sm" do %>
+                      class: "inline-flex items-center gap-2 px-4 py-2.5 bg-secondary-500 hover:bg-secondary-600 text-white font-semibold text-sm rounded-xl transition-all duration-200 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 shadow-sm" do %>
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/>
+          </svg>
           <%= t(".accept") %>
         <% end %>
         <%= link_to new_shelter_adoption_request_decision_path(@request, decision: "declined"),
-                    class: "px-6 py-3 bg-danger hover:bg-danger/90 text-white font-semibold rounded-xl transition-all duration-200 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-danger focus-visible:ring-offset-2 shadow-sm" do %>
+                    class: "inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-danger/40 text-danger font-medium text-sm rounded-xl hover:bg-danger/5 hover:border-danger/60 transition-all duration-200 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-danger focus-visible:ring-offset-2 shadow-sm" do %>
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 18 18 6M6 6l12 12"/>
+          </svg>
           <%= t(".decline") %>
         <% end %>
       </div>

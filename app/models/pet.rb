@@ -1,7 +1,7 @@
 class Pet < ApplicationRecord
   include Discard::Model
 
-  belongs_to :shelter, optional: true
+  belongs_to :shelter, optional: true, touch: true
   belongs_to :publisher, class_name: "User", optional: true
 
   delegate :ai_features_enabled?, to: :shelter, allow_nil: true

@@ -14,6 +14,12 @@ RSpec.describe "Registrations" do
       get new_registration_path
       expect(response).to redirect_to(user_dashboard_path)
     end
+
+    it "renders the individual variant for the deprecated adopter role param" do
+      get new_registration_path, params: { role: "adopter" }
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("authentication.registrations.new.title_individual"))
+    end
   end
 
   describe "POST /registration" do
@@ -49,9 +55,25 @@ RSpec.describe "Registrations" do
         expect(response).to redirect_to(check_email_registration_path)
       end
 
-      it "sets adopter role by default" do
+      it "sets individual role by default" do
         post registration_path, params: valid_params
-        expect(User.last.role).to eq("adopter")
+        expect(User.last.role).to eq("individual")
+      end
+    end
+
+    context "with the deprecated adopter role" do
+      it "registers the user as an individual" do
+        post registration_path, params: {
+          user: {
+            name: "Jane Doe",
+            email: "jane@example.com",
+            password: "password123",
+            password_confirmation: "password123",
+            role: "adopter"
+          }
+        }
+        expect(response).to redirect_to(check_email_registration_path)
+        expect(User.last.role).to eq("individual")
       end
     end
 

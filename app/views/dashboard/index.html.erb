@@ -186,7 +186,7 @@
               <div class="group card-lift">
                 <%= link_to pet_path(pet), class: "block" do %>
                   <div class="relative rounded-xl overflow-hidden bg-neutral-100 aspect-[16/10] mb-3">
-                    <% if pet.primary_photo&.attached? %>
+                    <% if pet.primary_photo.present? %>
                       <%= image_tag pet.primary_photo.variant(resize_to_limit: [500, 350]),
                           class: "w-full h-full object-cover image-reveal group-hover:scale-105 transition-transform duration-500",
                           alt: pet.name %>
@@ -267,7 +267,7 @@
             <% @published_pets.first(3).each do |pet| %>
               <div class="flex items-center gap-3 p-3 rounded-xl bg-neutral-50">
                 <div class="shrink-0 w-10 h-10 rounded-lg overflow-hidden bg-neutral-200">
-                  <% if pet.primary_photo&.attached? %>
+                  <% if pet.primary_photo.present? %>
                     <%= image_tag pet.primary_photo.variant(resize_to_limit: [40, 40]), class: "w-full h-full object-cover", alt: pet.name %>
                   <% else %>
                     <div class="w-full h-full flex items-center justify-center text-neutral-500 text-xs font-bold"><%= pet.name.first.upcase %></div>
@@ -333,7 +333,7 @@
 
               <%= link_to adoption_request_path(req), class: "group flex items-center gap-3 p-3 -mx-2 rounded-xl hover:bg-neutral-50 transition-all duration-200 card-lift" do %>
                 <div class="shrink-0 w-11 h-11 rounded-xl overflow-hidden bg-neutral-100 flex items-center justify-center shadow-sm">
-                  <% if pet&.primary_photo&.attached? %>
+                  <% if pet&.primary_photo.present? %>
                     <%= image_tag pet.primary_photo.variant(resize_to_limit: [44, 44]),
                         class: "w-full h-full object-cover image-reveal",
                         alt: pet.name %>

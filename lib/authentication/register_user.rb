@@ -7,7 +7,10 @@ module Authentication
       @email = email
       @password = password
       @password_confirmation = password_confirmation
-      @role = role
+      # "adopter" is a deprecated alias for "individual". Normalize it so
+      # legacy bookmarks / links (`?role=adopter`) register an individual
+      # account instead of failing the role validation.
+      @role = role.to_s == "adopter" ? "individual" : role
       @locale = locale
     end
 

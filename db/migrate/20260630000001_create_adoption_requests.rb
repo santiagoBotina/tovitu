@@ -16,7 +16,7 @@ class CreateAdoptionRequests < ActiveRecord::Migration[8.1]
     end
 
     add_index :adoption_requests, :status
-    add_index :adoption_requests, [:adopter_id, :pet_id],
+    add_index :adoption_requests, [ :adopter_id, :pet_id ],
               unique: true,
               where: "status != 'declined'",
               name: "idx_adoption_requests_active_unique"

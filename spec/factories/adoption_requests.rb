@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :adoption_request do
     association :pet
-    association :adopter, factory: [:user, :verified, :onboarding_completed]
+    association :adopter, factory: [ :user, :verified, :onboarding_completed ]
     shelter { pet.shelter }
 
     status { "pending" }

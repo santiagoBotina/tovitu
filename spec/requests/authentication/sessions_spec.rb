@@ -2,17 +2,15 @@ require "rails_helper"
 
 RSpec.describe "Sessions" do
   describe "GET /login/adopter" do
-    it "renders the login form" do
-      get login_adopter_path
-      expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Log in")
+    it "permanently redirects to the individual login (locale preserved)" do
+      get login_adopter_path(locale: :en)
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response).to redirect_to("/en/login/individual")
     end
 
-    it "redirects to root if already logged in" do
-      user = create(:user, :verified, :onboarding_completed)
-      post session_path, params: { session: { email: user.email, password: "password123" } }
-      get login_adopter_path
-      expect(response).to redirect_to(user_dashboard_path)
+    it "permanently redirects preserving a non-default locale" do
+      get login_adopter_path(locale: :es)
+      expect(response).to redirect_to("/es/login/individual")
     end
   end
 

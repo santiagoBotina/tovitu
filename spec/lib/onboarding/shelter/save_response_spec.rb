@@ -42,5 +42,24 @@ RSpec.describe Onboarding::Shelter::SaveResponse do
         expect(result.data[:complete]).to be true
       end
     end
+
+    context "with a text answer longer than the question max_length" do
+      it "rejects without saving" do
+        result = described_class.call(user: user, question_number: 7, answer: "x" * 201)
+        expect(result).to be_failure
+        expect(user.shelter_profile).to be_nil
+      end
+
+      it "accepts an answer at exactly max_length" do
+        result = described_class.call(user: user, question_number: 7, answer: "x" * 200)
+        expect(result).to be_success
+        expect(user.shelter_profile.approval_philosophy).to eq("x" * 200)
+      end
+
+      it "returns the localized error message" do
+        result = described_class.call(user: user, question_number: 7, answer: "x" * 201)
+        expect(result.errors).to include(I18n.t("errors.onboarding.answer_too_long", max_length: 200))
+      end
+    end
   end
 end

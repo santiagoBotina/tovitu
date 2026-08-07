@@ -5,6 +5,7 @@ RSpec.describe AdoptionRequest, type: :model do
     it { is_expected.to belong_to(:pet) }
     it { is_expected.to belong_to(:adopter).class_name("User") }
     it { is_expected.to belong_to(:shelter).optional }
+    it { is_expected.to belong_to(:reviewed_by).class_name("User").optional }
     it { is_expected.to have_many(:timeline_events).class_name("AdoptionRequestTimelineEvent").dependent(:destroy) }
   end
 

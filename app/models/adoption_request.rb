@@ -2,6 +2,7 @@ class AdoptionRequest < ApplicationRecord
   belongs_to :pet
   belongs_to :adopter, class_name: "User"
   belongs_to :shelter, optional: true
+  belongs_to :reviewed_by, class_name: "User", optional: true
   has_many :timeline_events, class_name: "AdoptionRequestTimelineEvent", dependent: :destroy
 
   enum :status, { pending: "pending", in_validation: "in_validation",
@@ -10,9 +11,9 @@ class AdoptionRequest < ApplicationRecord
 
   validates :adopter_id, uniqueness: { scope: :pet_id,
     message: ->(obj, data) { I18n.t("adoptions.requests.errors.duplicate") },
-    conditions: -> { where.not(status: [:declined, :withdrawn]) } }
+    conditions: -> { where.not(status: [ :declined, :withdrawn ]) } }
 
-  scope :active, -> { where.not(status: [:declined, :withdrawn]) }
+  scope :active, -> { where.not(status: [ :declined, :withdrawn ]) }
   scope :by_shelter, ->(shelter_id) { where(shelter_id: shelter_id) }
   scope :by_adopter, ->(adopter_id) { where(adopter_id: adopter_id) }
   scope :by_status, ->(status) { where(status: status) if status.present? }
@@ -65,7 +66,7 @@ class AdoptionRequest < ApplicationRecord
     ActionController::Base.render(
       partial: "adoption_requests/status_badge",
       locals: { status: status },
-      formats: [:html]
+      formats: [ :html ]
     )
   end
 

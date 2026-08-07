@@ -8,7 +8,7 @@ RSpec.describe Authentication::RegisterUser do
         email: "jane@example.com",
         password: "password123",
         password_confirmation: "password123",
-        role: "adopter"
+        role: "individual"
       }
     end
 
@@ -26,7 +26,7 @@ RSpec.describe Authentication::RegisterUser do
       result = described_class.call(**valid_params)
       expect(result.data[:name]).to eq("Jane Doe")
       expect(result.data[:email]).to eq("jane@example.com")
-      expect(result.data[:role]).to eq("adopter")
+      expect(result.data[:role]).to eq("individual")
       expect(result.data[:verified]).to be false
     end
 
@@ -44,6 +44,16 @@ RSpec.describe Authentication::RegisterUser do
       it "returns failure" do
         result = described_class.call(**valid_params.merge(role: "invalid"))
         expect(result).to be_failure
+      end
+    end
+
+    context "with the deprecated adopter role" do
+      it "normalizes it to an individual account" do
+        result = described_class.call(**valid_params.merge(role: "adopter"))
+        expect(result).to be_success
+        expect(result.data[:role]).to eq("individual")
+        expect(User.last.role).to eq("individual")
+        expect(User.last).to be_individual
       end
     end
 

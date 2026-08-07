@@ -4,7 +4,7 @@ mode: primary
 temperature: 0.1
 permission:
   edit: allow
-  bash: deny
+  bash: allow
 ---
 
 # Spec Agent

@@ -53,7 +53,7 @@ gem "httparty"      # HTTP client for AI API calls
 # S3-compatible storage adapter (required for Cloudflare R2, MinIO, LocalStack)
 gem "aws-sdk-s3", require: false
 
-gem 'discard', '~> 1.3'
+gem "discard", "~> 1.3"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

@@ -112,9 +112,15 @@ RSpec.describe "Notifications" do
       }.to change { user.notifications.unread.count }.from(3).to(0)
     end
 
-    it "redirects back" do
+    it "redirects back for HTML requests" do
       patch mark_all_read_notifications_path
       expect(response).to have_http_status(:redirect)
+    end
+
+    it "returns the remaining unread count as JSON when the client requests JSON" do
+      patch mark_all_read_notifications_path, headers: { accept: "application/json" }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq({ "count" => 0 })
     end
   end
 

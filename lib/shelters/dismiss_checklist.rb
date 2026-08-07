@@ -4,6 +4,13 @@ module Shelters
   # Guarded: the checklist can only be dismissed once every step is done, so a
   # partially onboarded shelter can never lose the checklist that drives them
   # to completion.
+  #
+  # Product decision: dismissal is sticky. If a fully onboarded shelter later
+  # becomes incomplete again (e.g. its only staff member is removed), the
+  # checklist stays hidden and the dashboard keeps showing the restore
+  # affordance as a nudge back to completion — we never auto-restore, because
+  # dismissing was an explicit admin choice and the restore link is always one
+  # click away.
   class DismissChecklist < ApplicationService
     def initialize(shelter:)
       @shelter = shelter

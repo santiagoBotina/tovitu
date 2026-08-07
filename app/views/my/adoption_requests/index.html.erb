@@ -44,7 +44,7 @@
           <div class="flex items-center gap-4">
             <%# ─── Pet Photo ─── %>
             <div class="shrink-0 w-14 h-14 rounded-xl overflow-hidden bg-neutral-100 shadow-sm">
-              <% if req.pet.primary_photo&.attached? %>
+              <% if req.pet.primary_photo.present? %>
                 <%= image_tag req.pet.primary_photo.variant(resize_to_limit: [56, 56]),
                     class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300",
                     alt: req.pet.name %>

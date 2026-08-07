@@ -8,9 +8,9 @@ RSpec.describe NotificationPreference, type: :model do
   describe "validations" do
     subject { build(:notification_preference) }
 
-    it { is_expected.to validate_inclusion_of(:in_app).in_array([true, false]) }
-    it { is_expected.to validate_inclusion_of(:email).in_array([true, false]) }
-    it { is_expected.to validate_inclusion_of(:whatsapp).in_array([true, false]) }
+    it { is_expected.to validate_inclusion_of(:in_app).in_array([ true, false ]) }
+    it { is_expected.to validate_inclusion_of(:email).in_array([ true, false ]) }
+    it { is_expected.to validate_inclusion_of(:whatsapp).in_array([ true, false ]) }
   end
 
   describe "scopes" do

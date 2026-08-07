@@ -10,7 +10,7 @@ RSpec.describe AdoptionApplication, type: :model do
   end
 
   describe "validations" do
-    subject { build(:adoption_application) }
+    subject { create(:adoption_application) }
 
     it { is_expected.to validate_presence_of(:applicant_name) }
     it { is_expected.to validate_presence_of(:applicant_email) }

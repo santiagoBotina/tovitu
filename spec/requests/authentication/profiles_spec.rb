@@ -210,4 +210,56 @@ RSpec.describe "Profiles" do
       end
     end
   end
+
+  describe "Language selector (UI refinement 4.2)" do
+    let(:user) { create(:user, :verified, :onboarding_completed) }
+
+    before do
+      post session_path, params: { session: { email: user.email, password: "password123" } }
+      get edit_profile_path
+    end
+
+    # Locks the progressive-enhancement contract: without JS the page must
+    # still work through the native <select> + Save button, and the custom
+    # control must start hidden and only be revealed by the Stimulus
+    # controller (language_select_controller.js#upgrade).
+    context "no-JS fallback" do
+      it "keeps the native select as the source of truth with both options" do
+        expect(response.body).to include('name="user[locale]"')
+        expect(response.body).to include('<option selected="selected" value="en">')
+        expect(response.body).to include('<option value="es">')
+      end
+
+      it "pre-selects the current locale in the native select" do
+        expect(response.body).to include('<option selected="selected" value="en">')
+        expect(response.body).not_to include('<option selected="selected" value="es">')
+      end
+
+      it "keeps the explicit save button for the no-JS path" do
+        expect(response.body).to include(I18n.t("authentication.profiles.edit.language_save"))
+      end
+
+      it "renders the custom control hidden until JS upgrades it" do
+        expect(response.body).to include('class="hidden" data-language-select-target="control"')
+      end
+
+      it "renders the full custom control markup for the JS path" do
+        expect(response.body).to include('role="combobox"')
+        expect(response.body).to include('aria-expanded="false"')
+        expect(response.body).to include('role="listbox"')
+        expect(response.body).to include('role="option"')
+      end
+    end
+
+    context "when the user's locale is Spanish" do
+      let(:user) { create(:user, :verified, :onboarding_completed, locale: "es") }
+
+      it "pre-selects Spanish in both the native select and the custom control" do
+        expect(response.body).to include('<option selected="selected" value="es">')
+        expect(response.body).to include('id="language-option-es"')
+        expect(response.body).to include('data-value="es"')
+        expect(response.body).to include('aria-selected="true"')
+      end
+    end
+  end
 end

@@ -1,9 +1,9 @@
 class NotificationPreference < ApplicationRecord
   belongs_to :user
 
-  validates :in_app, inclusion: { in: [true, false] }
-  validates :email, inclusion: { in: [true, false] }
-  validates :whatsapp, inclusion: { in: [true, false] }
+  validates :in_app, inclusion: { in: [ true, false ] }
+  validates :email, inclusion: { in: [ true, false ] }
+  validates :whatsapp, inclusion: { in: [ true, false ] }
   validates :whatsapp_phone,
             presence: true,
             if: -> { whatsapp? && whatsapp_verified_at.present? }

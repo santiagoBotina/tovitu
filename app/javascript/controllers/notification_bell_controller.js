@@ -53,17 +53,38 @@ export default class extends Controller {
     fetch(this.markAllReadUrlValue, {
       method: "PATCH",
       headers: { "X-CSRF-Token": this._csrfToken(), "Accept": "application/json" }
-    }).then(() => {
-      this.loadUnreadCount()
-      // Update all items in dropdown to show as read
-      this.dropdownTarget.querySelectorAll(".bg-primary-50\\/30").forEach(el => {
-        el.classList.remove("bg-primary-50/30")
-      })
-      this.dropdownTarget.querySelectorAll(".bg-primary-500").forEach(el => {
-        el.classList.remove("bg-primary-500")
-        el.classList.add("bg-transparent")
-      })
     })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to mark notifications as read (${response.status})`)
+        }
+        return response.json()
+      })
+      .then(data => {
+        // Update the badge directly from the server response so it never
+        // drifts from the actual unread count.
+        this.updateBadge(data.count)
+        this._clearDropdownUnread()
+      })
+      .catch(() => {
+        // If the request failed, don't fake a "cleared" dropdown. Fall back
+        // to polling the count so the badge still reflects reality.
+        this.loadUnreadCount()
+      })
+  }
+
+  _clearDropdownUnread() {
+    this.dropdownTarget.querySelectorAll(".bg-primary-50\\/30").forEach(el => {
+      el.classList.remove("bg-primary-50/30")
+    })
+    this.dropdownTarget.querySelectorAll(".bg-primary-500").forEach(el => {
+      el.classList.remove("bg-primary-500")
+      el.classList.add("bg-transparent")
+    })
+    // Hide the "Mark all as read" action now that nothing is unread.
+    // button_to renders a form wrapping the button, so hide the form.
+    const markAll = this.dropdownTarget.querySelector('[data-action="click->notification-bell#markAllRead"]')
+    if (markAll) markAll.closest("form").hidden = true
   }
 
   loadUnreadCount() {

@@ -17,6 +17,12 @@ RSpec.describe "AdoptionRequests" do
       expect(response).to have_http_status(:ok)
     end
 
+    it "renders the list when the pet has a photo" do
+      pet.photos.attach(fixture_file_upload("spec/fixtures/files/valid_photo.jpg", "image/jpeg"))
+      get adoption_requests_path
+      expect(response).to have_http_status(:ok)
+    end
+
     it "displays the user's requests" do
       get adoption_requests_path
       expect(response.body).to include(pet.name)
@@ -46,10 +52,23 @@ RSpec.describe "AdoptionRequests" do
       expect(response).to have_http_status(:ok)
     end
 
+    it "renders the request when the pet has a photo" do
+      pet.photos.attach(fixture_file_upload("spec/fixtures/files/valid_photo.jpg", "image/jpeg"))
+      get adoption_request_path(request)
+      expect(response).to have_http_status(:ok)
+    end
+
     it "prevents access to other users' requests" do
       other_request = create(:adoption_request)
       get adoption_request_path(other_request)
       expect(response).to redirect_to(root_path)
+    end
+
+    it "links to the pet profile with a back_to param so the pet page can return here" do
+      get adoption_request_path(request)
+      expect(response.body).to include(
+        %(href="#{pet_path(request.pet, back_to: adoption_request_path(request))}")
+      )
     end
   end
 
@@ -57,6 +76,21 @@ RSpec.describe "AdoptionRequests" do
     it "renders the new request form" do
       get new_adoption_request_path(pet_id: pet.id)
       expect(response).to have_http_status(:ok)
+    end
+
+    it "renders the form when the pet has a photo" do
+      pet.photos.attach(fixture_file_upload("spec/fixtures/files/valid_photo.jpg", "image/jpeg"))
+      get new_adoption_request_path(pet_id: pet.id)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "places the additional answer fields inside the request form so they are submitted" do
+      get new_adoption_request_path(pet_id: pet.id)
+      form_html = response.body.match(%r{<form.*</form>}m).to_s
+      expect(form_html).to include('name="additional_answers[interest_reason]"')
+      expect(form_html).to include('name="additional_answers[home_description]"')
+      expect(form_html).to include('name="additional_answers[current_pets_details]"')
+      expect(form_html).to include('name="additional_answers[something_else]"')
     end
 
     it "redirects for unavailable pets" do
@@ -70,7 +104,7 @@ RSpec.describe "AdoptionRequests" do
 
       it "redirects to onboarding" do
         get new_adoption_request_path(pet_id: pet.id)
-        expect(response).to redirect_to("/onboarding/individual/questions")
+        expect(response).to redirect_to("/en/onboarding/individual/questions")
       end
     end
   end

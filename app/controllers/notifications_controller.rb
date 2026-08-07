@@ -34,8 +34,12 @@ class NotificationsController < ApplicationController
     authorize Notification
 
     Notifications::MarkAsRead::All.call(recipient: current_user)
+    count = Notification.where(recipient: current_user, read_at: nil).count
 
-    redirect_back fallback_location: notifications_path, notice: t("notifications.index.mark_all_read_success")
+    respond_to do |format|
+      format.json { render json: { count: count } }
+      format.html { redirect_back fallback_location: notifications_path, notice: t("notifications.index.mark_all_read_success") }
+    end
   end
 
   def unread_count
