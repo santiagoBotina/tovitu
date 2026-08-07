@@ -1,0 +1,14 @@
+<%# Text edit form for the onboarding review page.
+    Locals: question, profile, i18n_prefix, form_url %>
+<%= form_with url: form_url, method: :patch, class: "space-y-3" do |f| %>
+  <%= f.hidden_field :question_number, value: question[:number] %>
+  <%= f.hidden_field :from_profile, value: "true" %>
+
+  <%= f.text_area :answer, value: profile.send(question[:key]), rows: 3,
+        maxlength: question[:max_length] || 200,
+        placeholder: t("#{i18n_prefix}.placeholder", default: ""),
+        class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 text-neutral-800 placeholder-neutral-400 transition resize-none" %>
+
+  <%= f.submit t("onboarding.review.save"),
+      class: "px-5 py-2.5 bg-primary-500 text-white text-sm font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-150 active:scale-[0.97] cursor-pointer shadow-sm" %>
+<% end %>

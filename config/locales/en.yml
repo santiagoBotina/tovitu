@@ -655,84 +655,12 @@ en:
       next: "Next"
       complete: "Complete Profile"
       skip: "Skip"
-      questions:
-        q1:
-          text: "What does a typical weekend look like for you?"
-          placeholder: "Select all that apply"
-          options:
-            relaxing_at_home: "Relaxing at home"
-            going_for_walks: "Going for walks"
-            outdoor_adventures: "Outdoor adventures"
-            spending_time_with_family: "Spending time with family"
-            exercising_or_sports: "Exercising or sports"
-            visiting_friends: "Visiting friends"
-            exploring_new_places: "Exploring new places"
-        q2:
-          text: "How active would you describe yourself?"
-          placeholder: "Select one"
-          options:
-            very_calm: "Very calm"
-            mostly_calm: "Mostly calm"
-            balanced: "Balanced"
-            active: "Active"
-            very_active: "Very active"
-        q3:
-          text: "Which sounds most like your ideal companion?"
-          placeholder: "Select one"
-          options:
-            calm_friend: "Calm friend"
-            playful_companion: "Playful companion"
-            affectionate_pet: "Affectionate pet"
-            independent_pet: "Independent pet"
-            social_pet: "Social pet"
-        q4:
-          text: "How much experience do you have with pets?"
-          placeholder: "Select one"
-          options:
-            first_time: "First-time"
-            some_experience: "Some experience"
-            years_of_experience: "Years of experience"
-            very_experienced: "Very experienced"
-        q5:
-          text: "What are you hoping to gain from adopting?"
-          placeholder: "Select all that apply"
-          options:
-            daily_companion: "Daily companion"
-            more_activity: "More activity"
-            emotional_support: "Emotional support"
-            family_pet: "Family pet"
-            friend_for_pet: "Friend for another pet"
-            meaningful_help: "Meaningful way to help"
-        q6:
-          text: "How much time can you realistically dedicate to a pet each day?"
-          placeholder: "Select one"
-          options:
-            less_than_1h: "Less than 1 hour"
-            1_to_2h: "1–2 hours"
-            2_to_4h: "2–4 hours"
-            more_than_4h: "More than 4 hours"
-        q7:
-          text: "Which personality feels closest to yours?"
-          placeholder: "Select one"
-          options:
-            calm_thoughtful: "Calm and thoughtful"
-            friendly_social: "Friendly and social"
-            adventurous_energetic: "Adventurous and energetic"
-            organized_routine: "Organized and routine-oriented"
-            flexible_spontaneous: "Flexible and spontaneous"
-        q8:
-          text: "What matters most to you when adopting a pet?"
-          placeholder: "Tell us what's most important to you in finding your companion..."
-          max_length: "Maximum 200 characters"
-    adopter:
-      title: "Tell us about yourself"
-      subtitle: "Help us find the perfect pet for your lifestyle"
-      from_profile_subtitle: "Help us find the perfect pet for your lifestyle"
-      progress: "Question %{current} of %{total}"
-      back: "Back"
-      next: "Next"
-      complete: "Complete Profile"
-      skip: "Skip"
+      review:
+        title: "Review your profile"
+        subtitle: "Here's what shelters will see when they review your application."
+        back_to_profile: "Back to profile"
+        back_to_review: "Back to review"
+        edit_all: "Edit all answers"
       questions:
         q1:
           text: "What does a typical weekend look like for you?"
@@ -838,6 +766,12 @@ en:
       next: "Next"
       complete: "Complete Profile"
       skip: "Skip"
+      review:
+        title: "Review your shelter profile"
+        subtitle: "Here's what your profile looks like before you finish onboarding."
+        back_to_profile: "Back to profile"
+        back_to_review: "Back to review"
+        edit_all: "Edit all answers"
       questions:
         q1:
           text: "What best describes your organization?"
@@ -939,3 +873,10 @@ en:
           step2: "Register Shelter"
           step3: "Setup Dashboard"
         celebration: "%{name} is now registered! Let's get you set up."
+    review:
+      edit: "Edit"
+      cancel: "Cancel"
+      save: "Save"
+      not_answered: "Not answered"
+      legacy_value: "From your previous answers"
+

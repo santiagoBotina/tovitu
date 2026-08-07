@@ -1,0 +1,49 @@
+<%# Shared onboarding review question card.
+    Locals:
+      - question    Hash from Onboarding::*::QuestionsData (number/key/type/options/max_length)
+      - profile     The user's profile record (may be an unsaved build)
+      - i18n_prefix String prefix for the question's locale keys (e.g. "onboarding.shelter.questions.q1")
+      - form_url    String the PATCH endpoint for SaveResponse (e.g. onboarding_shelter_questions_path)
+      - icon        HTML-safe string rendered as the question icon %>
+<% question_number = question[:number] %>
+<% question_key = question[:key] %>
+<% question_type = question[:type] %>
+<% stored_value = profile.send(question_key) %>
+<% has_answer = stored_value.present? && (stored_value.is_a?(Array) ? stored_value.any? : stored_value.to_s.presence.present?) %>
+<% edit_partial = %w[single_select multi_select text].include?(question_type) ? question_type : "text" %>
+<% open_editors = local_assigns[:edit_all] == true %>
+
+<div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-5 sm:p-6" data-review-question="<%= question_number %>">
+  <div class="flex items-start gap-3">
+    <span class="text-2xl shrink-0"><%= icon %></span>
+    <div class="flex-1 min-w-0">
+      <p class="font-display text-base font-bold text-neutral-800 mb-1.5">
+        <span class="text-neutral-400 mr-1"><%= question_number %>.</span>
+        <%= t("#{i18n_prefix}.text") %>
+      </p>
+
+      <div class="review-answer">
+        <% if has_answer %>
+          <%= render "onboarding/review/answer_display", question: question, stored_value: stored_value, i18n_prefix: i18n_prefix %>
+        <% else %>
+          <p class="text-sm font-medium text-warning"><%= t("onboarding.review.not_answered") %></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# Edit affordance (native <details>, no JS required). With edit_all the
+      editors render open so users can jump straight into making changes. %>
+  <details class="review-edit mt-4 group" <%= "open" if open_editors %>>
+    <summary class="cursor-pointer inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 select-none list-none [&::-webkit-details-marker]:hidden">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z"/>
+      </svg>
+      <span class="group-open:hidden"><%= t("onboarding.review.edit") %></span>
+      <span class="hidden group-open:inline"><%= t("onboarding.review.cancel") %></span>
+    </summary>
+    <div class="mt-4 pt-4 border-t border-neutral-100">
+      <%= render "onboarding/review/#{edit_partial}", question: question, profile: profile, i18n_prefix: i18n_prefix, form_url: form_url %>
+    </div>
+  </details>
+</div>

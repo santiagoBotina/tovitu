@@ -1,0 +1,38 @@
+<div class="w-full max-w-3xl mx-auto space-y-6">
+
+  <header class="text-center">
+    <div class="w-14 h-14 bg-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4" aria-hidden="true">
+      <svg class="w-7 h-7 text-primary-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+      </svg>
+    </div>
+    <h1 class="font-display text-3xl font-bold text-neutral-900 mb-1"><%= t("onboarding.individual.review.title") %></h1>
+    <p class="text-neutral-500"><%= t("onboarding.individual.review.subtitle") %></p>
+  </header>
+
+  <div class="flex items-center justify-between gap-3">
+    <%= link_to edit_profile_path,
+        class: "inline-flex items-center gap-1.5 text-sm font-medium text-neutral-500 hover:text-neutral-700 transition-colors" do %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      <%= t("onboarding.individual.review.back_to_profile") %>
+    <% end %>
+
+    <%= link_to onboarding_individual_questions_path(from_profile: true, start: 1, edit_all: true),
+        class: "inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors" do %>
+      <%= t("onboarding.individual.review.edit_all") %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    <% end %>
+  </div>
+
+  <div class="space-y-4">
+    <% @questions_data.each do |question| %>
+      <%= render "onboarding/review/question",
+          question: question,
+          profile: @profile,
+          i18n_prefix: "onboarding.individual.questions.q#{question[:number]}",
+          form_url: onboarding_individual_questions_path,
+          icon: question_icon(question[:number]),
+          edit_all: params[:edit_all] == "true" %>
+    <% end %>
+  </div>
+</div>

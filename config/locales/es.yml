@@ -639,7 +639,7 @@ es:
         profile: "Completar tu perfil"
         publish: "Publicar tu refugio"
   onboarding:
-    adopter:
+    individual:
       title: "Cuéntanos sobre ti"
       subtitle: "Ayúdanos a encontrar la mascota perfecta para tu estilo de vida"
       from_profile_subtitle: "Ayúdanos a encontrar la mascota perfecta para tu estilo de vida"
@@ -648,6 +648,12 @@ es:
       next: "Siguiente"
       complete: "Completar Perfil"
       skip: "Saltar"
+      review:
+        title: "Revisa tu perfil"
+        subtitle: "Esto es lo que los refugios verán al revisar tu solicitud."
+        back_to_profile: "Volver al perfil"
+        back_to_review: "Volver a la revisión"
+        edit_all: "Editar todas las respuestas"
       questions:
         q1:
           text: "¿Cómo se ve un fin de semana típico para ti?"
@@ -726,6 +732,12 @@ es:
       next: "Siguiente"
       complete: "Completar Perfil"
       skip: "Saltar"
+      review:
+        title: "Revisa el perfil de tu refugio"
+        subtitle: "Así se ve tu perfil antes de terminar la incorporación."
+        back_to_profile: "Volver al perfil"
+        back_to_review: "Volver a la revisión"
+        edit_all: "Editar todas las respuestas"
       questions:
         q1:
           text: "¿Qué describe mejor a tu organización?"
@@ -854,3 +866,10 @@ es:
           step2: "Registrar Refugio"
           step3: "Configurar Panel"
         celebration: "¡%{name} está ahora registrado! Vamos a configurarlo."
+    review:
+      edit: "Editar"
+      cancel: "Cancelar"
+      save: "Guardar"
+      not_answered: "Sin responder"
+      legacy_value: "De tus respuestas anteriores"
+

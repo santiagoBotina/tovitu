@@ -1,0 +1,25 @@
+<%# Read-only answer display for the onboarding review page.
+    Locals:
+      - question      Hash from Onboarding::*::QuestionsData
+      - stored_value  Raw value from the profile (String, Array, or nil)
+      - i18n_prefix   String prefix for the question's locale keys %>
+<% if question[:type] == "multi_select" %>
+  <div class="flex flex-wrap gap-1.5">
+    <% Array(stored_value).each do |option| %>
+      <% label = t("#{i18n_prefix}.options.#{option}", default: nil) %>
+      <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary-50 text-primary-700 border border-primary-100">
+        <%= label.presence || "#{option} (#{t('onboarding.review.legacy_value')})" %>
+      </span>
+    <% end %>
+  </div>
+<% elsif question[:type] == "single_select" %>
+  <% label = t("#{i18n_prefix}.options.#{stored_value}", default: nil) %>
+  <p class="text-sm font-medium text-neutral-700">
+    <%= label.presence || stored_value %>
+    <% if label.blank? %>
+      <span class="text-xs text-neutral-400">(<%= t("onboarding.review.legacy_value") %>)</span>
+    <% end %>
+  </p>
+<% else %>
+  <p class="text-sm text-neutral-700 whitespace-pre-wrap"><%= stored_value %></p>
+<% end %>

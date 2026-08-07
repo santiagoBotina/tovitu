@@ -1,0 +1,20 @@
+<%# Multi-select edit form for the onboarding review page.
+    Locals: question, profile, i18n_prefix, form_url %>
+<% selected = Array(profile.send(question[:key])) %>
+<%= form_with url: form_url, method: :patch, class: "space-y-3" do |f| %>
+  <%= f.hidden_field :question_number, value: question[:number] %>
+  <%= f.hidden_field :from_profile, value: "true" %>
+
+  <div class="flex flex-wrap gap-2">
+    <% question[:options].each do |option| %>
+      <label class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border-2 text-sm font-medium cursor-pointer transition-all duration-150
+                    <%= selected.include?(option) ? 'bg-primary-100 border-primary-400 text-primary-700' : 'bg-white border-neutral-200 text-neutral-600 hover:border-primary-300 hover:text-primary-600' %>">
+        <%= f.check_box :answer, { multiple: true, checked: selected.include?(option), class: "h-4 w-4 rounded text-primary-500 border-neutral-300 focus:ring-primary-500" }, option, nil %>
+        <%= t("#{i18n_prefix}.options.#{option}") %>
+      </label>
+    <% end %>
+  </div>
+
+  <%= f.submit t("onboarding.review.save"),
+      class: "px-5 py-2.5 bg-primary-500 text-white text-sm font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-150 active:scale-[0.97] cursor-pointer shadow-sm" %>
+<% end %>

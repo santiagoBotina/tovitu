@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     root "landing#index"
 
     get "login/individual", to: "authentication/sessions#new_individual"
-    get "login/adopter", to: redirect("login/individual"), status: :moved_permanently
+    get "login/adopter", to: redirect(path: "/%{locale}/login/individual"), status: :moved_permanently
     get "login/shelter",  to: "authentication/sessions#new_shelter"
     get "login", to: "authentication/sessions#new", as: :new_session
 
@@ -54,10 +54,15 @@ Rails.application.routes.draw do
         resource :questions, only: [ :show, :update ]
         resource :completion, only: [ :create ]
       end
+
+      # Legacy "adopter" namespace — deprecated alias for "individual".
+      # Kept only as permanent redirects so bookmarked legacy URLs keep working;
+      # no controller exists for these routes.
       namespace :adopter, as: :adopter_onboarding do
-        resource :questions, only: [ :show, :update ], controller: "individual/questions"
-        resource :completion, only: [ :create ], controller: "individual/completions"
+        get "questions", to: redirect(path: "/%{locale}/onboarding/individual/questions", status: :moved_permanently)
+        get "completion", to: redirect(path: "/%{locale}/onboarding/individual/completion", status: :moved_permanently)
       end
+
       namespace :shelter do
         resource :questions, only: [ :show, :update ]
         resource :completion, only: [ :create ]

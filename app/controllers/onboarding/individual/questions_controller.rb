@@ -11,8 +11,14 @@ module Onboarding
         @user = current_user
         @profile = @user.individual_profile || @user.build_individual_profile
         @questions_data = Onboarding::Individual::QuestionsData.all
-        @current_step = [ @profile.onboarding_step.to_i, 1 ].max
         @total_questions = Onboarding::Individual::QuestionsData.count
+        @current_step = if params[:start].present?
+          params[:start].to_i.clamp(1, @total_questions)
+        else
+          [ @profile.onboarding_step.to_i, 1 ].max
+        end
+
+        render :review if @from_profile
       end
 
       def update
@@ -21,6 +27,15 @@ module Onboarding
           question_number: params[:question_number],
           answer: params[:answer]
         )
+
+        if params[:from_profile] == "true"
+          if result.success?
+            redirect_to profile_onboarding_path, notice: t("flash.onboarding.preferences_updated")
+          else
+            redirect_to profile_onboarding_path, alert: Array(result.errors).join(", ")
+          end
+          return
+        end
 
         if result.success?
           render json: {
