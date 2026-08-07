@@ -15,12 +15,13 @@ RSpec.describe "Shelter Policies" do
     end
 
     it "rejects non-admin access" do
-      staff = create(:user, :verified, :onboarding_completed, shelter: shelter)
+      staff = create(:user, :verified, :shelter_staff, :onboarding_completed, shelter: shelter)
       delete session_path
       post session_path, params: { session: { email: staff.email, password: "password123" } }
 
       get edit_shelter_policies_path(shelter_id: shelter)
       expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq(I18n.t("flash.unauthorized"))
     end
   end
 

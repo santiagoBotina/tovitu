@@ -1,4 +1,5 @@
 <% shelter = present(@shelter) %>
+<% can_manage = policy(@shelter).manage? %>
 
 <%# Welcome overlay for first-time visitors (JS checks sessionStorage) %>
 <% if @shelter.pets.undiscarded.count == 0 %>
@@ -40,18 +41,34 @@
   <%# ──────────────────────────────────────────────────────────── %>
   <%# ONBOARDING CHECKLIST (Gamified)                                %>
   <%# ──────────────────────────────────────────────────────────── %>
-  <div class="bg-primary-50 rounded-xl shadow-sm border border-primary-100 p-6 mb-8 bento-enter bento-enter-d2">
-    <div class="flex items-center gap-3 mb-4">
-      <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center" aria-hidden="true">
-        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/>
-        </svg>
+  <% if shelter.checklist_dismissed? %>
+    <%= render "shelters/dashboard/restore_checklist", shelter: shelter %>
+  <% else %>
+    <div class="bg-primary-50 rounded-xl shadow-sm border border-primary-100 p-6 mb-8 bento-enter bento-enter-d2">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center" aria-hidden="true">
+          <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/>
+          </svg>
+        </div>
+        <h2 class="font-display text-lg font-bold text-neutral-800 flex-1"><%= t(".onboarding.title") %></h2>
+        <% if shelter.checklist_completed? %>
+          <%= button_to dismiss_checklist_shelter_dashboard_path(@shelter),
+              method: :post,
+              aria: { label: t(".onboarding.dismiss") },
+              class: "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-neutral-500 hover:text-neutral-700 bg-white/60 hover:bg-white rounded-lg border border-transparent hover:border-neutral-200 transition-all duration-150 active:scale-[0.97]" do %>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 3l18 18M10.29 3.86A2 2 0 0 1 12 3h0a2 2 0 0 1 2 2v.3M8.5 7.5h8.65a2 2 0 0 1 1.9 2.6l-1.1 4.4a2 2 0 0 1-1.9 1.5H8.5M7.35 7.5l-1.3 4.4a2 2 0 0 0 1.9 2.6h6.55"/>
+              <path d="M4 4l16 16M8.5 20.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm7 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/>
+            </svg>
+            <%= t(".onboarding.dismiss") %>
+          <% end %>
+        <% end %>
       </div>
-      <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".onboarding.title") %></h2>
-    </div>
 
-    <%= render "shelters/dashboard/checklist", shelter: shelter %>
-  </div>
+      <%= render "shelters/dashboard/checklist", shelter: shelter, manage: can_manage %>
+    </div>
+  <% end %>
 
   <%# ──────────────────────────────────────────────────────────── %>
   <%# PIPELINE METRICS                                              %>
@@ -202,30 +219,32 @@
             </div>
           <% end %>
 
-          <%= link_to shelter_staff_index_path(shelter_id: @shelter),
-              class: "group flex items-center gap-3 p-3.5 bg-neutral-50 rounded-xl hover:bg-primary-50 transition-colors duration-200 border border-neutral-100 hover:border-primary-100" do %>
-            <div class="w-9 h-9 bg-primary-50 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
-              <svg class="w-4.5 h-4.5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 4.354a4 4 0 1 1 0 5.292M15 21H3v-1a6 6 0 0 1 12 0v1Zm0 0h6v-1a6 6 0 0 0-9-5.197"/>
-              </svg>
-            </div>
-            <div>
-              <p class="font-medium text-sm text-neutral-800 group-hover:text-primary-700 transition-colors"><%= t(".quick_actions.manage_team.title") %></p>
-              <p class="text-xs text-neutral-500"><%= t(".quick_actions.manage_team.description") %></p>
-            </div>
-          <% end %>
+          <% if can_manage %>
+            <%= link_to shelter_staff_index_path(shelter_id: @shelter),
+                class: "group flex items-center gap-3 p-3.5 bg-neutral-50 rounded-xl hover:bg-primary-50 transition-colors duration-200 border border-neutral-100 hover:border-primary-100" do %>
+              <div class="w-9 h-9 bg-primary-50 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
+                <svg class="w-4.5 h-4.5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 4.354a4 4 0 1 1 0 5.292M15 21H3v-1a6 6 0 0 1 12 0v1Zm0 0h6v-1a6 6 0 0 0-9-5.197"/>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-sm text-neutral-800 group-hover:text-primary-700 transition-colors"><%= t(".quick_actions.manage_team.title") %></p>
+                <p class="text-xs text-neutral-500"><%= t(".quick_actions.manage_team.description") %></p>
+              </div>
+            <% end %>
 
-          <%= link_to edit_shelter_policies_path(shelter_id: @shelter),
-              class: "group flex items-center gap-3 p-3.5 bg-neutral-50 rounded-xl hover:bg-primary-50 transition-colors duration-200 border border-neutral-100 hover:border-primary-100" do %>
-            <div class="w-9 h-9 bg-primary-50 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
-              <svg class="w-4.5 h-4.5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              </svg>
-            </div>
-            <div>
-              <p class="font-medium text-sm text-neutral-800 group-hover:text-primary-700 transition-colors"><%= t(".quick_actions.policies.title") %></p>
-              <p class="text-xs text-neutral-500"><%= t(".quick_actions.policies.description") %></p>
-            </div>
+            <%= link_to edit_shelter_policies_path(shelter_id: @shelter),
+                class: "group flex items-center gap-3 p-3.5 bg-neutral-50 rounded-xl hover:bg-primary-50 transition-colors duration-200 border border-neutral-100 hover:border-primary-100" do %>
+              <div class="w-9 h-9 bg-primary-50 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
+                <svg class="w-4.5 h-4.5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-sm text-neutral-800 group-hover:text-primary-700 transition-colors"><%= t(".quick_actions.policies.title") %></p>
+                <p class="text-xs text-neutral-500"><%= t(".quick_actions.policies.description") %></p>
+              </div>
+            <% end %>
           <% end %>
         </div>
       </div>
@@ -235,9 +254,11 @@
         <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d7">
           <div class="flex items-center justify-between mb-4">
             <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".team.title") %></h2>
-            <%= link_to shelter_staff_index_path(shelter_id: @shelter),
-                class: "text-xs font-medium text-primary-500 hover:text-primary-600 transition-colors" do %>
-              <%= t(".team.manage") %>
+            <% if can_manage %>
+              <%= link_to shelter_staff_index_path(shelter_id: @shelter),
+                  class: "text-xs font-medium text-primary-500 hover:text-primary-600 transition-colors" do %>
+                <%= t(".team.manage") %>
+              <% end %>
             <% end %>
           </div>
           <div class="flex flex-wrap items-center gap-3">

@@ -1,0 +1,14 @@
+<%# Subtle restore affordance shown when the onboarding checklist is dismissed %>
+<% shelter = local_assigns[:shelter] || present(@shelter) %>
+<div class="mb-8 flex justify-center">
+  <%= button_to restore_checklist_shelter_dashboard_path(shelter.id),
+      method: :delete,
+      aria: { label: t("shelters.dashboard.show.onboarding.restore") },
+      class: "inline-flex items-center gap-2 px-4 py-2 text-xs font-medium text-neutral-500 hover:text-neutral-700 bg-white rounded-xl border border-neutral-200 hover:border-neutral-300 shadow-sm transition-all duration-150 active:scale-[0.97] bento-enter bento-enter-d2" do %>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M2.06 12.35a1 1 0 0 1 0-.7C3.42 8.6 7.22 6 12 6s8.58 2.6 9.94 5.65a1 1 0 0 1 0 .7C20.58 15.4 16.78 18 12 18s-8.58-2.6-9.94-5.65Z"/>
+      <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+    </svg>
+    <%= t("shelters.dashboard.show.onboarding.restore") %>
+  <% end %>
+</div>

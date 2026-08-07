@@ -24,9 +24,9 @@ class SheltersController < ApplicationController
     result = Shelters::Register.call(user: current_user, shelter_params: shelter_params)
 
     if result.success?
-      shelter = Shelter.find(result.data)
+      shelter = result.data
       notice = t("onboarding.shelter.register.celebration", name: shelter.name)
-      redirect_to shelter_dashboard_path(shelter_id: result.data), notice: notice
+      redirect_to shelter_dashboard_path(shelter_id: shelter.id), notice: notice
     else
       @shelter = Shelter.new(shelter_params)
       @shelter.validate

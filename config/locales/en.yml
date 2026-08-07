@@ -244,6 +244,10 @@ en:
         onboarding:
           title: "Onboarding Checklist"
           done_badge: "Done!"
+          dismiss: "Hide checklist"
+          dismissed_confirmation: "Checklist hidden. You can bring it back anytime."
+          restore: "Show checklist"
+          restored_confirmation: "Checklist is back on your dashboard."
         welcome:
           title: "Welcome to Your Shelter Dashboard!"
           subtitle: "You are now the proud captain of %{name}. Let's get your shelter ready for adopters."
@@ -576,6 +580,8 @@ en:
       accepted: "Invitation has already been accepted"
     register_user:
       invalid_role: "Invalid role selection"
+    shelters:
+      checklist_not_complete: "Complete every onboarding step before hiding the checklist."
     onboarding:
       invalid_question: "Invalid question number"
       no_profile: "Profile not found"

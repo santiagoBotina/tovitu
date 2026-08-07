@@ -58,80 +58,96 @@ class ShelterPresenter < ApplicationPresenter
     model.species_served.map(&:capitalize).to_sentence
   end
 
+  # Presentation metadata for each onboarding step. The "is this step done?"
+  # conditions live in Shelters::OnboardingChecklist so domain services and the
+  # dashboard agree on completion; STEPS_CONFIG only carries icon/path details.
   STEPS_CONFIG = [
     {
       key: :add_pet,
       icon: "M12 5v14m-7-7h14",
       category: :pets,
+      manage_only: false,
       path_method: :new_shelter_pet_path,
-      path_args: ->(shelter) { {} },
-      condition: ->(shelter) { shelter.pets.undiscarded.exists? }
+      path_args: ->(shelter) { {} }
     },
     {
       key: :policies,
       icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
       category: :operations,
+      manage_only: true,
       path_method: :edit_shelter_policies_path,
-      path_args: ->(shelter) { { shelter_id: shelter } },
-      condition: ->(shelter) { shelter.adoption_policies.values.any?(&:present?) }
+      path_args: ->(shelter) { { shelter_id: shelter } }
     },
     {
       key: :staff,
       icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z",
       category: :team,
+      manage_only: true,
       path_method: :shelter_staff_index_path,
-      path_args: ->(shelter) { { shelter_id: shelter } },
-      condition: ->(shelter) { shelter.users.staff.exists? }
+      path_args: ->(shelter) { { shelter_id: shelter } }
     },
     {
       key: :hours,
       icon: "M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z",
       category: :operations,
+      manage_only: true,
       path_method: :edit_shelter_path,
-      path_args: ->(shelter) { { id: shelter } },
-      condition: ->(shelter) { shelter.hours.present? }
+      path_args: ->(shelter) { { id: shelter } }
     },
     {
       key: :profile,
       icon: "M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z",
       category: :profile,
+      manage_only: true,
       path_method: :edit_shelter_path,
-      path_args: ->(shelter) { { id: shelter } },
-      condition: ->(shelter) { shelter.description.present? }
+      path_args: ->(shelter) { { id: shelter } }
     },
     {
       key: :publish,
       icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
       category: :visibility,
+      manage_only: true,
       path_method: :edit_shelter_path,
-      path_args: ->(shelter) { { id: shelter } },
-      condition: ->(shelter) { shelter.active? }
+      path_args: ->(shelter) { { id: shelter } }
     }
   ].freeze
 
+  def onboarding_checklist
+    @onboarding_checklist ||= Shelters::OnboardingChecklist.new(model)
+  end
+
   def onboarding_progress
-    total = STEPS_CONFIG.size
-    done = STEPS_CONFIG.count { |step| step[:condition].call(model) }
+    total = onboarding_checklist.total_count
+    done = onboarding_checklist.done_count
     ((done.to_f / total) * 100).to_i
   end
 
   def onboarding_steps
     STEPS_CONFIG.map do |step|
-      done = step[:condition].call(model)
+      done = onboarding_checklist.step_done?(step[:key])
       {
         key: step[:key],
         label: I18n.t("presenters.shelter.onboarding.#{step[:key]}"),
         description: I18n.t("onboarding.shelter.checklist.step.#{step[:key]}.description", default: ""),
         icon: step[:icon],
         category: step[:category],
+        manage_only: step[:manage_only],
         done: done,
         path: send(step[:path_method], **step[:path_args].call(model))
       }
     end
   end
 
+  def checklist_completed?
+    onboarding_checklist.completed?
+  end
+
+  def checklist_dismissed?
+    onboarding_checklist.dismissed?
+  end
+
   def checklist_level
-    done_count = onboarding_steps.count { |s| s[:done] }
+    done_count = onboarding_checklist.done_count
     case done_count
     when 0
       { level: 1, title: I18n.t("onboarding.shelter.checklist.level.new_recruit"), badge: :bronze, color_class: "text-amber-700 bg-amber-50 border-amber-200" }

@@ -41,7 +41,10 @@
     <div class="flex items-center gap-2.5">
       <% if signed_in? %>
         <%# Notification Bell %>
-        <div data-controller="notification-bell" class="relative">
+        <div data-controller="notification-bell"
+             data-notification-bell-unread-count-url-value="<%= unread_count_notifications_path %>"
+             data-notification-bell-mark-all-read-url-value="<%= mark_all_read_notifications_path %>"
+             class="relative">
           <button data-action="click->notification-bell#toggle"
                   data-notification-bell-target="button"
                   class="relative flex items-center justify-center w-10 h-10 rounded-xl text-neutral-500 hover:text-primary-600 hover:bg-primary-50 transition-colors duration-150"

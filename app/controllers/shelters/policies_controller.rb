@@ -17,7 +17,7 @@ module Shelters
         format.turbo_stream do
           shelter_presenter = present(@shelter)
           render turbo_stream: [
-            turbo_stream.replace("onboarding-checklist", partial: "shelters/dashboard/checklist", locals: { shelter: shelter_presenter }),
+            turbo_stream.replace("onboarding-checklist", partial: "shelters/dashboard/checklist", locals: { shelter: shelter_presenter, manage: policy(@shelter).manage? }),
             turbo_stream.replace("progress-bar", partial: "shelters/dashboard/progress_bar", locals: { shelter: shelter_presenter }),
             turbo_stream.append("flash-container", partial: "shared/flash", locals: { notice: t("flash.policies.update.success") })
           ]

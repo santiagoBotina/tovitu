@@ -3,7 +3,11 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="notification-bell"
 export default class extends Controller {
   static targets = ["dropdown", "badge", "button"]
-  static values = { unreadCount: Number }
+  static values = {
+    unreadCount: Number,
+    unreadCountUrl: String,
+    markAllReadUrl: String
+  }
 
   connect() {
     this.pollInterval = null
@@ -46,7 +50,7 @@ export default class extends Controller {
 
   markAllRead(event) {
     event.preventDefault()
-    fetch("/notifications/mark_all_read", {
+    fetch(this.markAllReadUrlValue, {
       method: "PATCH",
       headers: { "X-CSRF-Token": this._csrfToken(), "Accept": "application/json" }
     }).then(() => {
@@ -63,7 +67,7 @@ export default class extends Controller {
   }
 
   loadUnreadCount() {
-    fetch("/notifications/unread_count", {
+    fetch(this.unreadCountUrlValue, {
       headers: { "Accept": "application/json" }
     })
       .then(response => response.json())

@@ -77,7 +77,10 @@ Rails.application.routes.draw do
     resources :saved_pets, only: [ :index ]
 
     resources :shelters, only: [ :index, :show, :new, :create, :edit, :update ] do
-      resource :dashboard, only: [ :show ], controller: "shelters/dashboard"
+      resource :dashboard, only: [ :show ], controller: "shelters/dashboard" do
+        post :dismiss_checklist
+        delete :restore_checklist
+      end
       resources :staff, only: [ :index, :create, :destroy ], controller: "shelters/staff"
       resources :invitations, only: [ :create ], controller: "shelters/invitations"
       resource :policies, only: [ :edit, :update ], controller: "shelters/policies"

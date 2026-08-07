@@ -136,3 +136,37 @@ All application routes are scoped under `scope ":locale"` (`/:locale/notificatio
 
 - Relaxing policies to allow staff editing is a product decision with adoption-safety implications — default to **keep admin-only** and fix the view/authorization mismatch instead.
 - Changing `handle_unauthorized` globally would mask real authorization bugs — avoid.
+
+---
+
+## Implementation Notes (2026-08-06)
+
+### Root cause confirmed (2.1a)
+
+The authorization model itself was correct for the nominal owner (`shelter_admin` + matching `shelter_id` passes every failing action). The bug was **role confusion in the UI**: the views presented admin-only links to any shelter user (`shelter_user?` with a `shelter_id`), including `shelter_staff` (and invited members whose role is `staff`). Clicking those links produced the reported `You are not authorized to perform this action.` redirect.
+
+Affected views before the fix:
+- Profile settings rendered "Edit Shelter Information" for every shelter user.
+- Sidebar rendered Staff and Adoption Policies for every shelter user.
+- Dashboard quick actions rendered Manage Team and Adoption Policies, and the team card's Manage link, for every shelter member.
+
+### Decision
+
+**Keep admin-only.** Do not relax `ShelterPolicy`. Fix the view/authorization mismatch instead (per Risks above).
+
+### Changes
+
+1. `ShelterPolicy#manage?` umbrella (`shelter_admin? && shelter_id == record.id`); `edit?/update?/staff_*/policies_*` delegate to it. `dashboard?` unchanged (shelter members may view).
+2. Views gate admin-only links on `policy(<shelter>).manage?`:
+   - `shared/_sidebar` — Staff / Adoption Policies links
+   - `authentication/profiles/edit` — Shelter Information card
+   - `shelters/dashboard/show` — Manage Team / Adoption Policies quick actions + team Manage link
+   - `shelters/dashboard/_checklist` — admin-only steps render as non-clickable (lock) for non-managers (`ShelterPresenter` steps carry `manage_only`)
+3. Bug 2.1b: navbar injects locale-scoped URLs as Stimulus values (`data-notification-bell-unread-count-url-value`, `...mark-all-read-url-value`); `notification_bell_controller.js` reads `this.unreadCountUrlValue` / `this.markAllReadUrlValue`. No hardcoded `/notifications/*` paths remain in `app/javascript/**`.
+4. Specs: `spec/policies/shelter_policy_spec.rb` (new), dashboard/staff/policies/shelters/notifications request specs extended, profiles spec asserts staff do not see the edit link.
+
+### Drive-by fixes (unrelated defects blocking the P0 flow)
+
+- `SheltersController#create` called `Shelter.find(result.data)` while `Shelters::Register` returns a `Shelter` object → shelter creation 500'd. Now uses `result.data` directly.
+- Dashboard `_welcome_overlay` called `shelter.model.name` where `model` is a private reader → dashboard 500'd for shelters with no pets. Now uses `shelter.name`.
+- Stale test assertions updated: profiles "Edit profile" → i18n title; notifications grouping uses `Time.current` (timezone-safe).

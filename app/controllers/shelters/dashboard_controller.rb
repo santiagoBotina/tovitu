@@ -26,6 +26,29 @@ module Shelters
       @staff_count = @shelter.users.undiscarded.count
       @staff_members = @shelter.users.undiscarded.limit(5)
       @pending_count = @pending_requests
+
+      @checklist_dismissed = @shelter.checklist_dismissed_at.present?
+    end
+
+    # Permanently hides a completed onboarding checklist for this shelter.
+    # Guarded by Shelters::DismissChecklist: only complete checklists dismiss.
+    def dismiss_checklist
+      authorize @shelter, :dashboard?
+
+      result = Shelters::DismissChecklist.call(shelter: @shelter)
+      if result.success?
+        redirect_to shelter_dashboard_path(@shelter), notice: t("shelters.dashboard.show.onboarding.dismissed_confirmation")
+      else
+        redirect_to shelter_dashboard_path(@shelter), alert: Array(result.errors).join(", ")
+      end
+    end
+
+    # Brings a dismissed onboarding checklist back onto the dashboard.
+    def restore_checklist
+      authorize @shelter, :dashboard?
+
+      Shelters::RestoreChecklist.call(shelter: @shelter)
+      redirect_to shelter_dashboard_path(@shelter), notice: t("shelters.dashboard.show.onboarding.restored_confirmation")
     end
 
     private

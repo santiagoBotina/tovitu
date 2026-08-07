@@ -816,7 +816,8 @@ CREATE TABLE public.shelters (
     onboarding_completed boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    ai_features_enabled boolean DEFAULT true
+    ai_features_enabled boolean DEFAULT true,
+    checklist_dismissed_at timestamp(6) without time zone
 );
 
 
@@ -1971,6 +1972,7 @@ ALTER TABLE ONLY public.adoption_applications
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260806000001'),
 ('20260720163141'),
 ('20260720163140'),
 ('20260720163139'),

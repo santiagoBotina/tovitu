@@ -155,6 +155,16 @@ RSpec.describe "Shelters" do
       expect(response).to redirect_to(root_path)
     end
 
+    it "redirects shelter staff with a flash instead of a 500" do
+      shelter = create(:shelter)
+      staff = create(:user, :verified, :shelter_staff, :onboarding_completed, shelter: shelter)
+      post session_path, params: { session: { email: staff.email, password: "password123" } }
+
+      get edit_shelter_path(id: shelter)
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eq(I18n.t("flash.unauthorized"))
+    end
+
     it "allows shelter admin to edit" do
       shelter = create(:shelter)
       admin = create(:user, :verified, :shelter_admin, :onboarding_completed, shelter: shelter)

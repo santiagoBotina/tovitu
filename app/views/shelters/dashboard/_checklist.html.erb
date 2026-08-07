@@ -1,5 +1,6 @@
 <%# Gamified onboarding checklist partial for shelter dashboard %>
 <% shelter = local_assigns[:shelter] || present(@shelter) %>
+<% can_manage = local_assigns.fetch(:manage, false) %>
 <% steps = shelter.onboarding_steps %>
 <% done_count = steps.count { |s| s[:done] } %>
 <% total_count = steps.size %>
@@ -50,28 +51,44 @@
       <% else %>
         <% is_next = steps[0...idx].all? { |s| s[:done] } %>
         <div data-checklist-target="item"
-             data-key="<%= step[:key] %>"
-             data-done="false"
-             class="flex items-center gap-3 p-3.5 bg-white rounded-xl border <%= is_next ? 'border-primary-200 task-pulse' : 'border-neutral-200' %> hover:border-primary-300 transition-colors">
-          <div class="w-9 h-9 <%= is_next ? 'bg-primary-50' : 'bg-neutral-50' %> rounded-xl flex items-center justify-center shrink-0">
-            <svg class="w-5 h-5 <%= is_next ? 'text-primary-500' : 'text-neutral-400' %>" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <path d="<%= step[:icon] %>"/>
-            </svg>
-          </div>
-          <%= link_to step[:path], class: "flex-1 min-w-0 flex items-center gap-2 group" do %>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium <%= is_next ? 'text-primary-600' : 'text-neutral-700' %> group-hover:text-primary-600 transition-colors">
-                <%= step[:label] %>
-              </p>
-              <% if step[:description].present? %>
-                <p class="text-xs text-neutral-500 truncate"><%= step[:description] %></p>
-              <% end %>
+               data-key="<%= step[:key] %>"
+               data-done="false"
+               class="flex items-center gap-3 p-3.5 bg-white rounded-xl border <%= is_next ? 'border-primary-200 task-pulse' : 'border-neutral-200' %> hover:border-primary-300 transition-colors">
+            <div class="w-9 h-9 <%= is_next ? 'bg-primary-50' : 'bg-neutral-50' %> rounded-xl flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 <%= is_next ? 'text-primary-500' : 'text-neutral-400' %>" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="<%= step[:icon] %>"/>
+              </svg>
             </div>
-            <svg class="w-4 h-4 text-neutral-400 group-hover:text-primary-500 transition-colors shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
-            </svg>
-          <% end %>
-        </div>
+            <% if step[:manage_only] && !can_manage %>
+              <div class="flex-1 min-w-0 flex items-center gap-2">
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-neutral-400">
+                    <%= step[:label] %>
+                  </p>
+                  <% if step[:description].present? %>
+                    <p class="text-xs text-neutral-400 truncate"><%= step[:description] %></p>
+                  <% end %>
+                </div>
+                <svg class="w-4 h-4 text-neutral-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+            <% else %>
+              <%= link_to step[:path], class: "flex-1 min-w-0 flex items-center gap-2 group" do %>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium <%= is_next ? 'text-primary-600' : 'text-neutral-700' %> group-hover:text-primary-600 transition-colors">
+                    <%= step[:label] %>
+                  </p>
+                  <% if step[:description].present? %>
+                    <p class="text-xs text-neutral-500 truncate"><%= step[:description] %></p>
+                  <% end %>
+                </div>
+                <svg class="w-4 h-4 text-neutral-400 group-hover:text-primary-500 transition-colors shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                </svg>
+              <% end %>
+            <% end %>
+          </div>
       <% end %>
     <% end %>
   </div>

@@ -137,8 +137,8 @@
     <% end %>
   </section>
 
-  <%# ─── Shelter Information Card (shelter users only) ─── %>
-  <% if current_user.shelter_user? && current_user.shelter_id.present? %>
+  <%# ─── Shelter Information Card (shelter admins only) ─── %>
+  <% if current_user.shelter_user? && current_user.shelter_id.present? && current_user.shelter.present? && policy(current_user.shelter).manage? %>
     <div class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d6 card-lift">
       <div class="flex items-start justify-between">
         <div>

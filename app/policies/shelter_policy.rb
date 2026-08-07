@@ -15,12 +15,18 @@ class ShelterPolicy < ApplicationPolicy
     new?
   end
 
-  def edit?
+  # Umbrella rule for managing shelter settings (info, staff, adoption policies).
+  # Admin-only: shelter owners can manage their own shelter; staff cannot.
+  def manage?
     user.present? && user.shelter_admin? && user.shelter_id == record.id
   end
 
+  def edit?
+    manage?
+  end
+
   def update?
-    edit?
+    manage?
   end
 
   def dashboard?
@@ -28,23 +34,23 @@ class ShelterPolicy < ApplicationPolicy
   end
 
   def staff_index?
-    user.present? && user.shelter_admin? && user.shelter_id == record.id
+    manage?
   end
 
   def staff_create?
-    staff_index?
+    manage?
   end
 
   def staff_destroy?
-    staff_index?
+    manage?
   end
 
   def policies_edit?
-    user.present? && user.shelter_admin? && user.shelter_id == record.id
+    manage?
   end
 
   def policies_update?
-    policies_edit?
+    manage?
   end
 
   class Scope < ApplicationPolicy::Scope

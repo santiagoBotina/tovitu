@@ -36,7 +36,9 @@ RSpec.describe "Notifications" do
     end
 
     it "groups notifications by date" do
-      create(:notification, recipient: user, created_at: 1.hour.ago)
+      # Use Time.current (Rails time zone) so the "today" notification cannot
+      # drift into "yesterday" when the system clock is ahead of the app zone.
+      create(:notification, recipient: user, created_at: Time.current)
       create(:notification, recipient: user, created_at: 2.days.ago)
       get notifications_path
       expect(response.body).to include(I18n.t("notifications.index.today"))
@@ -129,6 +131,20 @@ RSpec.describe "Notifications" do
     it "returns Turbo Stream format" do
       get unread_count_notifications_path, headers: { accept: "text/vnd.turbo-stream.html" }
       expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe "notification bell URL injection" do
+    # Regression for Bug 2.1b: the bell JS previously polled locale-less paths
+    # (/notifications/unread_count) which did not match any route.
+    it "renders locale-scoped notification URLs as data attributes on the bell" do
+      get notifications_path
+      expect(response.body).to include(
+        %(data-notification-bell-unread-count-url-value="#{unread_count_notifications_path}")
+      )
+      expect(response.body).to include(
+        %(data-notification-bell-mark-all-read-url-value="#{mark_all_read_notifications_path}")
+      )
     end
   end
 end

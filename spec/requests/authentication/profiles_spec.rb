@@ -12,7 +12,7 @@ RSpec.describe "Profiles" do
       post session_path, params: { session: { email: user.email, password: "password123" } }
       get edit_profile_path
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Edit profile")
+      expect(response.body).to include(I18n.t("authentication.profiles.edit.title"))
     end
   end
 
@@ -112,6 +112,26 @@ RSpec.describe "Profiles" do
 
       it "shows the edit shelter info link" do
         expect(response.body).to include(edit_shelter_path(id: user.shelter_id))
+      end
+    end
+
+    context "as shelter staff with a shelter" do
+      let(:shelter) { create(:shelter) }
+      let(:user) { create(:user, :verified, :onboarding_completed, :shelter_staff, shelter: shelter) }
+
+      before do
+        post session_path, params: { session: { email: user.email, password: "password123" } }
+        get edit_profile_path
+      end
+
+      it "does not show the shelter information section" do
+        expect(response.body).not_to include(I18n.t("authentication.profiles.edit.shelter_info_title"))
+      end
+
+      # Reproduces Bug 2.1a: before the fix staff were shown an "Edit Shelter
+      # Information" link that always redirected them as unauthorized.
+      it "does not show the edit shelter info link" do
+        expect(response.body).not_to include(edit_shelter_path(id: user.shelter_id))
       end
     end
 

@@ -253,6 +253,10 @@ es:
         onboarding:
           title: "Lista de Verificación"
           done_badge: "¡Listo!"
+          dismiss: "Ocultar lista de verificación"
+          dismissed_confirmation: "Lista oculta. Puedes volver a mostrarla cuando quieras."
+          restore: "Mostrar lista de verificación"
+          restored_confirmation: "La lista de verificación volvió a tu panel."
         welcome:
           title: "¡Bienvenido a tu Panel de Refugio!"
           subtitle: "Ahora eres el orgulloso capitán de %{name}. Preparemos tu refugio para los adoptantes."
@@ -569,6 +573,8 @@ es:
       accepted: "La invitación ya ha sido aceptada"
     register_user:
       invalid_role: "Selección de rol inválida"
+    shelters:
+      checklist_not_complete: "Completa todos los pasos de bienvenida antes de ocultar la lista de verificación."
     onboarding:
       invalid_question: "Número de pregunta inválido"
       no_profile: "Perfil no encontrado"
