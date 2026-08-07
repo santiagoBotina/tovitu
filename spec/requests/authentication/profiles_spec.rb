@@ -64,6 +64,25 @@ RSpec.describe "Profiles" do
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end
+
+      context "when saving only the locale (language selector auto-save)" do
+        it "persists the locale without clearing name or email" do
+          patch profile_path, params: { user: { locale: "es" } }
+          expect(response).to redirect_to(edit_profile_path)
+          user.reload
+          expect(user.locale).to eq("es")
+          expect(user.name).to be_present
+          expect(user.email).to be_present
+        end
+
+        it "does not change the email or mark it unverified" do
+          original_email = user.email
+          patch profile_path, params: { user: { locale: "en" } }
+          user.reload
+          expect(user.email).to eq(original_email)
+          expect(user).to be_verified
+        end
+      end
     end
   end
 
@@ -145,6 +164,49 @@ RSpec.describe "Profiles" do
 
       it "does not show the shelter information section" do
         expect(response.body).not_to include(I18n.t("authentication.profiles.edit.shelter_info_title"))
+      end
+    end
+  end
+
+  describe "Verified badge (UI refinement 4.1)" do
+    before do
+      post session_path, params: { session: { email: user.email, password: "password123" } }
+      get edit_profile_path
+    end
+
+    context "when the account is verified" do
+      let(:user) { create(:user, :verified, :onboarding_completed) }
+
+      it "renders a squared verified badge (not a pill)" do
+        expect(response.body).to include("rounded-lg bg-success/10 text-success")
+        expect(response.body).not_to include("rounded-full bg-success/10")
+      end
+
+      it "places the verified badge in the card header before the account form" do
+        badge_index = response.body.index('aria-label="Verified"')
+        form_index = response.body.index('class="space-y-5"')
+        expect(badge_index).to be_present
+        expect(form_index).to be_present
+        expect(badge_index).to be < form_index
+      end
+
+      it "marks the badge as a live status region" do
+        expect(response.body).to include('role="status"')
+      end
+    end
+
+    context "when the account is pending verification" do
+      # Unverified users cannot log in, so sign in first, then unverify.
+      let(:user) { create(:user, :verified, :onboarding_completed) }
+
+      before do
+        user.update!(verified_at: nil)
+        get edit_profile_path
+      end
+
+      it "renders a squared pending badge (not a pill)" do
+        expect(response.body).to include("rounded-lg bg-warning/10 text-warning")
+        expect(response.body).not_to include("rounded-full bg-warning/10")
       end
     end
   end

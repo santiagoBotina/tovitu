@@ -28,6 +28,16 @@ RSpec.describe "NotificationPreferences" do
         expect(response).to redirect_to(root_path)
       end
     end
+
+    context "with a verified WhatsApp number" do
+      let!(:preference) { create(:notification_preference, :whatsapp_opted_in, user: user) }
+
+      it "shows the shared squared verified badge (UI refinement 4.1)" do
+        get edit_notification_preferences_path
+        expect(response.body).to include("rounded-lg bg-success/10 text-success")
+        expect(response.body).not_to include("text-secondary-600 bg-secondary-50")
+      end
+    end
   end
 
   describe "PATCH /notification_preferences" do

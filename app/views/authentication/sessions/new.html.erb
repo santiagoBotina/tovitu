@@ -2,21 +2,50 @@
      data-controller="role-toggle"
      data-role-toggle-role="<%= @role %>">
 
-  <div class="bg-white rounded-xl shadow-md p-8">
-    <div class="mb-8">
-      <%= render "authentication/role_toggle", current_role: @role %>
-    </div>
+  <div class="relative">
+    <%# Subtle repeating Tovitu paw pattern behind the card (decorative only) %>
+    <div class="login-paw-pattern absolute -inset-3 rounded-3xl pointer-events-none select-none"
+         aria-hidden="true"></div>
 
-    <div data-role-toggle-target="toggleable"
-         data-role="individual"
-         class="<%= @role == 'individual' || @role == 'adopter' ? '' : 'hidden' %>">
-      <%= render "authentication/sessions/individual_form" %>
-    </div>
+    <div class="relative bg-white rounded-xl shadow-md p-8">
+      <%# Brand mark: playful geometric mascot + wordmark %>
+      <div class="flex flex-col items-center gap-2.5 mb-6">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-16 h-16" aria-hidden="true">
+          <!-- Geometric cat-dog hybrid mascot in Tovitu purple/teal -->
+          <circle cx="32" cy="36" r="18" fill="var(--color-primary-100)"/>
+          <path d="M18 22 L14 8 L26 18 Z" fill="var(--color-primary-400)"/>
+          <path d="M46 22 L50 8 L38 18 Z" fill="var(--color-primary-400)"/>
+          <circle cx="26" cy="32" r="3" fill="var(--color-primary-700)"/>
+          <circle cx="38" cy="32" r="3" fill="var(--color-primary-700)"/>
+          <circle cx="27" cy="31" r="1" fill="white" opacity="0.8"/>
+          <circle cx="39" cy="31" r="1" fill="white" opacity="0.8"/>
+          <path d="M30 38 L34 38 L32 41 Z" fill="var(--color-secondary-500)"/>
+          <path d="M28 42 C30 44, 34 44, 36 42" stroke="var(--color-primary-600)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <line x1="12" y1="35" x2="22" y2="36" stroke="var(--color-primary-300)" stroke-width="1" stroke-linecap="round"/>
+          <line x1="12" y1="39" x2="22" y2="38" stroke="var(--color-primary-300)" stroke-width="1" stroke-linecap="round"/>
+          <line x1="52" y1="35" x2="42" y2="36" stroke="var(--color-primary-300)" stroke-width="1" stroke-linecap="round"/>
+          <line x1="52" y1="39" x2="42" y2="38" stroke="var(--color-primary-300)" stroke-width="1" stroke-linecap="round"/>
+          <ellipse cx="22" cy="52" rx="5" ry="3" fill="var(--color-primary-200)"/>
+          <ellipse cx="42" cy="52" rx="5" ry="3" fill="var(--color-primary-200)"/>
+        </svg>
+        <p class="font-display text-2xl font-extrabold tracking-tight text-primary-600">Tovitu</p>
+      </div>
 
-    <div data-role-toggle-target="toggleable"
-         data-role="shelter"
-         class="<%= @role == 'shelter' ? '' : 'hidden' %>">
-      <%= render "authentication/sessions/shelter_form" %>
+      <div class="mb-8">
+        <%= render "authentication/role_toggle", current_role: @role %>
+      </div>
+
+      <div data-role-toggle-target="toggleable"
+           data-role="individual"
+           class="<%= @role == 'individual' || @role == 'adopter' ? '' : 'hidden' %>">
+        <%= render "authentication/sessions/individual_form" %>
+      </div>
+
+      <div data-role-toggle-target="toggleable"
+           data-role="shelter"
+           class="<%= @role == 'shelter' ? '' : 'hidden' %>">
+        <%= render "authentication/sessions/shelter_form" %>
+      </div>
     </div>
   </div>
 

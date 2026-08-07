@@ -41,7 +41,7 @@ en:
       whatsapp_label: "WhatsApp notifications"
       whatsapp_phone: "Phone number for WhatsApp"
       verify: "Verify"
-      verified: "✓ Verified"
+      verified: "Verified"
       save: "Save Preferences"
       saved: "Notification preferences saved successfully!"
       whatsapp_hint: "Enter your phone number to receive real-time updates on WhatsApp."

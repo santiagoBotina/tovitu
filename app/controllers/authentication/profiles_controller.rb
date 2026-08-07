@@ -9,9 +9,13 @@ module Authentication
     def update
       @user = current_user
       old_email = @user.email
-      new_email = params[:user][:email]&.downcase&.strip
+      attrs = user_params
 
-      if @user.update(name: params[:user][:name], email: new_email, locale: params[:user][:locale])
+      # Only normalize/apply the email when the form actually sent one.
+      # A locale-only save (language selector auto-save) must not clear it.
+      attrs = attrs.merge(email: attrs[:email]&.downcase&.strip) if attrs.key?(:email)
+
+      if @user.update(attrs)
         if @user.email != old_email
           @user.update!(verified_at: nil)
           Authentication::ResendVerificationEmail.call(user: @user)
@@ -23,6 +27,12 @@ module Authentication
       else
         render :edit, status: :unprocessable_entity
       end
+    end
+
+    private
+
+    def user_params
+      params.fetch(:user, {}).permit(:name, :email, :locale)
     end
   end
 end

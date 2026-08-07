@@ -40,6 +40,12 @@ es:
       user_options: "Opciones de usuario"
       search: "Buscar mascotas"
       search_placeholder: "Buscar mascotas..."
+    verified_badge: "Verificado"
+    language_selector:
+      aria_label: "Idioma"
+      menu_label: "Seleccionar idioma"
+      option_english: "English"
+      option_spanish: "Español"
   landing:
     index:
       title: "Encuentra tu pareja perfecta. Literalmente."

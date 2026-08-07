@@ -461,6 +461,29 @@ details[open] > .lp-panel-body {
   animation: trophy-glow 2s ease-in-out infinite;
 }
 
+/* ─── Login: Subtle Repeating Paw Pattern ─── */
+.login-paw-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%236C30FF'%3E%3Ccircle cx='40' cy='52' r='9'/%3E%3Cellipse cx='22' cy='38' rx='6' ry='8' transform='rotate(-20 22 38)'/%3E%3Cellipse cx='34' cy='28' rx='6' ry='8' transform='rotate(-8 34 28)'/%3E%3Cellipse cx='46' cy='28' rx='6' ry='8' transform='rotate(8 46 28)'/%3E%3Cellipse cx='58' cy='38' rx='6' ry='8' transform='rotate(20 58 38)'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 72px 72px;
+  opacity: 0.06;
+}
+
+/* ─── Language Selector: Menu Entrance ─── */
+@keyframes language-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.language-menu-enter {
+  animation: language-menu-in 150ms ease-out;
+}
+
 /* ─── Gamification: Reduced Motion ─── */
 @media (prefers-reduced-motion: reduce) {
   .confetti-piece,
@@ -474,7 +497,8 @@ details[open] > .lp-panel-body {
   .task-pulse,
   .journey-step-active,
   .toast-celebrate,
-  .trophy-glow {
+  .trophy-glow,
+  .language-menu-enter {
     animation: none !important;
   }
   .confetti-container {

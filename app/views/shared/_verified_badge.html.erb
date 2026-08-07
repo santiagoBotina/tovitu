@@ -1,0 +1,15 @@
+<%# Shared "Verified" badge.
+  # Squared (non-pill) per the design system; keeps the success palette + check icon.
+  # Locals:
+  #   label       - badge text (defaults to t("shared.verified_badge"))
+  #   extra_class - optional extra classes appended to the badge
+%>
+<% label = local_assigns[:label] || t("shared.verified_badge") %>
+<span role="status"
+      aria-label="<%= label %>"
+      class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-success/10 text-success <%= local_assigns[:extra_class] %>">
+  <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+  </svg>
+  <span><%= label %></span>
+</span>

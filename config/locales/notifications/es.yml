@@ -39,7 +39,7 @@ es:
       whatsapp_label: "Notificaciones por WhatsApp"
       whatsapp_phone: "Número de teléfono para WhatsApp"
       verify: "Verificar"
-      verified: "✓ Verificado"
+      verified: "Verificado"
       save: "Guardar Preferencias"
       saved: "¡Preferencias guardadas exitosamente!"
       whatsapp_hint: "Ingresa tu número de teléfono para recibir actualizaciones en tiempo real por WhatsApp."

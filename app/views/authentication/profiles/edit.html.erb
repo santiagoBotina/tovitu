@@ -55,7 +55,24 @@
 
   <%# ─── Account Info Card ─── %>
   <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d3">
-    <h2 class="font-display text-lg font-bold text-neutral-800 mb-6"><%= t(".account_info_title") %></h2>
+    <div class="flex items-start justify-between gap-4 mb-6">
+      <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".account_info_title") %></h2>
+      <%# Verification status badge lives in the upper-right corner of the card %>
+      <div class="shrink-0">
+        <% if current_user.verified? %>
+          <%= render "shared/verified_badge", label: t(".verified") %>
+        <% else %>
+          <span role="status"
+                aria-label="<%= t(".pending_verification") %>"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-warning/10 text-warning">
+            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span><%= t(".pending_verification") %></span>
+          </span>
+        <% end %>
+      </div>
+    </div>
 
     <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-5" do |f| %>
       <%= render "shared/error_messages", resource: @user %>
@@ -70,23 +87,6 @@
         <%= f.label :email, t(".email_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
         <%= f.email_field :email, required: true, autocomplete: "email",
               class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 text-neutral-800 placeholder-neutral-400 transition" %>
-        <div class="mt-2">
-          <% if current_user.verified? %>
-            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full bg-success/10 text-success">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-              </svg>
-              <%= t(".verified") %>
-            </span>
-          <% else %>
-            <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full bg-warning/10 text-warning">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              <%= t(".pending_verification") %>
-            </span>
-          <% end %>
-        </div>
       </div>
 
       <%= f.submit t(".submit"),
@@ -130,15 +130,81 @@
     <h2 class="font-display text-lg font-bold text-neutral-800 mb-2"><%= t(".language_title") %></h2>
     <p class="text-neutral-500 text-sm mb-4"><%= t(".language_desc") %></p>
 
-    <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-4" do |f| %>
-      <div>
-        <%= f.label :locale, t(".language_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
-        <%= f.select :locale,
-            options_for_select([["English", "en"], ["Español", "es"]], @user.locale.presence || I18n.locale),
-            {}, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 text-neutral-800 transition bg-white" %>
+    <% current_locale = @user.locale.presence || I18n.locale.to_s %>
+
+    <%# Custom language selector: auto-saves the locale on selection.
+        The native <select> is kept in the DOM as the no-JS fallback; once the
+        Stimulus controller connects it is hidden in favor of the custom control. %>
+    <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-4",
+                  data: { controller: "language-select" } do |f| %>
+
+      <%= f.label :locale, t(".language_label"),
+            id: "language-select-label",
+            class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+
+      <%# Native fallback (hidden after JS upgrade) %>
+      <%= f.select :locale,
+          options_for_select([[t("shared.language_selector.option_english"), "en"], [t("shared.language_selector.option_spanish"), "es"]], current_locale),
+          {},
+          data: { language_select_target: "native" },
+          class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 text-neutral-800 transition bg-white" %>
+
+      <%# Custom control (revealed after JS upgrade) %>
+      <div class="hidden" data-language-select-target="control">
+        <div class="relative">
+          <button type="button"
+                  role="combobox"
+                  data-language-select-target="trigger"
+                  data-action="language-select#toggle language-select#onKeydown"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-controls="language-select-listbox"
+                  aria-labelledby="language-select-label"
+                  class="w-full flex items-center justify-between gap-3 px-4 py-3 border border-neutral-300 rounded-xl shadow-sm bg-white text-neutral-800 font-medium hover:border-neutral-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition cursor-pointer">
+            <span data-language-select-target="triggerLabel"><%= current_locale == "es" ? t("shared.language_selector.option_spanish") : t("shared.language_selector.option_english") %></span>
+            <svg class="w-4 h-4 text-neutral-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+            </svg>
+          </button>
+
+          <ul id="language-select-listbox"
+              data-language-select-target="menu"
+              role="listbox"
+              aria-labelledby="language-select-label"
+              class="hidden absolute z-dropdown mt-2 w-full bg-white border border-neutral-200 rounded-xl shadow-md py-1.5 overflow-hidden">
+            <li id="language-option-en"
+                data-language-select-target="option"
+                data-value="en"
+                role="option"
+                aria-selected="<%= current_locale == "en" %>"
+                data-action="language-select#select"
+                class="flex items-center justify-between px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-primary-50 cursor-pointer <%= current_locale == "en" ? "bg-primary-500 text-white" : "" %>">
+              <span><%= t("shared.language_selector.option_english") %></span>
+              <svg data-language-select-target="check" class="w-4 h-4 shrink-0 <%= current_locale == "en" ? "" : "hidden" %>" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+              </svg>
+            </li>
+            <li id="language-option-es"
+                data-language-select-target="option"
+                data-value="es"
+                role="option"
+                aria-selected="<%= current_locale == "es" %>"
+                data-action="language-select#select"
+                class="flex items-center justify-between px-4 py-2.5 text-sm font-medium text-neutral-700 hover:bg-primary-50 cursor-pointer <%= current_locale == "es" ? "bg-primary-500 text-white" : "" %>">
+              <span><%= t("shared.language_selector.option_spanish") %></span>
+              <svg data-language-select-target="check" class="w-4 h-4 shrink-0 <%= current_locale == "es" ? "" : "hidden" %>" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+              </svg>
+            </li>
+          </ul>
+        </div>
       </div>
-      <%= f.submit t(".language_save"),
-          class: "w-full bg-primary-500 text-white font-semibold py-3 px-4 rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] cursor-pointer shadow-sm" %>
+
+      <%# Save button is the no-JS fallback; with JS, selecting a language auto-saves %>
+      <div data-language-select-target="submit">
+        <%= f.submit t(".language_save"),
+            class: "w-full bg-primary-500 text-white font-semibold py-3 px-4 rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] cursor-pointer shadow-sm" %>
+      </div>
     <% end %>
   </section>
 

@@ -40,6 +40,12 @@ en:
       user_options: "User options"
       search: "Search pets"
       search_placeholder: "Search pets..."
+    verified_badge: "Verified"
+    language_selector:
+      aria_label: "Language"
+      menu_label: "Select language"
+      option_english: "English"
+      option_spanish: "Español"
   landing:
     index:
       title: "Find your perfect match. Literally."
