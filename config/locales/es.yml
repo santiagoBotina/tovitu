@@ -33,6 +33,8 @@ es:
       saved_pets: "Mascotas guardadas"
       user_menu: "Menú de usuario"
       user_options: "Opciones de usuario"
+      search: "Buscar mascotas"
+      search_placeholder: "Buscar mascotas..."
   landing:
     index:
       title: "Encuentra tu pareja perfecta. Literalmente."

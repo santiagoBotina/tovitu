@@ -33,6 +33,8 @@ en:
       saved_pets: "Saved pets"
       user_menu: "User menu"
       user_options: "User options"
+      search: "Search pets"
+      search_placeholder: "Search pets..."
   landing:
     index:
       title: "Find your perfect match. Literally."
