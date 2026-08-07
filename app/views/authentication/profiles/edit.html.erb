@@ -2,6 +2,11 @@
 <%# Design: Dashboard-level bento cards with micro-interactions %>
 <div class="w-full max-w-2xl mx-auto space-y-5">
 
+  <%# ─── Back link ─── %>
+  <div class="bento-enter bento-enter-d1">
+    <%= render "shared/back_link", path: root_path, label: t(".back") %>
+  </div>
+
   <%# ─── Page Header ─── %>
   <header class="bento-enter bento-enter-d1">
     <h1 class="font-display text-2xl md:text-3xl font-bold text-neutral-900"><%= t(".title") %></h1>
@@ -157,14 +162,4 @@
       </div>
     </div>
   <% end %>
-
-  <%# ─── Back link ─── %>
-  <div class="text-center bento-enter bento-enter-d8">
-    <%= link_to root_path, class: "inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-700 transition-colors" do %>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M15 19l-7-7 7-7"/>
-      </svg>
-      <%= t(".back") %>
-    <% end %>
-  </div>
 </div>

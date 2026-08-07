@@ -14,23 +14,42 @@
   <div class="flex items-center justify-end h-16 px-4 md:hidden">
     <button data-action="click->sidebar#closeMobile"
             class="flex items-center justify-center w-8 h-8 rounded-lg text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 transition-colors"
-            aria-label="Close sidebar">
+            aria-label="<%= t('shared.sidebar.close') %>">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
         <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
       </svg>
     </button>
   </div>
 
-  <%# ─── Logo + Brand — Always visible ─── %>
+  <%# ─── Logo + Brand + Desktop collapse ─── %>
   <div class="flex-shrink-0 px-4 pt-5 pb-4 md:px-3 md:pt-4 md:pb-3">
-    <%= link_to user_dashboard_path, class: "flex items-center gap-3 group md:justify-center" do %>
-      <div class="shrink-0 sidebar-logo-glow transition-transform duration-300 group-hover:scale-105">
-        <%= render "shared/logo", class_name: "w-9 h-9 md:w-8 md:h-8" %>
-      </div>
-      <span data-sidebar-label class="font-display text-xl font-extrabold tracking-tight text-primary-600 md:hidden whitespace-nowrap">
-        Tovitu
-      </span>
-    <% end %>
+    <div class="flex items-center">
+      <%= link_to user_dashboard_path, data: { sidebar_target: "brandLink" }, class: "flex items-center gap-3 group md:hidden" do %>
+        <div class="shrink-0 sidebar-logo-glow transition-transform duration-300 group-hover:scale-105">
+          <%= render "shared/logo", class_name: "w-9 h-9 md:w-8 md:h-8" %>
+        </div>
+        <span data-sidebar-label class="font-display text-xl font-extrabold tracking-tight text-primary-600 md:hidden whitespace-nowrap">
+          Tovitu
+        </span>
+      <% end %>
+
+      <%# Desktop collapse/expand toggle (upper-right) %>
+      <button type="button"
+              data-sidebar-target="collapseButton"
+              data-action="click->sidebar#toggleDesktop"
+              data-expand-label="<%= t('shared.sidebar.expand') %>"
+              data-collapse-label="<%= t('shared.sidebar.collapse') %>"
+              class="hidden md:flex md:mx-auto shrink-0 items-center justify-center w-8 h-8 rounded-lg text-neutral-400 hover:text-primary-600 hover:bg-primary-50 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+              aria-label="<%= t('shared.sidebar.expand') %>"
+              aria-expanded="false">
+        <svg data-sidebar-target="collapseIcon" class="hidden w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m15 18-6-6 6-6"/>
+        </svg>
+        <svg data-sidebar-target="expandIcon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <%# ─── User Profile Card (expanded only) ─── %>
@@ -236,7 +255,7 @@
         aria: { current: current_page?(edit_profile_path) ? "page" : nil } do %>
       <div class="shrink-0 w-5 h-5 flex items-center justify-center">
         <svg class="w-5 h-5 #{current_page?(edit_profile_path) ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
         </svg>
       </div>
       <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.settings") %></span>

@@ -2,12 +2,9 @@
 <%# Design: Dashboard-level bento cards, timeline with visual connectors, decision form with styling %>
 <div class="w-full max-w-5xl mx-auto">
   <%# ─── Back link ─── %>
-  <%= link_to shelter_adoption_requests_path, class: "inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-700 text-sm mb-6 transition bento-enter bento-enter-d1" do %>
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-    </svg>
-    <%= t(".back_to_requests") %>
-  <% end %>
+  <div class="mb-6 bento-enter bento-enter-d1">
+    <%= render "shared/back_link", path: shelter_adoption_requests_path, label: t(".back_to_requests") %>
+  </div>
 
   <%# ─── Request Header Card ─── %>
   <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6 bento-enter bento-enter-d2">
@@ -77,19 +74,19 @@
         </div>
         <div class="grid grid-cols-2 gap-2 text-sm pt-2 border-t border-neutral-100">
           <% if @profile&.personality.present? %>
-            <div><span class="text-neutral-500"><%= t(".personality") %>:</span> <%= t("onboarding.adopter.questions.q7.options.#{@profile.personality}") %></div>
+            <div><span class="text-neutral-500"><%= t(".personality") %>:</span> <%= t("onboarding.individual.questions.q7.options.#{@profile.personality}") %></div>
           <% end %>
           <% if @profile&.activity_level.present? %>
-            <div><span class="text-neutral-500"><%= t(".activity") %>:</span> <%= t("onboarding.adopter.questions.q2.options.#{@profile.activity_level}") %></div>
+            <div><span class="text-neutral-500"><%= t(".activity") %>:</span> <%= t("onboarding.individual.questions.q2.options.#{@profile.activity_level}") %></div>
           <% end %>
           <% if @profile&.pet_experience.present? %>
-            <div><span class="text-neutral-500"><%= t(".experience") %>:</span> <%= t("onboarding.adopter.questions.q4.options.#{@profile.pet_experience}") %></div>
+            <div><span class="text-neutral-500"><%= t(".experience") %>:</span> <%= t("onboarding.individual.questions.q4.options.#{@profile.pet_experience}") %></div>
           <% end %>
           <% if @profile&.daily_time_available.present? %>
-            <div><span class="text-neutral-500"><%= t(".daily_time") %>:</span> <%= t("onboarding.adopter.questions.q6.options.#{@profile.daily_time_available}") %></div>
+            <div><span class="text-neutral-500"><%= t(".daily_time") %>:</span> <%= t("onboarding.individual.questions.q6.options.#{@profile.daily_time_available}") %></div>
           <% end %>
           <% if @profile&.ideal_companion.present? %>
-            <div><span class="text-neutral-500"><%= t(".ideal_companion") %>:</span> <%= t("onboarding.adopter.questions.q3.options.#{@profile.ideal_companion}") %></div>
+            <div><span class="text-neutral-500"><%= t(".ideal_companion") %>:</span> <%= t("onboarding.individual.questions.q3.options.#{@profile.ideal_companion}") %></div>
           <% end %>
         </div>
         <% if @profile&.adoption_goals.present? && @profile.adoption_goals.any? %>
@@ -97,7 +94,7 @@
             <p class="text-sm text-neutral-500 mb-1"><%= t(".goals") %>:</p>
             <div class="flex flex-wrap gap-1">
               <% @profile.adoption_goals.each do |goal| %>
-                <span class="px-2 py-0.5 bg-secondary-50 text-secondary-600 text-xs rounded-full"><%= t("onboarding.adopter.questions.q5.options.#{goal}") %></span>
+                <span class="px-2 py-0.5 bg-secondary-50 text-secondary-600 text-xs rounded-full"><%= t("onboarding.individual.questions.q5.options.#{goal}") %></span>
               <% end %>
             </div>
           </div>

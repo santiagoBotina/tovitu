@@ -6,11 +6,15 @@ es:
     privacy: "Política de Privacidad"
     terms: "Términos del Servicio"
   shared:
+    back: "Atrás"
     error_messages:
       one: "%{count} error prohibió que esto se guardara:"
       other: "%{count} errores prohibieron que esto se guardara:"
     sidebar:
       dashboard: "Panel"
+      collapse: "Contraer menú lateral"
+      expand: "Expandir menú lateral"
+      close: "Cerrar menú lateral"
       shelters: "Refugios"
       pets: "Mascotas"
       adoptions: "Adopciones"
@@ -28,6 +32,7 @@ es:
       confirm: "Cerrar sesión"
       cancel: "Cancelar"
     navbar:
+      toggle_sidebar: "Alternar menú lateral"
       sign_in: "Iniciar sesión"
       create_account: "Crear cuenta"
       saved_pets: "Mascotas guardadas"

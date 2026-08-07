@@ -3,10 +3,9 @@
 <div class="max-w-2xl mx-auto px-4 py-8">
 
   <%# ─── Back link ─── %>
-  <%= link_to shelter_ai_documents_path, class: "inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-700 text-sm mb-6 transition bento-enter bento-enter-d1" do %>
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-    <%= t(".back") %>
-  <% end %>
+  <div class="mb-6 bento-enter bento-enter-d1">
+    <%= render "shared/back_link", path: shelter_ai_documents_path, label: t(".back") %>
+  </div>
 
   <%# ─── Page Header ─── %>
   <header class="mb-6 bento-enter bento-enter-d1">

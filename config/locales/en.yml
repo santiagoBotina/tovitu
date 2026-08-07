@@ -6,11 +6,15 @@ en:
     privacy: "Privacy Policy"
     terms: "Terms of Service"
   shared:
+    back: "Back"
     error_messages:
       one: "%{count} error prohibited this from being saved:"
       other: "%{count} errors prohibited this from being saved:"
     sidebar:
       dashboard: "Dashboard"
+      collapse: "Collapse sidebar"
+      expand: "Expand sidebar"
+      close: "Close sidebar"
       shelters: "Shelters"
       pets: "Pets"
       adoptions: "Adoptions"
@@ -28,6 +32,7 @@ en:
       confirm: "Sign out"
       cancel: "Cancel"
     navbar:
+      toggle_sidebar: "Toggle sidebar"
       sign_in: "Sign in"
       create_account: "Create account"
       saved_pets: "Saved pets"

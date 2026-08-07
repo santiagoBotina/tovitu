@@ -4,10 +4,9 @@
 
 <div class="w-full max-w-3xl mx-auto">
   <%# ─── Back link ─── %>
-  <%= link_to shelters_path, class: "inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-700 text-sm mb-6 transition bento-enter bento-enter-d1" do %>
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-    <%= t(".back") %>
-  <% end %>
+  <div class="mb-6 bento-enter bento-enter-d1">
+    <%= render "shared/back_link", path: shelters_path, label: t(".back") %>
+  </div>
 
   <%# ─── Hero/Header Card ─── %>
   <section class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden mb-6 bento-enter bento-enter-d2">
@@ -179,12 +178,4 @@
       </div>
     <% end %>
   </section>
-
-  <%# ─── Back link (bottom) ─── %>
-  <div class="text-center mb-8 bento-enter bento-enter-d8">
-    <%= link_to shelters_path, class: "inline-flex items-center gap-1.5 text-primary-500 hover:text-primary-600 text-sm font-medium transition" do %>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-      <%= t(".back") %>
-    <% end %>
-  </div>
 </div>

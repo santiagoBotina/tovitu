@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["sidebar", "overlay", "mainWrapper"]
+  static targets = ["sidebar", "overlay", "mainWrapper", "brandLink", "collapseButton", "collapseIcon", "expandIcon"]
 
   connect() {
     this._lastMobile = this.isMobile()
@@ -45,6 +45,7 @@ export default class extends Controller {
       el => el.classList.remove("md:hidden")
     )
 
+    this.updateCollapseState(true)
     localStorage.setItem("tovitu:sidebar", "expanded")
   }
 
@@ -61,7 +62,32 @@ export default class extends Controller {
       el => el.classList.add("md:hidden")
     )
 
+    this.updateCollapseState(false)
     localStorage.setItem("tovitu:sidebar", "collapsed")
+  }
+
+  updateCollapseState(expanded) {
+    if (this.hasBrandLinkTarget) {
+      this.brandLinkTarget.classList.toggle("md:hidden", !expanded)
+    }
+
+    if (this.hasCollapseButtonTarget) {
+      const button = this.collapseButtonTarget
+      button.setAttribute("aria-expanded", String(expanded))
+      button.setAttribute("aria-label", expanded ? button.dataset.collapseLabel : button.dataset.expandLabel)
+
+      // Right-aligned when expanded, centered when collapsed
+      button.classList.toggle("md:ml-auto", expanded)
+      button.classList.toggle("md:mx-auto", !expanded)
+    }
+
+    if (this.hasCollapseIconTarget) {
+      this.collapseIconTarget.classList.toggle("hidden", !expanded)
+    }
+
+    if (this.hasExpandIconTarget) {
+      this.expandIconTarget.classList.toggle("hidden", expanded)
+    }
   }
 
   toggleMobile() {
