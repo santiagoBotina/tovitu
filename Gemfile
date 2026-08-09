@@ -56,7 +56,7 @@ gem "aws-sdk-secretsmanager", require: false
 gem "aws-sdk-sns", require: false
 gem "aws-sdk-scheduler", require: false
 
-gem "discard", "~> 1.3"
+gem "discard", "~> 2.0"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
