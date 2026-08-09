@@ -14,6 +14,7 @@ echo ">>> Initializing LocalStack Cognito..."
 
 pool_id=$(awslocal cognito-idp list-user-pools --max-results 60 \
   --query "UserPools[?Name=='${POOL_NAME}'].Id" --output text 2>&1 || true)
+pool_id=$(echo "$pool_id" | tr -d '[:space:]')
 
 # cognito-idp is a LocalStack Pro/student feature. Without the Pro image +
 # license (LOCALSTACK_IMAGE=localstack/localstack-pro:4 and LOCALSTACK_AUTH_TOKEN)
@@ -24,7 +25,13 @@ if echo "$pool_id" | grep -qi "not included within your LocalStack license"; the
   exit 0
 fi
 
-pool_id=$(echo "$pool_id" | tr -d '[:space:]')
+# Any other non-pool-id output means the API call itself failed (e.g.
+# cognito-idp is not enabled in SERVICES). Skip rather than failing the whole
+# init sequence; aws:smoke reports the gap as a warning, not an error.
+if [ -n "$pool_id" ] && [ "$pool_id" != "None" ] && ! echo "$pool_id" | grep -Eq '^[a-z0-9-]+_[A-Za-z0-9_]+$'; then
+  echo ">>> Cognito skipped: cognito-idp unavailable (${pool_id})."
+  exit 0
+fi
 
 if [ -z "$pool_id" ] || [ "$pool_id" = "None" ]; then
   pool_id=$(awslocal cognito-idp create-user-pool \

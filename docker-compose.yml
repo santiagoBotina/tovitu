@@ -44,7 +44,10 @@ services:
     ports:
       - "${LOCALSTACK_PORT:-4566}:4566"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      # "Ready" requires the init hooks (ready.d) to have finished, not just
+      # the services to be reachable — otherwise resources (queues, topics,
+      # secrets, schedules) appear missing to aws:smoke.
+      test: ["CMD-SHELL", "curl -sf http://localhost:4566/_localstack/init/ready | python3 -c \"import json,sys; d=json.load(sys.stdin); sys.exit(0 if d.get('completed') is True else 1)\""]
       interval: 10s
       timeout: 5s
       retries: 5

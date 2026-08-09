@@ -58,7 +58,7 @@ namespace :aws do
     end
 
     if failed
-      $stderr.puts "AWS smoke check FAILED — see messages above. Verify LocalStack is running (`docker compose up -d localstack`) and the init scripts provisioned every resource."
+      $stderr.puts "AWS smoke check FAILED — see messages above. Verify LocalStack is running (`docker compose up -d localstack`) and its init hooks finished provisioning every resource before re-running (`curl -s http://localhost:4566/_localstack/init/ready` should report \"completed\": true)."
       exit 1
     end
 
@@ -110,7 +110,12 @@ namespace :aws do
           "tovitu-jobs" => "tovitu-jobs-dlq",
           "tovitu-mailers" => "tovitu-mailers-dlq"
         }.each do |queue, dlq|
-          url = client.get_queue_url(queue_name: queue).queue_url
+          url = begin
+            client.get_queue_url(queue_name: queue).queue_url
+          rescue Aws::Errors::ServiceError => e
+            failures << "#{queue} (#{e.class})"
+            next
+          end
           attrs = client.get_queue_attributes(queue_url: url, attribute_names: [ "RedrivePolicy" ]).attributes
           policy = attrs["RedrivePolicy"] ? JSON.parse(attrs["RedrivePolicy"]) : {}
           unless policy["maxReceiveCount"] == "5" && policy["deadLetterTargetArn"]&.end_with?(":#{dlq}")

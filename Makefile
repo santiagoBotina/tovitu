@@ -54,7 +54,7 @@ docker-up: ## Start Docker services (postgres, localstack)
 	@echo ">>> Waiting for PostgreSQL..."
 	@i=0; until docker compose exec postgres pg_isready -U $$(grep POSTGRES_USER .env 2>/dev/null | cut -d= -f2 || echo "tovitu") 2>/dev/null; do i=$$((i+1)); [ $$i -ge 30 ] && break; sleep 1; done
 	@echo ">>> Waiting for LocalStack services..."
-	@i=0; until curl -s http://localhost:4566/_localstack/health | python3 -c "import json,sys; d=json.load(sys.stdin); s=d.get(\"services\",{}); [exit(1) for k in [\"s3\",\"sqs\",\"sns\",\"ses\",\"secretsmanager\",\"logs\",\"events\",\"scheduler\"] if s.get(k) not in (\"available\",\"running\",\"starting\")]" 2>/dev/null; do i=$$((i+1)); [ $$i -ge 45 ] && break; sleep 2; done
+	@i=0; until (curl -s http://localhost:4566/_localstack/health | python3 -c "import json,sys; d=json.load(sys.stdin); s=d.get(\"services\",{}); [exit(1) for k in [\"s3\",\"sqs\",\"sns\",\"ses\",\"secretsmanager\",\"logs\",\"events\",\"scheduler\"] if s.get(k) not in (\"available\",\"running\",\"starting\")]" && curl -s http://localhost:4566/_localstack/init/ready | python3 -c "import json,sys; d=json.load(sys.stdin); sys.exit(0 if d.get('completed') is True else 1)") >/dev/null 2>&1; do i=$$((i+1)); [ $$i -ge 60 ] && break; sleep 2; done
 	@echo ">>> Core services ready."
 
 docker-down: ## Stop all Docker services
@@ -75,7 +75,7 @@ localstack-up: ## Start LocalStack (full AWS emulation for dev)
 	@echo ">>> Starting LocalStack..."
 	docker compose up -d --remove-orphans localstack
 	@echo ">>> Waiting for LocalStack services..."
-	@i=0; until curl -s http://localhost:4566/_localstack/health | python3 -c "import json,sys; d=json.load(sys.stdin); s=d.get(\"services\",{}); [exit(1) for k in [\"s3\",\"sqs\",\"sns\",\"ses\",\"secretsmanager\",\"logs\",\"events\",\"scheduler\"] if s.get(k) not in (\"available\",\"running\",\"starting\")]" 2>/dev/null; do i=$$((i+1)); [ $$i -ge 45 ] && break; sleep 2; done
+	@i=0; until (curl -s http://localhost:4566/_localstack/health | python3 -c "import json,sys; d=json.load(sys.stdin); s=d.get(\"services\",{}); [exit(1) for k in [\"s3\",\"sqs\",\"sns\",\"ses\",\"secretsmanager\",\"logs\",\"events\",\"scheduler\"] if s.get(k) not in (\"available\",\"running\",\"starting\")]" && curl -s http://localhost:4566/_localstack/init/ready | python3 -c "import json,sys; d=json.load(sys.stdin); sys.exit(0 if d.get('completed') is True else 1)") >/dev/null 2>&1; do i=$$((i+1)); [ $$i -ge 60 ] && break; sleep 2; done
 	@echo ">>> LocalStack ready."
 
 localstack-down: ## Stop LocalStack
