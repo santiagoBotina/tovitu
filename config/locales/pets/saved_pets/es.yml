@@ -7,3 +7,12 @@ es:
       empty_body: Toca el ♡ en cualquier mascota para guardarla aquí y encontrarla después.
       browse_pets: Explorar Mascotas
       pet_photo: Foto de %{name}
+    import:
+      require_login: Inicia sesión para importar tus mascotas guardadas.
+      require_individual: Solo las cuentas de adoptante pueden guardar mascotas.
+      imported_none: No hay mascotas nuevas para importar.
+      imported_one: Se agregó 1 mascota guardada a tu cuenta.
+      imported_other: Se agregaron %{count} mascotas guardadas a tu cuenta.
+      success_title: ¡Listo!
+      success_body: Tus mascotas guardadas ahora están en tu cuenta.
+      close: Cerrar

@@ -1,0 +1,13 @@
+<%# Tovitu brand lockup for standalone authentication pages (Login, Sign Up,
+    password reset, verification, check-email).
+    Renders the official logo mark + "Tovitu" wordmark — the same mark used in
+    the navbar/sidebar (Playground Standard, DESIGN.md §6 "use the multi-color
+    logo as a signature element"). The logo SVG is decorative (aria-hidden,
+    consistent with shared/logo usage); the wordmark is real text.
+    Brand accent here is purple (primary) by default: these pages are
+    role-agnostic shared flows. Role-specific pages (individual/shelter login)
+    color their own accents with their role palette instead. %>
+<div class="flex flex-col items-center gap-3 mb-6">
+  <%= render "shared/logo", class_name: "w-14 h-14" %>
+  <p class="font-display text-2xl font-extrabold tracking-tight text-primary-600">Tovitu</p>
+</div>

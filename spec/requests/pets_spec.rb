@@ -4,7 +4,73 @@ RSpec.describe "Pets" do
   let(:shelter) { create(:shelter) }
   let(:pet) { create(:pet, shelter: shelter) }
 
+  describe "GET /pets" do
+    it "allows unauthenticated visitors to browse the pets index" do
+      get pets_path
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "filters results by query" do
+      create(:pet, name: "Beagle Buddy")
+      create(:pet, name: "Whiskers")
+
+      get pets_path, params: { query: "Beagle" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Beagle Buddy")
+      expect(response.body).not_to include("Whiskers")
+    end
+
+    it "includes the exploration memory controller on the filter form" do
+      get pets_path
+
+      expect(response.body).to include("data-controller=\"exploration-memory\"")
+      expect(response.body).to include("data-exploration-memory-mode-value=\"save\"")
+      expect(response.body).to include("data-exploration-memory-signed-in-value=\"false\"")
+    end
+
+    it "uses the localStorage interest button for signed-out visitors" do
+      pet # materialize before the request so the card renders
+      get pets_path
+
+      expect(response.body).to include("data-controller=\"pet-interest\"")
+      expect(response.body).to include("data-pet-interest-id-value=\"#{pet.id}\"")
+      expect(response.body).not_to include(pet_save_path(pet_id: pet.id))
+    end
+
+    it "uses the server-backed save button for signed-in visitors" do
+      user = create(:user, :verified, :onboarding_completed)
+      post session_path, params: { session: { email: user.email, password: "password123" } }
+      pet # materialize before the request so the card renders
+
+      get pets_path
+
+      expect(response.body).to include(%(id="save-button-#{pet.id}"))
+      expect(response.body).to include(pet_save_path(pet_id: pet.id))
+      expect(response.body).not_to include("data-controller=\"pet-interest\"")
+      # Exploration memory is gated off for signed-in users.
+      expect(response.body).to include("data-exploration-memory-signed-in-value=\"true\"")
+    end
+  end
+
   describe "GET /pets/:id" do
+    it "allows unauthenticated visitors to view an available pet profile" do
+      get pet_path(pet)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(pet.name)
+      expect(response.body).to include(I18n.t("pets.show.apply_to_adopt"))
+    end
+
+    it "links back to the homepage when arriving from a featured pet card" do
+      get pet_path(pet, back_to: root_path)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(%(href="#{root_path}"))
+      expect(response.body).to include(CGI.escapeHTML(I18n.t("shared.back_to_home")))
+      expect(response.body).not_to include(%(href="#{pets_path}"))
+    end
+
     it "links back to the pets listing by default" do
       get pet_path(pet)
       expect(response).to have_http_status(:ok)

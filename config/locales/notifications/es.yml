@@ -48,7 +48,7 @@ es:
 
     index:
       title: "Notificaciones"
-      subtitle: "Mantente al día con tus solicitudes de adopción"
+      subtitle: "Actualizaciones sobre tus solicitudes, mensajes y mascotas, todo en un solo lugar."
       empty: "Sin notificaciones"
       empty_body: "Aquí verás notificaciones cuando haya actualizaciones en tus solicitudes de adopción, mensajes y más."
       mark_all_read: "Marcar todo como leído"

@@ -96,7 +96,7 @@ en:
 
     index:
       title: Find Your New Best Friend
-      subtitle: Every pet deserves a loving home. Browse available pets near you and find your perfect companion.
+      subtitle: Browse adoptable pets near you. Use filters to narrow your search and save the ones you love.
       pet_photo: Photo of %{name}
       no_results: No pets match your criteria
       no_results_body: Try adjusting your filters to see more pets.
@@ -162,7 +162,7 @@ en:
     pets:
       index:
         title: My Pets
-        subtitle: Manage your shelter's pet listings
+        subtitle: Every pet your shelter manages. Publish new pets and keep profiles up to date.
         add_pet: Add Pet
         all: All
         empty_title: No pets yet
@@ -278,7 +278,7 @@ en:
     pets:
       index:
         title: "My Published Pets"
-        subtitle: "Manage the pets you've listed for adoption"
+        subtitle: "Pets you've published. Add a new pet, update their story, and manage their adoption status."
         publish_new: "Publish a Pet"
         view: "View"
         edit: "Edit"
@@ -329,36 +329,6 @@ en:
         description_label: "Description"
         submit: "Save Changes"
         cancel: "Cancel"
-    adoption_requests:
-      index:
-        title: "Incoming Adoption Requests"
-        subtitle: "Review and respond to requests for your pets"
-        from: "From %{name}"
-        for_pet: "For %{pet_name}"
-        submitted: "Submitted %{time} ago"
-        view: "View"
-        empty_title: "No requests yet"
-        empty_body: "When someone requests to adopt one of your pets, it will appear here."
-      show:
-        back: "Back to requests"
-        request_from: "Request from %{name}"
-        for_pet: "For %{pet_name}"
-        submitted: "Submitted %{time} ago"
-        accept: "Accept"
-        decline: "Decline"
-        adopter_info: "Adopter Information"
-        adopter_profile: "Adopter Profile"
-        pet_details: "Pet Details"
-      decisions:
-        new:
-          title: "Review Adoption Request"
-          subtitle: "Decide on the request from %{name} for %{pet_name}"
-          decision_label: "Decision"
-          accept: "Accept"
-          decline: "Decline"
-          notes_label: "Notes (optional)"
-          submit: "Submit Decision"
-          cancel: "Cancel"
 
   flash:
     my:
@@ -367,5 +337,3 @@ en:
         updated: "Pet updated successfully!"
         removed: "Pet removed successfully."
         status_updated: "Pet status updated successfully."
-      adoption_requests:
-        decision_made: "Decision submitted successfully."

@@ -898,7 +898,7 @@ CREATE TABLE public.users (
     onboarding_completed_at timestamp(6) without time zone,
     onboarding_step integer DEFAULT 0 NOT NULL,
     locale character varying,
-    CONSTRAINT valid_role CHECK (((role)::text = ANY ((ARRAY['individual'::character varying, 'shelter_admin'::character varying, 'shelter_staff'::character varying, 'admin'::character varying, 'staff'::character varying])::text[])))
+    CONSTRAINT valid_role CHECK (((role)::text = ANY (ARRAY[('individual'::character varying)::text, ('shelter_admin'::character varying)::text, ('shelter_staff'::character varying)::text, ('admin'::character varying)::text, ('staff'::character varying)::text])))
 );
 
 

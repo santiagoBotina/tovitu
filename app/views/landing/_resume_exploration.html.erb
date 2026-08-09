@@ -1,0 +1,77 @@
+<%# ── Pick Up Where You Left Off ── %>
+<%# Revealed client-side by the exploration_memory controller when a recent
+    tovitu:exploration entry exists in localStorage. Everything is local —
+    no PII, no cookies beyond what the app already uses. %>
+<% exploration_labels = {
+     "species" => Pet::SPECIES.index_with { |s| t("pets.species.#{s}") },
+     "age_category" => Pet::AGE_CATEGORIES.index_with { |c| t("pets.age_categories.#{c}") },
+     "size" => Pet::SIZES.index_with { |s| t("pets.sizes.#{s}") },
+     "sex" => Pet::SEXES.index_with { |s| t("pets.sex.#{s}") },
+     "good_with_children" => t("pets.show.good_with_children"),
+     "good_with_dogs" => t("pets.show.good_with_dogs"),
+     "good_with_cats" => t("pets.show.good_with_cats")
+   } %>
+
+<section class="hidden bg-white px-4 sm:px-6 lg:px-8 py-12 sm:py-16"
+         data-controller="exploration-memory"
+         data-exploration-memory-mode-value="resume"
+         data-exploration-memory-base-url-value="<%= pets_path %>"
+         data-exploration-memory-labels-value="<%= escape_once(exploration_labels.to_json) %>"
+         data-exploration-memory-one-value="<%= t("landing.index.resume.saved_count_one") %>"
+         data-exploration-memory-other-value="<%= t("landing.index.resume.saved_count_other") %>"
+         data-exploration-memory-more-value="<%= t("landing.index.resume.more_filters") %>"
+         aria-label="<%= t("landing.index.resume.title") %>">
+  <div class="max-w-7xl mx-auto">
+    <div data-exploration-memory-target="panel"
+         class="hidden bg-secondary-50 border border-secondary-200 rounded-2xl p-6 sm:p-8">
+      <div class="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-10">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-2" aria-hidden="true">
+            <svg class="w-5 h-5 text-secondary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+            </svg>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-neutral-900">
+              <%= t("landing.index.resume.title") %>
+            </h2>
+          </div>
+          <p class="text-neutral-600 mb-4">
+            <%= t("landing.index.resume.subtitle") %>
+          </p>
+
+          <div class="flex flex-wrap gap-2 mb-5" data-exploration-memory-target="chips"></div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <%= link_to pets_path,
+                data: { exploration_memory_target: "resumeLink" },
+                class: "inline-flex items-center gap-2 px-6 py-3 bg-secondary-500 text-white font-semibold rounded-xl hover:bg-secondary-600 focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+              </svg>
+              <%= t("landing.index.resume.resume_search") %>
+            <% end %>
+
+            <%= link_to "#",
+                data: { action: "click->exploration-memory#showInterests", exploration_memory_target: "interestCount" },
+                class: "hidden inline-flex items-center gap-2 text-sm font-medium text-secondary-700 hover:text-secondary-800 underline transition-colors" do %>
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+              </svg>
+              <span data-exploration-memory-target="interestText"></span>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="lg:shrink-0">
+          <%= button_tag type: "button",
+              data: { action: "click->exploration-memory#clear" },
+              class: "inline-flex items-center gap-1.5 text-sm font-medium text-neutral-500 hover:text-neutral-700 transition-colors" do %>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+            <%= t("landing.index.resume.clear") %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -21,9 +21,39 @@
             <%= t("landing.index.title") %>
           </h1>
 
-          <p class="text-lg text-primary-100 max-w-lg mx-auto lg:mx-0 mb-10 leading-relaxed">
+          <p class="text-lg text-primary-100 max-w-lg mx-auto lg:mx-0 mb-8 leading-relaxed">
             <%= t("landing.index.subtitle") %>
           </p>
+
+          <%# ── Hero search (public discovery entry point) ── %>
+          <%= form_tag pets_path, method: :get, role: "search", class: "w-full max-w-xl mx-auto lg:mx-0 mb-6" do %>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none" aria-hidden="true">
+                <svg class="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                </svg>
+              </div>
+              <%= text_field_tag :query, nil,
+                    type: "search",
+                    placeholder: t("landing.index.discovery.search_placeholder"),
+                    aria: { label: t("landing.index.discovery.search") },
+                    autocomplete: "off",
+                    class: "w-full pl-14 pr-32 sm:pr-40 py-4 sm:py-5 bg-white rounded-2xl border-2 border-white text-base sm:text-lg text-neutral-800 placeholder-neutral-400 shadow-lg focus:outline-none focus:ring-4 focus:ring-primary-200 focus:border-primary-500 transition-all duration-200" %>
+              <%= submit_tag t("landing.index.discovery.search_button"),
+                    class: "absolute right-2 top-1/2 -translate-y-1/2 px-5 sm:px-6 py-2.5 sm:py-3 bg-primary-500 text-white font-semibold text-sm sm:text-base rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-white active:scale-[0.97] transition-all duration-150 cursor-pointer shadow-sm" %>
+            </div>
+          <% end %>
+
+          <%# ── Species quick-pick ── %>
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-10">
+            <span class="text-sm text-primary-200 font-medium mr-1"><%= t("landing.index.discovery.quick_species_label") %></span>
+            <%= link_to t("landing.index.discovery.quick_dog"), pets_path(species: "dog"),
+                class: "px-4 py-2 rounded-full text-sm font-semibold text-white bg-white/15 border border-white/25 hover:bg-white/25 active:scale-[0.97] transition-all duration-150" %>
+            <%= link_to t("landing.index.discovery.quick_cat"), pets_path(species: "cat"),
+                class: "px-4 py-2 rounded-full text-sm font-semibold text-white bg-white/15 border border-white/25 hover:bg-white/25 active:scale-[0.97] transition-all duration-150" %>
+            <%= link_to t("landing.index.discovery.quick_other"), pets_path(species: "other"),
+                class: "px-4 py-2 rounded-full text-sm font-semibold text-white bg-white/15 border border-white/25 hover:bg-white/25 active:scale-[0.97] transition-all duration-150" %>
+          </div>
 
           <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
             <%= link_to pets_path, class: "inline-flex items-center px-8 py-4 bg-white text-primary-600 font-bold text-base rounded-xl border-2 border-primary-700 hover:bg-primary-50 active:scale-[0.97] transition-all duration-150 shadow-button-primary hover:shadow-button-primary-hover active:shadow-button-primary-active" do %>
@@ -56,6 +86,12 @@
       </div>
     </div>
   </section>
+
+  <%# ── Pick up where you left off (revealed by exploration_memory) ── %>
+  <%= render "landing/resume_exploration" %>
+
+  <%# ── Featured Pets ── %>
+  <%= render "landing/featured_pets" %>
 
   <%# ── How It Works ── %>
   <section class="bg-white px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
@@ -110,6 +146,15 @@
       </div>
     </div>
   </section>
+
+  <%# ── How Matching Works ── %>
+  <%= render "landing/matching" %>
+
+  <%# ── Adoption Process ── %>
+  <%= render "landing/process" %>
+
+  <%# ── Benefits of an Account ── %>
+  <%= render "landing/benefits" %>
 
   <%# ── For Shelters ── %>
   <section class="bg-primary-50 px-4 sm:px-6 lg:px-8 py-20 sm:py-24">

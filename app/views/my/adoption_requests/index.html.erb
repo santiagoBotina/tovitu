@@ -4,11 +4,10 @@
 
 <div class="max-w-4xl mx-auto">
   <%# ─── Header with counts ─── %>
-  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-6">
-    <div>
-      <h1 class="font-display text-2xl font-bold text-neutral-900"><%= t(".title") %></h1>
-      <p class="text-neutral-500 text-sm mt-1"><%= t(".subtitle") %></p>
-    </div>
+  <%= render "shared/section_header",
+             title: t(".title"),
+             subtitle: t(".subtitle"),
+             header_class: "flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-6" do %>
     <% if @requests.any? %>
       <div class="flex items-center gap-3 shrink-0">
         <% if pending_count > 0 %>
@@ -20,7 +19,7 @@
         <span class="text-xs text-neutral-400"><%= t(".total_count", count: @requests.count) %></span>
       </div>
     <% end %>
-  </div>
+  <% end %>
 
   <% if @requests.any? %>
     <%# ─── Request List ─── %>

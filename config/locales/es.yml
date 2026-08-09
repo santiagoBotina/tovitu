@@ -7,6 +7,7 @@ es:
     terms: "Términos del Servicio"
   shared:
     back: "Atrás"
+    back_to_home: "Volver al inicio"
     error_messages:
       one: "%{count} error prohibió que esto se guardara:"
       other: "%{count} errores prohibieron que esto se guardara:"
@@ -46,6 +47,17 @@ es:
       menu_label: "Seleccionar idioma"
       option_english: "English"
       option_spanish: "Español"
+    interests:
+      aria_view_saved: "Ver tus mascotas guardadas"
+      saved: "Guardado en este dispositivo"
+      unsaved: "Eliminado de tus favoritos"
+      prompt_title: "Guarda tus favoritos"
+      prompt_body: "Crea una cuenta gratuita para conservar tus mascotas favoritas — te estarán esperando la próxima vez."
+      prompt_benefit: "Tus mascotas guardadas, coincidencias y solicitudes te siguen en todos tus dispositivos."
+      create_account: "Crear cuenta gratuita"
+      sign_in: "Ya tengo una cuenta"
+      keep_browsing: "Seguir explorando"
+      close: "Cerrar"
   landing:
     index:
       title: "Encuentra tu pareja perfecta. Literalmente."
@@ -53,6 +65,63 @@ es:
       adopter_cta: "Explorar mascotas adoptables"
       shelter_cta: "Represento un refugio"
       hero_pet_alt: "Un perro feliz mirando hacia arriba con una expresión cálida, listo para ser adoptado"
+      discovery:
+        search: "Buscar mascotas"
+        search_placeholder: "Busca por nombre, raza o ciudad…"
+        search_button: "Buscar"
+        quick_species_label: "Explorar por especie"
+        quick_dog: "Perros"
+        quick_cat: "Gatos"
+        quick_other: "Otros"
+      featured:
+        title: "¿Listo para conocer a alguien?"
+        subtitle: "Algunas mascotas que buscan hogar ahora mismo."
+        view_all: "Ver todas las mascotas"
+        pet_photo: "Foto de %{name}"
+        browse_all: "Ver todas las mascotas adoptables"
+      matching:
+        title: "El match no es suerte. Es compatibilidad."
+        subtitle: "Tovitu analiza tu estilo de vida y la personalidad de cada mascota para encontrar conexiones que duran — no solo gustos."
+        step1_title: "Cuéntanos sobre ti"
+        step1_desc: "Responde unas preguntas rápidas sobre tu rutina, espacio y experiencia."
+        step2_title: "Evaluamos la compatibilidad"
+        step2_desc: "Nuestra IA equilibra energía, tiempo y espacio para que el match funcione en ambos sentidos."
+        step3_title: "Conoce mascotas que encajan"
+        step3_desc: "Descubre las mascotas con más probabilidades de prosperar contigo — y las razones."
+      process:
+        title: "Del scroll al hogar para siempre"
+        subtitle: "Un camino claro, con apoyo en cada paso."
+        step_discover: "Descubre"
+        step_meet: "Conoce"
+        step_apply: "Postúlate"
+        step_adopt: "Adopta"
+        step_thrive: "Crece"
+        discover_desc: "Explora mascotas que encajan con tu vida."
+        meet_desc: "Conócelas antes de comprometerte."
+        apply_desc: "Envía tu solicitud en minutos."
+        adopt_desc: "Lleva a casa a tu nuevo miembro de la familia."
+        thrive_desc: "Recibe apoyo mucho después de la adopción."
+      benefits:
+        title: "¿Por qué crear una cuenta gratuita?"
+        subtitle: "Explorar está abierto para todos. Una cuenta convierte la exploración en un plan."
+        benefit1_title: "Conserva tus favoritos"
+        benefit1_desc: "Guarda mascotas en tu lista y retoma justo donde lo dejaste, en cualquier dispositivo."
+        benefit2_title: "Matches hechos para ti"
+        benefit2_desc: "Recibe recomendaciones basadas en tu estilo de vida real, no solo en filtros."
+        benefit3_title: "Postúlate en minutos"
+        benefit3_desc: "Tus datos te acompañan, así las solicitudes son rápidas y simples."
+        benefit4_title: "Sigue tu camino"
+        benefit4_desc: "Da seguimiento a cada solicitud, del primer hola al hogar para siempre."
+        cta: "Crea tu cuenta gratuita"
+      resume:
+        title: "Retoma donde lo dejaste"
+        subtitle: "Guardamos tu última búsqueda en este dispositivo."
+        resume_search: "Reanudar búsqueda"
+        more_filters: "+%{count} más"
+        saved_count_one: "%{count} mascota guardada"
+        saved_count_other: "%{count} mascotas guardadas"
+        view_saved: "Ver mis mascotas guardadas"
+        clear: "Borrar búsqueda guardada"
       how_it_works:
         title: "Cómo funciona"
         subtitle: "Tres pasos simples para encontrar a tu compañero perfecto."
@@ -88,6 +157,12 @@ es:
         subtitle_active: "Tienes solicitudes de adopción activas. ¡Revisemos su estado!"
         cta_browse: "Explorar Mascotas"
         cta_profile: "Completar Perfil"
+      interest_import:
+        title_one: "Guardaste 1 mascota antes de unirte"
+        title_other: "Guardaste %{count} mascotas antes de unirte"
+        body: "Tráelas a tu cuenta para que te estén esperando."
+        import: "Importar mis mascotas guardadas"
+        skip: "Ahora no"
       readiness:
         title: "Preparación para Adoptar"
         percent: "%{percent}%%"
@@ -255,8 +330,8 @@ es:
     dashboard:
       show:
         title: "Panel de %{name}"
-        subtitle: "Esto es lo que está sucediendo hoy."
-        subtitle_new: "¡Configuremos tu refugio!"
+        subtitle: "Tu refugio de un vistazo: preparación, actividad reciente y próximos pasos para dar mascotas en adopción."
+        subtitle_new: "¡Configuremos tu refugio: agrega mascotas, define políticas e invita a tu equipo para estar en línea!"
         alert_bar: "🐾 %{count} nueva solicitud de adopción necesita tu atención."
         alert_bar_plural: "🐾 %{count} nuevas solicitudes de adopción necesitan tu atención."
         alert_cta: "Revisar Ahora"
@@ -395,6 +470,8 @@ es:
         signup_link: "Crear cuenta"
     registrations:
       new:
+        title_individual: "Crea tu cuenta"
+        subtitle_individual: "Comienza tu viaje de adopción con Tovitu"
         title_adopter: "Crea tu cuenta"
         subtitle_adopter: "Comienza tu viaje de adopción con Tovitu"
         title_shelter: "Crea tu cuenta de refugio"
@@ -435,7 +512,7 @@ es:
     profiles:
       edit:
         title: "Configuración"
-        subtitle: "Administra los detalles de tu cuenta, preferencias y configuración de idioma."
+        subtitle: "Tu cuenta y tu perfil de compatibilidad. Cuanto más completo esté, mejores serán tus coincidencias de mascotas."
         account_info_title: "Información de la Cuenta"
         name_label: "Nombre completo"
         email_label: "Correo electrónico"

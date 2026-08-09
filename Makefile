@@ -1,8 +1,7 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help setup deps run dev docker-up docker-down docker-logs \
-        minio-up minio-down \
-        localstack-up localstack-down db-migrate db-seed db-reset \
+.PHONY: help setup deps run dev docker-up docker-down docker-logs docker-clean \
+        localstack-up localstack-down aws-smoke db-migrate db-seed db-reset \
         test test-verbose lint lint-fix console clean install
 
 help: ## Show this help
@@ -11,7 +10,6 @@ help: ## Show this help
 
 setup: deps .env docker-up install db-migrate db-setup ## First-time project setup (system deps + Docker + gems + DB)
 	@echo ">>> Setup complete. Run 'make dev' to start."
-	@echo ">>> Set MINIO_ENABLED=true in .env to use MinIO for Active Storage."
 
 deps: ## Install system dependencies (libvips for image processing)
 	@echo ">>> Checking system dependencies..."
@@ -48,45 +46,41 @@ db-seed: ## Seed the database
 db-reset: ## Reset and reseed the database
 	bin/rails db:reset
 
-docker-up: ## Start Docker services (postgres, redis, minio)
-	@echo ">>> Starting Docker services..."
-	docker compose up -d postgres redis minio
+docker-up: ## Start Docker services (postgres, localstack)
+	@echo ">>> Starting Docker services (postgres, localstack)..."
+	docker compose up -d --remove-orphans postgres localstack
 	@echo ">>> Waiting for PostgreSQL..."
-	@timeout 30 sh -c 'until docker compose exec postgres pg_isready -U $$(grep POSTGRES_USER .env 2>/dev/null | cut -d= -f2 || echo "tovitu") 2>/dev/null; do sleep 1; done' || true
-	@echo ">>> Waiting for MinIO..."
-	@timeout 30 sh -c 'until curl -s http://localhost:9000/minio/health/live 2>/dev/null | grep -q "ok"; do sleep 1; done' || true
-	@echo ">>> Initializing MinIO bucket..."
-	docker compose run --rm minio-init
+	@i=0; until docker compose exec postgres pg_isready -U $$(grep POSTGRES_USER .env 2>/dev/null | cut -d= -f2 || echo "tovitu") 2>/dev/null; do i=$$((i+1)); [ $$i -ge 30 ] && break; sleep 1; done
+	@echo ">>> Waiting for LocalStack services..."
+	@i=0; until curl -s http://localhost:4566/_localstack/health | python3 -c "import json,sys; d=json.load(sys.stdin); s=d.get(\"services\",{}); [exit(1) for k in [\"s3\",\"sqs\",\"sns\",\"ses\",\"secretsmanager\",\"logs\",\"events\",\"scheduler\"] if s.get(k) not in (\"available\",\"running\",\"starting\")]" 2>/dev/null; do i=$$((i+1)); [ $$i -ge 45 ] && break; sleep 2; done
 	@echo ">>> Core services ready."
 
 docker-down: ## Stop all Docker services
 	@echo ">>> Stopping Docker services..."
-	docker compose down
+	docker compose down --remove-orphans
 
 docker-logs: ## View Docker service logs
 	docker compose logs -f
 
-minio-up: ## Start MinIO (S3-compatible local storage)
-	@echo ">>> Starting MinIO..."
-	docker compose up -d minio
-	@echo ">>> Waiting for MinIO..."
-	@timeout 30 sh -c 'until curl -s http://localhost:9000/minio/health/live 2>/dev/null | grep -q "ok"; do sleep 1; done' || true
-	@echo ">>> Initializing MinIO bucket..."
-	docker compose run --rm minio-init
-	@echo ">>> MinIO ready."
+docker-clean: ## Remove retired MinIO/Redis containers + volumes (run once post-migration)
+	@echo ">>> Removing orphan containers..."
+	docker compose down --remove-orphans
+	@echo ">>> Removing retired MinIO/Redis volumes..."
+	docker volume rm tovitu_minio_data tovitu_redis_data 2>/dev/null || echo "  (volumes already gone)"
+	@echo ">>> Done. Start the new stack with 'make docker-up'."
 
-minio-down: ## Stop MinIO
-	docker compose stop minio
-
-localstack-up: ## Start LocalStack (S3-compatible storage for dev)
+localstack-up: ## Start LocalStack (full AWS emulation for dev)
 	@echo ">>> Starting LocalStack..."
-	docker compose up -d localstack
-	@echo ">>> Waiting for LocalStack..."
-	@timeout 30 sh -c 'until curl -s http://localhost:4566/_localstack/health | grep -q "\"s3\": \"running\"" 2>/dev/null; do sleep 1; done' || true
+	docker compose up -d --remove-orphans localstack
+	@echo ">>> Waiting for LocalStack services..."
+	@i=0; until curl -s http://localhost:4566/_localstack/health | python3 -c "import json,sys; d=json.load(sys.stdin); s=d.get(\"services\",{}); [exit(1) for k in [\"s3\",\"sqs\",\"sns\",\"ses\",\"secretsmanager\",\"logs\",\"events\",\"scheduler\"] if s.get(k) not in (\"available\",\"running\",\"starting\")]" 2>/dev/null; do i=$$((i+1)); [ $$i -ge 45 ] && break; sleep 2; done
 	@echo ">>> LocalStack ready."
 
 localstack-down: ## Stop LocalStack
 	docker compose stop localstack
+
+aws-smoke: ## Run the AWS smoke check (verify LocalStack footprint)
+	bin/rails aws:smoke
 
 test: ## Run the test suite
 	bundle exec rspec

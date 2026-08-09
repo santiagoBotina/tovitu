@@ -2,11 +2,68 @@ es:
   adoption_requests:
     new:
       transparency_note: Tovitu muestra al refugio un resumen de tu perfil y actividad para ayudarte a encontrar el compañero perfecto.
+    index:
+      title: Mis Solicitudes de Adopción
+      subtitle: Cada mascota que has solicitado, en un solo lugar. Consulta el estado y haz seguimiento cuando lo necesites.
+      submitted: Enviada hace %{time}
+      empty_title: Aún no hay solicitudes de adopción
+      empty_body: Aún no has solicitado adoptar ninguna mascota. ¡Explora las mascotas disponibles y encuentra a tu nuevo compañero!
+      browse_cta: Explorar Mascotas
+  my:
+    adoption_requests:
+      index:
+        title: Solicitudes de Adopción Entrantes
+        subtitle: Solicitudes de adopción para tus mascotas. Revisa a los solicitantes y decide quién encaja mejor con tu mascota.
+        from: Solicitud de %{name}
+        for_pet: Para %{pet_name}
+        submitted: Enviada hace %{time}
+        view: Ver
+        empty_title: Aún no hay solicitudes entrantes
+        empty_body: Cuando alguien solicite adoptar una de tus mascotas, lo verás aquí.
+        pending_count:
+          one: "%{count} necesita tu revisión"
+          other: "%{count} necesitan tu revisión"
+        total_count: "%{count} en total"
+        browse_pets: Mis Mascotas
+      show:
+        back: ← Volver a Solicitudes
+        request_from: Solicitud de %{name}
+        for_pet: Para %{pet_name}
+        submitted: Enviada hace %{time}
+        accept: Aceptar
+        decline: Declinar
+        adopter_info: Información del Adoptante
+        adopter_profile: Perfil del Adoptante
+        pet_details: Detalles de la Mascota
+        timeline: Cronología de Estado
+        other_pending:
+          one: Tienes %{count} otra solicitud esperando tu revisión.
+          other: Tienes %{count} otras solicitudes esperando tu revisión.
+        view_all_requests: Ver todas →
+      decisions:
+        new:
+          back: ← Volver a la Solicitud
+          title: Declinar Solicitud de Adopción
+          subtitle: Proporciona motivo(s) para declinar la solicitud de %{adopter_name} para %{pet_name}
+          accept_title: Aceptar Solicitud de Adopción
+          accept_subtitle: Confirma la aceptación de la solicitud de %{adopter_name} para %{pet_name}
+          accept_info: Aceptar esta solicitud pondrá a la mascota en espera para el adoptante. Será notificado.
+          select_reasons: "Selecciona motivo(s):"
+          custom_reason_label: O agrega un motivo personalizado
+          custom_reason_placeholder: Escribe tu motivo...
+          custom_reason_hint: Esto se mostrará al adoptante junto con los motivos seleccionados.
+          submit: Enviar Decisión
+          declined_submit: Enviar Declinación
+          confirm_accept: Confirmar Aceptación
+          processing: Procesando...
+          cancel: Cancelar
+        create:
+          decision_made: Tu decisión ha sido enviada.
   shelter:
     adoption_requests:
       index:
         title: Solicitudes de Adopción
-        subtitle: Revisa y gestiona las solicitudes de adopción de tu refugio
+        subtitle: Solicitudes de adopción para las mascotas de tu refugio. Revisa cada solicitante y decide quién encaja mejor.
         filters:
           all: Todas
         table:

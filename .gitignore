@@ -35,7 +35,11 @@ app/assets/builds/
 *~
 
 # LocalStack
-.localstack/
+# Init scripts (`.localstack/*.sh`) are the provisioning hooks mounted into the
+# container at `/etc/localstack/init/ready.d` and MUST be tracked. Everything
+# else under `.localstack/` (generated state, logs) is local-only.
+.localstack/*
+!.localstack/*.sh
 
 # OS
 .DS_Store

@@ -91,7 +91,7 @@ es:
 
     index:
       title: Encuentra tu Nuevo Mejor Amigo
-      subtitle: Toda mascota merece un hogar amoroso. Explora las mascotas disponibles cerca de ti y encuentra tu compañero perfecto.
+      subtitle: Explora mascotas adoptables cerca de ti. Usa los filtros para afinar tu búsqueda y guarda las que ames.
       pet_photo: Foto de %{name}
       no_results: Ninguna mascota coincide con tus criterios
       no_results_body: Intenta ajustar tus filtros para ver más mascotas.
@@ -158,7 +158,7 @@ es:
     pets:
       index:
         title: Mis Mascotas
-        subtitle: Administra las listas de mascotas de tu refugio
+        subtitle: Cada mascota que gestiona tu refugio. Publica nuevas mascotas y mantén los perfiles al día.
         add_pet: Agregar Mascota
         all: Todas
         empty_title: Aún no hay mascotas
@@ -231,6 +231,62 @@ es:
         photos_hint: Puedes seleccionar múltiples fotos. Máximo 10 fotos. Solo JPEG, PNG o WebP.
         cancel: Cancelar
         submit: Guardar Mascota
+
+  my:
+    pets:
+      index:
+        title: "Mis Mascotas Publicadas"
+        subtitle: "Las mascotas que has publicado. Agrega una nueva mascota, actualiza su historia y gestiona su estado de adopción."
+        publish_new: "Publicar una Mascota"
+        view: "Ver"
+        edit: "Editar"
+        empty_title: "Aún no has publicado mascotas"
+        empty_body: "Publica una mascota que hayas encontrado y ayúdala a encontrar un hogar amoroso."
+      new:
+        title: "Publicar una Mascota"
+        subtitle: "Publica una mascota que encontraste para adopción"
+        back: "Volver a mis mascotas"
+        name_label: "Nombre de la Mascota"
+        species_label: "Especie"
+        breed_label: "Raza"
+        age_label: "Categoría de Edad"
+        size_label: "Tamaño"
+        size_placeholder: "Seleccionar tamaño"
+        sex_label: "Sexo"
+        description_label: "Descripción"
+        photos_label: "Fotos"
+        photos_hint: "JPEG, PNG o WebP. Máximo 10 fotos."
+        submit: "Publicar Mascota"
+        cancel: "Cancelar"
+      show:
+        back: "Volver a mis mascotas"
+        edit: "Editar"
+        delete: "Eliminar"
+        delete_confirm: "¿Estás seguro de que quieres eliminar esta mascota?"
+        description: "Acerca de"
+        age: "Edad"
+        size: "Tamaño"
+        sex: "Sexo"
+        status: "Estado"
+        incoming_requests: "Solicitudes de Adopción Entrantes"
+        submitted: "Enviada hace %{time}"
+        review: "Revisar"
+        change_status: "Cambiar Estado"
+        update_status: "Actualizar Estado"
+      edit:
+        title: "Editar %{name}"
+        subtitle: "Actualiza la información de esta mascota"
+        back: "Volver a la mascota"
+        name_label: "Nombre de la Mascota"
+        species_label: "Especie"
+        breed_label: "Raza"
+        age_label: "Categoría de Edad"
+        size_label: "Tamaño"
+        size_placeholder: "Seleccionar tamaño"
+        sex_label: "Sexo"
+        description_label: "Descripción"
+        submit: "Guardar Cambios"
+        cancel: "Cancelar"
 
   activerecord:
     models:

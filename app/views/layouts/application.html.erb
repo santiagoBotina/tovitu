@@ -57,7 +57,7 @@
         <%= render "shared/navbar" %>
       <% end %>
 
-      <main id="main-content" class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main id="main-content" class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8">
         <%= yield %>
       </main>
 
@@ -72,6 +72,61 @@
         </div>
       </footer>
     </div>
+
+    <% if !signed_in? %>
+      <%# ─── Conversion prompt modal (signed-out visitors only) ─── %>
+      <%# Lives at body level, outside the sticky navbar. The navbar's
+          backdrop-blur-md would otherwise become the containing block for
+          this fixed dialog and clip it to the navbar's height. %>
+      <div data-controller="interest-prompt">
+        <div data-interest-prompt-target="dialog"
+             class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="interest-prompt-title"
+             aria-hidden="true">
+          <div class="absolute inset-0 bg-neutral-900/50"
+               data-action="click->interest-prompt#hideFromEvent"></div>
+          <div class="relative w-full max-w-md bg-white rounded-2xl border border-neutral-200 shadow-lg p-8 text-center">
+            <button type="button"
+                    data-interest-prompt-target="closeButton"
+                    data-action="click->interest-prompt#hideFromEvent"
+                    class="absolute top-4 right-4 w-9 h-9 rounded-full text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 flex items-center justify-center transition-colors duration-150"
+                    aria-label="<%= t('shared.interests.close') %>">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+
+            <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-accent-pink/10 flex items-center justify-center" aria-hidden="true">
+              <svg class="w-8 h-8 text-accent-pink" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+              </svg>
+            </div>
+
+            <h2 id="interest-prompt-title" class="font-display text-2xl font-bold text-neutral-900 mb-2">
+              <%= t("shared.interests.prompt_title") %>
+            </h2>
+            <p class="text-neutral-600 mb-2 leading-relaxed">
+              <%= t("shared.interests.prompt_body") %>
+            </p>
+            <p class="text-sm text-neutral-400 mb-6 leading-relaxed">
+              <%= t("shared.interests.prompt_benefit") %>
+            </p>
+
+            <%= link_to t("shared.interests.create_account"), new_registration_path(role: "individual"),
+                class: "block w-full px-6 py-3.5 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 active:scale-[0.97] transition-all duration-150 shadow-sm mb-3" %>
+            <%= link_to t("shared.interests.sign_in"), new_session_path,
+                class: "block w-full px-6 py-3 text-sm font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-xl transition-colors duration-150 mb-4" %>
+            <button type="button"
+                    data-action="click->interest-prompt#hideFromEvent"
+                    class="text-sm font-medium text-neutral-500 hover:text-neutral-700 transition-colors">
+              <%= t("shared.interests.keep_browsing") %>
+            </button>
+          </div>
+        </div>
+      </div>
+    <% end %>
 
 
   </body>

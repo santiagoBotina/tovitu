@@ -7,6 +7,7 @@ en:
     terms: "Terms of Service"
   shared:
     back: "Back"
+    back_to_home: "Back to homepage"
     error_messages:
       one: "%{count} error prohibited this from being saved:"
       other: "%{count} errors prohibited this from being saved:"
@@ -46,6 +47,17 @@ en:
       menu_label: "Select language"
       option_english: "English"
       option_spanish: "Español"
+    interests:
+      aria_view_saved: "View your saved pets"
+      saved: "Saved to this device"
+      unsaved: "Removed from your picks"
+      prompt_title: "Save your picks"
+      prompt_body: "Create a free account to keep your favorite pets — they'll be waiting for you next time."
+      prompt_benefit: "Your saved pets, matches, and applications follow you across devices."
+      create_account: "Create free account"
+      sign_in: "I already have an account"
+      keep_browsing: "Keep browsing"
+      close: "Close"
   landing:
     index:
       title: "Find your perfect match. Literally."
@@ -53,6 +65,63 @@ en:
       adopter_cta: "Browse adoptable pets"
       shelter_cta: "I run a shelter"
       hero_pet_alt: "A happy dog looking up with a warm expression, ready for adoption"
+      discovery:
+        search: "Search pets"
+        search_placeholder: "Search by name, breed, or city…"
+        search_button: "Search"
+        quick_species_label: "Browse by species"
+        quick_dog: "Dogs"
+        quick_cat: "Cats"
+        quick_other: "Other pets"
+      featured:
+        title: "Ready to meet someone?"
+        subtitle: "A few pets looking for a home right now."
+        view_all: "View all pets"
+        pet_photo: "Photo of %{name}"
+        browse_all: "See every adoptable pet"
+      matching:
+        title: "Matching isn't luck. It's a fit."
+        subtitle: "Tovitu looks at your lifestyle and a pet's personality to find connections that last — not just likes."
+        step1_title: "Tell us about you"
+        step1_desc: "Answer a few quick questions about your routine, space, and experience."
+        step2_title: "We weigh the fit"
+        step2_desc: "Our AI balances energy, time, and home space so the match works both ways."
+        step3_title: "Meet pets that fit"
+        step3_desc: "See the pets most likely to thrive with you — and the reasons why."
+      process:
+        title: "From scroll to forever home"
+        subtitle: "A clear path, with support at every step."
+        step_discover: "Discover"
+        step_meet: "Meet"
+        step_apply: "Apply"
+        step_adopt: "Adopt"
+        step_thrive: "Thrive"
+        discover_desc: "Browse pets that fit your life."
+        meet_desc: "Get to know them before you commit."
+        apply_desc: "Send your application in minutes."
+        adopt_desc: "Bring your new family member home."
+        thrive_desc: "Stay supported long after adoption."
+      benefits:
+        title: "Why create a free account?"
+        subtitle: "Browsing is open to everyone. An account turns browsing into a plan."
+        benefit1_title: "Keep your picks"
+        benefit1_desc: "Save pets to your list and pick up right where you left off, on any device."
+        benefit2_title: "Matches made for you"
+        benefit2_desc: "Get recommendations based on your real lifestyle, not just filters."
+        benefit3_title: "Apply in minutes"
+        benefit3_desc: "Your details travel with you, so applications are fast and simple."
+        benefit4_title: "Track your journey"
+        benefit4_desc: "Follow every application from first hello to forever home."
+        cta: "Create your free account"
+      resume:
+        title: "Pick up where you left off"
+        subtitle: "We saved your last search on this device."
+        resume_search: "Resume search"
+        more_filters: "+%{count} more"
+        saved_count_one: "%{count} pet saved"
+        saved_count_other: "%{count} pets saved"
+        view_saved: "View my saved pets"
+        clear: "Clear saved search"
       how_it_works:
         title: "How it works"
         subtitle: "Three simple steps to find your perfect companion."
@@ -87,6 +156,12 @@ en:
         subtitle_active: "You have active adoption requests. Let's check on them!"
         cta_browse: "Browse Pets"
         cta_profile: "Complete Profile"
+      interest_import:
+        title_one: "You saved 1 pet before joining"
+        title_other: "You saved %{count} pets before joining"
+        body: "Bring them into your account so they're waiting for you."
+        import: "Import my saved pets"
+        skip: "Not now"
       readiness:
         title: "Adoption Readiness"
         percent: "%{percent}%%"
@@ -246,8 +321,8 @@ en:
     dashboard:
       show:
         title: "%{name} Dashboard"
-        subtitle: "Here's what's happening today."
-        subtitle_new: "Let's get your shelter set up!"
+        subtitle: "Your shelter at a glance: readiness, recent activity, and next steps to get pets adopted."
+        subtitle_new: "Let's get your shelter set up: add pets, set policies, and invite your team to go live."
         alert_bar: "🐾 %{count} new adoption request needs your attention!"
         alert_bar_plural: "🐾 %{count} new adoption requests need your attention!"
         alert_cta: "Review Now"
@@ -439,7 +514,7 @@ en:
     profiles:
       edit:
         title: "Settings"
-        subtitle: "Manage your account details, preferences, and language settings."
+        subtitle: "Your account and matching profile. The more complete this is, the better your pet matches."
         account_info_title: "Account Information"
         name_label: "Full name"
         email_label: "Email address"

@@ -8,10 +8,10 @@
   </div>
 
   <%# ─── Page Header ─── %>
-  <header class="bento-enter bento-enter-d1">
-    <h1 class="font-display text-2xl md:text-3xl font-bold text-neutral-900"><%= t(".title") %></h1>
-    <p class="text-neutral-500 mt-1 text-sm"><%= t(".subtitle") %></p>
-  </header>
+  <%= render "shared/section_header",
+             title: t(".title"),
+             subtitle: t(".subtitle"),
+             header_class: "bento-enter bento-enter-d1" %>
 
   <%# ─── Onboarding Completion Banner ─── %>
   <% if !current_user.onboarding_completed? %>

@@ -1,0 +1,59 @@
+<%# ── How Matching Works ── %>
+<%# Compact visual steps with icon tiles — no numbered-marker kickers,
+    no glass, no gradient text (DESIGN.md). %>
+<section class="bg-primary-50 px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 mb-4 text-balance">
+        <%= t("landing.index.matching.title") %>
+      </h2>
+      <p class="text-lg text-neutral-600 leading-relaxed">
+        <%= t("landing.index.matching.subtitle") %>
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+      <div class="bg-white rounded-xl border border-neutral-200 shadow-sm p-8">
+        <div class="w-14 h-14 rounded-2xl bg-primary-100 flex items-center justify-center mb-6">
+          <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <h3 class="font-display text-xl font-bold text-neutral-900 mb-2">
+          <%= t("landing.index.matching.step1_title") %>
+        </h3>
+        <p class="text-neutral-600 leading-relaxed">
+          <%= t("landing.index.matching.step1_desc") %>
+        </p>
+      </div>
+
+      <div class="bg-white rounded-xl border border-neutral-200 shadow-sm p-8 md:-translate-y-3">
+        <div class="w-14 h-14 rounded-2xl bg-secondary-100 flex items-center justify-center mb-6">
+          <svg class="w-7 h-7 text-secondary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/>
+          </svg>
+        </div>
+        <h3 class="font-display text-xl font-bold text-neutral-900 mb-2">
+          <%= t("landing.index.matching.step2_title") %>
+        </h3>
+        <p class="text-neutral-600 leading-relaxed">
+          <%= t("landing.index.matching.step2_desc") %>
+        </p>
+      </div>
+
+      <div class="bg-white rounded-xl border border-neutral-200 shadow-sm p-8">
+        <div class="w-14 h-14 rounded-2xl bg-accent-pink/10 flex items-center justify-center mb-6">
+          <svg class="w-7 h-7 text-accent-pink" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4.318 6.318a4.5 4.5 0 0 0 0 6.364L12 20.364l7.682-7.682a4.5 4.5 0 0 0-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 0 0-6.364 0Z"/>
+          </svg>
+        </div>
+        <h3 class="font-display text-xl font-bold text-neutral-900 mb-2">
+          <%= t("landing.index.matching.step3_title") %>
+        </h3>
+        <p class="text-neutral-600 leading-relaxed">
+          <%= t("landing.index.matching.step3_desc") %>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

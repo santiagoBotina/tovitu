@@ -27,10 +27,6 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "solid_cache"
 gem "solid_cable"
 
-# Background jobs with Redis
-gem "sidekiq"
-gem "redis"
-
 # Authorization
 gem "pundit"
 
@@ -50,8 +46,15 @@ gem "pgvector"      # pgvector support for ActiveRecord
 gem "pdf-reader"    # PDF text extraction for uploaded shelter docs
 gem "httparty"      # HTTP client for AI API calls
 
-# S3-compatible storage adapter (required for Cloudflare R2, MinIO, LocalStack)
+# AWS SDK gems (LocalStack in dev/test/CI, real AWS in prod).
+# All `require: false` — consumers require their own client lazily.
 gem "aws-sdk-s3", require: false
+gem "aws-sdk-sqs", require: false
+gem "aws-sdk-sesv2", require: false
+gem "aws-sdk-cognitoidentityprovider", require: false
+gem "aws-sdk-secretsmanager", require: false
+gem "aws-sdk-sns", require: false
+gem "aws-sdk-scheduler", require: false
 
 gem "discard", "~> 1.3"
 

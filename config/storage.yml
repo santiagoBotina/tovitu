@@ -6,50 +6,23 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
-# Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
-# amazon:
-#   service: S3
-#   access_key_id: <%= Rails.application.credentials.dig(:aws, :access_key_id) %>
-#   secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
-#   region: us-east-1
-#   bucket: your_own_bucket-<%= Rails.env %>
-
-# Remember not to checkin your GCS keyfile to a repository
-# google:
-#   service: GCS
-#   project: your_project
-#   credentials: <%= Rails.root.join("path/to/gcs.keyfile") %>
-#   bucket: your_own_bucket-<%= Rails.env %>
-
-minio:
-  service: S3
-  endpoint: http://localhost:9000
-  access_key_id: <%= ENV.fetch("MINIO_ACCESS_KEY", "minioadmin") %>
-  secret_access_key: <%= ENV.fetch("MINIO_SECRET_KEY", "minioadmin") %>
-  region: <%= ENV.fetch("AWS_REGION", "us-east-1") %>
-  bucket: <%= ENV.fetch("MINIO_BUCKET", "tovitu-development") %>
-  force_path_style: true
-
+# Development/test storage backed by LocalStack S3. Endpoint and credentials
+# come from the shared AWS config (see config/initializers/aws.rb) via ENV —
+# the same values the rest of the app uses.
 localstack:
   service: S3
-  endpoint: http://localhost:4566
-  access_key_id: <%= ENV.fetch("LOCALSTACK_ACCESS_KEY", "test") %>
-  secret_access_key: <%= ENV.fetch("LOCALSTACK_SECRET_KEY", "test") %>
+  endpoint: <%= ENV["AWS_ENDPOINT_URL"] %>
+  access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
+  secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
   region: <%= ENV.fetch("AWS_REGION", "us-east-1") %>
-  bucket: tovitu-development
+  bucket: <%= ENV.fetch("S3_BUCKET", "tovitu-development") %>
   force_path_style: true
 
-cloudflare_r2:
+# Production storage on real Amazon S3. With no static credentials set, the
+# SDK falls back to the instance/IAM role credential chain.
+amazon:
   service: S3
-  endpoint: <%= ENV["R2_ENDPOINT"] %>
-  access_key_id: <%= ENV["R2_ACCESS_KEY_ID"] %>
-  secret_access_key: <%= ENV["R2_SECRET_ACCESS_KEY"] %>
-  region: auto
-  bucket: <%= ENV.fetch("R2_BUCKET") { "tovitu" } %>
-  public_url: <%= ENV["R2_PUBLIC_URL"] %>
-  force_path_style: true
-
-# mirror:
-#   service: Mirror
-#   primary: local
-#   mirrors: [ amazon, google, microsoft ]
+  access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
+  secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
+  region: <%= ENV.fetch("AWS_REGION", "us-east-1") %>
+  bucket: <%= ENV.fetch("S3_BUCKET", "tovitu-production") %>

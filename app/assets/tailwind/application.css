@@ -157,6 +157,9 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .bento-enter {
+    animation: none;
+  }
   .card-lift:hover {
     transform: none;
   }
@@ -507,4 +510,12 @@ details[open] > .lp-panel-body {
   .field-focus-glow:focus-within {
     transform: none;
   }
+}
+
+/* ─── Featured pets horizontal strip ─── */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }

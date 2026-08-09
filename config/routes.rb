@@ -74,7 +74,11 @@ Rails.application.routes.draw do
       resource :life_preview, only: [ :show ], controller: "life_previews"
     end
 
-    resources :saved_pets, only: [ :index ]
+    resources :saved_pets, only: [ :index ] do
+      collection do
+        post :import
+      end
+    end
 
     resources :shelters, only: [ :index, :show, :new, :create, :edit, :update ] do
       resource :dashboard, only: [ :show ], controller: "shelters/dashboard" do

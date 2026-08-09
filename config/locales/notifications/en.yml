@@ -50,7 +50,7 @@ en:
 
     index:
       title: "Notifications"
-      subtitle: "Stay up to date with your adoption requests"
+      subtitle: "Updates about your requests, messages, and pets — all in one feed."
       empty: "No notifications yet"
       empty_body: "You'll see notifications here when there are updates on your adoption requests, messages, and more."
       mark_all_read: "Mark all as read"

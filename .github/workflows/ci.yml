@@ -65,3 +65,45 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
+  aws_localstack:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ENDPOINT_URL: http://localhost:4566
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      S3_BUCKET: tovitu-development
+      SQS_QUEUE_PREFIX: tovitu
+      # Optional: set LOCALSTACK_AUTH_TOKEN as a repo secret to validate the
+      # Pro-only footprint (cognito-idp, sesv2) in CI. Empty otherwise.
+      LOCALSTACK_AUTH_TOKEN: ${{ secrets.LOCALSTACK_AUTH_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Start LocalStack
+        run: |
+          if [ -n "${{ secrets.LOCALSTACK_AUTH_TOKEN }}" ]; then
+            echo "LOCALSTACK_IMAGE=localstack/localstack-pro:4" >> "$GITHUB_ENV"
+          fi
+          docker compose up -d localstack
+
+      - name: Wait for LocalStack health
+        run: |
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:4566/_localstack/health | python3 -c "import json,sys; d=json.load(sys.stdin); s=d.get('services',{}); sys.exit(0 if all(s.get(k) in ('available','running') for k in ['s3','sqs','sns','ses','secretsmanager','logs','events','scheduler']) else 1)"; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "LocalStack did not become healthy" >&2
+          exit 1
+
+      - name: Verify AWS emulation footprint
+        run: bin/rails aws:smoke
+

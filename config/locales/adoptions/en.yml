@@ -278,7 +278,7 @@ en:
     adoption_requests:
       index:
         title: Incoming Requests
-        subtitle: Adoption requests for your pets
+        subtitle: Adoption requests for your pets. Review applicants and decide who meets your pet best.
         from: Request from %{name}
         for_pet: For %{pet_name}
         submitted: Submitted %{time} ago
@@ -305,14 +305,6 @@ en:
           one: You have %{count} other request waiting for your review.
           other: You have %{count} other requests waiting for your review.
         view_all_requests: View all →
-        title: Incoming Requests
-        subtitle: Adoption requests for your pets
-        from: Request from %{name}
-        for_pet: For %{pet_name}
-        submitted: Submitted %{time} ago
-        view: View
-        empty_title: No incoming requests yet
-        empty_body: When someone requests to adopt one of your pets, you'll see it here.
       decisions:
         new:
           back: ← Back to Request
@@ -367,7 +359,7 @@ en:
   adoption_requests:
     index:
       title: My Adoption Requests
-      subtitle: Track and manage your adoption requests
+      subtitle: Every pet you've applied for, in one place. Track status and follow up when needed.
       submitted: Submitted %{time} ago
       empty_title: No adoption requests yet
       empty_body: You haven't requested to adopt any pets yet. Browse available pets and find your new companion!
@@ -439,7 +431,7 @@ en:
     adoption_requests:
       index:
         title: Adoption Requests
-        subtitle: Review and manage adoption requests for your shelter
+        subtitle: Adoption requests for your shelter's pets. Review each applicant and decide who fits best.
         filters:
           all: All
         table:

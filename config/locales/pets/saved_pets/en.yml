@@ -7,3 +7,12 @@ en:
       empty_body: Tap the ♡ on any pet to save them here and find them later.
       browse_pets: Browse Pets
       pet_photo: Photo of %{name}
+    import:
+      require_login: Please log in to import your saved pets.
+      require_individual: Only adopter accounts can save pets.
+      imported_none: No new pets to import.
+      imported_one: 1 saved pet was added to your account.
+      imported_other: "%{count} saved pets were added to your account."
+      success_title: You're all set!
+      success_body: Your saved pets are now in your account.
+      close: Close

@@ -2,12 +2,33 @@
 <% saved = pet_saved?(@pet) if saved.nil? && local_variables.include?(:@pet) %>
 <% saved = pet_saved?(pet) if saved.nil? && defined?(pet) %>
 <% pet_id = (defined?(@pet) && @pet&.id) || (defined?(pet) && pet&.id) %>
-<%= button_to pet_save_path(pet_id: pet_id),
-    method: saved ? :delete : :post,
-    class: "absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 z-10",
-    aria: { label: saved ? t("pets.index.unsave") : t("pets.index.save") },
-    data: { turbo_stream: true } do %>
-  <svg class="w-5 h-5 transition-all duration-200 heart-icon <%= saved ? 'fill-accent-pink text-accent-pink heart-saved' : 'fill-transparent text-neutral-400 hover:text-accent-pink' %>" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-  </svg>
+
+<% if signed_in? %>
+  <%= button_to pet_save_path(pet_id: pet_id),
+      id: "save-button-#{pet_id}",
+      method: saved ? :delete : :post,
+      class: "absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 z-10",
+      aria: { label: saved ? t("pets.index.unsave") : t("pets.index.save") },
+      data: { turbo_stream: true } do %>
+    <svg class="w-5 h-5 transition-all duration-200 heart-icon <%= saved ? 'fill-accent-pink text-accent-pink heart-saved' : 'fill-transparent text-neutral-400 hover:text-accent-pink' %>" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+    </svg>
+  <% end %>
+<% else %>
+  <%# Signed-out visitors: "paw it" stores interests locally in the browser.
+      No account required — the conversion prompt handles the account nudge. %>
+  <button type="button"
+          id="save-button-<%= pet_id %>"
+          data-controller="pet-interest"
+          data-pet-interest-id-value="<%= pet_id %>"
+          data-pet-interest-save-label-value="<%= t("pets.index.save") %>"
+          data-pet-interest-unsave-label-value="<%= t("pets.index.unsave") %>"
+          data-action="click->pet-interest#toggle"
+          class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 z-10 cursor-pointer"
+          aria-label="<%= t("pets.index.save") %>"
+          aria-pressed="false">
+    <svg class="w-5 h-5 pointer-events-none transition-all duration-200 fill-transparent text-neutral-400" data-pet-interest-target="icon" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+    </svg>
+  </button>
 <% end %>

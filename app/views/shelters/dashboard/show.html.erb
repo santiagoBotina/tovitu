@@ -13,12 +13,10 @@
   <%# ──────────────────────────────────────────────────────────── %>
   <%# HEADER                                                        %>
   <%# ──────────────────────────────────────────────────────────── %>
-  <div class="mb-6">
-    <h1 class="font-display text-3xl font-bold text-neutral-900"><%= t(".title", name: @shelter.name) %></h1>
-    <p class="text-neutral-500 mt-1">
-      <%= @pending_count > 0 ? t(".subtitle") : t(".subtitle_new") %>
-    </p>
-  </div>
+  <%= render "shared/section_header",
+             title: t(".title", name: @shelter.name),
+             subtitle: (@pending_count > 0 ? t(".subtitle") : t(".subtitle_new")),
+             header_class: "mb-6" %>
 
   <%# ──────────────────────────────────────────────────────────── %>
   <%# ALERT BAR (conditional)                                       %>

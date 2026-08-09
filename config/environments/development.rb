@@ -28,15 +28,8 @@ Rails.application.configure do
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store
 
-  # Store uploaded files on local disk by default.
-  # Set MINIO_ENABLED=true to use MinIO for S3-compatible local storage.
-  if ENV["MINIO_ENABLED"].present?
-    config.active_storage.service = :minio
-  elsif ENV["LOCALSTACK_ENABLED"].present?
-    config.active_storage.service = :localstack
-  else
-    config.active_storage.service = :local
-  end
+  # Store uploaded files on LocalStack S3 (see config/storage.yml).
+  config.active_storage.service = :localstack
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false

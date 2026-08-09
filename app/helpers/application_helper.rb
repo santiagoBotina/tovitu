@@ -6,6 +6,16 @@ module ApplicationHelper
     presenter_class.new(model)
   end
 
+  # Small rounded badge used in the adoption process journey. The number
+  # conveys order within a linear path — not a decorative section kicker.
+  def render_step_badge(number)
+    content_tag :span,
+                class: "w-10 h-10 rounded-full bg-secondary-500 text-white font-display font-bold text-base flex items-center justify-center mx-auto mb-4 shadow-sm",
+                aria: { hidden: "true" } do
+      number.to_s
+    end
+  end
+
   def safe_url(url)
     return "" unless url.present?
 

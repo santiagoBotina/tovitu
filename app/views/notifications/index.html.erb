@@ -1,17 +1,16 @@
 <%# ─── Notifications Index Page ─── %>
 <div class="w-full max-w-3xl mx-auto">
-  <div class="flex items-center justify-between mb-6 bento-enter bento-enter-d1">
-    <div>
-      <h1 class="font-display text-2xl font-bold text-neutral-900"><%= t(".title") %></h1>
-      <p class="text-neutral-500 text-sm mt-1"><%= t(".subtitle") %></p>
-    </div>
+  <%= render "shared/section_header",
+             title: t(".title"),
+             subtitle: t(".subtitle"),
+             header_class: "flex items-center justify-between mb-6 bento-enter bento-enter-d1" do %>
     <% if @notifications.any? { |n| n.read_at.nil? } %>
       <%= button_to mark_all_read_notifications_path, method: :patch,
           class: "px-4 py-2 text-sm font-medium text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-xl transition-colors" do %>
         <%= t(".mark_all_read") %>
       <% end %>
     <% end %>
-  </div>
+  <% end %>
 
   <%# ─── Filter Tabs ─── %>
   <div class="flex gap-2 mb-6 bento-enter bento-enter-d2">

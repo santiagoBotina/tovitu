@@ -5,7 +5,7 @@ AI-powered pet adoption platform. Reduces failed adoptions through AI life previ
 ## Prerequisites
 
 - **Ruby 4.0+** — managed via `rbenv` (see `.ruby-version`)
-- **Docker Desktop** — for PostgreSQL 16 and Redis 7 containers
+- **Docker Desktop** — for PostgreSQL 16 and LocalStack (AWS emulation) containers
 - **Foreman** — installed automatically via `tailwindcss-rails`
 
 ## Quick Start
@@ -18,11 +18,16 @@ bin/setup                     # Starts Docker services, installs gems, creates D
 Or step-by-step:
 
 ```bash
-docker compose up -d          # Start PostgreSQL + Redis
+make docker-up                # Start PostgreSQL + LocalStack (removes retired containers)
 bundle install                # Install Ruby gems
 rails db:prepare              # Create and migrate database
-bin/dev                       # Start server + Tailwind watcher + Sidekiq
+bin/dev                       # Start server + Tailwind watcher + SQS worker
 ```
+
+LocalStack emulates every AWS dependency locally (S3 storage, SQS jobs, SES email,
+Cognito auth, Secrets Manager, EventBridge Scheduler). Verify the footprint with
+`bin/rails aws:smoke`. Inspect queues/email via the `awslocal` CLI inside the container
+(`docker compose exec localstack awslocal ...`).
 
 ## Architecture
 
@@ -58,8 +63,8 @@ config/
   prompts/                    # AI prompt templates (never hardcoded inline)
     life_preview.yml          #   Life preview generation prompt
     compatibility.yml         #   Compatibility analysis prompt
-  storage.yml                 # Active Storage: local (dev), Cloudflare R2 (prod)
-  sidekiq.yml                 # Sidekiq configuration
+  storage.yml                 # Active Storage: LocalStack S3 (dev), Amazon S3 (prod)
+  queuing/ (lib)              # SQS seam: Queuing::Client / Worker / QueueRegistry
 ```
 
 ### Key Decisions
@@ -71,8 +76,8 @@ config/
 | `lib/` for domain code | Rails 8's `config.autoload_lib` provides proper Zeitwerk namespacing (`Ai::GenerateLifePreview`) |
 | Service/Query/Form/Presenter | Keep models thin, controllers thin, views simple |
 | Result value object | Errors-as-values across all service boundaries |
-| Sidekiq + Redis | Proven background job ecosystem; solid_queue removed |
-| Cloudflare R2 (S3-compatible) | Cost-effective object storage, no egress fees |
+| SQS (LocalStack locally) | Durable Active Job backend behind `lib/queuing/`; DLQ-backed, no Redis |
+| S3 (LocalStack locally) | Active Storage object storage via Amazon S3 |
 | Rails auth (no Devise) | Built-in `has_secure_password`, `authenticate_by` — sufficient for MVP |
 | Pundit | Explicit policy objects; no auth logic in views or controllers |
 | Request specs > controller specs | Full middleware coverage (auth, routing, params, rendering) |
@@ -112,8 +117,8 @@ rspec spec/requests                # Run request specs
 Production uses:
 
 - **Database:** PostgreSQL (via `DATABASE_URL`)
-- **Jobs:** Sidekiq + Redis (via `REDIS_URL`)
-- **Storage:** Cloudflare R2 (S3-compatible Active Storage)
+- **Jobs:** SQS (Active Job adapter + `bin/rails queuing:work` worker)
+- **Storage:** Amazon S3 (Active Storage, via `storage.yml` `amazon` service)
 - **AI:** Anthropic API (via `ANTHROPIC_API_KEY`)
 - **Messaging:** WhatsApp Business API
 

@@ -46,8 +46,13 @@ module Tovitu
     config.i18n.default_locale = :en
     config.i18n.available_locales = [ :en, :es ]
 
-    # Use Sidekiq for Active Job
-    config.active_job.queue_adapter = :sidekiq
+    # Use SQS for Active Job (emulated locally by LocalStack).
+    # Consume queues with `bin/rails queuing:work`.
+    config.active_job.queue_adapter = :sqs
+
+    # Keep mailer delivery off the default queue so long-running AI jobs don't
+    # delay email. Mailers route to <prefix>-mailers via Queuing::QueueRegistry.
+    config.action_mailer.deliver_later_queue_name = :mailers
 
     # Permit locale param from routing scope — not user input
     config.action_controller.always_permitted_parameters = %w[locale]

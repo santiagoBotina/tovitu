@@ -1,0 +1,37 @@
+<%# ─── Shared Section Header ─── %>
+<%# Renders a page title, an optional one-sentence explanation, and an optional CTA slot. %>
+<%# Usage: render "shared/section_header", title: ..., subtitle: ... do ... end %>
+<%# The block (if given) is rendered to the right of the title as the CTA slot. %>
+<%# Locals: %>
+<%#   - title          (required) h1 text %>
+<%#   - subtitle       (optional) one-sentence explanation of the section %>
+<%#   - centered       (optional) true centers the header block (Explorer hero) %>
+<%#   - header_class   (optional) header element classes (default: "mb-6", centered: "text-center mb-8") %>
+<%#   - title_class    (optional) h1 classes (default: "font-display text-2xl md:text-3xl font-bold text-neutral-900") %>
+<%#   - subtitle_class (optional) p classes (default: "text-neutral-500 text-sm md:text-base mt-1 max-w-2xl") %>
+<%#   - content_class  (optional) wrapper div classes (default: "min-w-0") %>
+<%#   - cta_class      (optional) CTA container classes (default: "flex items-center gap-3 shrink-0") %>
+<%
+  centered = local_assigns[:centered]
+  header_class = local_assigns[:header_class] || (centered ? "text-center mb-8" : "mb-6")
+  title_class = local_assigns[:title_class] || (centered ? "font-display text-3xl md:text-4xl font-bold text-neutral-900 mb-3 text-balance" : "font-display text-2xl md:text-3xl font-bold text-neutral-900")
+  subtitle_class = local_assigns[:subtitle_class] || (centered ? "text-neutral-600 text-lg max-w-2xl mx-auto" : "text-neutral-500 text-sm md:text-base mt-1 max-w-2xl")
+  content_class = local_assigns[:content_class] || "min-w-0"
+  cta_class = local_assigns[:cta_class] || "flex items-center gap-3 shrink-0"
+  cta_content = capture { yield }
+  has_cta = cta_content.present?
+%>
+
+<header class="<%= header_class %>">
+  <div class="<%= content_class %>">
+    <h1 class="<%= title_class %>"><%= title %></h1>
+    <% if local_assigns[:subtitle].present? %>
+      <p class="<%= subtitle_class %>"><%= subtitle %></p>
+    <% end %>
+  </div>
+  <% if has_cta %>
+    <div class="<%= cta_class %>">
+      <%= cta_content %>
+    </div>
+  <% end %>
+</header>

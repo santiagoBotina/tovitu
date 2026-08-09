@@ -119,10 +119,27 @@
           </div>
         </div>
       <% else %>
-        <%= link_to t("shared.navbar.sign_in"), new_session_path,
-            class: "inline-flex items-center px-4 py-2 text-sm font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-xl transition-colors duration-150" %>
-        <%= link_to t("shared.navbar.create_account"), new_registration_path(role: "individual"),
-            class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary-500 hover:bg-primary-600 active:bg-primary-700 active:scale-[0.97] rounded-xl transition-all duration-150 shadow-sm" %>
+        <div class="relative flex items-center gap-2.5">
+          <%# Saved-pets heart: for signed-out visitors this opens a friendly
+              conversion prompt instead of a login wall. The dialog lives at
+              body level (see layouts/application.html.erb); this button only
+              forwards the click via the tovitu:interest-prompt event. %>
+          <button type="button"
+                  data-controller="interest-trigger"
+                  data-action="click->interest-trigger#trigger"
+                  class="relative flex items-center justify-center w-10 h-10 rounded-xl text-neutral-500 hover:text-accent-pink hover:bg-accent-pink/5 transition-colors duration-150"
+                  aria-label="<%= t('shared.interests.aria_view_saved') %>"
+                  aria-haspopup="dialog">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+          </button>
+
+          <%= link_to t("shared.navbar.sign_in"), new_session_path,
+              class: "inline-flex items-center px-4 py-2 text-sm font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-xl transition-colors duration-150" %>
+          <%= link_to t("shared.navbar.create_account"), new_registration_path(role: "individual"),
+              class: "inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-primary-500 hover:bg-primary-600 active:bg-primary-700 active:scale-[0.97] rounded-xl transition-all duration-150 shadow-sm" %>
+        </div>
       <% end %>
     </div>
 

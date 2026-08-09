@@ -1,38 +1,4 @@
 services:
-  minio:
-    image: minio/minio:latest
-    command: server /data --console-address ":9001"
-    volumes:
-      - minio_data:/data
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
-      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
-    ports:
-      - "${MINIO_PORT:-9000}:9000"
-      - "${MINIO_CONSOLE_PORT:-9001}:9001"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  minio-init:
-    image: minio/mc:latest
-    restart: "no"
-    depends_on:
-      minio:
-        condition: service_healthy
-    environment:
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
-      MINIO_BUCKET: ${MINIO_BUCKET:-tovitu-development}
-    entrypoint: >
-      /bin/sh -c "
-        mc alias set local http://minio:9000 $$MINIO_ACCESS_KEY $$MINIO_SECRET_KEY &&
-        mc mb local/$$MINIO_BUCKET --ignore-existing &&
-        echo '>>> MinIO bucket $$MINIO_BUCKET ready.'
-      "
-
   postgres:
     image: pgvector/pgvector:pg16
     volumes:
@@ -49,27 +15,28 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis:7
-    volumes:
-      - redis_data:/data
-    ports:
-      - "${REDIS_PORT:-6379}:6379"
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
+  # LocalStack is the local equivalent of every AWS service the app uses
+  # (S3 storage, SQS jobs, SES email, Cognito auth, Secrets Manager,
+  # EventBridge Scheduler). Run `bin/rails queuing:work` to consume job queues.
   localstack:
-    image: localstack/localstack:4
-    profiles:
-      - localstack
+    # Community by default. To unlock Pro-only services (cognito-idp, sesv2)
+    # and persistence, set LOCALSTACK_IMAGE=localstack/localstack-pro:4 and
+    # LOCALSTACK_AUTH_TOKEN in .env.
+    image: ${LOCALSTACK_IMAGE:-localstack/localstack:4}
     volumes:
       - localstack_data:/var/lib/localstack
+      # Repo `.localstack/` maps directly to LocalStack's init-ready.d hook dir.
+      # Numbered `NN-*.sh` scripts there provision resources on boot; generated
+      # state (e.g. Cognito pool ids) is written to `.localstack/state/`.
       - "${LOCALSTACK_VOLUME:-./.localstack}:/etc/localstack/init/ready.d"
     environment:
-      SERVICES: s3
+      # Every AWS service LocalStack emulates for the migration (s3, sqs, sns,
+      # ses + sesv2, cognito-idp, secretsmanager, logs, events, scheduler).
+      SERVICES: s3,sqs,sns,ses,sesv2,cognito-idp,secretsmanager,logs,events,scheduler
+      PERSISTENCE: 1
+      # Optional LocalStack student/Pro license. Without it, Pro-only services
+      # (cognito-idp, sesv2) are skipped gracefully; PERSISTENCE also requires it.
+      LOCALSTACK_AUTH_TOKEN: ${LOCALSTACK_AUTH_TOKEN:-}
       AWS_DEFAULT_REGION: ${AWS_REGION:-us-east-1}
       AWS_ACCESS_KEY_ID: ${LOCALSTACK_ACCESS_KEY:-test}
       AWS_SECRET_ACCESS_KEY: ${LOCALSTACK_SECRET_KEY:-test}
@@ -84,6 +51,4 @@ services:
 
 volumes:
   postgres_data:
-  redis_data:
   localstack_data:
-  minio_data:

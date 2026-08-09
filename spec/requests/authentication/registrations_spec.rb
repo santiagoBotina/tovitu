@@ -20,6 +20,15 @@ RSpec.describe "Registrations" do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(I18n.t("authentication.registrations.new.title_individual"))
     end
+
+    it "renders the shelter variant for the shelter_admin role param" do
+      get new_registration_path, params: { role: "shelter_admin" }
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("authentication.registrations.new.title_shelter"))
+      expect(response.body).to include('data-role-toggle-role="shelter"')
+      # The hidden role field keeps the real role so the account registers correctly.
+      expect(response.body).to include('value="shelter_admin"')
+    end
   end
 
   describe "POST /registration" do
@@ -74,6 +83,24 @@ RSpec.describe "Registrations" do
         }
         expect(response).to redirect_to(check_email_registration_path)
         expect(User.last.role).to eq("individual")
+      end
+    end
+
+    context "with the shelter role" do
+      it "registers the user as a shelter_admin (what the Shelter toggle submits)" do
+        expect {
+          post registration_path, params: {
+            user: {
+              name: "Shelter Admin",
+              email: "shelter@example.com",
+              password: "password123",
+              password_confirmation: "password123",
+              role: "shelter_admin"
+            }
+          }
+        }.to change(User, :count).by(1)
+        expect(response).to redirect_to(check_email_registration_path)
+        expect(User.last.role).to eq("shelter_admin")
       end
     end
 

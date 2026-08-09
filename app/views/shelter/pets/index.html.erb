@@ -3,18 +3,17 @@
 <div class="w-full max-w-5xl mx-auto">
 
   <%# ─── Page Header ─── %>
-  <header class="flex items-center justify-between mb-6 bento-enter bento-enter-d1">
-    <div>
-      <h1 class="font-display text-3xl font-bold text-neutral-900"><%= t(".title") %></h1>
-      <p class="text-neutral-500 mt-1"><%= t(".subtitle") %></p>
-    </div>
+  <%= render "shared/section_header",
+             title: t(".title"),
+             subtitle: t(".subtitle"),
+             header_class: "flex items-center justify-between mb-6 bento-enter bento-enter-d1" do %>
     <%= link_to new_shelter_pet_path, class: "inline-flex items-center gap-2 bg-secondary-500 hover:bg-secondary-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 shadow-sm" do %>
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
       </svg>
       <%= t(".add_pet") %>
     <% end %>
-  </header>
+  <% end %>
 
   <%# ─── Filter Chips (dashboard pill pattern) ─── %>
   <div class="flex flex-wrap gap-2 mb-6 bento-enter bento-enter-d2">

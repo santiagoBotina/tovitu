@@ -1,7 +1,13 @@
 class LandingController < ApplicationController
   before_action :redirect_signed_in_users, only: [ :index ]
 
+  FEATURED_PETS_LIMIT = 6
+
   def index
+    @featured_pets = Pet.available.includes(:shelter, photos_attachments: :blob)
+                        .order(created_at: :desc)
+                        .limit(FEATURED_PETS_LIMIT)
+    @presented_featured_pets = @featured_pets.map { |pet| PetPresenter.new(pet) }
   end
 
   private
