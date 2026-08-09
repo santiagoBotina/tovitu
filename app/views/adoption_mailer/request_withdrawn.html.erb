@@ -5,7 +5,7 @@
      my_adoption_request_url(@request, locale: @locale)
    end %>
 
-<h1><%= t(".greeting", name: @recipient_name) %></h1>
+<h1><%= t(".greeting", recipient_name: @recipient_name) %></h1>
 
 <p><%= t(".body", adopter_name: @adopter.name, pet_name: @pet.name) %></p>
 

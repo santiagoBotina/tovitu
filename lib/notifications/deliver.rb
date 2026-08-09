@@ -13,8 +13,23 @@ module Notifications
     end
 
     def call
-      notification = create_notification_record!
-      deliver_to_channels(notification)
+      # Dedup guard lives here — the single delivery decision point — not at
+      # call sites. One notification (and therefore one email) per
+      # (recipient, kind, notifiable). Re-delivering the same event returns the
+      # existing record without double-sending.
+      existing = find_existing
+      return Result.success(existing) if existing
+
+      preferences = NotificationPreference.defaults_for(recipient)
+
+      # The record IS the in-app notification. If the user opted out of in-app
+      # for this kind, no record is created (no feed entry, no badge count);
+      # other enabled channels still deliver.
+      notification = create_notification_record! if preferences.kind_enabled?(kind, :in_app)
+
+      deliver_email(notification)  if preferences.kind_enabled?(kind, :email)
+      deliver_whatsapp(notification) if preferences.kind_enabled?(kind, :whatsapp)
+
       Result.success(notification)
     rescue ActiveRecord::RecordInvalid => e
       Result.failure(e.record.errors.full_messages)
@@ -26,6 +41,10 @@ module Notifications
 
     attr_reader :recipient, :kind, :notifiable, :title, :body,
                 :actor, :action_url, :metadata
+
+    def find_existing
+      Notification.find_by(recipient: recipient, kind: kind.to_s, notifiable: notifiable)
+    end
 
     def create_notification_record!
       Notification.create!(
@@ -40,59 +59,30 @@ module Notifications
       )
     end
 
-    def deliver_to_channels(notification)
-      preferences = NotificationPreference.defaults_for(recipient)
-
-      deliver_in_app(notification) if preferences.kind_enabled?(kind, :in_app)
-      deliver_email(notification)  if preferences.kind_enabled?(kind, :email)
-      deliver_whatsapp(notification) if preferences.kind_enabled?(kind, :whatsapp)
-    end
-
-    def deliver_in_app(notification)
-      # In-app delivery is already done — the record is created.
-      # Future: broadcast via ActionCable for real-time updates.
-      true
-    end
-
     def deliver_email(notification)
-      case kind.to_s
-      when "request_submitted"
-        if notifiable.is_a?(AdoptionRequest)
-          if recipient == notifiable.adopter
-            AdoptionMailer.request_confirmation(notifiable).deliver_later
-          else
-            AdoptionMailer.new_request_notification(notifiable, recipient).deliver_later
-          end
-        end
-      when "request_accepted", "request_declined", "request_in_validation"
-        if notifiable.is_a?(AdoptionRequest)
-          AdoptionMailer.status_changed(notifiable).deliver_later
-        end
-      when "request_withdrawn"
-        if notifiable.is_a?(AdoptionRequest)
-          AdoptionMailer.request_withdrawn(notifiable, recipient).deliver_later
-        end
-      when "info_requested", "info_received"
-        if notifiable.is_a?(AdoptionRequest)
-          AdoptionMailer.status_changed(notifiable).deliver_later
-        end
-      when "message_received"
-        # Conversation messages will use their own mailer in Phase 2
-        Rails.logger.debug("Email for message_received kind not implemented yet")
-      when "pet_status_changed"
-        # Pet status change notifications use a different mailer
-        Rails.logger.debug("Email for pet_status_changed kind not implemented yet")
-      when "welcome"
-        # Welcome handled by AuthenticationMailer
-        Rails.logger.debug("Email for welcome kind not implemented yet")
+      message = EmailRouting.route_for(kind, notifiable, recipient, notification&.id)
+      unless message
+        Rails.logger.debug("No email route for notification #{notification&.id} (kind=#{kind})")
+        return
       end
+
+      # Enqueue inside the recipient's locale so the background job renders the
+      # email in their language (ActiveJob serializes I18n.locale at enqueue).
+      # The real delivery outcome is written back by Notifications::DeliveryTracker
+      # via the X-Tovitu-Notification-Id header.
+      I18n.with_locale(locale_for(recipient)) { message.deliver_later }
     rescue => e
-      Rails.logger.warn("Email delivery failed for notification #{notification.id}: #{e.message}")
+      notification&.update_columns(email_failed_at: Time.current, email_error: e.message)
+      Rails.logger.error("Email delivery failed for notification #{notification&.id}: #{e.message}")
+    end
+
+    def locale_for(user)
+      user&.locale.presence || I18n.default_locale
     end
 
     def deliver_whatsapp(notification)
-      # WhatsApp delivery will be implemented when the WhatsApp provider is ready.
-      # See Messaging::WhatsAppProvider.
+      # WhatsApp delivery is gated on the provider — see Messaging::WhatsAppProvider.
+      # Opt-in + verified phone only; wired when the provider is available.
       true
     end
   end

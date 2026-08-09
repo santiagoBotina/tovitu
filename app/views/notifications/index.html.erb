@@ -1,4 +1,5 @@
 <%# ─── Notifications Index Page ─── %>
+<% mark_all_read_label = t(".mark_all_read") %>
 <div class="w-full max-w-3xl mx-auto">
   <%= render "shared/section_header",
              title: t(".title"),
@@ -7,7 +8,7 @@
     <% if @notifications.any? { |n| n.read_at.nil? } %>
       <%= button_to mark_all_read_notifications_path, method: :patch,
           class: "px-4 py-2 text-sm font-medium text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-xl transition-colors" do %>
-        <%= t(".mark_all_read") %>
+        <%= mark_all_read_label %>
       <% end %>
     <% end %>
   <% end %>

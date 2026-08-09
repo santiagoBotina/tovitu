@@ -89,4 +89,30 @@ module ApplicationHelper
       %w[WI Wisconsin], %w[WY Wyoming]
     ]
   end
+
+  # SVG path data for a milestone icon, keyed by the icon name used in
+  # Gamification::Journey::MILESTONES. Kept here so views stay readable.
+  def milestone_icon_path(icon)
+    case icon.to_sym
+    when :heart
+      "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+    when :paper_plane
+      "M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"
+    when :clock
+      "M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z"
+    when :paw
+      "M5.5 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zm13 0a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM12 20a4.5 4.5 0 004.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 00-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0012 20z"
+    else
+      "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+    end
+  end
+
+  # Memoized adoption journey for the current user. The sidebar and dashboard
+  # both render journey-derived UI, so sharing a single instance per request
+  # avoids re-running the underlying count queries on every page load.
+  def current_user_journey
+    return nil unless current_user
+
+    @current_user_journey ||= Gamification::Journey.new(current_user)
+  end
 end

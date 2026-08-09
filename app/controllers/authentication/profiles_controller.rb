@@ -8,22 +8,9 @@ module Authentication
 
     def update
       @user = current_user
-      old_email = @user.email
-      attrs = user_params
 
-      # Only normalize/apply the email when the form actually sent one.
-      # A locale-only save (language selector auto-save) must not clear it.
-      attrs = attrs.merge(email: attrs[:email]&.downcase&.strip) if attrs.key?(:email)
-
-      if @user.update(attrs)
-        if @user.email != old_email
-          @user.update!(verified_at: nil)
-          Authentication::ResendVerificationEmail.call(user: @user)
-          redirect_to edit_profile_path,
-                      notice: t("flash.profiles.update.email_changed")
-        else
-          redirect_to edit_profile_path, notice: t("flash.profiles.update.success")
-        end
+      if @user.update(user_params)
+        redirect_to edit_profile_path, notice: t("flash.profiles.update.success")
       else
         render :edit, status: :unprocessable_entity
       end
@@ -31,8 +18,11 @@ module Authentication
 
     private
 
+    # The account email is the sign-in identifier and is intentionally NOT
+    # editable here — it is rendered read-only on the settings page. A
+    # locale-only save (language selector auto-save) must never touch it.
     def user_params
-      params.fetch(:user, {}).permit(:name, :email, :locale)
+      params.fetch(:user, {}).permit(:name, :locale)
     end
   end
 end

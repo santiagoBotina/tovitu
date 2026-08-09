@@ -148,6 +148,35 @@ RSpec.describe AdoptionRequest, type: :model do
     end
   end
 
+  describe "#decline_reasons" do
+    it "returns reasons stored in the decline timeline-event metadata" do
+      request = create(:adoption_request)
+      request.record_timeline!(
+        from_status: "pending",
+        to_status: "declined",
+        actor: request.adopter,
+        metadata: { decline_reasons: [ "Not a fit", "Needs experience" ] }
+      )
+      expect(request.decline_reasons).to eq([ "Not a fit", "Needs experience" ])
+    end
+
+    it "returns nil when there is no decline event with reasons" do
+      request = create(:adoption_request)
+      expect(request.decline_reasons).to be_nil
+    end
+
+    it "ignores events without decline_reasons metadata" do
+      request = create(:adoption_request)
+      request.record_timeline!(from_status: nil, to_status: "pending", metadata: {})
+      request.record_timeline!(
+        from_status: "pending",
+        to_status: "declined",
+        metadata: { decline_reasons: [ "Only reason" ] }
+      )
+      expect(request.decline_reasons).to eq([ "Only reason" ])
+    end
+  end
+
   describe "#record_timeline!" do
     it "creates a timeline event with the given attributes" do
       request = create(:adoption_request)

@@ -49,6 +49,11 @@ class AdopterInsightPresenter
     I18n.t(Ai::Adopter::Archetype.label_key(insight_data["archetype"]))
   end
 
+  # Raw stable archetype key, exposed for presentation-layer icon mapping only.
+  def archetype_key
+    insight_data["archetype"]
+  end
+
   def self_report_present?
     insight_data["self_reported_personality"].present?
   end

@@ -4,14 +4,16 @@ module Pets
 
     def create
       if signed_in?
+        was_done = current_user.saved_pets.exists?
         current_user.saved_pets.find_or_create_by!(pet: @pet)
+        @milestone_notice = milestone_unlocked_message(current_user, :first_saved_pet, was_done: was_done)
       else
         session[:saved_pet_ids] = (session[:saved_pet_ids] || []) | [ @pet.id ]
       end
 
       respond_to do |format|
         format.turbo_stream
-        format.html { redirect_back fallback_location: pets_path, notice: t(".saved") }
+        format.html { redirect_back fallback_location: pets_path, notice: @milestone_notice || t(".saved") }
         format.json { head :ok }
       end
     end

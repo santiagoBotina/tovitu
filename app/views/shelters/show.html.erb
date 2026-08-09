@@ -4,15 +4,18 @@
 
 <div class="w-full max-w-3xl mx-auto">
   <%# ─── Back link ─── %>
-  <div class="mb-6 bento-enter bento-enter-d1">
+  <div class="mt-6 mb-6 bento-enter bento-enter-d1">
     <%= render "shared/back_link", path: shelters_path, label: t(".back") %>
   </div>
 
   <%# ─── Hero/Header Card ─── %>
   <section class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden mb-6 bento-enter bento-enter-d2">
     <% if @shelter.cover_image.attached? %>
-      <div class="aspect-[3/1] bg-neutral-100">
-        <%= image_tag shelter.cover_url(variant: :xlarge), alt: @shelter.name, class: "w-full h-full object-cover image-reveal" %>
+      <div class="aspect-[3/1] bg-neutral-100 relative" data-controller="image-loader">
+        <div data-image-loader-target="skeleton" class="absolute inset-0 img-skeleton" aria-hidden="true"></div>
+        <%= image_tag shelter.cover_url(variant: :xlarge), alt: @shelter.name, fetchpriority: "high", decoding: "async",
+              data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
+              class: "relative w-full h-full object-cover opacity-0 transition-opacity duration-500" %>
       </div>
     <% end %>
 
@@ -20,8 +23,11 @@
       <div class="flex items-start justify-between mb-4">
         <div class="flex items-center gap-4">
           <% if @shelter.logo.attached? %>
-            <div class="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-sm shrink-0 bg-white">
-              <%= image_tag shelter.logo_url(variant: :large), alt: @shelter.name, class: "w-full h-full object-cover" %>
+            <div class="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-sm shrink-0 bg-white relative" data-controller="image-loader">
+              <div data-image-loader-target="skeleton" class="absolute inset-0 rounded-full img-skeleton" aria-hidden="true"></div>
+              <%= image_tag shelter.logo_url(variant: :large), alt: @shelter.name, decoding: "async",
+                    data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
+                    class: "relative w-full h-full object-cover opacity-0 transition-opacity duration-500" %>
             </div>
           <% end %>
           <div>
@@ -146,9 +152,12 @@
           <% pet_presenter = PetPresenter.new(pet) %>
           <% delay = ((idx % 3) + 1) %>
           <%= link_to pet_path(id: pet.id), class: "block bg-neutral-50 rounded-xl overflow-hidden hover:shadow-sm hover:bg-secondary-50/50 transition-all duration-200 group border border-neutral-100 card-lift bento-enter bento-enter-d#{delay}" do %>
-            <div class="aspect-[4/3] bg-neutral-100 overflow-hidden">
+            <div class="aspect-[4/3] bg-neutral-100 overflow-hidden relative" data-controller="image-loader">
+              <div data-image-loader-target="skeleton" class="absolute inset-0 img-skeleton" aria-hidden="true"></div>
               <% if pet_presenter.primary_photo.present? %>
-                <%= image_tag pet_presenter.primary_photo_url(variant: :medium), alt: pet.name, class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 image-reveal" %>
+                <%= image_tag pet_presenter.primary_photo_url(variant: :medium), alt: pet.name, loading: "lazy", decoding: "async",
+                      data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
+                      class: "relative w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-0" %>
               <% else %>
                 <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary-50 to-secondary-100">
                   <svg class="w-10 h-10 text-secondary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

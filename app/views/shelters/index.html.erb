@@ -3,7 +3,7 @@
 <div class="w-full max-w-4xl mx-auto">
 
   <%# ─── Page Header ─── %>
-  <header class="text-center mb-8 bento-enter bento-enter-d1">
+  <header class="mt-8 text-center mb-8 bento-enter bento-enter-d1">
     <h1 class="font-display text-3xl md:text-4xl font-bold text-neutral-900 mb-3 text-balance"><%= t(".title") %></h1>
     <p class="text-neutral-500 text-lg"><%= t(".subtitle") %></p>
   </header>
@@ -46,18 +46,28 @@
       <% @shelters.each_with_index do |shelter, idx| %>
         <% delay = ((idx % 4) + 3).clamp(3, 7) %>
         <% shelter_presenter = ShelterPresenter.new(shelter) %>
-        <%= link_to shelter_path(id: shelter), class: "block bg-white rounded-xl shadow-sm border border-neutral-200 hover:shadow-md hover:border-primary-100 transition-all duration-200 p-6 group card-lift bento-enter bento-enter-d#{delay}" do %>
+        <%# Cards stretch to equal height per row (flex flex-col + mt-auto footer),
+            so the species badges + "View shelter" row always sits at the bottom
+            regardless of how long each shelter's description is. %>
+        <%= link_to shelter_path(id: shelter),
+            class: "flex flex-col h-full bg-white rounded-xl shadow-sm border border-neutral-200 hover:shadow-md hover:border-primary-100 transition-all duration-200 p-6 group card-lift bento-enter bento-enter-d#{delay}",
+            data: { controller: "image-prefetch",
+                    image_prefetch_url_value: shelter_presenter.cover_url(variant: :xlarge),
+                    action: "mouseenter->image-prefetch#prefetch mouseleave->image-prefetch#cancel" } do %>
           <div class="flex items-start gap-4 mb-3">
             <% if shelter.logo.attached? %>
-              <div class="w-14 h-14 rounded-xl overflow-hidden shrink-0 bg-neutral-100 shadow-sm">
-                <%= image_tag shelter_presenter.logo_url(variant: :medium), alt: shelter.name, class: "w-full h-full object-cover image-reveal" %>
+              <div class="w-14 h-14 rounded-xl overflow-hidden shrink-0 bg-neutral-100 shadow-sm relative" data-controller="image-loader">
+                <div data-image-loader-target="skeleton" class="absolute inset-0 rounded-xl img-skeleton" aria-hidden="true"></div>
+                <%= image_tag shelter_presenter.logo_url(variant: :medium), alt: shelter.name, decoding: "async",
+                      data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
+                      class: "relative w-full h-full object-cover opacity-0 transition-opacity duration-500" %>
               </div>
             <% end %>
             <div class="flex-1 min-w-0">
               <h2 class="font-display text-xl font-bold text-neutral-900 group-hover:text-primary-600 transition"><%= shelter.name %></h2>
               <div class="flex items-center gap-1.5 text-neutral-500 text-sm mt-1">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                <span><%= shelter.city %>, <%= shelter.state %></span>
+                <span class="truncate"><%= shelter.city %>, <%= shelter.state %></span>
               </div>
             </div>
             <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary-50 text-secondary-700 shrink-0">
@@ -65,15 +75,16 @@
             </span>
           </div>
           <% if shelter.description.present? %>
-            <p class="text-neutral-600 text-sm mb-4 line-clamp-2"><%= truncate(shelter.description, length: 120) %></p>
+            <p class="text-neutral-600 text-sm mb-4 line-clamp-2 flex-1"><%= truncate(shelter.description, length: 120) %></p>
           <% end %>
-          <div class="flex items-center justify-between">
-            <div class="flex gap-1.5">
+          <%# Footer row pinned to the bottom of every card. %>
+          <div class="flex items-center justify-between gap-3 mt-auto pt-4 border-t border-neutral-100">
+            <div class="flex flex-wrap gap-1.5">
               <% shelter.species_served.each do |species| %>
                 <span class="px-2.5 py-1 bg-primary-50 text-primary-600 text-xs font-medium rounded-full"><%= t("pets.species.#{species}") %></span>
               <% end %>
             </div>
-            <span class="text-sm font-medium text-primary-500 group-hover:text-primary-600 transition"><%= t(".view_shelter") %></span>
+            <span class="text-sm font-medium text-primary-500 group-hover:text-primary-600 transition whitespace-nowrap shrink-0"><%= t(".view_shelter") %></span>
           </div>
         <% end %>
       <% end %>

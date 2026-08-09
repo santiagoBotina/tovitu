@@ -31,6 +31,40 @@ RSpec.describe "My AdoptionRequests" do
       expect(response).to have_http_status(:not_found)
     end
 
+    context "when insights are ready" do
+      before do
+        AdopterInsight.create!(
+          adopter: adopter,
+          data: {
+            "archetype" => "homebody_companion",
+            "commitment_signals" => [],
+            "confidence" => "high",
+            "provenance" => { "based_on" => "onboarding answers", "activity_up_to" => Date.current.iso8601 }
+          },
+          generated_at: Time.current
+        )
+        request.update!(pet_fit_data: {
+          "fit_indicators" => {
+            "energy" => { "status" => "strong_fit", "evidence" => "Calm home routine." },
+            "time" => { "status" => "unknown", "evidence" => "" },
+            "experience" => { "status" => "unknown", "evidence" => "" },
+            "home_space" => { "status" => "unknown", "evidence" => "" },
+            "household" => { "status" => "unknown", "evidence" => "" }
+          },
+          "summary" => "A great companion match.",
+          "verification_questions" => [ "Is anyone home during the day?" ],
+          "confidence" => "high"
+        })
+      end
+
+      it "renders the redesigned visual zones for the individual publisher" do
+        get my_adoption_request_path(request)
+        expect(response.body).to include("data-testid=\"insight-archetype\"")
+        expect(response.body).to include("data-testid=\"insight-fit-factors\"")
+        expect(response.body).to include("data-testid=\"insight-checkins\"")
+      end
+    end
+
     context "when the pet-fit summary is stale" do
       before do
         AdopterInsight.create!(

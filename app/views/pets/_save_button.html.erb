@@ -1,34 +1,65 @@
 <% saved = local_assigns[:saved] %>
-<% saved = pet_saved?(@pet) if saved.nil? && local_variables.include?(:@pet) %>
 <% saved = pet_saved?(pet) if saved.nil? && defined?(pet) %>
-<% pet_id = (defined?(@pet) && @pet&.id) || (defined?(pet) && pet&.id) %>
+<% pet_id = defined?(pet) && pet&.id %>
+<% variant = (local_assigns[:variant] || "circle").to_s %>
+<%# The labeled "button" variant (pet profile page) gets its own id so the
+    circle heart on the hero and the sidebar button can both live on the same
+    page. The turbo_stream templates replace both ids. %>
+<% button_id = variant == "button" ? "save-button-#{pet_id}-label" : "save-button-#{pet_id}" %>
+<% save_aria = saved ? t("pets.index.unsave") : t("pets.index.save") %>
+<% button_label = saved ? t("pets.show.saved") : t("pets.show.save_to_favorites") %>
+
+<% circle_class = "absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 z-10 cursor-pointer" %>
+<% button_class = if saved
+                    "flex items-center justify-center gap-2 w-full px-5 py-3 bg-accent-pink text-white font-semibold text-sm rounded-xl hover:bg-accent-pink/90 focus-visible:ring-2 focus-visible:ring-accent-pink/40 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] cursor-pointer shadow-sm"
+                  else
+                    "flex items-center justify-center gap-2 w-full px-5 py-3 bg-white border-2 border-accent-pink/40 text-accent-pink font-semibold text-sm rounded-xl hover:bg-accent-pink/5 hover:border-accent-pink/60 focus-visible:ring-2 focus-visible:ring-accent-pink/40 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] cursor-pointer shadow-sm"
+                  end %>
+<% control_class = variant == "button" ? button_class : circle_class %>
+<% icon_class = if variant == "button" && saved
+                  "fill-white text-white heart-saved"
+                elsif saved
+                  "fill-accent-pink text-accent-pink heart-saved"
+                elsif variant == "button"
+                  "fill-transparent text-accent-pink"
+                else
+                  "fill-transparent text-neutral-400 hover:text-accent-pink"
+                end %>
 
 <% if signed_in? %>
   <%= button_to pet_save_path(pet_id: pet_id),
-      id: "save-button-#{pet_id}",
+      id: button_id,
       method: saved ? :delete : :post,
-      class: "absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 z-10",
-      aria: { label: saved ? t("pets.index.unsave") : t("pets.index.save") },
+      class: control_class,
+      aria: { label: variant == "button" ? button_label : save_aria },
       data: { turbo_stream: true } do %>
-    <svg class="w-5 h-5 transition-all duration-200 heart-icon <%= saved ? 'fill-accent-pink text-accent-pink heart-saved' : 'fill-transparent text-neutral-400 hover:text-accent-pink' %>" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none">
+    <svg class="w-5 h-5 transition-all duration-200 heart-icon <%= icon_class %>" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
       <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
     </svg>
+    <% if variant == "button" %>
+      <span><%= button_label %></span>
+    <% end %>
   <% end %>
 <% else %>
   <%# Signed-out visitors: "paw it" stores interests locally in the browser.
       No account required — the conversion prompt handles the account nudge. %>
+  <% interest_save_label = variant == "button" ? t("pets.show.save_to_favorites") : t("pets.index.save") %>
+  <% interest_unsave_label = variant == "button" ? t("pets.show.saved") : t("pets.index.unsave") %>
   <button type="button"
-          id="save-button-<%= pet_id %>"
+          id="<%= button_id %>"
           data-controller="pet-interest"
           data-pet-interest-id-value="<%= pet_id %>"
-          data-pet-interest-save-label-value="<%= t("pets.index.save") %>"
-          data-pet-interest-unsave-label-value="<%= t("pets.index.unsave") %>"
+          data-pet-interest-save-label-value="<%= interest_save_label %>"
+          data-pet-interest-unsave-label-value="<%= interest_unsave_label %>"
           data-action="click->pet-interest#toggle"
-          class="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 z-10 cursor-pointer"
-          aria-label="<%= t("pets.index.save") %>"
+          class="<%= control_class %>"
+          aria-label="<%= interest_save_label %>"
           aria-pressed="false">
-    <svg class="w-5 h-5 pointer-events-none transition-all duration-200 fill-transparent text-neutral-400" data-pet-interest-target="icon" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none">
+    <svg class="w-5 h-5 pointer-events-none transition-all duration-200 fill-transparent text-neutral-400" data-pet-interest-target="icon" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
       <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
     </svg>
+    <% if variant == "button" %>
+      <span data-pet-interest-target="label"><%= interest_save_label %></span>
+    <% end %>
   </button>
 <% end %>

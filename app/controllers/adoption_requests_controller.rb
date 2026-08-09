@@ -37,7 +37,9 @@ class AdoptionRequestsController < ApplicationController
 
     if result.success?
       @request = result.data
-      redirect_to adoption_request_path(@request), notice: t("adoptions.requests.flash.submitted")
+      was_done = current_user.adoption_requests.where.not(id: @request.id).exists?
+      milestone_notice = milestone_unlocked_message(current_user, :first_application, was_done: was_done)
+      redirect_to adoption_request_path(@request), notice: milestone_notice || t("adoptions.requests.flash.submitted")
     else
       redirect_to pet_path(@pet), alert: Array(result.errors).join(", ")
     end

@@ -2,7 +2,7 @@
 
 **Domain:** Frontend, Engagement, Onboarding, Dashboard
 **Priority:** 2 (Medium)
-**Status:** Draft
+**Status:** Implemented — see `specs/31_gamification_engagement/specification.md` + `acceptance-criteria.md` (full suite green).
 **Tracks:** Product Improvements §6 (Gamification & Product Engagement)
 
 ---

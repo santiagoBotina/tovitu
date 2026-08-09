@@ -1,0 +1,26 @@
+<%# ─── Zone 4: Suggested check-ins ─── %>
+<%# Compact reviewer checklist. Checkboxes are a lightweight in-session tracking %>
+<%# aid only — nothing is persisted. Native inputs keep it keyboard accessible. %>
+<% if presenter.verification_questions.any? %>
+  <div class="mb-4 bento-enter bento-enter-d4" data-testid="insight-checkins">
+    <div class="flex items-baseline justify-between gap-3 mb-1.5">
+      <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide"><%= t("ai.adopter_insight.card.checkins_title") %></h3>
+      <span class="text-xs text-neutral-400 hidden sm:inline"><%= t("ai.adopter_insight.card.checkin_hint") %></span>
+    </div>
+    <div data-controller="insight-checklist">
+      <ol class="space-y-1" aria-label="<%= t("ai.adopter_insight.card.checkins_title") %>">
+        <% presenter.verification_questions.each_with_index do |question, index| %>
+          <li data-insight-checklist-target="row" class="insight-checkin-row -mx-2 rounded-xl transition-colors hover:bg-neutral-50">
+            <label class="flex items-start gap-2.5 px-2 py-1.5 cursor-pointer">
+              <input type="checkbox"
+                     class="mt-0.5 w-4 h-4 rounded accent-secondary-600 shrink-0"
+                     data-action="change->insight-checklist#toggle">
+              <span class="insight-checkin-number mt-0.5 w-5 h-5 rounded-full bg-primary-50 text-primary-600 text-xs font-semibold flex items-center justify-center shrink-0" aria-hidden="true"><%= index + 1 %></span>
+              <span class="insight-checkin-text text-sm text-neutral-700"><%= question %></span>
+            </label>
+          </li>
+        <% end %>
+      </ol>
+    </div>
+  </div>
+<% end %>

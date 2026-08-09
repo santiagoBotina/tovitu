@@ -2,7 +2,7 @@
 
 .PHONY: help setup deps run dev docker-up docker-down docker-logs docker-clean \
         localstack-up localstack-down aws-smoke db-migrate db-seed db-reset \
-        test test-verbose lint lint-fix console clean install
+        test test-js test-verbose lint lint-fix console clean install
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
@@ -28,9 +28,11 @@ dev: docker-up ## Start dev environment with Foreman (hot reload)
 	@echo ">>> Starting dev environment..."
 	bin/dev
 
-install: ## Install Ruby dependencies
+install: ## Install Ruby + JavaScript dependencies
 	@echo ">>> Installing gems..."
 	bundle install
+	@echo ">>> Installing JS dependencies (Stimulus tests)..."
+	npm install
 
 db-setup: ## Create, migrate, and seed the database
 	@echo ">>> Setting up database..."
@@ -82,8 +84,12 @@ localstack-down: ## Stop LocalStack
 aws-smoke: ## Run the AWS smoke check (verify LocalStack footprint)
 	bin/rails aws:smoke
 
-test: ## Run the test suite
+test: ## Run the test suite (Ruby + JavaScript)
 	bundle exec rspec
+	npm test
+
+test-js: ## Run the JavaScript (Stimulus) test suite
+	npm test
 
 test-verbose: ## Run tests with verbose output
 	bundle exec rspec --format documentation

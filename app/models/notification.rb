@@ -19,6 +19,8 @@ class Notification < ApplicationRecord
   scope :unread, -> { where(read_at: nil) }
   scope :read, -> { where.not(read_at: nil) }
   scope :recent, -> { order(created_at: :desc) }
+  scope :email_delivered, -> { where.not(email_delivered_at: nil) }
+  scope :email_failed, -> { where.not(email_failed_at: nil) }
 
   delegate :name, to: :actor, prefix: true, allow_nil: true
 

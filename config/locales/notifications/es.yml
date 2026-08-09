@@ -35,7 +35,9 @@ es:
     preferences:
       title: "Configuración de Notificaciones"
       in_app_label: "Notificaciones en la app"
+      in_app_desc: "Recibe notificaciones dentro de la app"
       email_label: "Notificaciones por correo"
+      email_desc: "Recibe notificaciones por correo"
       whatsapp_label: "Notificaciones por WhatsApp"
       whatsapp_phone: "Número de teléfono para WhatsApp"
       verify: "Verificar"
@@ -45,6 +47,7 @@ es:
       whatsapp_hint: "Ingresa tu número de teléfono para recibir actualizaciones en tiempo real por WhatsApp."
       opt_in_info: "Recibirás un código de verificación por WhatsApp."
       per_kind_title: "Personalizar por tipo de notificación"
+      per_kind_hint: "Elige qué actualizaciones quieres recibir por correo. Desactivar el correo arriba anula todo."
 
     index:
       title: "Notificaciones"
@@ -74,3 +77,10 @@ es:
     edit:
       title: "Preferencias de Notificación"
       subtitle: "Elige cómo recibir notificaciones"
+
+  mailers:
+    footer:
+      manage_preferences: "Administrar preferencias de notificación"
+      privacy: "Política de Privacidad"
+      terms: "Términos del Servicio"
+      tagline: "Hacemos que las adopciones de mascotas perduren, un match a la vez."

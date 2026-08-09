@@ -8,7 +8,7 @@
                 end %>
 <div class="w-full max-w-4xl mx-auto">
   <%# ─── Back link ─── %>
-  <%= link_to safe_back_path(pets_path), class: "inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-700 text-sm mb-6 transition bento-enter bento-enter-d1" do %>
+  <%= link_to safe_back_path(pets_path), class: "inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-700 text-sm mt-6 mb-6 transition bento-enter bento-enter-d1" do %>
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
     </svg>
@@ -29,15 +29,20 @@
   <% end %>
 
   <%# ─── Photo Gallery ─── %>
-  <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden mb-6 bento-enter bento-enter-d2">
+  <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden mb-6 relative bento-enter bento-enter-d2">
     <% if pet.primary_photo.present? %>
-      <div class="aspect-[16/10] bg-neutral-100">
-        <%= image_tag pet.primary_photo_url(variant: :large), alt: pet.name, class: "w-full h-full object-cover image-reveal" %>
+      <div class="aspect-[16/10] bg-neutral-100 relative" data-controller="image-loader">
+        <div data-image-loader-target="skeleton" class="absolute inset-0 img-skeleton" aria-hidden="true"></div>
+        <%= image_tag pet.primary_photo_url(variant: :large), alt: pet.name, fetchpriority: "high", decoding: "async",
+              data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
+              class: "relative w-full h-full object-cover opacity-0 transition-opacity duration-500" %>
       </div>
       <% if pet.photo_gallery.length > 1 %>
         <div class="grid grid-cols-5 gap-1 p-1 bg-neutral-50">
           <% pet.photo_gallery(variant: :thumb).each_with_index do |photo_url, index| %>
-            <%= image_tag photo_url, alt: t(".photo_alt", name: pet.name, index: index + 1), class: "aspect-square object-cover rounded-lg hover:opacity-90 transition-opacity #{index == 0 ? 'ring-2 ring-secondary-500' : ''} image-reveal" %>
+            <%= image_tag photo_url, alt: t(".photo_alt", name: pet.name, index: index + 1),
+                  loading: "lazy", decoding: "async",
+                  class: "aspect-square object-cover rounded-lg hover:opacity-90 transition-opacity #{index == 0 ? 'ring-2 ring-secondary-500' : ''}" %>
           <% end %>
         </div>
       <% end %>
@@ -48,6 +53,10 @@
         </svg>
       </div>
     <% end %>
+
+    <%# Quick-save heart overlaid on the hero photo (same control as the
+        explorer cards, so signed-out "paw it" works here too). %>
+    <%= render "pets/save_button", pet: pet, saved: pet_saved?(pet) %>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -235,6 +244,12 @@
             <span><%= pet.shelter.phone %></span>
           </div>
         </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d4 card-lift">
+        <h2 class="font-display text-lg font-bold text-neutral-800 mb-1"><%= t(".save_title") %></h2>
+        <p class="text-neutral-500 text-sm mb-4"><%= t(".save_body") %></p>
+        <%= render "pets/save_button", pet: pet, saved: pet_saved?(pet), variant: "button" %>
       </div>
 
       <div class="bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-xl shadow-sm p-6 text-white bento-enter bento-enter-d5">

@@ -1,0 +1,21 @@
+<div style="text-align: center; margin-bottom: 30px;">
+  <h1 style="color: #6C30FF; font-family: 'Baloo 2', 'Arial Black', cursive; font-size: 28px; margin: 0;">Tovitu</h1>
+</div>
+
+<div style="background-color: #ffffff; border-radius: 16px; padding: 30px;">
+  <h2 style="margin-top: 0; color: #111827; font-size: 24px; margin-bottom: 16px;"><%= t(".greeting", name: @user.name) %></h2>
+
+  <p style="color: #4B5563; line-height: 1.6;"><%= t(".body") %></p>
+
+  <div style="text-align: center; margin: 30px 0;">
+    <a href="<%= pets_url(locale: @locale) %>" style="display: inline-block; background-color: #6C30FF; color: white; padding: 14px 36px; border-radius: 24px; text-decoration: none; font-weight: 600; font-size: 16px;">
+      <%= t(".cta") %>
+    </a>
+  </div>
+
+  <p style="color: #6B7280; font-size: 14px; line-height: 1.5;"><%= t(".tip") %></p>
+</div>
+
+<div style="text-align: center; margin-top: 20px; color: #A0A6B4; font-size: 12px;">
+  <p><%= t("authentication_mailer.footer") %></p>
+</div>

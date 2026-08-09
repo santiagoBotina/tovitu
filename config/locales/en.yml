@@ -8,6 +8,8 @@ en:
   shared:
     back: "Back"
     back_to_home: "Back to homepage"
+    toast:
+      dismiss: "Dismiss"
     error_messages:
       one: "%{count} error prohibited this from being saved:"
       other: "%{count} errors prohibited this from being saved:"
@@ -29,6 +31,13 @@ en:
       create_shelter: "Set Up Shelter"
       sign_out: "Sign out"
       sign_out_confirm: "Are you sure you want to sign out?"
+      journey_label:
+        label_getting_started: "Getting started"
+        label_building_profile: "Profile in progress"
+        label_discovering_matches: "Discovering matches"
+        label_ready_to_adopt: "Ready to adopt"
+        shelter_setup: "Setting up"
+        shelter_live: "Live & active"
     confirm_modal:
       confirm: "Confirm"
       cancel: "Cancel"
@@ -163,11 +172,35 @@ en:
         import: "Import my saved pets"
         skip: "Not now"
       readiness:
-        title: "Adoption Readiness"
+        title: "Adoption Journey"
         percent: "%{percent}%%"
-        next_milestone: "Next milestone: Complete your profile"
-        next_milestone_requests: "Next milestone: Awaiting shelter review"
-        next_milestone_complete: "You're all set! Start browsing pets."
+        stages_label: "Adoption journey stages"
+        stage:
+          getting_started: "Getting Started"
+          building_profile: "Building Your Profile"
+          discovering_matches: "Discovering Matches"
+          ready_to_adopt: "Ready to Adopt"
+        next_step:
+          next_complete_profile: "Next: Complete your profile to unlock better matches"
+          next_save_pet: "Next: Save a pet you love to start your matches"
+          next_submit_request: "Next: Submit an adoption request to move forward"
+          next_await_review: "Your request is with the shelter — we'll keep you posted"
+      journey:
+        title: "Your Journey"
+        progress: "%{done}/%{total} milestones"
+        unlocked: "Unlocked"
+        milestone:
+          profile_starter: "Profile starter"
+          first_saved_pet: "First saved pet"
+          first_application: "First application"
+          active_applicant: "Active applicant"
+          publisher: "Publisher"
+        hint:
+          hint_profile: "Complete your profile to unlock"
+          hint_saved_pet: "Save a pet you love"
+          hint_application: "Submit your first adoption request"
+          hint_active: "Awaiting a shelter's review"
+          hint_publisher: "Publish your first pet"
       preview:
         title: "Life Preview"
         description: "See how your favorite pets fit into your daily routine. The best way to know if they're the one."
@@ -178,13 +211,11 @@ en:
         title: "Your Top Matches"
         subtitle: "Based on your lifestyle and preferences"
         view_all: "View all favorites"
-        match_percent: "%{percent}%% Match"
         preview: "Preview Life with %{name}"
         saved: "Saved"
         empty_title: "Start saving pets"
         empty_description: "Browse pets and save your favorites to see your top matches here."
         empty_cta: "Browse Pets"
-        age_years: "%{years}y"
       activity:
         title: "Recent Activity"
         mark_all_read: "Mark all as read"
@@ -231,6 +262,14 @@ en:
         questions_remaining: "Just %{count} quick question left"
         questions_remaining_plural: "Just %{count} quick questions left"
         cta: "Complete Your Profile"
+        missing:
+          complete_profile: "Add your lifestyle preferences to improve your matches — it only takes a couple of minutes."
+          save_pet: "Save a pet you love to start building your matches."
+          submit_request: "Submit an adoption request to move your journey forward."
+        cta:
+          complete_profile: "Complete Profile"
+          save_pet: "Browse Pets"
+          submit_request: "Browse Pets"
       tip:
         title: "Did you know?"
         text: "Completing your profile helps us find pets that match your lifestyle — not just any pet, but the right one."
@@ -518,6 +557,7 @@ en:
         account_info_title: "Account Information"
         name_label: "Full name"
         email_label: "Email address"
+        email_readonly_hint: "Your email is your sign-in and can't be changed here."
         verified: "Verified"
         pending_verification: "Pending verification"
         submit: "Update profile"
@@ -534,6 +574,15 @@ en:
         language_desc: "Choose your preferred language for the app."
         language_label: "Language"
         language_save: "Save language preference"
+        journey:
+          title: "Your Adoption Journey"
+          progress: "%{done}/%{total} milestones"
+          milestone:
+            profile_starter: "Profile starter"
+            first_saved_pet: "First saved pet"
+            first_application: "First application"
+            active_applicant: "Active applicant"
+            publisher: "Publisher"
     verifications:
       expired:
         title: "Link expired"
@@ -564,7 +613,20 @@ en:
       title: "Email address changed"
       body: "This email is to confirm that your Tovitu account email address has been changed."
       contact: "If you did not make this change, please contact support immediately."
+    welcome:
+      subject: "Welcome to Tovitu!"
+      greeting: "Welcome to Tovitu, %{name}!"
+      body: "Your email is verified and your account is ready. Start exploring pets that fit your lifestyle — your future best friend is waiting."
+      cta: "Browse Pets"
+      tip: "Tip: Save pets you love and complete your profile so we can match you with the best fit."
     footer: "© 2026 Tovitu. All rights reserved."
+  gamification:
+    milestone_unlocked:
+      profile_starter: "Milestone unlocked: Profile starter 🎉"
+      first_saved_pet: "Milestone unlocked: First saved pet 🎉"
+      first_application: "Milestone unlocked: First application 🎉"
+      active_applicant: "Milestone unlocked: Active applicant 🎉"
+      publisher: "Milestone unlocked: Publisher 🎉"
   flash:
     sessions:
       create:
@@ -589,7 +651,6 @@ en:
         success: "Email verified successfully! Welcome to Tovitu."
     profiles:
       update:
-        email_changed: "Profile updated! Please check your new email to verify the change."
         success: "Profile updated successfully."
     shelters:
       create:
@@ -691,12 +752,20 @@ en:
         commitment_title: "Commitment signals"
         summary_title: "Pet-fit summary"
         verify_title: "Suggested verification questions"
+        checkins_title: "Suggested check-ins"
+        checkin_hint: "Check these off as you confirm them with the applicant."
         confidence_label: "AI confidence"
+        confidence_value: "%{level} confidence"
         activity_up_to: "based on activity up to %{date}"
         based_on_label: "Based on"
+        based_on_short: "Based on %{based_on}"
         disclaimer: "AI-generated estimate to support your decision — always verify with the applicant before approving."
         not_enough_activity: "Not enough activity yet"
         stale_badge: "Updating…"
+        divergence_pill: "Worth confirming"
+        why: "Why?"
+        read_more: "Read more"
+        show_less: "Show less"
         loading: "Preparing the adopter insight…"
         loading_hint: "This card appears here automatically once it's ready. It never blocks your review."
         unavailable: "Insight not available for this request."

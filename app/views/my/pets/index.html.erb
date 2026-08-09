@@ -1,3 +1,4 @@
+<% publish_new_label = t(".publish_new") %>
 <div class="max-w-4xl mx-auto">
   <%= render "shared/section_header",
              title: t(".title"),
@@ -5,7 +6,7 @@
              header_class: "flex items-center justify-between mb-6" do %>
     <%= link_to new_my_pet_path, class: "inline-flex items-center gap-2 px-5 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-      <%= t(".publish_new") %>
+      <%= publish_new_label %>
     <% end %>
   <% end %>
 

@@ -1,6 +1,7 @@
 <%# ─── Individual Publisher Incoming Requests Index ─── %>
 <% pending_count = @requests.count(&:pending?) %>
-<% active_count = @requests.count { |r| r.pending? || r.in_validation? } %>
+<% pending_count_label = t(".pending_count", count: pending_count) %>
+<% total_count_label = t(".total_count", count: @requests.count) %>
 
 <div class="max-w-4xl mx-auto">
   <%# ─── Header with counts ─── %>
@@ -13,10 +14,10 @@
         <% if pending_count > 0 %>
           <span class="px-3 py-1.5 rounded-full bg-warning/10 text-warning text-xs font-semibold flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-warning animate-pulse" aria-hidden="true"></span>
-            <%= t(".pending_count", count: pending_count) %>
+            <%= pending_count_label %>
           </span>
         <% end %>
-        <span class="text-xs text-neutral-400"><%= t(".total_count", count: @requests.count) %></span>
+        <span class="text-xs text-neutral-400"><%= total_count_label %></span>
       </div>
     <% end %>
   <% end %>

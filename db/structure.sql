@@ -638,7 +638,10 @@ CREATE TABLE public.notifications (
     actionable_until timestamp(6) without time zone,
     action_url character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    email_delivered_at timestamp(6) without time zone,
+    email_failed_at timestamp(6) without time zone,
+    email_error text
 );
 
 
@@ -2042,6 +2045,7 @@ ALTER TABLE ONLY public.adoption_applications
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260809120000'),
 ('20260806020000'),
 ('20260806010002'),
 ('20260806010001'),

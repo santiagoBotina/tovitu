@@ -66,4 +66,50 @@ RSpec.describe "Onboarding wizard completion", type: :request do
     expect(response.status).to eq(302)
     expect(response.headers["Location"]).not_to include("onboarding")
   end
+
+  it "flashes the profile-starter milestone on first completion" do
+    answers = {
+      1 => %w[going_for_walks],
+      2 => "active",
+      3 => "playful_companion",
+      4 => "some_experience",
+      5 => %w[daily_companion],
+      6 => "2_to_4h",
+      7 => "adventurous_energetic",
+      8 => "A loving home"
+    }
+    answers.each { |qnum, answer| patch_answer(qnum, answer) }
+    post_completion
+
+    expect(flash[:notice]).to eq(I18n.t("gamification.milestone_unlocked.profile_starter"))
+  end
+
+  it "does not flash the profile-starter milestone when the wizard is skipped" do
+    post onboarding_individual_completion_path, params: { skip: "true" }
+
+    expect(flash[:notice]).to eq(I18n.t("flash.onboarding.individual.skipped"))
+    expect(flash[:notice]).not_to eq(I18n.t("gamification.milestone_unlocked.profile_starter"))
+  end
+
+  it "does not flash the milestone a second time after onboarding is complete" do
+    answers = {
+      1 => %w[going_for_walks],
+      2 => "active",
+      3 => "playful_companion",
+      4 => "some_experience",
+      5 => %w[daily_companion],
+      6 => "2_to_4h",
+      7 => "adventurous_energetic",
+      8 => "A loving home"
+    }
+    answers.each { |qnum, answer| patch_answer(qnum, answer) }
+    post_completion
+
+    # Second submission via profile-settings flow: no milestone, just the
+    # preferences-updated notice (early-return path).
+    post onboarding_individual_completion_path, params: { skip: "false", from_profile: "true" }
+
+    expect(flash[:notice]).to eq(I18n.t("flash.onboarding.preferences_updated"))
+    expect(flash[:notice]).not_to eq(I18n.t("gamification.milestone_unlocked.profile_starter"))
+  end
 end

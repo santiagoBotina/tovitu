@@ -37,7 +37,9 @@ en:
     preferences:
       title: "Notification Settings"
       in_app_label: "In-app notifications"
+      in_app_desc: "Receive notifications inside the app"
       email_label: "Email notifications"
+      email_desc: "Receive email notifications"
       whatsapp_label: "WhatsApp notifications"
       whatsapp_phone: "Phone number for WhatsApp"
       verify: "Verify"
@@ -47,6 +49,7 @@ en:
       whatsapp_hint: "Enter your phone number to receive real-time updates on WhatsApp."
       opt_in_info: "You'll receive a verification code via WhatsApp."
       per_kind_title: "Customize by notification type"
+      per_kind_hint: "Choose which updates you want by email. Turning email off above overrides everything."
 
     index:
       title: "Notifications"
@@ -76,3 +79,10 @@ en:
     edit:
       title: "Notification Preferences"
       subtitle: "Choose how you receive notifications"
+
+  mailers:
+    footer:
+      manage_preferences: "Manage notification preferences"
+      privacy: "Privacy Policy"
+      terms: "Terms of Service"
+      tagline: "Making pet adoptions stick, one match at a time."

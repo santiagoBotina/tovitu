@@ -1,4 +1,35 @@
 es:
+  adoption_mailer:
+    request_confirmation:
+      subject: "Solicitud para adoptar a %{pet_name} — Confirmación"
+      greeting: "Hola %{name},"
+      body: "¡Gracias por tu interés en adoptar a %{pet_name}! Tu solicitud ha sido enviada a %{party_name} para revisión."
+      next_steps: "El publicador revisará tu perfil y se pondrá en contacto contigo pronto."
+      view_request: "Ver Tu Solicitud"
+      thanks: "¡Gracias por elegir adoptar!"
+    status_changed:
+      subject: "Actualización sobre tu solicitud para adoptar a %{pet_name}"
+      greeting: "Hola %{name},"
+      in_validation_body: "%{party_name} está revisando tu solicitud para %{pet_name} y puede contactarte para obtener más información."
+      accepted_body: "¡Felicitaciones! Tu solicitud para adoptar a %{pet_name} ha sido aceptada por %{party_name}. Ellos se pondrán en contacto contigo para coordinar los siguientes pasos."
+      declined_body: "Lamentablemente, tu solicitud para adoptar a %{pet_name} no fue aprobada en este momento."
+      reasons_title: "Motivo"
+      view_request: "Ver Tu Solicitud"
+      contact: "Si tienes preguntas, contacta directamente a %{party_name}."
+    new_request_notification:
+      subject: "Nueva solicitud de adopción para %{pet_name}"
+      greeting: "Hola %{name},"
+      body: "%{adopter_name} ha enviado una solicitud de adopción para %{pet_name}."
+      review: "Revisa la solicitud y responde desde tu panel de control."
+      view_request: "Revisar Solicitud"
+    request_withdrawn:
+      subject: "%{adopter_name} retiró su solicitud para %{pet_name}"
+      greeting: "Hola %{recipient_name},"
+      body: "%{adopter_name} ha retirado su solicitud de adopción para %{pet_name}."
+      next_steps: "%{pet_name} ahora está disponible para otros adoptantes. Puedes revisar tu panel de control para más actualizaciones."
+      view_request: "Ver Solicitud"
+      thanks: "¡Gracias por usar Tovitu!"
+
   adoption_requests:
     new:
       transparency_note: Tovitu muestra al refugio un resumen de tu perfil y actividad para ayudarte a encontrar el compañero perfecto.

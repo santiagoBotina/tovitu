@@ -8,6 +8,8 @@ es:
   shared:
     back: "Atrás"
     back_to_home: "Volver al inicio"
+    toast:
+      dismiss: "Descartar"
     error_messages:
       one: "%{count} error prohibió que esto se guardara:"
       other: "%{count} errores prohibieron que esto se guardara:"
@@ -29,6 +31,13 @@ es:
       create_shelter: "Configurar Refugio"
       sign_out: "Cerrar sesión"
       sign_out_confirm: "¿Estás seguro de que quieres cerrar sesión?"
+      journey_label:
+        label_getting_started: "Primeros pasos"
+        label_building_profile: "Perfil en progreso"
+        label_discovering_matches: "Descubriendo coincidencias"
+        label_ready_to_adopt: "Listo para adoptar"
+        shelter_setup: "Configurando"
+        shelter_live: "Activo y en línea"
     confirm_modal:
       confirm: "Confirmar"
       cancel: "Cancelar"
@@ -164,11 +173,35 @@ es:
         import: "Importar mis mascotas guardadas"
         skip: "Ahora no"
       readiness:
-        title: "Preparación para Adoptar"
+        title: "Viaje de Adopción"
         percent: "%{percent}%%"
-        next_milestone: "Siguiente hito: Completa tu perfil"
-        next_milestone_requests: "Siguiente hito: Esperando revisión del refugio"
-        next_milestone_complete: "¡Estás listo! Empieza a explorar mascotas."
+        stages_label: "Etapas del viaje de adopción"
+        stage:
+          getting_started: "Primeros Pasos"
+          building_profile: "Construyendo tu Perfil"
+          discovering_matches: "Descubriendo Coincidencias"
+          ready_to_adopt: "Listo para Adoptar"
+        next_step:
+          next_complete_profile: "Siguiente: Completa tu perfil para desbloquear mejores coincidencias"
+          next_save_pet: "Siguiente: Guarda una mascota que ames para empezar tus coincidencias"
+          next_submit_request: "Siguiente: Envía una solicitud de adopción para avanzar"
+          next_await_review: "Tu solicitud está con el refugio — te mantendremos informado"
+      journey:
+        title: "Tu Viaje"
+        progress: "%{done}/%{total} hitos"
+        unlocked: "Desbloqueado"
+        milestone:
+          profile_starter: "Perfil iniciado"
+          first_saved_pet: "Primera mascota guardada"
+          first_application: "Primera solicitud"
+          active_applicant: "Solicitante activo"
+          publisher: "Publicador"
+        hint:
+          hint_profile: "Completa tu perfil para desbloquear"
+          hint_saved_pet: "Guarda una mascota que ames"
+          hint_application: "Envía tu primera solicitud de adopción"
+          hint_active: "Esperando revisión del refugio"
+          hint_publisher: "Publica tu primera mascota"
       preview:
         title: "Vista Previa"
         description: "Descubre cómo tus mascotas favoritas encajan en tu rutina diaria. La mejor forma de saber si son las indicadas."
@@ -182,17 +215,23 @@ es:
         questions_remaining: "Solo %{count} pregunta rápida restante"
         questions_remaining_plural: "Solo %{count} preguntas rápidas restantes"
         cta: "Completar tu Perfil"
+        missing:
+          complete_profile: "Añade tus preferencias de estilo de vida para mejorar tus coincidencias — solo toma un par de minutos."
+          save_pet: "Guarda una mascota que ames para empezar a construir tus coincidencias."
+          submit_request: "Envía una solicitud de adopción para avanzar en tu viaje."
+        cta:
+          complete_profile: "Completar Perfil"
+          save_pet: "Explorar Mascotas"
+          submit_request: "Explorar Mascotas"
       matches:
         title: "Tus Mejores Coincidencias"
         subtitle: "Basadas en tu estilo de vida y preferencias"
         view_all: "Ver todos los favoritos"
-        match_percent: "%{percent}%% Coincidencia"
         preview: "Vista Previa con %{name}"
         saved: "Guardado"
         empty_title: "Comienza a guardar mascotas"
         empty_description: "Explora mascotas y guarda tus favoritas para ver tus mejores coincidencias aquí."
         empty_cta: "Explorar Mascotas"
-        age_years: "%{years}a"
       requests:
         title: "Mis Solicitudes"
         empty_title: "Sin solicitudes aún"
@@ -516,6 +555,7 @@ es:
         account_info_title: "Información de la Cuenta"
         name_label: "Nombre completo"
         email_label: "Correo electrónico"
+        email_readonly_hint: "Tu correo electrónico es tu método de inicio de sesión y no se puede cambiar aquí."
         verified: "Verificado"
         pending_verification: "Verificación pendiente"
         submit: "Actualizar perfil"
@@ -532,6 +572,15 @@ es:
         language_desc: "Elige tu idioma preferido para la aplicación."
         language_label: "Idioma"
         language_save: "Guardar preferencia de idioma"
+        journey:
+          title: "Tu Viaje de Adopción"
+          progress: "%{done}/%{total} hitos"
+          milestone:
+            profile_starter: "Perfil iniciado"
+            first_saved_pet: "Primera mascota guardada"
+            first_application: "Primera solicitud"
+            active_applicant: "Solicitante activo"
+            publisher: "Publicador"
     verifications:
       expired:
         title: "Enlace expirado"
@@ -562,7 +611,20 @@ es:
       title: "Correo electrónico cambiado"
       body: "Este correo es para confirmar que la dirección de correo electrónico de tu cuenta de Tovitu ha sido cambiada."
       contact: "Si no realizaste este cambio, por favor contacta al soporte inmediatamente."
+    welcome:
+      subject: "¡Bienvenido a Tovitu!"
+      greeting: "¡Bienvenido a Tovitu, %{name}!"
+      body: "Tu correo está verificado y tu cuenta está lista. Comienza a explorar mascotas que se adapten a tu estilo de vida — tu futuro mejor amigo te está esperando."
+      cta: "Explorar Mascotas"
+      tip: "Consejo: Guarda las mascotas que ames y completa tu perfil para que podamos encontrar la mejor coincidencia para ti."
     footer: "© 2026 Tovitu. Todos los derechos reservados."
+  gamification:
+    milestone_unlocked:
+      profile_starter: "Hito desbloqueado: Perfil iniciado 🎉"
+      first_saved_pet: "Hito desbloqueado: Primera mascota guardada 🎉"
+      first_application: "Hito desbloqueado: Primera solicitud 🎉"
+      active_applicant: "Hito desbloqueado: Solicitante activo 🎉"
+      publisher: "Hito desbloqueado: Publicador 🎉"
   flash:
     sessions:
       create:
@@ -587,7 +649,6 @@ es:
         success: "¡Correo verificado exitosamente! Bienvenido a Tovitu."
     profiles:
       update:
-        email_changed: "¡Perfil actualizado! Por favor revisa tu nuevo correo para verificar el cambio."
         success: "Perfil actualizado correctamente."
     shelters:
       create:
@@ -689,12 +750,20 @@ es:
         commitment_title: "Señales de compromiso"
         summary_title: "Resumen de compatibilidad"
         verify_title: "Preguntas sugeridas para verificar"
+        checkins_title: "Check-ins sugeridos"
+        checkin_hint: "Márcalos a medida que los confirmas con el solicitante."
         confidence_label: "Confianza de la IA"
+        confidence_value: "Confianza %{level}"
         activity_up_to: "según la actividad hasta %{date}"
         based_on_label: "Basado en"
+        based_on_short: "Basado en %{based_on}"
         disclaimer: "Estimación generada por IA para apoyar tu decisión: verifica siempre con el solicitante antes de aprobar."
         not_enough_activity: "Aún no hay suficiente actividad"
         stale_badge: "Actualizando…"
+        divergence_pill: "Vale la pena confirmar"
+        why: "¿Por qué?"
+        read_more: "Leer más"
+        show_less: "Ver menos"
         loading: "Preparando el resumen del adoptante…"
         loading_hint: "Esta tarjeta aparece automáticamente cuando esté lista. Nunca bloquea tu revisión."
         unavailable: "Resumen no disponible para esta solicitud."

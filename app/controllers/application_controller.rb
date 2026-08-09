@@ -111,4 +111,25 @@ class ApplicationController < ActionController::Base
 
     redirect_to request.referer || root_path, alert: message
   end
+
+  # Computes the "milestone unlocked" message when the given milestone
+  # transitions from locked to unlocked for the user. Callers pass `was_done:`
+  # — whether the milestone was already complete before the action (e.g. the
+  # user already had a saved pet). This keeps the feedback honest: it only
+  # fires on the first time the milestone is reached.
+  #
+  # Returns the milestone message (or nil) so callers can prefer it over a
+  # generic action notice. Callers are responsible for surfacing it: via
+  # `redirect_to ... notice:`, or appended inline as a turbo_stream toast.
+  # This helper deliberately does NOT write to `flash` so the message is never
+  # shown twice (once as a session flash and once as an inline toast).
+  def milestone_unlocked_message(user, milestone_key, was_done:)
+    return nil if was_done
+
+    journey = Gamification::Journey.new(user)
+    milestone = journey.milestones.find { |m| m[:key] == milestone_key }
+    return nil unless milestone && milestone[:done]
+
+    t("gamification.milestone_unlocked.#{milestone_key}")
+  end
 end

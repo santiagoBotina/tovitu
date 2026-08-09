@@ -18,6 +18,7 @@ module My
     end
 
     def create
+      was_done = current_user.published_pets.kept.exists?
       result = Pets::Publish.call(
         publisher: current_user,
         params: pet_params,
@@ -25,7 +26,8 @@ module My
       )
 
       if result.success?
-        redirect_to my_pet_path(result.data), notice: t("flash.my.pets.created")
+        milestone_notice = milestone_unlocked_message(current_user, :publisher, was_done: was_done)
+        redirect_to my_pet_path(result.data), notice: milestone_notice || t("flash.my.pets.created")
       else
         @pet = Pet.new(pet_params)
         flash.now[:alert] = Array(result.errors).join(", ")

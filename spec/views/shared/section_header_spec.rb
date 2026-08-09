@@ -36,10 +36,16 @@ RSpec.describe "shared/section_header", type: :view do
     assert_select "header > div", count: 1
   end
 
+  it "adds a top margin so the section explanation clears the navbar" do
+    render inline: '<%= render "shared/section_header", title: "My Pets" %>'
+
+    assert_select "header[class~='mt-6']"
+  end
+
   it "supports a centered hero variant with a larger title" do
     render inline: '<%= render "shared/section_header", title: "Find Your Match", subtitle: "Browse pets near you.", centered: true %>'
 
-    assert_select "header[class~='text-center'][class~='mb-8']"
+    assert_select "header[class~='text-center'][class~='mb-8'][class~='mt-8']"
     assert_select "h1[class~='text-3xl'][class~='md:text-4xl']", text: "Find Your Match"
     assert_select "p[class~='mx-auto'][class~='text-lg']", text: "Browse pets near you."
   end

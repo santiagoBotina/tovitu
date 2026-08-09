@@ -14,6 +14,10 @@ module Onboarding
         zero_answers = current_user.individual_profile.nil? ||
                        current_user.individual_profile.onboarding_step.to_i == 0
 
+        # Capture whether the profile-starter milestone was already unlocked
+        # BEFORE completing, so the toast only fires on the first completion.
+        was_done = current_user.onboarding_completed?
+
         result = Onboarding::Individual::Complete.call(
           user: current_user,
           skip: skip
@@ -23,11 +27,15 @@ module Onboarding
 
         if result.success?
           if skip && zero_answers
+            # Skipping is not completing: the "profile starter" milestone
+            # should only celebrate a genuine completion, so a skipped wizard
+            # keeps the plain skipped notice.
             redirect_to redirect_destination,
                         notice: t("flash.onboarding.individual.skipped")
           else
+            milestone_notice = milestone_unlocked_message(current_user, :profile_starter, was_done: was_done)
             redirect_to redirect_destination,
-                        notice: t("flash.onboarding.individual.complete")
+                        notice: milestone_notice || t("flash.onboarding.individual.complete")
           end
         else
           redirect_to onboarding_individual_questions_path,

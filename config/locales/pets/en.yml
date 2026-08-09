@@ -141,6 +141,10 @@ en:
       apply_title: Ready to adopt?
       apply_body: Start your adoption application and give this pet a loving home.
       apply_to_adopt: Apply to Adopt
+      save_title: Favorites
+      save_body: Save this pet to your list — it will be waiting in your favorites.
+      save_to_favorites: Save to favorites
+      saved: Saved
       life_preview_title: "Life with %{name}"
       life_preview_description: "Your future together, mapped out week by week"
       life_preview_plan: Week-by-Week Plan

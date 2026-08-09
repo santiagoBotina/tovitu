@@ -1,9 +1,11 @@
 <%# ─── Adopter Insight Card ─── %>
 <%# Shared between shelter and individual-publisher request review pages. %>
 <%# AI-generated, advisory only. Renders three states: ready / loading / unavailable. %>
+<%# Ready state is composed of four visual zones (archetype hero, fit factors, %>
+<%# signals, check-ins) with staggered reveal motion (disabled under reduced motion). %>
 <% presenter = AdopterInsightPresenter.new(request: insight_request, adopter: insight_adopter) %>
 
-<section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6 bento-enter bento-enter-d5" data-testid="adopter-insight-card">
+<section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6" data-testid="adopter-insight-card">
   <div class="flex items-start justify-between gap-3 mb-4">
     <div class="flex items-center gap-2">
       <span class="w-8 h-8 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0" aria-hidden="true">
@@ -17,111 +19,37 @@
   </div>
 
   <% if presenter.ready? %>
-    <%# ─── Archetype ─── %>
-    <div class="rounded-xl bg-primary-50 border border-primary-100 p-4 mb-4">
-      <div class="flex items-start justify-between gap-3">
-        <div>
-          <p class="text-xs text-neutral-500 font-medium"><%= t("ai.adopter_insight.card.archetype_label") %></p>
-          <p class="font-display text-lg font-bold text-primary-700 leading-snug"><%= presenter.archetype_label %></p>
-        </div>
-        <% if presenter.pet_fit_stale? %>
-          <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-warning/10 text-warning shrink-0"><%= t("ai.adopter_insight.card.stale_badge") %></span>
-        <% end %>
-      </div>
-      <% if presenter.self_report_present? && presenter.diverges? %>
-        <div class="mt-3 pt-3 border-t border-primary-100">
-          <p class="text-xs text-neutral-500"><%= t("ai.adopter_insight.card.self_report_label") %>: <span class="font-medium text-neutral-800"><%= presenter.self_report_label %></span></p>
-          <p class="text-xs text-neutral-500 mt-0.5"><%= t("ai.adopter_insight.card.divergence_hint") %></p>
-        </div>
-      <% elsif presenter.self_report_present? %>
-        <div class="mt-3 pt-3 border-t border-primary-100">
-          <p class="text-xs text-neutral-500"><%= t("ai.adopter_insight.card.self_report_label") %>: <span class="font-medium text-neutral-800"><%= presenter.self_report_label %></span></p>
-        </div>
-      <% end %>
-    </div>
+    <%= render "adoption_requests/archetype_hero", presenter: presenter %>
+    <%= render "adoption_requests/fit_factors", presenter: presenter %>
+    <%= render "adoption_requests/signals", presenter: presenter %>
+    <%= render "adoption_requests/checkins", presenter: presenter %>
 
-    <%# ─── Fit indicators ─── %>
-    <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-2"><%= t("ai.adopter_insight.card.fit_title") %></h3>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
-      <% presenter.fit_indicators.each do |indicator| %>
-        <div class="rounded-xl border border-neutral-100 bg-neutral-50 p-3">
-          <div class="flex items-center justify-between gap-2 mb-1">
-            <p class="text-sm font-medium text-neutral-800"><%= indicator[:label] %></p>
-            <% chip_class = case indicator[:status]
-                 when "strong_fit" then "bg-secondary-50 text-secondary-700"
-                 when "possible_mismatch" then "bg-warning/10 text-warning"
-                 else "bg-neutral-100 text-neutral-500"
-               end %>
-            <span class="px-2 py-0.5 text-xs font-medium rounded-full shrink-0 <%= chip_class %>"><%= indicator[:status_label] %></span>
-          </div>
-          <p class="text-xs text-neutral-500 leading-relaxed"><%= indicator[:evidence] %></p>
-        </div>
-      <% end %>
-    </div>
-
-    <%# ─── Commitment signals ─── %>
-    <% if presenter.commitment_signals.any? %>
-      <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-2"><%= t("ai.adopter_insight.card.commitment_title") %></h3>
-      <ul class="space-y-2 mb-4">
-        <% presenter.commitment_signals.each do |signal| %>
-          <li class="flex items-start gap-2.5">
-            <% dot_class = case signal[:kind]
-                 when "positive" then "bg-secondary-500"
-                 when "attention" then "bg-warning"
-                 else "bg-neutral-300"
-               end %>
-            <span class="mt-1.5 w-2 h-2 rounded-full <%= dot_class %> shrink-0" aria-hidden="true"></span>
-            <div>
-              <p class="text-sm text-neutral-700"><%= signal[:observation] %></p>
-            </div>
-          </li>
-        <% end %>
-      </ul>
-    <% end %>
-
-    <%# ─── Pet-fit summary ─── %>
-    <% if presenter.summary.present? %>
-      <div class="rounded-xl bg-secondary-50 border border-secondary-100 p-4 mb-4">
-        <h3 class="text-xs font-semibold text-secondary-700 uppercase tracking-wide mb-1.5"><%= t("ai.adopter_insight.card.summary_title") %></h3>
-        <p class="text-sm text-neutral-700 leading-relaxed"><%= presenter.summary %></p>
-      </div>
-    <% end %>
-
-    <%# ─── Verification questions ─── %>
-    <% if presenter.verification_questions.any? %>
-      <div class="mb-4">
-        <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-2"><%= t("ai.adopter_insight.card.verify_title") %></h3>
-        <ul class="space-y-1.5">
-          <% presenter.verification_questions.each do |question| %>
-            <li class="text-sm text-neutral-700 flex items-start gap-2">
-              <svg class="w-4 h-4 text-primary-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-              </svg>
-              <span><%= question %></span>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-
-    <%# ─── Confidence & provenance footer ─── %>
-    <div class="pt-4 border-t border-neutral-100 space-y-1.5">
-      <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-        <span class="text-xs text-neutral-500"><%= t("ai.adopter_insight.card.confidence_label") %>:</span>
-        <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-neutral-100 text-neutral-700"><%= presenter.confidence_label %></span>
-        <% if presenter.activity_up_to.present? %>
-          <span class="text-xs text-neutral-400"><%= t("ai.adopter_insight.card.activity_up_to", date: presenter.activity_up_to) %></span>
-        <% end %>
-      </div>
+    <%# ─── Provenance footer (single subtle line) ─── %>
+    <div class="pt-4 border-t border-neutral-100 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 bento-enter bento-enter-d5" data-testid="insight-provenance">
       <% if presenter.based_on.present? %>
-        <p class="text-xs text-neutral-500"><%= t("ai.adopter_insight.card.based_on_label") %>: <%= presenter.based_on %></p>
+        <details class="insight-details max-w-full" data-testid="insight-disclaimer">
+          <summary class="text-xs text-neutral-500 flex items-center gap-1.5 rounded focus-visible:ring-2 focus-visible:ring-primary-200 focus-visible:outline-none">
+            <span class="shrink-0">
+              <%= adopter_insight_icon(:info, size: "w-4 h-4", extra_class: "text-neutral-400") %>
+            </span>
+            <span class="min-w-0"><%= t("ai.adopter_insight.card.based_on_short", based_on: presenter.based_on) %></span>
+            <svg class="insight-chevron w-3.5 h-3.5 text-neutral-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </summary>
+          <p class="insight-details-body text-xs text-neutral-500 leading-relaxed mt-1.5"><%= presenter.disclaimer %></p>
+        </details>
+      <% else %>
+        <p class="text-xs text-neutral-500"><%= presenter.disclaimer %></p>
       <% end %>
-      <p class="text-xs text-neutral-400"><%= presenter.disclaimer %></p>
+      <% if presenter.activity_up_to.present? %>
+        <span class="text-xs text-neutral-400"><%= t("ai.adopter_insight.card.activity_up_to", date: presenter.activity_up_to) %></span>
+      <% end %>
     </div>
 
   <% elsif presenter.loading? %>
     <%# ─── Loading state (non-blocking) ─── %>
-    <div class="py-8 text-center">
+    <div class="py-8 text-center bento-enter bento-enter-d1">
       <div class="mx-auto w-8 h-8 mb-3 rounded-full border-2 border-primary-200 border-t-primary-500 animate-spin" aria-hidden="true"></div>
       <p class="text-sm font-medium text-neutral-700"><%= t("ai.adopter_insight.card.loading") %></p>
       <p class="text-xs text-neutral-500 mt-1"><%= t("ai.adopter_insight.card.loading_hint") %></p>
@@ -129,7 +57,7 @@
 
   <% else %>
     <%# ─── Unavailable / fallback state ─── %>
-    <div class="py-6 text-center">
+    <div class="py-6 text-center bento-enter bento-enter-d1">
       <p class="text-sm font-medium text-neutral-700"><%= t("ai.adopter_insight.card.unavailable") %></p>
       <p class="text-xs text-neutral-500 mt-1 max-w-md mx-auto"><%= t("ai.adopter_insight.card.unavailable_hint") %></p>
     </div>

@@ -7,7 +7,7 @@ const INTERESTS_KEY = "tovitu:interests"
 const MAX_INTERESTS = 20
 
 export default class extends Controller {
-  static targets = ["icon"]
+  static targets = ["icon", "label"]
   static values = {
     id: Number,
     saveLabel: String,
@@ -17,6 +17,24 @@ export default class extends Controller {
   connect() {
     this.interests = this.read()
     this.render()
+    // Keep multiple controls for the same pet in sync (e.g. the heart on the
+    // profile hero + the labeled sidebar button). Each instance listens for
+    // interest changes that concern its own pet.
+    this.sync = this.sync.bind(this)
+    document.addEventListener("tovitu:interest-changed", this.sync)
+  }
+
+  disconnect() {
+    document.removeEventListener("tovitu:interest-changed", this.sync)
+  }
+
+  sync(event) {
+    if (event.detail.petId === this.idValue) {
+      // Re-read from storage: this instance's in-memory copy is stale and the
+      // change may have come from a sibling control.
+      this.interests = this.read()
+      this.render()
+    }
   }
 
   toggle(event) {
@@ -80,6 +98,9 @@ export default class extends Controller {
     icon.classList.toggle("fill-transparent", !saved)
     icon.classList.toggle("text-neutral-400", !saved)
     icon.classList.toggle("heart-saved", saved)
+    if (this.hasLabelTarget) {
+      this.labelTarget.textContent = saved ? this.unsaveLabelValue : this.saveLabelValue
+    }
     this.element.setAttribute("aria-label", saved ? this.unsaveLabelValue : this.saveLabelValue)
     this.element.setAttribute("aria-pressed", String(saved))
   }

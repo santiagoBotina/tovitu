@@ -92,5 +92,26 @@ RSpec.describe "Pets" do
       expect(response.body).to include(%(href="#{pets_path}"))
       expect(response.body).not_to include("evil.com")
     end
+
+    it "renders the labeled save button for signed-out visitors" do
+      get pet_path(pet)
+
+      expect(response.body).to include(%(id="save-button-#{pet.id}-label"))
+      expect(response.body).to include("data-controller=\"pet-interest\"")
+      expect(response.body).to include(CGI.escapeHTML(I18n.t("pets.show.save_to_favorites")))
+      expect(response.body).not_to include(pet_save_path(pet_id: pet.id))
+    end
+
+    it "renders both save controls for signed-in visitors" do
+      user = create(:user, :verified, :onboarding_completed)
+      post session_path, params: { session: { email: user.email, password: "password123" } }
+
+      get pet_path(pet)
+
+      expect(response.body).to include(%(id="save-button-#{pet.id}"))
+      expect(response.body).to include(%(id="save-button-#{pet.id}-label"))
+      expect(response.body).to include(pet_save_path(pet_id: pet.id))
+      expect(response.body).to include(CGI.escapeHTML(I18n.t("pets.show.save_to_favorites")))
+    end
   end
 end

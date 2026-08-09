@@ -137,6 +137,10 @@ es:
       apply_title: ¿Listo para adoptar?
       apply_body: Inicia tu solicitud de adopción y dale a esta mascota un hogar amoroso.
       apply_to_adopt: Solicitar Adopción
+      save_title: Favoritos
+      save_body: Guarda esta mascota en tu lista — te estará esperando en tus favoritos.
+      save_to_favorites: Guardar en favoritos
+      saved: Guardado
       life_preview_title: "Vida con %{name}"
       life_preview_description: "Su futuro juntos, planificado semana a semana"
       life_preview_plan: Plan Semanal

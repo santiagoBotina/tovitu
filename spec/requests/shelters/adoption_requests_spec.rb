@@ -168,13 +168,90 @@ RSpec.describe "Shelter AdoptionRequests" do
         })
       end
 
-      it "renders the archetype badge, fit indicators, commitment signals, and disclaimer" do
+      it "renders the archetype hero, fit indicators, commitment signals, and disclaimer" do
         get shelter_adoption_request_path(request)
         expect(response.body).to include("Active Outdoors Partner")
         expect(response.body).to include(I18n.t("ai.adopter_insight.card.fit_title"))
         expect(response.body).to include("Applied to 1 pet and followed through.")
         expect(response.body).to include(I18n.t("ai.adopter_insight.card.disclaimer"))
-        expect(response.body).to include(I18n.t("ai.adopter_insight.card.confidence_label"))
+      end
+
+      it "renders the four visual zones (archetype hero, fit factors, signals, check-ins)" do
+        get shelter_adoption_request_path(request)
+        expect(response.body).to include("data-testid=\"insight-archetype\"")
+        expect(response.body).to include("data-testid=\"insight-fit-factors\"")
+        expect(response.body).to include("data-testid=\"insight-signals\"")
+        expect(response.body).to include("data-testid=\"insight-checkins\"")
+      end
+
+      it "wires the reviewer checklist, number badges, and check-in inputs" do
+        get shelter_adoption_request_path(request)
+        expect(response.body).to include("data-controller=\"insight-checklist\"")
+        expect(response.body).to include("insight-checkin-number")
+        expect(response.body).to include("type=\"checkbox\"")
+      end
+
+      it "shows confidence prominently in the archetype hero" do
+        get shelter_adoption_request_path(request)
+        expect(response.body).to include(
+          I18n.t("ai.adopter_insight.card.confidence_value", level: "Medium")
+        )
+      end
+
+      it "collapses the provenance footer to a single subtle line with the disclaimer expandable" do
+        get shelter_adoption_request_path(request)
+        expect(response.body).to include("data-testid=\"insight-provenance\"")
+        expect(response.body).to include("data-testid=\"insight-disclaimer\"")
+        expect(response.body).to include(
+          I18n.t("ai.adopter_insight.card.based_on_short", based_on: "onboarding answers")
+        )
+        expect(response.body).to include(I18n.t("ai.adopter_insight.card.disclaimer"))
+      end
+
+      it "truncates long evidence and exposes a Why expander" do
+        request.update!(pet_fit_data: request.pet_fit_data.deep_merge(
+          "fit_indicators" => {
+            "energy" => {
+              "status" => "strong_fit",
+              "evidence" => "Matches the adopter's active routine across weekdays and weekends, with regular outdoor time and space to run and explore."
+            }
+          }
+        ))
+        get shelter_adoption_request_path(request)
+        expect(response.body).to include(I18n.t("ai.adopter_insight.card.why"))
+      end
+
+      it "does not render a Why expander for short evidence" do
+        get shelter_adoption_request_path(request)
+        expect(response.body).not_to include(I18n.t("ai.adopter_insight.card.why"))
+      end
+
+      it "exposes a Read more expander for long summaries and collapses short ones" do
+        request.update!(pet_fit_data: request.pet_fit_data.merge(
+          "summary" => "A very long summary. " * 20
+        ))
+        get shelter_adoption_request_path(request)
+        expect(response.body).to include("insight-summary-content")
+        expect(response.body).to include("data-controller=\"insight-expand\"")
+        expect(response.body).to include(I18n.t("ai.adopter_insight.card.read_more"))
+
+        request.update!(pet_fit_data: request.pet_fit_data.merge("summary" => "Short."))
+        get shelter_adoption_request_path(request)
+        expect(response.body).not_to include("data-controller=\"insight-expand\"")
+      end
+
+      it "renders the disclaimer inline when provenance has no based-on source" do
+        adopter.adopter_insight.update!(data: adopter.adopter_insight.data.merge("provenance" => {}))
+        get shelter_adoption_request_path(request)
+        expect(response.body).to include(I18n.t("ai.adopter_insight.card.disclaimer"))
+        expect(response.body).not_to include("Based on ")
+      end
+
+      it "renders a compact worth-confirming pill when self-report and activity diverge" do
+        adopter.adopter_insight.update!(data: adopter.adopter_insight.data.merge("archetype_diverges" => true))
+        get shelter_adoption_request_path(request)
+        expect(response.body).to include("data-testid=\"insight-divergence-pill\"")
+        expect(response.body).to include(I18n.t("ai.adopter_insight.card.divergence_pill"))
       end
 
       it "renders a not-enough-activity state instead of fabricating unknown dimensions" do
@@ -229,6 +306,15 @@ RSpec.describe "Shelter AdoptionRequests" do
         expect {
           get shelter_adoption_request_path(request)
         }.not_to have_enqueued_job(Ai::GenerateAdopterInsightJob)
+      end
+    end
+
+    context "when the request is old and no insight exists" do
+      before { request.update!(created_at: 1.day.ago) }
+
+      it "renders the unavailable state" do
+        get shelter_adoption_request_path(request)
+        expect(response.body).to include(I18n.t("ai.adopter_insight.card.unavailable"))
       end
     end
   end

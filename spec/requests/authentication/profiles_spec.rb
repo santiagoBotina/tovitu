@@ -14,6 +14,23 @@ RSpec.describe "Profiles" do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(I18n.t("authentication.profiles.edit.title"))
     end
+
+    it "renders the email as read-only (not an editable field)" do
+      user = create(:user, :verified, :onboarding_completed)
+      post session_path, params: { session: { email: user.email, password: "password123" } }
+      get edit_profile_path
+      expect(response.body).to include(user.email)
+      expect(response.body).not_to include('name="user[email]"')
+      expect(response.body).to include(CGI.escapeHTML(I18n.t("authentication.profiles.edit.email_readonly_hint")))
+    end
+
+    it "renders the adoption journey strip for individual users" do
+      user = create(:user, :verified, :onboarding_completed)
+      post session_path, params: { session: { email: user.email, password: "password123" } }
+      get edit_profile_path
+      expect(response.body).to include(I18n.t("authentication.profiles.edit.journey.title"))
+      expect(response.body).to include(I18n.t("authentication.profiles.edit.journey.milestone.profile_starter"))
+    end
   end
 
   describe "PATCH /profile" do
@@ -39,22 +56,23 @@ RSpec.describe "Profiles" do
         expect(response).to redirect_to(edit_profile_path)
       end
 
-      context "when changing email" do
+      context "when attempting to change the email (read-only field)" do
         let(:new_email) { "newemail@example.com" }
 
-        it "updates the email" do
+        it "ignores the submitted email and keeps the account email unchanged" do
           patch profile_path, params: { user: { name: user.name, email: new_email } }
-          expect(user.reload.email).to eq(new_email)
+          expect(user.reload.email).to eq(user.email)
+          expect(user.reload.email).not_to eq(new_email)
         end
 
-        it "marks email as unverified" do
+        it "does not mark the account unverified" do
           patch profile_path, params: { user: { name: user.name, email: new_email } }
-          expect(user.reload).not_to be_verified
+          expect(user.reload).to be_verified
         end
 
-        it "sends a verification email to the new address" do
+        it "does not send a verification email" do
           expect { patch profile_path, params: { user: { name: user.name, email: new_email } } }
-            .to have_enqueued_mail(AuthenticationMailer, :verification)
+            .not_to have_enqueued_mail(AuthenticationMailer, :verification)
         end
       end
 

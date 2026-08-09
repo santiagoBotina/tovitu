@@ -1,1 +1,5 @@
 <%= yield %>
+
+--
+<%= t("mailers.footer.manage_preferences") %>: <%= notification_preferences_url(locale: I18n.locale) %>
+<%= t("mailers.footer.tagline") %>

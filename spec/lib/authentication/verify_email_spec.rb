@@ -26,6 +26,21 @@ RSpec.describe Authentication::VerifyEmail do
         expect(result.data[:verified]).to be true
         expect(result.data[:email]).to eq(user.email)
       end
+
+      it "delivers a welcome notification after verification" do
+        expect { described_class.call(token: token.token) }
+          .to change { user.reload.notifications.welcome.count }.by(1)
+      end
+
+      it "enqueues the welcome email via the notification preference" do
+        expect { described_class.call(token: token.token) }
+          .to have_enqueued_mail(AuthenticationMailer, :welcome)
+      end
+
+      it "does not deliver the welcome notification for invalid tokens" do
+        expect { described_class.call(token: "invalid") }
+          .not_to change(Notification, :count)
+      end
     end
 
     context "with invalid token" do

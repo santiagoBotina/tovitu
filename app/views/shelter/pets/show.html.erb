@@ -65,8 +65,11 @@
     <% if pet.photo_gallery.any? %>
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         <% pet.photo_gallery(variant: :medium).each_with_index do |photo_url, index| %>
-          <div class="relative group aspect-square rounded-xl overflow-hidden bg-neutral-100 shadow-sm bento-enter bento-enter-d<%= ((index % 4) + 1) %> card-lift">
-            <%= image_tag photo_url, alt: t(".photo_alt", name: pet.name, index: index + 1), class: "w-full h-full object-cover image-reveal" %>
+          <div class="relative group aspect-square rounded-xl overflow-hidden bg-neutral-100 shadow-sm bento-enter bento-enter-d<%= ((index % 4) + 1) %> card-lift" data-controller="image-loader">
+            <div data-image-loader-target="skeleton" class="absolute inset-0 img-skeleton" aria-hidden="true"></div>
+            <%= image_tag photo_url, alt: t(".photo_alt", name: pet.name, index: index + 1), loading: "lazy", decoding: "async",
+                  data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
+                  class: "relative w-full h-full object-cover opacity-0 transition-opacity duration-500" %>
             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
               <%= link_to shelter_pet_photo_path(pet.id, pet.ordered_photos[index].blob_id), data: { turbo_method: :delete, turbo_confirm: t(".delete_photo_confirm") }, class: "w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors active:scale-[0.97]" do %>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

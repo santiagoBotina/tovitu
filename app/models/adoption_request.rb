@@ -64,6 +64,16 @@ class AdoptionRequest < ApplicationRecord
     end
   end
 
+  # Decline reasons are stored in the timeline-event metadata by
+  # Adoptions::DeclineRequest. Expose them so mailers and views can render them
+  # without parsing timeline events themselves (plan 32, problem 11).
+  def decline_reasons
+    event = timeline_events.order(created_at: :desc).find do |e|
+      e.metadata.is_a?(Hash) && e.metadata["decline_reasons"].present?
+    end
+    event&.metadata&.dig("decline_reasons")
+  end
+
   def status_badge
     ActionController::Base.render(
       partial: "adoption_requests/status_badge",

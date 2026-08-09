@@ -132,6 +132,20 @@ RSpec.describe "AdoptionRequests" do
       expect(response).to redirect_to(adoption_request_path(AdoptionRequest.last))
     end
 
+    it "flashes the first-application milestone on the first request" do
+      post adoption_requests_path, params: { pet_id: pet.id }
+      expect(flash[:notice]).to eq(I18n.t("gamification.milestone_unlocked.first_application"))
+    end
+
+    it "does not flash the first-application milestone on a second request" do
+      create(:adoption_request, adopter: adopter, pet: pet, shelter: shelter, status: :pending)
+      other_pet = create(:pet, shelter: shelter)
+
+      post adoption_requests_path, params: { pet_id: other_pet.id }
+
+      expect(flash[:notice]).not_to eq(I18n.t("gamification.milestone_unlocked.first_application"))
+    end
+
     it "with additional answers" do
       expect {
         post adoption_requests_path, params: {

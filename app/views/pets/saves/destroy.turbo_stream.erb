@@ -1,3 +1,9 @@
 <%= turbo_stream.replace "save-button-#{@pet.id}" do %>
   <%= render "pets/save_button", pet: @pet, saved: false %>
 <% end %>
+
+<%# Pet profile page also renders a labeled sidebar button under its own id.
+    On pages without it (explorer cards) the replace is a no-op. %>
+<%= turbo_stream.replace "save-button-#{@pet.id}-label" do %>
+  <%= render "pets/save_button", pet: @pet, saved: false, variant: "button" %>
+<% end %>

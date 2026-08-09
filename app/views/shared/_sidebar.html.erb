@@ -60,7 +60,13 @@
       </div>
       <div class="min-w-0 flex-1">
         <p class="text-sm font-semibold text-neutral-800 truncate"><%= current_user.name %></p>
-        <p class="text-xs text-primary-500 font-medium">Animal Ally</p>
+        <% if current_user.individual? %>
+          <p class="text-xs text-primary-500 font-medium"><%= t("shared.sidebar.journey_label.#{current_user_journey.sidebar_label_key}") %></p>
+        <% elsif current_user.shelter_user? && current_user.shelter.present? %>
+          <p class="text-xs text-primary-500 font-medium"><%= t("shared.sidebar.journey_label.shelter_#{current_user.shelter.active? ? 'live' : 'setup'}") %></p>
+        <% else %>
+          <p class="text-xs text-primary-500 font-medium"><%= t("shared.sidebar.journey_label.label_getting_started") %></p>
+        <% end %>
       </div>
     </div>
   </div>

@@ -5,13 +5,13 @@
     <p class="text-neutral-500 text-sm mt-1"><%= t(".subtitle") %></p>
   </div>
 
-  <%= form_with model: @preference, url: notification_preferences_path, method: :patch, class: "space-y-6 bento-enter bento-enter-d2" do |f| %>
+  <%= form_with model: @preference, url: notification_preferences_path, method: :patch, class: "space-y-6 bento-enter bento-enter-d2", data: { controller: "preference-kind-toggle" } do |f| %>
     <%# ─── In-App ─── %>
     <div class="bg-white rounded-xl border border-neutral-200 p-5">
       <div class="flex items-center justify-between">
         <div>
           <h3 class="font-medium text-neutral-900"><%= t("notifications.preferences.in_app_label") %></h3>
-          <p class="text-sm text-neutral-500 mt-0.5">Receive notifications inside the app</p>
+          <p class="text-sm text-neutral-500 mt-0.5"><%= t("notifications.preferences.in_app_desc") %></p>
         </div>
         <%= f.label :in_app, class: "relative inline-flex items-center cursor-pointer" do %>
           <%= f.check_box :in_app, class: "sr-only peer", checked: @preference.in_app %>
@@ -25,11 +25,33 @@
       <div class="flex items-center justify-between">
         <div>
           <h3 class="font-medium text-neutral-900"><%= t("notifications.preferences.email_label") %></h3>
-          <p class="text-sm text-neutral-500 mt-0.5">Receive email notifications</p>
+          <p class="text-sm text-neutral-500 mt-0.5"><%= t("notifications.preferences.email_desc") %></p>
         </div>
         <%= f.label :email, class: "relative inline-flex items-center cursor-pointer" do %>
-          <%= f.check_box :email, class: "sr-only peer", checked: @preference.email %>
+          <%= f.check_box :email, class: "sr-only peer", checked: @preference.email,
+                          data: { action: "change->preference-kind-toggle#sync" } %>
           <div class="w-10 h-6 bg-neutral-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+        <% end %>
+      </div>
+    </div>
+
+    <%# ─── Email by type ─── %>
+    <div class="bg-white rounded-xl border border-neutral-200 p-5">
+      <div>
+        <h3 class="font-medium text-neutral-900"><%= t("notifications.preferences.per_kind_title") %></h3>
+        <p class="text-sm text-neutral-500 mt-0.5"><%= t("notifications.preferences.per_kind_hint") %></p>
+      </div>
+
+      <div class="mt-4 space-y-3 <%= 'hidden' unless @preference.email %>" data-preference-kind-toggle-target="kinds">
+        <% NotificationPreference.ui_kinds.each do |kind| %>
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-neutral-700"><%= t("notifications.kinds.#{kind}") %></span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <%= hidden_field_tag "notification_preference[per_kind_overrides][#{kind}][email]", "false" %>
+              <%= check_box_tag "notification_preference[per_kind_overrides][#{kind}][email]", "true", @preference.per_kind_enabled?(kind, :email), class: "sr-only peer" %>
+              <div class="w-10 h-6 bg-neutral-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+            </label>
+          </div>
         <% end %>
       </div>
     </div>

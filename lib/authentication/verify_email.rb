@@ -16,6 +16,8 @@ module Authentication
         token.consume!
       end
 
+      deliver_welcome(user)
+
       Result.success(
         id: user.id,
         name: user.name,
@@ -25,6 +27,22 @@ module Authentication
       )
     rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
       Result.failure(e.message)
+    end
+
+    private
+
+    # The `welcome` notification fires here — after verification, never at
+    # signup — so the welcome email cannot race the verification email.
+    def deliver_welcome(user)
+      Notifications::Deliver.call(
+        recipient: user,
+        kind: :welcome,
+        notifiable: user,
+        title: I18n.t("notifications.titles.welcome"),
+        body: I18n.t("notifications.bodies.welcome"),
+        action_url: Rails.application.routes.url_helpers.pets_path(locale: user.locale || I18n.locale),
+        metadata: {}
+      )
     end
   end
 end

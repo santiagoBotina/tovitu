@@ -17,6 +17,12 @@ end
 RSpec.configure do |config|
   config.include ActiveSupport::Testing::TimeHelpers
 
+  # The app's controllers mutate I18n.locale from the :locale route param.
+  # Reset it per example so a Spanish request doesn't leak into later specs.
+  config.before(:each) do
+    I18n.locale = I18n.default_locale
+  end
+
   config.fixture_paths = [ Rails.root.join("spec/fixtures") ]
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
