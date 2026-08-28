@@ -1,50 +1,54 @@
 import { Controller } from "@hotwired/stimulus"
 
-// One-time, best-effort client → server sync: after a visitor creates an
-// account, offers to move localStorage interests into real SavedPet records.
-// Soft prompt — dismissible, skippable, never blocks.
+// Auto-import of localStorage interests after authentication.
+//
+// Rendered once at body level for signed-in individuals. On connect it checks
+// for locally saved pet ids (the signed-out "paw it" list). If any exist, it
+// POSTs them to the import endpoint, which persists them server-side in a
+// FavoritesImport record and imports them in the background. The user is told
+// immediately via a toast and can keep browsing.
+//
+// Safety: the local copy is cleared only AFTER the server accepts the import
+// (the ids are then persisted server-side), so a failed request never destroys
+// the visitor's saved interests — the next page load retries automatically.
 const INTERESTS_KEY = "tovitu:interests"
 
 export default class extends Controller {
-  static targets = ["banner", "idsInput", "count"]
-  static values = { skipKey: String, one: String, other: String }
+  static values = { importUrl: String }
 
   connect() {
-    if (this.skipKeyValue && sessionStorage.getItem(this.skipKeyValue)) return
     const ids = this.readInterests()
     if (!ids.length) return
-    this.ids = ids
-    if (this.hasIdsInputTarget) this.idsInputTarget.value = ids.join(",")
-    if (this.hasCountTarget) {
-      const template = ids.length === 1 ? this.oneValue : this.otherValue
-      this.countTarget.textContent = (template || "").replace("%{count}", ids.length)
-    }
-    if (this.hasBannerTarget) this.bannerTarget.classList.remove("hidden")
+    this.importInterests(ids)
+  }
 
-    // Clear the local copy only AFTER the server confirms the import, so a
-    // failed request never destroys the visitor's saved interests.
-    const form = this.element.querySelector("form")
-    if (form) {
-      form.addEventListener("turbo:submit-end", (event) => {
-        if (event.detail.success) {
-          try {
-            localStorage.removeItem(INTERESTS_KEY)
-          } catch {
-            // ignore
-          }
-        }
+  async importInterests(ids) {
+    const formData = new FormData()
+    formData.append("pet_ids", ids.join(","))
+
+    try {
+      const response = await fetch(this.importUrlValue, {
+        method: "POST",
+        headers: {
+          "Accept": "text/vnd.turbo-stream.html",
+          "X-CSRF-Token": this.csrfToken(),
+        },
+        body: formData,
+        credentials: "same-origin",
       })
+      if (!response.ok) throw new Error("import failed")
+
+      const html = await response.text()
+      if (html.trim()) Turbo.renderStreamMessage(html)
+      this.clearInterests()
+    } catch {
+      // Keep the local copy; the next page load retries automatically.
     }
   }
 
-  dismiss(event) {
-    event.preventDefault()
-    if (this.hasBannerTarget) this.bannerTarget.classList.add("hidden")
-    try {
-      sessionStorage.setItem(this.skipKeyValue, "1")
-    } catch {
-      // ignore
-    }
+  csrfToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]')
+    return meta ? meta.content : ""
   }
 
   readInterests() {
@@ -54,6 +58,14 @@ export default class extends Controller {
       return raw.map(Number).filter((n) => Number.isInteger(n) && n > 0)
     } catch {
       return []
+    }
+  }
+
+  clearInterests() {
+    try {
+      localStorage.removeItem(INTERESTS_KEY)
+    } catch {
+      // ignore
     }
   }
 }

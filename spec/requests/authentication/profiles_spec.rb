@@ -4,7 +4,7 @@ RSpec.describe "Profiles" do
   describe "GET /profile/edit" do
     it "redirects to login when not authenticated" do
       get edit_profile_path
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(new_session_path)
     end
 
     it "renders the edit form when logged in" do
@@ -36,7 +36,7 @@ RSpec.describe "Profiles" do
   describe "PATCH /profile" do
     it "redirects to login when not authenticated" do
       patch profile_path, params: { user: { name: "New Name" } }
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(new_session_path)
     end
 
     context "when logged in" do

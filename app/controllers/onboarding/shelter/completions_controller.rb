@@ -19,7 +19,10 @@ module Onboarding
           skip: skip
         )
 
-        redirect_destination = if params[:redirect_to].present?
+        return_to = consume_return_to
+        redirect_destination = if return_to.present?
+          return_to
+        elsif params[:redirect_to].present?
           params[:redirect_to]
         elsif current_user.shelter_id.present?
           shelter_dashboard_path(shelter_id: current_user.shelter_id)

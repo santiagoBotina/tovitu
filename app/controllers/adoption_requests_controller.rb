@@ -23,7 +23,7 @@ class AdoptionRequestsController < ApplicationController
 
     authorize AdoptionRequest
   rescue ActiveRecord::RecordNotFound
-    redirect_to pets_path, alert: t("pets.not_found")
+    redirect_to pets_path, alert: t("adoptions.requests.errors.pet_not_available")
   end
 
   def create

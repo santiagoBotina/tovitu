@@ -11,6 +11,10 @@ es:
       adult: Adulto
       senior: Senior
 
+    age_display:
+      one: "%{category} (%{age} año)"
+      other: "%{category} (%{age} años)"
+
     sizes:
       small: Pequeño
       medium: Mediano
@@ -89,6 +93,11 @@ es:
 
     not_found: Mascota no encontrada.
 
+    saves:
+      saved: Mascota guardada en tus favoritos.
+      unsaved: Mascota eliminada de tus favoritos.
+      error: No pudimos actualizar tus favoritos. Inténtalo de nuevo.
+
     index:
       title: Encuentra tu Nuevo Mejor Amigo
       subtitle: Explora mascotas adoptables cerca de ti. Usa los filtros para afinar tu búsqueda y guarda las que ames.
@@ -144,6 +153,9 @@ es:
       life_preview_title: "Vida con %{name}"
       life_preview_description: "Su futuro juntos, planificado semana a semana"
       life_preview_plan: Plan Semanal
+      life_preview_week_count:
+        one: "%{count} semana"
+        other: "%{count} semanas"
       life_preview_itinerary: Itinerario Diario
       life_preview_tips: Consejos de Preparación
       life_preview_disclaimer: Este contenido fue generado por IA y puede no ser 100%% preciso. Siempre consulta con el personal del refugio.

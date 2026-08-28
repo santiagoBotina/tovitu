@@ -13,6 +13,15 @@ module Ai
       interpolate(template)
     end
 
+    # Public interpolation helper so callers can apply the same {{variable}}
+    # substitution to other templates (e.g. the system prompt) that are not
+    # loaded through PromptBuilder itself.
+    def self.interpolate(template, variables)
+      variables.reduce(template) do |result, (key, value)|
+        result.gsub("{{#{key}}}", value.to_s)
+      end
+    end
+
     private
 
     attr_reader :prompt_name, :variables
@@ -25,9 +34,7 @@ module Ai
     end
 
     def interpolate(template)
-      variables.reduce(template) do |result, (key, value)|
-        result.gsub("{{#{key}}}", value.to_s)
-      end
+      self.class.interpolate(template, variables)
     end
   end
 end

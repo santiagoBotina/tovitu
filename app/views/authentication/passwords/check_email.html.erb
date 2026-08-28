@@ -1,12 +1,12 @@
-<div class="w-full max-w-md mx-auto">
+<%= render "shared/auth_shell" do %>
   <div class="bg-white rounded-xl shadow-md p-8 text-center">
     <%= render "shared/auth_brand" %>
-    <h1 class="font-display text-3xl font-bold text-neutral-900 mb-2"><%= t(".title") %></h1>
+    <h1 class="font-display text-3xl font-bold text-neutral-900 mb-2"><%= t("authentication.passwords.check_email.title") %></h1>
     <p class="text-neutral-600 mb-6">
-      <%= t(".body") %>
+      <%= t("authentication.passwords.check_email.body") %>
     </p>
-    <p class="text-sm text-neutral-500">
-      <%= link_to t(".back"), new_session_path, class: "text-primary-600 hover:text-primary-800 font-medium transition" %>
+    <p class="text-sm text-neutral-600">
+      <%= link_to t("authentication.passwords.check_email.back"), new_session_path, class: "text-primary-600 hover:text-primary-800 font-medium transition" %>
     </p>
   </div>
-</div>
+<% end %>

@@ -26,7 +26,28 @@ RSpec.describe Ai::GenerateLifePreviewJob do
       it "sets the preview version from the prompt file" do
         described_class.perform_now(pet.id)
         pet.reload
-        expect(pet.life_preview_version).to eq(2)
+        expect(pet.life_preview_version).to eq(3)
+      end
+
+      it "passes the locale to the generation service" do
+        expect(Ai::GenerateLifePreview).to receive(:call).with(
+          pet: pet,
+          personality_spec: pet.personality_spec,
+          adopter_tips: pet.adopter_tips,
+          locale: "es"
+        ).and_return(Result.success(default_preview_response))
+
+        described_class.perform_now(pet.id, "es")
+      end
+
+      it "persists the locale inside the stored preview data" do
+        allow(Ai::GenerateLifePreview).to receive(:call).and_return(
+          Result.success(default_preview_response.merge("locale" => "es"))
+        )
+
+        described_class.perform_now(pet.id, "es")
+        pet.reload
+        expect(pet.life_preview_data["locale"]).to eq("es")
       end
     end
 

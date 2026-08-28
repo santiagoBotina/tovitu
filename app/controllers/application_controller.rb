@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   stale_when_importmap_changes
 
-  helper_method :current_user, :signed_in?
+  helper_method :current_user, :signed_in?, :auth_flow?, :auth_intent_pet
 
   rescue_from ActiveRecord::RecordNotUnique, with: :handle_record_not_unique
   rescue_from Pundit::NotAuthorizedError, with: :handle_unauthorized
@@ -40,7 +40,8 @@ class ApplicationController < ActionController::Base
   def require_authentication(role: nil)
     unless signed_in?
       store_location
-      redirect_to root_path, alert: t("flash.sessions.require_authentication") and return
+      store_auth_intent
+      redirect_to new_session_path, alert: t("flash.sessions.require_authentication") and return
     end
 
     if role.present?
@@ -73,6 +74,17 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path
+    if session[:return_to].present?
+      if current_user.onboarding_completed?
+        return consume_return_to
+      end
+
+      # Onboarding is still required: keep the return path in the session so
+      # the onboarding completion step can send the user back to where they
+      # were heading (e.g. the adoption application they started).
+      return Onboarding::DetermineDestination.call(user: current_user)
+    end
+
     if current_user.adopter?
       if current_user.onboarding_completed?
         user_dashboard_path
@@ -94,8 +106,39 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # True while rendering the standalone authentication flow (Login, Sign Up,
+  # password reset, verification). These screens get a minimal navbar with a
+  # single way back home instead of the full app navigation.
+  def auth_flow?
+    controller_path.start_with?("authentication/") && controller_path != "authentication/profiles"
+  end
+
+  # The pet a signed-out visitor was applying for when they were asked to log
+  # in. Used by the login screen to show a friendly "continue your application"
+  # reason instead of a bare login wall.
+  def auth_intent_pet
+    intent = session[:auth_intent]
+    return nil unless intent.is_a?(Hash) && intent["type"] == "adoption_request"
+    Pet.undiscarded.find_by(id: intent["pet_id"])
+  end
+
   def store_location
     session[:return_to] = request.fullpath unless request.xhr?
+  end
+
+  # Remembers why a signed-out visitor was sent to login, so the login screen
+  # can explain the redirect and the post-auth flow can return them to it.
+  def store_auth_intent
+    return unless controller_path == "adoption_requests" && action_name.in?(%w[new create])
+    session[:auth_intent] = { "type" => "adoption_request", "pet_id" => params[:pet_id] }
+  end
+
+  # Reads and clears the stored return path. Only internal paths are honored
+  # (defense against open redirects); nil is returned for anything else.
+  def consume_return_to
+    path = session.delete(:return_to)
+    return nil unless path.is_a?(String) && path.start_with?("/") && !path.start_with?("//")
+    path
   end
 
   def handle_unauthorized

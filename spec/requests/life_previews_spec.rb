@@ -44,7 +44,7 @@ RSpec.describe "LifePreviews" do
       it "enqueues a generation job" do
         expect {
           get pet_life_preview_path(pet_id: pet.id)
-        }.to have_enqueued_job(Ai::GenerateLifePreviewJob).with(pet.id)
+        }.to have_enqueued_job(Ai::GenerateLifePreviewJob).with(pet.id, "en")
       end
     end
 
@@ -65,7 +65,40 @@ RSpec.describe "LifePreviews" do
       it "enqueues a regeneration job" do
         expect {
           get pet_life_preview_path(pet_id: pet.id)
-        }.to have_enqueued_job(Ai::GenerateLifePreviewJob).with(pet.id)
+        }.to have_enqueued_job(Ai::GenerateLifePreviewJob).with(pet.id, "en")
+      end
+    end
+
+    context "when cached preview locale differs from the active locale" do
+      let(:pet) { create(:pet, :with_life_preview, shelter: shelter) }
+
+      before do
+        pet.update!(life_preview_data: pet.life_preview_data.merge("locale" => "es"))
+      end
+
+      it "renders the loading state instead of serving the wrong-language preview" do
+        get pet_life_preview_path(pet_id: pet.id, locale: :en)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("life-preview-loading")
+        expect(response.body).not_to include("Daily Routine")
+      end
+
+      it "enqueues a regeneration job with the active locale" do
+        expect {
+          get pet_life_preview_path(pet_id: pet.id, locale: :en)
+        }.to have_enqueued_job(Ai::GenerateLifePreviewJob).with(pet.id, "en")
+      end
+    end
+
+    context "when cached preview locale matches the active locale" do
+      let(:pet) { create(:pet, :with_life_preview, shelter: shelter) }
+
+      it "serves the cached preview" do
+        get pet_life_preview_path(pet_id: pet.id, locale: :en)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("Daily Routine")
       end
     end
 

@@ -14,7 +14,7 @@ module Pets
       respond_to do |format|
         format.turbo_stream
         format.html { redirect_back fallback_location: pets_path, notice: @milestone_notice || t(".saved") }
-        format.json { head :ok }
+        format.json { render json: { saved: true, milestone: @milestone_notice } }
       end
     end
 
@@ -28,7 +28,7 @@ module Pets
       respond_to do |format|
         format.turbo_stream
         format.html { redirect_back fallback_location: pets_path, notice: t(".unsaved") }
-        format.json { head :ok }
+        format.json { render json: { saved: false } }
       end
     end
 

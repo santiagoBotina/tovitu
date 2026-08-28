@@ -1,0 +1,19 @@
+<%# Shared decorative shell for the standalone authentication screens (Login,
+    Sign Up, password reset, verification). Gives Login and Sign Up one
+    coherent visual direction: a Tovitu-aligned background that supports the
+    form without competing with it.
+
+    The background is purely decorative — aria-hidden, non-interactive, and
+    lightweight (flat CSS color fields + an inline SVG paw pattern, no raster
+    assets). It is contained by overflow-hidden so it never adds horizontal
+    scroll on small screens. %>
+<div class="relative min-h-[calc(100vh-4rem)] overflow-hidden">
+  <div class="auth-background absolute inset-0 pointer-events-none select-none" aria-hidden="true">
+    <div class="auth-background__block auth-background__block--secondary"></div>
+    <div class="auth-background__paws"></div>
+  </div>
+
+  <div class="relative z-10 w-full max-w-md mx-auto px-4 py-10 sm:py-14">
+    <%= yield %>
+  </div>
+</div>

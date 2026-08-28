@@ -1,0 +1,5 @@
+<%# After a retry the notice flips back to the pending state; the
+    favorites-import controller resumes polling automatically. %>
+<%= turbo_stream.replace "favorites-import-notice" do %>
+  <%= render "saved_pets/import_notice", favorites_import: @favorites_import %>
+<% end %>

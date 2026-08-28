@@ -50,6 +50,7 @@ es:
       user_options: "Opciones de usuario"
       search: "Buscar mascotas"
       search_placeholder: "Buscar mascotas..."
+      back_home: "Volver al inicio"
     verified_badge: "Verificado"
     language_selector:
       aria_label: "Idioma"
@@ -166,12 +167,6 @@ es:
         subtitle_active: "Tienes solicitudes de adopción activas. ¡Revisemos su estado!"
         cta_browse: "Explorar Mascotas"
         cta_profile: "Completar Perfil"
-      interest_import:
-        title_one: "Guardaste 1 mascota antes de unirte"
-        title_other: "Guardaste %{count} mascotas antes de unirte"
-        body: "Tráelas a tu cuenta para que te estén esperando."
-        import: "Importar mis mascotas guardadas"
-        skip: "Ahora no"
       readiness:
         title: "Viaje de Adopción"
         percent: "%{percent}%%"
@@ -475,14 +470,27 @@ es:
   authentication:
     role_toggle:
       aria_label: "Seleccionar tipo de cuenta"
+      individual: "Individual"
       adopter: "Adoptante"
       shelter: "Refugio"
     sessions:
       new:
         title: "Bienvenido de nuevo"
         subtitle: "Inicia sesión en tu cuenta de Tovitu"
+        apply_intent_title: "Continúa tu solicitud"
+        apply_intent_body: "Inicia sesión para seguir solicitando a %{pet_name}."
+        individual_title: "Quiero adoptar"
         adopter_title: "Quiero adoptar"
         shelter_title: "Represento un refugio"
+        email_label: "Correo electrónico"
+        password_label: "Contraseña"
+        forgot_password: "¿Olvidaste tu contraseña?"
+        submit: "Iniciar sesión"
+        signup_prompt: "¿No tienes una cuenta?"
+        signup_link: "Crear cuenta"
+      new_individual:
+        title: "Bienvenido de nuevo"
+        subtitle: "Inicia sesión para continuar tu viaje de adopción"
         email_label: "Correo electrónico"
         password_label: "Contraseña"
         forgot_password: "¿Olvidaste tu contraseña?"
@@ -840,6 +848,13 @@ es:
           attributes:
             species_served:
               must_be_array: "debe ser un arreglo"
+    attributes:
+      user:
+        name: "Nombre"
+        email: "Correo electrónico"
+        password: "Contraseña"
+        password_confirmation: "Confirmación de contraseña"
+        role: "Tipo de cuenta"
   presenters:
     shelter:
       status_active: "Activo"

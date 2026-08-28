@@ -48,9 +48,9 @@ RSpec.describe "Notifications" do
     context "when unauthenticated" do
       before { delete session_path }
 
-      it "redirects to root" do
+      it "redirects to login" do
         get notifications_path
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(new_session_path)
       end
     end
   end

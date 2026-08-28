@@ -144,8 +144,27 @@ RSpec.describe Pet, type: :model do
       end
 
       it "returns false when data exists and version matches" do
-        pet.update_columns(life_preview_data: { "test" => "data" }, life_preview_version: Pet.current_life_preview_version)
+        pet.update_columns(life_preview_data: { "test" => "data", "locale" => "en" }, life_preview_version: Pet.current_life_preview_version)
         expect(pet.life_preview_stale?).to be false
+      end
+
+      it "returns true when the cached preview locale differs from the active locale" do
+        pet.update_columns(life_preview_data: { "test" => "data", "locale" => "es" }, life_preview_version: Pet.current_life_preview_version)
+        I18n.with_locale(:en) do
+          expect(pet.life_preview_stale?).to be true
+        end
+      end
+
+      it "returns false when the cached preview locale matches the active locale" do
+        pet.update_columns(life_preview_data: { "test" => "data", "locale" => "es" }, life_preview_version: Pet.current_life_preview_version)
+        I18n.with_locale(:es) do
+          expect(pet.life_preview_stale?).to be false
+        end
+      end
+
+      it "returns true when the cached preview has no locale (legacy data)" do
+        pet.update_columns(life_preview_data: { "test" => "data" }, life_preview_version: Pet.current_life_preview_version)
+        expect(pet.life_preview_stale?).to be true
       end
     end
 

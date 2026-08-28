@@ -23,7 +23,7 @@ module Onboarding
           skip: skip
         )
 
-        redirect_destination = params[:redirect_to].presence || pets_path
+        redirect_destination = consume_return_to.presence || params[:redirect_to].presence || pets_path
 
         if result.success?
           if skip && zero_answers

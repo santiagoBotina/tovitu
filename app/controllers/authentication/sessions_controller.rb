@@ -4,10 +4,12 @@ module Authentication
 
     def new
       @role = params[:role] || "individual"
+      clear_stale_auth_redirect
     end
 
     def new_individual
       @role = "individual"
+      clear_stale_auth_redirect
       render :new
     end
 
@@ -18,6 +20,7 @@ module Authentication
 
     def new_shelter
       @role = "shelter"
+      clear_stale_auth_redirect
       render :new
     end
 
@@ -46,6 +49,19 @@ module Authentication
     def destroy
       reset_session
       redirect_to root_path, notice: t("flash.sessions.destroy.success"), status: :see_other
+    end
+
+    private
+
+    # A return path is only meaningful when the visitor was redirected here by
+    # require_authentication (which sets a flash alert). If they reached login
+    # directly (e.g. via the navbar), drop any stale path so a navbar-initiated
+    # login never surprises them with an unexpected redirect afterwards.
+    def clear_stale_auth_redirect
+      return if flash[:alert].present?
+
+      session.delete(:return_to)
+      session.delete(:auth_intent)
     end
   end
 end

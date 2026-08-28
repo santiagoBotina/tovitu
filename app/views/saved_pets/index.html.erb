@@ -1,5 +1,7 @@
 <%# ─── Saved Pets Index Page ─── %>
-<%# Design: Dashboard-level cards, bento-enter animations, contextual empty state %>
+<%# Design: Dashboard-level cards, bento-enter animations, contextual empty state.
+    The favorites-import controller polls import_status while a background
+    import is pending and swaps the notice + list when it lands. %>
 <div class="w-full max-w-6xl mx-auto">
 
   <%# ─── Page Header ─── %>
@@ -8,95 +10,19 @@
     <p class="text-neutral-600 text-lg max-w-2xl mx-auto"><%= t(".subtitle") %></p>
   </header>
 
-  <% if @presented_pets.any? %>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <% @presented_pets.each_with_index do |pet, idx| %>
-        <% delay = ((idx % 6) + 1).clamp(1, 8) %>
-        <div class="relative bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md hover:border-primary-200 transition-all duration-200 overflow-hidden group card-lift bento-enter bento-enter-d#{delay}">
-          <%= link_to pet_path(id: pet.id), class: "block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-inset" do %>
-            <div class="aspect-[4/3] bg-neutral-100 overflow-hidden relative" data-controller="image-loader">
-              <div data-image-loader-target="skeleton" class="absolute inset-0 img-skeleton" aria-hidden="true"></div>
-              <% if pet.primary_photo.present? %>
-                <%= image_tag pet.primary_photo_url(variant: :medium), alt: t(".pet_photo", name: pet.name),
-                      loading: "lazy", decoding: "async",
-                      data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
-                      class: "relative w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-0" %>
-              <% else %>
-                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50">
-                  <svg class="w-16 h-16 text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                  </svg>
-                </div>
-              <% end %>
-            </div>
+  <div data-controller="favorites-import"
+       data-favorites-import-status-url-value="<%= import_status_saved_pets_path %>"
+       data-favorites-import-signed-in-value="<%= signed_in? %>">
 
-            <div class="p-5">
-              <div class="flex items-start justify-between mb-2">
-                <h3 class="font-display text-xl font-bold text-neutral-900 group-hover:text-primary-600 transition"><%= pet.name %></h3>
-                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-primary-50 text-primary-700 shrink-0 ml-3">
-                  <%= pet.age_display %>
-                </span>
-              </div>
-
-              <div class="flex items-center gap-2 text-sm text-neutral-600 mb-2">
-                <span><%= pet.species_label %></span>
-                <% if pet.breed.present? %>
-                  <span class="text-neutral-300" aria-hidden="true">·</span>
-                  <span><%= pet.breed %></span>
-                <% end %>
-                <% if pet.size_label.present? %>
-                  <span class="text-neutral-300" aria-hidden="true">·</span>
-                  <span><%= pet.size_label %></span>
-                <% end %>
-              </div>
-
-              <div class="flex items-center gap-1.5 text-sm text-neutral-500 mb-3">
-                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-                <span><%= pet.shelter.city %>, <%= pet.shelter.state %></span>
-              </div>
-
-              <% if pet.personality_traits_list.any? %>
-                <div class="flex flex-wrap gap-1.5">
-                  <% pet.personality_traits_list.first(2).each do |trait| %>
-                    <span class="px-2.5 py-1 bg-primary-50 text-primary-600 text-xs font-medium rounded-full capitalize"><%= trait %></span>
-                  <% end %>
-                  <% if pet.personality_traits_list.length > 2 %>
-                    <span class="px-2.5 py-1 bg-neutral-100 text-neutral-500 text-xs font-medium rounded-full">+<%= pet.personality_traits_list.length - 2 %></span>
-                  <% end %>
-                </div>
-              <% end %>
-            </div>
-          <% end %>
-
-          <%# Save button sits outside the link — no interactive elements nested inside an anchor. %>
-          <%= render "pets/save_button", pet: pet, saved: pet_saved?(pet) %>
-        </div>
-      <% end %>
+    <%# Import status notice (pending / failed / completed-hidden). %>
+    <div id="favorites-import-notice">
+      <%= render "saved_pets/import_notice", favorites_import: @favorites_import if @favorites_import %>
     </div>
 
-    <div class="mt-10 text-center bento-enter bento-enter-d8">
-      <%= link_to pets_path, class: "inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-        </svg>
-        <%= t(".browse_pets") %>
-      <% end %>
+    <%# Grid + empty state. Replaced wholesale by import_status when the import
+        completes so the list updates without a manual refresh. %>
+    <div id="saved-pets-grid">
+      <%= render "saved_pets/grid", presented_pets: @presented_pets %>
     </div>
-  <% else %>
-    <%# ─── Empty State (dashboard pattern) ─── %>
-    <div class="text-center py-16 bg-white rounded-xl border border-neutral-200 shadow-sm bento-enter bento-enter-d3">
-      <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-accent-pink/10 flex items-center justify-center" aria-hidden="true">
-        <svg class="w-8 h-8 text-accent-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-        </svg>
-      </div>
-      <h3 class="font-display text-xl font-bold text-neutral-700 mb-2"><%= t(".empty_title") %></h3>
-      <p class="text-sm text-neutral-500 mb-6 max-w-sm mx-auto"><%= t(".empty_body") %></p>
-      <%= link_to t(".browse_pets"), pets_path,
-          class: "inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" %>
-    </div>
-  <% end %>
+  </div>
 </div>

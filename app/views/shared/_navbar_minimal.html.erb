@@ -1,0 +1,20 @@
+<%# Minimal navbar for the standalone authentication flow (Login, Sign Up,
+    password reset, verification). Distraction-free by design: no sign-in /
+    create-account links, no saved-pets heart, no hamburger — just the brand
+    mark and exactly one clear way back to the landing page. %>
+<header class="sticky top-0 z-20 bg-white/80 backdrop-blur-md">
+  <div class="flex items-center justify-between h-16 px-4 md:px-6">
+    <div class="flex items-center gap-2" aria-hidden="true">
+      <%= render "shared/logo", class_name: "w-7 h-7" %>
+      <span class="font-display text-xl font-extrabold tracking-tight text-primary-600">Tovitu</span>
+    </div>
+
+    <%= link_to root_path,
+        class: "inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-neutral-600 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-300" do %>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M15 19l-7-7 7-7"/>
+      </svg>
+      <%= t("shared.navbar.back_home") %>
+    <% end %>
+  </div>
+</header>

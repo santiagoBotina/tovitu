@@ -10,9 +10,17 @@ en:
     import:
       require_login: Please log in to import your saved pets.
       require_individual: Only adopter accounts can save pets.
+      importing: Importing your favorites…
+      importing_title: Importing your favorites…
+      importing_body: This happens in the background — keep browsing and they'll be waiting for you.
+      failed_title: We couldn't import all your favorites
+      failed_body: Tap retry and we'll try again. Nothing you saved is lost.
+      retry: Try again
       imported_none: No new pets to import.
       imported_one: 1 saved pet was added to your account.
       imported_other: "%{count} saved pets were added to your account."
+      imported_partial_one: "1 of %{total} favorites imported"
+      imported_partial_other: "%{count} of %{total} favorites imported"
       success_title: You're all set!
       success_body: Your saved pets are now in your account.
       close: Close

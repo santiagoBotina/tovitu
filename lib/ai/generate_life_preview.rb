@@ -1,9 +1,13 @@
 module Ai
   class GenerateLifePreview < ApplicationService
-    def initialize(pet:, personality_spec: nil, adopter_tips: nil)
+    SUPPORTED_LOCALES = %w[en es].freeze
+    LANGUAGE_NAMES = { "en" => "English", "es" => "Spanish" }.freeze
+
+    def initialize(pet:, personality_spec: nil, adopter_tips: nil, locale: nil)
       @pet = pet
       @personality_spec = personality_spec
       @adopter_tips = adopter_tips
+      @locale = normalize_locale(locale)
       super()
     end
 
@@ -15,7 +19,7 @@ module Ai
       )
 
       prompt_config = YAML.load_file(Rails.root.join("config/prompts/life_preview.yml"))
-      system_prompt = prompt_config["system_prompt"]
+      system_prompt = Ai::PromptBuilder.interpolate(prompt_config["system_prompt"], prompt_vars)
 
       response = Ai::Provider.call(
         prompt: prompt,
@@ -23,6 +27,7 @@ module Ai
       )
 
       parsed = parse_response(response)
+      parsed["locale"] = locale
       Result.success(parsed)
     rescue Ai::ProviderError => e
       Result.failure(e.message)
@@ -32,7 +37,12 @@ module Ai
 
     private
 
-    attr_reader :pet, :personality_spec, :adopter_tips
+    attr_reader :pet, :personality_spec, :adopter_tips, :locale
+
+    def normalize_locale(value)
+      candidate = value.presence || I18n.locale.to_s
+      SUPPORTED_LOCALES.include?(candidate) ? candidate : I18n.default_locale.to_s
+    end
 
     def prompt_variables
       presenter = PetPresenter.new(pet)
@@ -53,7 +63,8 @@ module Ai
         vaccinated: pet.vaccinated? ? "Yes" : "No",
         special_needs: pet.special_needs? ? "Yes" : "No",
         personality_spec: personality_spec.presence || "Not provided by shelter.",
-        adopter_tips: adopter_tips.presence || "Not provided by shelter."
+        adopter_tips: adopter_tips.presence || "Not provided by shelter.",
+        language: LANGUAGE_NAMES.fetch(locale, "English")
       }
     end
 

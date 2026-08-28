@@ -3,12 +3,13 @@ require "rails_helper"
 RSpec.describe Ai::GenerateLifePreview do
   include AiProviderStub
 
-  subject(:service) { described_class.call(pet: pet, personality_spec: personality_spec, adopter_tips: adopter_tips) }
+  subject(:service) { described_class.call(pet: pet, personality_spec: personality_spec, adopter_tips: adopter_tips, locale: locale) }
 
   let(:shelter) { create(:shelter) }
   let(:pet) { create(:pet, shelter: shelter, personality_traits: [ "Friendly", "Energetic" ], description: "A lovely dog") }
   let(:personality_spec) { nil }
   let(:adopter_tips) { nil }
+  let(:locale) { "en" }
 
   before do
     allow(Ai::Provider).to receive(:call).and_return(default_preview_response.to_json)
@@ -47,6 +48,58 @@ RSpec.describe Ai::GenerateLifePreview do
         expect(service.data["tips"]).to have_key("family_preparation")
         expect(service.data["tips"]).to have_key("lifestyle_adjustments")
         expect(service.data["tips"]).to have_key("training_resources")
+      end
+    end
+
+    context "locale handling" do
+      it "passes the language name into the prompt variables for Spanish" do
+        expect(Ai::PromptBuilder).to receive(:call).with(
+          prompt_name: "life_preview",
+          variables: hash_including(language: "Spanish")
+        ).and_return("prompt")
+
+        allow(Ai::Provider).to receive(:call).and_return(default_preview_response.to_json)
+        described_class.call(pet: pet, locale: "es")
+      end
+
+      it "passes the language name into the prompt variables for English" do
+        expect(Ai::PromptBuilder).to receive(:call).with(
+          prompt_name: "life_preview",
+          variables: hash_including(language: "English")
+        ).and_return("prompt")
+
+        allow(Ai::Provider).to receive(:call).and_return(default_preview_response.to_json)
+        described_class.call(pet: pet, locale: "en")
+      end
+
+      it "interpolates the language into the system prompt" do
+        captured = nil
+        allow(Ai::Provider).to receive(:call) do |prompt:, system_prompt:|
+          captured = system_prompt
+          default_preview_response.to_json
+        end
+
+        described_class.call(pet: pet, locale: "es")
+
+        expect(captured).to include("entirely in Spanish")
+        expect(captured).to include("Never mix languages")
+      end
+
+      it "stores the locale in the returned data" do
+        data = described_class.call(pet: pet, locale: "es").data
+        expect(data["locale"]).to eq("es")
+      end
+
+      it "falls back to the default locale for unsupported values" do
+        data = described_class.call(pet: pet, locale: "fr").data
+        expect(data["locale"]).to eq(I18n.default_locale.to_s)
+      end
+
+      it "falls back to the active I18n locale when none is provided" do
+        I18n.with_locale(:es) do
+          data = described_class.call(pet: pet).data
+          expect(data["locale"]).to eq("es")
+        end
       end
     end
 

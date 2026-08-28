@@ -77,6 +77,8 @@ Rails.application.routes.draw do
     resources :saved_pets, only: [ :index ] do
       collection do
         post :import
+        post :retry_import
+        get :import_status
       end
     end
 

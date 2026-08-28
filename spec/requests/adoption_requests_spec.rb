@@ -37,9 +37,9 @@ RSpec.describe "AdoptionRequests" do
     context "when unauthenticated" do
       before { delete session_path }
 
-      it "redirects to root" do
+      it "redirects to login" do
         get adoption_requests_path
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(new_session_path)
       end
     end
   end
@@ -207,9 +207,9 @@ RSpec.describe "AdoptionRequests" do
     context "when unauthenticated" do
       before { delete session_path }
 
-      it "redirects to root" do
+      it "redirects to login" do
         patch withdraw_adoption_request_path(request)
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(new_session_path)
       end
     end
   end

@@ -61,7 +61,8 @@ class Pet < ApplicationRecord
   def life_preview_stale?
     life_preview_data.blank? ||
       life_preview_version.zero? ||
-      life_preview_version != self.class.current_life_preview_version
+      life_preview_version != self.class.current_life_preview_version ||
+      life_preview_data["locale"].to_s != I18n.locale.to_s
   end
 
   def mark_life_preview_stale!

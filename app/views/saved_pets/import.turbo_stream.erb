@@ -1,23 +1,6 @@
-<% imported = @imported.to_i %>
-<% import_summary = case imported
-     when 0 then t("saved_pets.import.imported_none")
-     when 1 then t("saved_pets.import.imported_one")
-     else t("saved_pets.import.imported_other", count: imported)
-     end %>
-<%= turbo_stream.replace "interest-import-banner" do %>
-  <div id="interest-import-banner" class="bg-secondary-50 border border-secondary-200 rounded-xl p-5 flex items-center gap-4" role="status">
-    <div class="w-10 h-10 rounded-xl bg-secondary-100 flex items-center justify-center shrink-0" aria-hidden="true">
-      <svg class="w-5 h-5 text-secondary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M5 13l4 4L19 7"/>
-      </svg>
-    </div>
-    <div class="flex-1 min-w-0">
-      <p class="font-display text-base font-bold text-neutral-900"><%= t("saved_pets.import.success_title") %></p>
-      <p class="text-sm text-neutral-600"><%= t("saved_pets.import.success_body") %></p>
-      <p class="text-xs text-neutral-500 mt-0.5"><%= import_summary %></p>
-    </div>
-    <%= link_to saved_pets_path, class: "shrink-0 inline-flex items-center px-4 py-2 bg-primary-500 text-white text-sm font-semibold rounded-xl hover:bg-primary-600 active:scale-[0.97] transition-all duration-150" do %>
-      <%= t("saved_pets.index.title") %>
-    <% end %>
-  </div>
+<%# The import now runs in the background (FavoritesImportJob). The client is
+    told immediately that the favorites are being imported; the Saved pets page
+    shows the server-driven progress notice while it runs. %>
+<%= turbo_stream.append "flash-container" do %>
+  <%= render "shared/milestone_toast", message: t("saved_pets.import.importing") %>
 <% end %>

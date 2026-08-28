@@ -473,6 +473,43 @@ ALTER SEQUENCE public.email_verification_tokens_id_seq OWNED BY public.email_ver
 
 
 --
+-- Name: favorites_imports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.favorites_imports (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    status character varying DEFAULT 'pending'::character varying NOT NULL,
+    requested_ids jsonb DEFAULT '[]'::jsonb NOT NULL,
+    imported_count integer DEFAULT 0 NOT NULL,
+    total_count integer DEFAULT 0 NOT NULL,
+    error character varying,
+    completed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: favorites_imports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.favorites_imports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: favorites_imports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.favorites_imports_id_seq OWNED BY public.favorites_imports.id;
+
+
+--
 -- Name: individual_profiles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1009,6 +1046,13 @@ ALTER TABLE ONLY public.email_verification_tokens ALTER COLUMN id SET DEFAULT ne
 
 
 --
+-- Name: favorites_imports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.favorites_imports ALTER COLUMN id SET DEFAULT nextval('public.favorites_imports_id_seq'::regclass);
+
+
+--
 -- Name: individual_profiles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1187,6 +1231,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.email_verification_tokens
     ADD CONSTRAINT email_verification_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: favorites_imports favorites_imports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.favorites_imports
+    ADD CONSTRAINT favorites_imports_pkey PRIMARY KEY (id);
 
 
 --
@@ -1528,6 +1580,20 @@ CREATE INDEX index_email_verification_tokens_on_token ON public.email_verificati
 --
 
 CREATE INDEX index_email_verification_tokens_on_user_id ON public.email_verification_tokens USING btree (user_id);
+
+
+--
+-- Name: index_favorites_imports_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_favorites_imports_on_user_id ON public.favorites_imports USING btree (user_id);
+
+
+--
+-- Name: index_favorites_imports_on_user_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_favorites_imports_on_user_id_and_created_at ON public.favorites_imports USING btree (user_id, created_at);
 
 
 --
@@ -1935,6 +2001,14 @@ ALTER TABLE ONLY public.shelter_profiles
 
 
 --
+-- Name: favorites_imports fk_rails_929820ea53; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.favorites_imports
+    ADD CONSTRAINT fk_rails_929820ea53 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: pets fk_rails_92fb5d7a05; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2045,6 +2119,7 @@ ALTER TABLE ONLY public.adoption_applications
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260827000001'),
 ('20260809120000'),
 ('20260806020000'),
 ('20260806010002'),

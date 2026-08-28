@@ -49,7 +49,7 @@ RSpec.describe "Shelter Invitations" do
 
     it "requires authentication" do
       post shelter_invitations_path(shelter_id: shelter), params: { token: "anything" }
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(new_session_path)
     end
   end
 end

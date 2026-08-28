@@ -29,6 +29,20 @@ RSpec.describe "Registrations" do
       # The hidden role field keeps the real role so the account registers correctly.
       expect(response.body).to include('value="shelter_admin"')
     end
+
+    it "renders the registration form in Spanish when locale is es" do
+      get new_registration_path(locale: :es)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("authentication.registrations.new.title_individual", locale: :es))
+      expect(response.body).to include(I18n.t("authentication.registrations.new.submit", locale: :es))
+      expect(response.body).not_to include("Create account")
+    end
+
+    it "renders the shelter registration variant in Spanish" do
+      get new_registration_path(locale: :es, params: { role: "shelter_admin" })
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("authentication.registrations.new.title_shelter", locale: :es))
+    end
   end
 
   describe "POST /registration" do
@@ -126,6 +140,21 @@ RSpec.describe "Registrations" do
         post registration_path, params: { user: { name: "Jane", email: "jane@example.com", password: "password123", password_confirmation: "password123" } }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.body).to include("already been taken")
+      end
+
+      it "shows localized validation errors in Spanish" do
+        post registration_path(locale: :es), params: { user: { name: "Jane", email: "jane@example.com", password: "short", password_confirmation: "short" } }
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.body).to include("Contraseña es demasiado corto (mínimo 8 caracteres)")
+        expect(response.body).not_to include("too short")
+      end
+
+      it "shows localized duplicate-email errors in Spanish" do
+        create(:user, email: "jane@example.com")
+        post registration_path(locale: :es), params: { user: { name: "Jane", email: "jane@example.com", password: "password123", password_confirmation: "password123" } }
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.body).to include("Correo electrónico ya está en uso")
+        expect(response.body).not_to include("already been taken")
       end
     end
   end

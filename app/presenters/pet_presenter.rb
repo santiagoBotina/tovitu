@@ -4,7 +4,10 @@ class PetPresenter < ApplicationPresenter
   def age_display
     if model.birth_date.present?
       age = compute_years
-      "#{I18n.t("pets.age_categories.#{model.age_category}")} (#{age} #{'year'.pluralize(age)})"
+      I18n.t("pets.age_display",
+             category: I18n.t("pets.age_categories.#{model.age_category}"),
+             age: age,
+             count: age)
     else
       I18n.t("pets.age_categories.#{model.age_category}")
     end

@@ -50,6 +50,7 @@ en:
       user_options: "User options"
       search: "Search pets"
       search_placeholder: "Search pets..."
+      back_home: "Back to home"
     verified_badge: "Verified"
     language_selector:
       aria_label: "Language"
@@ -165,12 +166,6 @@ en:
         subtitle_active: "You have active adoption requests. Let's check on them!"
         cta_browse: "Browse Pets"
         cta_profile: "Complete Profile"
-      interest_import:
-        title_one: "You saved 1 pet before joining"
-        title_other: "You saved %{count} pets before joining"
-        body: "Bring them into your account so they're waiting for you."
-        import: "Import my saved pets"
-        skip: "Not now"
       readiness:
         title: "Adoption Journey"
         percent: "%{percent}%%"
@@ -473,6 +468,8 @@ en:
       new:
         title: "Welcome back"
         subtitle: "Log in to your Tovitu account"
+        apply_intent_title: "Continue your application"
+        apply_intent_body: "Log in to keep applying for %{pet_name}."
         individual_title: "I'm looking to adopt"
         adopter_title: "I'm looking to adopt"
         shelter_title: "I represent a shelter"
@@ -842,6 +839,13 @@ en:
           attributes:
             species_served:
               must_be_array: "must be an array"
+    attributes:
+      user:
+        name: "Name"
+        email: "Email address"
+        password: "Password"
+        password_confirmation: "Password confirmation"
+        role: "Account type"
   presenters:
     shelter:
       status_active: "Active"

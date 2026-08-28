@@ -1,3 +1,6 @@
+<% if auth_flow? %>
+  <%= render "shared/navbar_minimal" %>
+<% else %>
 <header class="sticky top-0 z-20 bg-white/80 backdrop-blur-md <%= signed_in? ? "border-b border-neutral-200/60" : "" %>">
   <div class="flex items-center justify-between h-16 px-4 md:px-6">
 
@@ -66,9 +69,11 @@
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
           </svg>
-          <% if saved_pets_count > 0 %>
-            <span class="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 rounded-full bg-accent-pink text-white text-[10px] font-bold flex items-center justify-center shadow-sm transition-transform duration-200 hover:scale-110"><%= saved_pets_count %></span>
-          <% end %>
+          <%# Counter badge. The favorites-counter controller keeps it in sync
+              with optimistic save/remove actions (tovitu:favorites-changed). %>
+          <span data-controller="favorites-counter"
+                data-favorites-counter-count-value="<%= saved_pets_count %>"
+                class="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 rounded-full bg-accent-pink text-white text-[10px] font-bold flex items-center justify-center shadow-sm transition-transform duration-200 hover:scale-110 <%= saved_pets_count > 0 ? "" : "hidden" %>"><%= saved_pets_count %></span>
         <% end %>
 
         <%# User Avatar + Dropdown Menu %>
@@ -145,3 +150,4 @@
 
   </div>
 </header>
+<% end %>

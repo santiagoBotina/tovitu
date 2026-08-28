@@ -5,7 +5,7 @@ RSpec.describe "Shelter Dashboard" do
     it "requires authentication" do
       shelter = create(:shelter)
       get shelter_dashboard_path(shelter_id: shelter)
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(new_session_path)
     end
 
     it "shows dashboard to shelter members" do

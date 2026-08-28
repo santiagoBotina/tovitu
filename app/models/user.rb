@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :password_reset_tokens, dependent: :destroy
 
   has_many :saved_pets, dependent: :destroy
+  has_many :favorites_imports, dependent: :destroy
 
   has_many :published_pets, class_name: "Pet", foreign_key: :publisher_id, dependent: :destroy
   has_many :adoption_requests, foreign_key: :adopter_id, dependent: :destroy

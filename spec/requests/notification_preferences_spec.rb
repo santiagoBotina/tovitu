@@ -57,9 +57,9 @@ RSpec.describe "NotificationPreferences" do
     context "when unauthenticated" do
       before { delete session_path }
 
-      it "redirects to root" do
+      it "redirects to login" do
         get edit_notification_preferences_path
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(new_session_path)
       end
     end
 
@@ -159,9 +159,9 @@ RSpec.describe "NotificationPreferences" do
     context "when unauthenticated" do
       before { delete session_path }
 
-      it "redirects to root" do
+      it "redirects to login" do
         patch notification_preferences_path, params: valid_params
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(new_session_path)
       end
     end
   end

@@ -10,9 +10,17 @@ es:
     import:
       require_login: Inicia sesión para importar tus mascotas guardadas.
       require_individual: Solo las cuentas de adoptante pueden guardar mascotas.
+      importing: Importando tus favoritos…
+      importing_title: Importando tus favoritos…
+      importing_body: Esto sucede en segundo plano — sigue explorando y te estarán esperando.
+      failed_title: No pudimos importar todos tus favoritos
+      failed_body: Toca reintentar y lo intentaremos de nuevo. Nada de lo que guardaste se pierde.
+      retry: Reintentar
       imported_none: No hay mascotas nuevas para importar.
       imported_one: Se agregó 1 mascota guardada a tu cuenta.
       imported_other: Se agregaron %{count} mascotas guardadas a tu cuenta.
+      imported_partial_one: "1 de %{total} favoritos importados"
+      imported_partial_other: "%{count} de %{total} favoritos importados"
       success_title: ¡Listo!
       success_body: Tus mascotas guardadas ahora están en tu cuenta.
       close: Cerrar

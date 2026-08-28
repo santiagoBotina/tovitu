@@ -1,16 +1,16 @@
-<div class="w-full max-w-md mx-auto">
+<%= render "shared/auth_shell" do %>
   <div class="bg-white rounded-xl shadow-md p-8 text-center">
     <%= render "shared/auth_brand" %>
-    <h1 class="font-display text-3xl font-bold text-neutral-900 mb-2"><%= t(".title") %></h1>
+    <h1 class="font-display text-3xl font-bold text-neutral-900 mb-2"><%= t("authentication.registrations.check_email.title") %></h1>
     <p class="text-neutral-600 mb-6">
-      <%= t(".body") %>
+      <%= t("authentication.registrations.check_email.body") %>
     </p>
-    <p class="text-sm text-neutral-500">
-      <%= t(".didnt_receive") %>
-      <%= link_to t(".resend"), new_session_path, class: "text-primary-600 hover:text-primary-800 font-medium transition" %>
+    <p class="text-sm text-neutral-600">
+      <%= t("authentication.registrations.check_email.didnt_receive") %>
+      <%= link_to t("authentication.registrations.check_email.resend"), new_session_path, class: "text-primary-600 hover:text-primary-800 font-medium transition" %>
     </p>
-    <p class="text-sm text-neutral-500 mt-2">
-      <%= link_to t(".back"), new_session_path, class: "text-primary-600 hover:text-primary-800 font-medium transition" %>
+    <p class="text-sm text-neutral-600 mt-2">
+      <%= link_to t("authentication.registrations.check_email.back"), new_session_path, class: "text-primary-600 hover:text-primary-800 font-medium transition" %>
     </p>
   </div>
-</div>
+<% end %>

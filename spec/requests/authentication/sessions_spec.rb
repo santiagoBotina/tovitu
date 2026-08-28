@@ -14,6 +14,36 @@ RSpec.describe "Sessions" do
     end
   end
 
+  describe "GET /login/individual" do
+    it "renders the individual login in English by default" do
+      get login_individual_path
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("authentication.sessions.new_individual.title", locale: :en))
+    end
+
+    it "renders the individual login in Spanish when locale is es" do
+      get login_individual_path(locale: :es)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("authentication.sessions.new_individual.title", locale: :es))
+      expect(response.body).to include(I18n.t("authentication.sessions.new_individual.submit", locale: :es))
+      expect(response.body).not_to include("Welcome back")
+    end
+
+    it "renders the role toggle labels in Spanish" do
+      get login_individual_path(locale: :es)
+      expect(response.body).to include(I18n.t("authentication.role_toggle.individual", locale: :es))
+      expect(response.body).to include(I18n.t("authentication.role_toggle.shelter", locale: :es))
+    end
+  end
+
+  describe "GET /login/shelter" do
+    it "renders the shelter login in Spanish when locale is es" do
+      get login_shelter_path(locale: :es)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("authentication.sessions.new_shelter.title", locale: :es))
+    end
+  end
+
   describe "POST /session" do
     context "with valid credentials" do
       let(:user) { create(:user, :verified, :onboarding_completed) }
@@ -65,6 +95,12 @@ RSpec.describe "Sessions" do
       it "shows a generic error" do
         post session_path, params: { session: { email: user.email, password: "wrongpassword" } }
         expect(flash[:alert]).to include("Invalid email or password")
+      end
+
+      it "shows a localized error in Spanish" do
+        post session_path(locale: :es), params: { session: { email: user.email, password: "wrongpassword" } }
+        expect(flash[:alert]).to include(I18n.t("errors.authenticate_user.invalid", locale: :es))
+        expect(flash[:alert]).not_to include("Invalid email or password")
       end
 
       it "logs a failed login attempt" do

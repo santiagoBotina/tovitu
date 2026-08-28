@@ -1,0 +1,18 @@
+<%# Polled by the favorites-import controller while an import is pending.
+    Replaces the status notice on every poll; when the import completes it also
+    swaps in the updated list and shows a one-time summary toast. %>
+<% if @favorites_import %>
+  <%= turbo_stream.replace "favorites-import-notice" do %>
+    <%= render "saved_pets/import_notice", favorites_import: @favorites_import %>
+  <% end %>
+
+  <% if @favorites_import.completed? %>
+    <%= turbo_stream.replace "saved-pets-grid" do %>
+      <%= render "saved_pets/grid", presented_pets: @presented_pets %>
+    <% end %>
+
+    <%= turbo_stream.append "flash-container" do %>
+      <%= render "shared/milestone_toast", message: favorites_import_summary(@favorites_import) %>
+    <% end %>
+  <% end %>
+<% end %>

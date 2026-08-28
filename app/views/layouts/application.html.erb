@@ -41,6 +41,14 @@
       <%= render "shared/flash" %>
     </div>
 
+    <% if signed_in? && current_user.individual? %>
+      <%# Auto-import of localStorage interests after authentication. Fires on
+          the first page load after sign-up/sign-in while local interests exist;
+          the server persists them and imports in the background. %>
+      <div data-controller="interest-import"
+           data-interest-import-import-url-value="<%= import_saved_pets_path %>"></div>
+    <% end %>
+
     <% if signed_in? && !local_assigns[:hide_nav] && !@hide_nav %>
       <div data-sidebar-target="overlay"
            class="fixed inset-0 z-20 bg-black/20 backdrop-blur-sm hidden md:hidden"

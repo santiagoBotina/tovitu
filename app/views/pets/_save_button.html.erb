@@ -6,39 +6,67 @@
     circle heart on the hero and the sidebar button can both live on the same
     page. The turbo_stream templates replace both ids. %>
 <% button_id = variant == "button" ? "save-button-#{pet_id}-label" : "save-button-#{pet_id}" %>
-<% save_aria = saved ? t("pets.index.unsave") : t("pets.index.save") %>
-<% button_label = saved ? t("pets.show.saved") : t("pets.show.save_to_favorites") %>
 
+<%# Labels: the circle heart uses short aria labels, the labeled button uses
+    the fuller "Save to favorites" / "Saved" copy. %>
+<% save_label = variant == "button" ? t("pets.show.save_to_favorites") : t("pets.index.save") %>
+<% unsave_label = variant == "button" ? t("pets.show.saved") : t("pets.index.unsave") %>
+<% initial_aria = saved ? unsave_label : save_label %>
+
+<%# Class lists for the control (form) and the heart icon in each state. The
+    favorite-toggle controller swaps these on optimistic toggle so the visual
+    state changes instantly, then converges with the backend response. %>
 <% circle_class = "absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-all duration-200 z-10 cursor-pointer" %>
-<% button_class = if saved
-                    "flex items-center justify-center gap-2 w-full px-5 py-3 bg-accent-pink text-white font-semibold text-sm rounded-xl hover:bg-accent-pink/90 focus-visible:ring-2 focus-visible:ring-accent-pink/40 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] cursor-pointer shadow-sm"
-                  else
-                    "flex items-center justify-center gap-2 w-full px-5 py-3 bg-white border-2 border-accent-pink/40 text-accent-pink font-semibold text-sm rounded-xl hover:bg-accent-pink/5 hover:border-accent-pink/60 focus-visible:ring-2 focus-visible:ring-accent-pink/40 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] cursor-pointer shadow-sm"
-                  end %>
-<% control_class = variant == "button" ? button_class : circle_class %>
-<% icon_class = if variant == "button" && saved
-                  "fill-white text-white heart-saved"
-                elsif saved
-                  "fill-accent-pink text-accent-pink heart-saved"
-                elsif variant == "button"
-                  "fill-transparent text-accent-pink"
-                else
-                  "fill-transparent text-neutral-400 hover:text-accent-pink"
-                end %>
+<% button_class = "flex items-center justify-center gap-2 w-full px-5 py-3 font-semibold text-sm rounded-xl focus-visible:ring-2 focus-visible:ring-accent-pink/40 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] cursor-pointer shadow-sm" %>
+<% control_saved_class = if variant == "button"
+                           "#{button_class} bg-accent-pink text-white hover:bg-accent-pink/90"
+                         else
+                           circle_class
+                         end %>
+<% control_unsaved_class = if variant == "button"
+                             "#{button_class} bg-white border-2 border-accent-pink/40 text-accent-pink hover:bg-accent-pink/5 hover:border-accent-pink/60"
+                           else
+                             circle_class
+                           end %>
+<% icon_saved_class = variant == "button" ? "fill-white text-white heart-saved" : "fill-accent-pink text-accent-pink heart-saved" %>
+<% icon_unsaved_class = variant == "button" ? "fill-transparent text-accent-pink" : "fill-transparent text-neutral-400 hover:text-accent-pink" %>
+<% icon_class = saved ? icon_saved_class : icon_unsaved_class %>
 
 <% if signed_in? %>
-  <%= button_to pet_save_path(pet_id: pet_id),
+  <%# Signed-in users get an optimistic toggle: the heart reacts instantly and
+      the request is dispatched in the background. The form still submits
+      normally (turbo_stream) when JavaScript is unavailable. %>
+  <%= form_with url: pet_save_path(pet_id: pet_id),
       id: button_id,
       method: saved ? :delete : :post,
-      class: control_class,
-      aria: { label: variant == "button" ? button_label : save_aria },
-      data: { turbo_stream: true } do %>
-    <svg class="w-5 h-5 transition-all duration-200 heart-icon <%= icon_class %>" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-    </svg>
-    <% if variant == "button" %>
-      <span><%= button_label %></span>
-    <% end %>
+      class: saved ? control_saved_class : control_unsaved_class,
+      data: {
+        controller: "favorite-toggle",
+        favorite_toggle_pet_id_value: pet_id,
+        favorite_toggle_saved_value: saved,
+        favorite_toggle_save_label_value: save_label,
+        favorite_toggle_unsave_label_value: unsave_label,
+        favorite_toggle_error_message_value: t("pets.saves.error"),
+        favorite_toggle_dismiss_label_value: t("shared.toast.dismiss"),
+        favorite_toggle_control_saved_class_value: control_saved_class,
+        favorite_toggle_control_unsaved_class_value: control_unsaved_class,
+        favorite_toggle_icon_saved_class_value: icon_saved_class,
+        favorite_toggle_icon_unsaved_class_value: icon_unsaved_class,
+        action: "submit->favorite-toggle#toggle",
+        turbo_stream: true
+      } do |form| %>
+    <button type="submit"
+            data-favorite-toggle-target="button"
+            class="w-full h-full flex items-center justify-center"
+            aria-pressed="<%= saved %>"
+            aria-label="<%= initial_aria %>">
+      <svg data-favorite-toggle-target="icon" class="w-5 h-5 transition-all duration-200 heart-icon <%= icon_class %>" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+      </svg>
+      <% if variant == "button" %>
+        <span data-favorite-toggle-target="label"><%= saved ? unsave_label : save_label %></span>
+      <% end %>
+    </button>
   <% end %>
 <% else %>
   <%# Signed-out visitors: "paw it" stores interests locally in the browser.
@@ -52,7 +80,7 @@
           data-pet-interest-save-label-value="<%= interest_save_label %>"
           data-pet-interest-unsave-label-value="<%= interest_unsave_label %>"
           data-action="click->pet-interest#toggle"
-          class="<%= control_class %>"
+          class="<%= control_unsaved_class %>"
           aria-label="<%= interest_save_label %>"
           aria-pressed="false">
     <svg class="w-5 h-5 pointer-events-none transition-all duration-200 fill-transparent text-neutral-400" data-pet-interest-target="icon" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">

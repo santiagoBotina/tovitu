@@ -64,7 +64,7 @@ RSpec.describe "Shelters" do
   describe "GET /shelters/new" do
     it "requires authentication" do
       get new_shelter_path
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(new_session_path)
     end
 
     it "renders the form for verified users without a shelter" do
@@ -113,7 +113,7 @@ RSpec.describe "Shelters" do
       post shelters_path, params: {
         shelter: { name: "Test", street: "123 St", city: "City", state: "OR", zip: "97201", phone: "503-555-0123" }
       }
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(new_session_path)
     end
 
     it "rejects duplicate shelter names" do

@@ -49,4 +49,27 @@ module PetsHelper
       (session[:saved_pet_ids] || []).length
     end
   end
+
+  # Human summary for a completed favorites import. When every requested pet
+  # was imported the plain "N saved pets were added" copy is used; when some
+  # were skipped (e.g. no longer available) the summary communicates "N of M
+  # imported" so the user understands nothing was silently lost.
+  def favorites_import_summary(import)
+    imported = import.imported_count
+    total = import.total_count
+
+    if imported.zero?
+      t("saved_pets.import.imported_none")
+    elsif imported < total
+      if imported == 1
+        t("saved_pets.import.imported_partial_one", total: total)
+      else
+        t("saved_pets.import.imported_partial_other", count: imported, total: total)
+      end
+    elsif imported == 1
+      t("saved_pets.import.imported_one")
+    else
+      t("saved_pets.import.imported_other", count: imported)
+    end
+  end
 end
