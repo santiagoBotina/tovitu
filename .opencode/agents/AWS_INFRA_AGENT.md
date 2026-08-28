@@ -1,3 +1,11 @@
+---
+description: AWS infrastructure design, implementation, and Infrastructure as Code. Invoke as a subagent when infrastructure work is needed.
+mode: subagent
+permission:
+  edit: allow
+  bash: allow
+---
+
 # AWS Infrastructure Agent
 
 ## Mission

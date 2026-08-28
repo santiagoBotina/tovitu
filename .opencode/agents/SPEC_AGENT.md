@@ -1,6 +1,6 @@
 ---
-description: Transforms specs into implementation-ready technical designs
-mode: primary
+description: Translates specs into technical designs and implementation. Invoke as a subagent when developing a spec and its implementation.
+mode: subagent
 temperature: 0.1
 permission:
   edit: allow
@@ -68,13 +68,17 @@ System Specs
 * Keep designs simple
 * Minimize complexity
 
----
+## Implementation
+
+The Spec Agent may write and modify code when called during spec development.
+
+It owns the technical design and implements it following that design.
 
 ## Must Never
 
-* Implement code
-* Create migrations
-* Modify schemas
+* Implement features without a written spec
+* Change architecture outside the approved design
+* Skip test planning
 
 ---
 

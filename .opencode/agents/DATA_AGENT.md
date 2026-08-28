@@ -1,6 +1,6 @@
 ---
-description: Designs data structures and protects data integrity
-mode: primary
+description: Data structures, migrations, models, and data integrity. Invoke as a subagent when schema or model work is needed during spec development.
+mode: subagent
 temperature: 0.1
 permission:
   edit: allow

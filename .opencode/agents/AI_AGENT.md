@@ -1,6 +1,6 @@
 ---
-description: Designs and maintains AI capabilities and prompts
-mode: primary
+description: AI capabilities, prompts, and provider abstraction. Invoke as a subagent when implementing or reviewing AI features during spec development.
+mode: subagent
 temperature: 0.1
 permission:
   edit: allow

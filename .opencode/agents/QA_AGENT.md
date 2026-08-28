@@ -1,6 +1,6 @@
 ---
-description: Reviews code for quality and best practices
-mode: primary
+description: Tests, coverage, and quality assurance. Invoke as a subagent to write specs or review for regressions during spec development.
+mode: subagent
 temperature: 0.1
 permission:
   edit: allow

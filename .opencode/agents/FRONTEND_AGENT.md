@@ -1,6 +1,6 @@
 ---
-description: Builds accessible and consistent user experiences
-mode: primary
+description: Accessible, on-brand user experiences (views, components, Hotwire/Stimulus). Invoke as a subagent when UI work is needed during spec development.
+mode: subagent
 temperature: 0.1
 permission:
   edit: allow

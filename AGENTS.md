@@ -33,14 +33,19 @@ Business logic is organized by domain under `lib/`:
 
 ## Agent Directory Ownership
 
-| Agent | Owns |
+**Primary agents:** `build`, `plan`, and `product`.
+
+`product` owns `/specs` (spec creation per the spec-driven convention). `build` and `plan` are the built-in primary agents; `plan` owns pre-implementation planning.
+
+The domain agents below are **subagents** (see `.opencode/agents/*.md`). They are independent, write/modify code in their area of ownership, and are invoked by primary agents when a spec requires their domain.
+
+| Subagent | Owns |
 |-------|------|
 | AI | `lib/ai`, `config/prompts` |
 | Data | `db/`, `app/models/` |
 | Domain | `lib/adoptions`, `lib/pets`, `lib/shelters` |
 | Frontend | `app/views`, `app/components`, `app/javascript` |
-| Product | `/specs` |
-| Spec | technical design from `/specs/*` |
+| Spec | technical design + implementation from `/specs/*` |
 | QA | `spec/` |
 
 ## Design Context

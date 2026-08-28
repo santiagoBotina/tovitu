@@ -1,6 +1,6 @@
 ---
-description: Implements business logic and domain boundaries
-mode: primary
+description: Business logic and domain boundaries (service/value/query/policy objects). Invoke as a subagent when implementing domain workflows during spec development.
+mode: subagent
 temperature: 0.1
 permission:
   edit: allow
