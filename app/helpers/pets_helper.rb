@@ -75,16 +75,16 @@ module PetsHelper
   def life_preview_tip_category_label(category)
     normalized = category.to_s.downcase
     key = case normalized
-          when /home|space|environment/ then :home_preparation
-          when /suppl|gear|essentials/ then :supplies
-          when /family|household|member/ then :family_preparation
-          when /lifestyle|schedule|routine|adjust/ then :lifestyle_adjustments
-          when /train|behavior|social/ then :training_resources
-          when /food|feed|nutrition/ then :feeding
-          when /health|vet|medical/ then :health
-          when /safe|safety/ then :safety
-          when /bond|love|care|affection/ then :bonding
-          end
+    when /home|space|environment/ then :home_preparation
+    when /suppl|gear|essentials/ then :supplies
+    when /family|household|member/ then :family_preparation
+    when /lifestyle|schedule|routine|adjust/ then :lifestyle_adjustments
+    when /train|behavior|social/ then :training_resources
+    when /food|feed|nutrition/ then :feeding
+    when /health|vet|medical/ then :health
+    when /safe|safety/ then :safety
+    when /bond|love|care|affection/ then :bonding
+    end
     return category.to_s.humanize if key.nil?
     I18n.t("pets.show.life_preview_tip_categories.#{key}", default: category.to_s.humanize)
   end
@@ -97,15 +97,15 @@ module PetsHelper
   def life_preview_time_block_style(time_period, index)
     normalized = time_period.to_s.downcase
     matched = case normalized
-              when /morning|early|mañana|manana|madrugada|desayuno/ then { icon: "☀️", card: "bg-accent-yellow/15 border-accent-yellow/40", chip: "bg-accent-yellow/30" }
-              when /\bmidday\b|\bnoon\b|\blunch\b|almuerzo|comida|mediodía|mediodia/ then { icon: "🍽️", card: "bg-accent-orange/15 border-accent-orange/40", chip: "bg-accent-orange/30" }
-              when /afternoon|tarde/ then { icon: "🌤️", card: "bg-secondary-50 border-secondary-200/70", chip: "bg-secondary-100" }
-              when /evening|atardecer|cena/ then { icon: "🌅", card: "bg-accent-pink/15 border-accent-pink/40", chip: "bg-accent-pink/20" }
-              when /night|noche|dormir|descanso/ then { icon: "🌙", card: "bg-primary-50 border-primary-200/70", chip: "bg-primary-100" }
-              when /walk|paseo|ejercicio|exercise/ then { icon: "🚶", card: "bg-secondary-50 border-secondary-200/70", chip: "bg-secondary-100" }
-              when /play|juego|enrichment/ then { icon: "🎾", card: "bg-accent-pink/15 border-accent-pink/40", chip: "bg-accent-pink/20" }
-              when /groom|aseo|cepillado/ then { icon: "🛁", card: "bg-primary-50 border-primary-200/70", chip: "bg-primary-100" }
-              end
+    when /morning|early|mañana|manana|madrugada|desayuno/ then { icon: "☀️", card: "bg-accent-yellow/15 border-accent-yellow/40", chip: "bg-accent-yellow/30" }
+    when /\bmidday\b|\bnoon\b|\blunch\b|almuerzo|comida|mediodía|mediodia/ then { icon: "🍽️", card: "bg-accent-orange/15 border-accent-orange/40", chip: "bg-accent-orange/30" }
+    when /afternoon|tarde/ then { icon: "🌤️", card: "bg-secondary-50 border-secondary-200/70", chip: "bg-secondary-100" }
+    when /evening|atardecer|cena/ then { icon: "🌅", card: "bg-accent-pink/15 border-accent-pink/40", chip: "bg-accent-pink/20" }
+    when /night|noche|dormir|descanso/ then { icon: "🌙", card: "bg-primary-50 border-primary-200/70", chip: "bg-primary-100" }
+    when /walk|paseo|ejercicio|exercise/ then { icon: "🚶", card: "bg-secondary-50 border-secondary-200/70", chip: "bg-secondary-100" }
+    when /play|juego|enrichment/ then { icon: "🎾", card: "bg-accent-pink/15 border-accent-pink/40", chip: "bg-accent-pink/20" }
+    when /groom|aseo|cepillado/ then { icon: "🛁", card: "bg-primary-50 border-primary-200/70", chip: "bg-primary-100" }
+    end
     return matched if matched
 
     palette = [
