@@ -1,6 +1,6 @@
 class Shelter::PetsController < ApplicationController
   before_action :require_authentication
-  before_action :set_shelter_pet, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_shelter_pet, only: [ :show, :edit, :update, :destroy, :media ]
   before_action :require_shelter
 
   def index
@@ -13,6 +13,11 @@ class Shelter::PetsController < ApplicationController
 
   def show
     authorize @pet
+    @pet = PetPresenter.new(@pet)
+  end
+
+  def media
+    authorize @pet, :manage_photos?
     @pet = PetPresenter.new(@pet)
   end
 
@@ -116,7 +121,7 @@ class Shelter::PetsController < ApplicationController
       :description, :personality_traits, :medical_notes,
       :spayed_neutered, :vaccinated, :special_needs,
       :good_with_children, :good_with_dogs, :good_with_cats,
-      :requirements, :personality_spec, :adopter_tips,
+      :requirements, :personality_spec, :adopter_tips, :recommendation,
       photos: []
     ).tap do |p|
       p[:personality_traits] = p[:personality_traits].to_s.split(",").map(&:strip).reject(&:blank?) if p[:personality_traits].present?

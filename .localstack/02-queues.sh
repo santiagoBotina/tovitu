@@ -64,6 +64,11 @@ apply_queue_attributes() {
 
 ensure_queue "tovitu-jobs-dlq"
 ensure_queue "tovitu-mailers-dlq"
+ensure_queue "tovitu-variants-dlq"
 
 ensure_queue_with_redrive "tovitu-jobs" "tovitu-jobs-dlq"
 ensure_queue_with_redrive "tovitu-mailers" "tovitu-mailers-dlq"
+# Dedicated queue for image variant generation (Pets::GeneratePhotoVariantsJob,
+# ActiveStorage::TransformJob). Keeps vips work off the default queue and lets
+# ops run a dedicated worker (SQS_QUEUES=variants) with its own concurrency.
+ensure_queue_with_redrive "tovitu-variants" "tovitu-variants-dlq"

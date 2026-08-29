@@ -277,14 +277,14 @@ en:
   my:
     adoption_requests:
       index:
-        title: Incoming Requests
-        subtitle: Adoption requests for your pets. Review applicants and decide who meets your pet best.
+        title: Requests for my pets
+        subtitle: Requests you receive from people who want to adopt your pets. Review applicants and respond.
         from: Request from %{name}
         for_pet: For %{pet_name}
         submitted: Submitted %{time} ago
         view: View
-        empty_title: No incoming requests yet
-        empty_body: When someone requests to adopt one of your pets, you'll see it here.
+        empty_title: No requests for your pets yet
+        empty_body: When you publish a pet for adoption, requests from adopters appear here.
         pending_count:
           one: "%{count} needs your review"
           other: "%{count} need your review"

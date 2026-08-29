@@ -309,12 +309,12 @@ html {
 }
 
 @keyframes lp-fade-in-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(18px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .lp-fade-in {
-  animation: lp-fade-in-up 0.5s ease-out both;
+  animation: lp-fade-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes lp-slide-down {
@@ -322,13 +322,30 @@ html {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-details[open] > .lp-panel-body {
-  animation: lp-slide-down 0.25s ease-out;
-}
-
 @keyframes lp-shimmer {
   0%   { background-position: -200% center; }
   100% { background-position: 200% center; }
+}
+
+/* Gentle vertical bob for the species icon while the preview generates —
+   spring-like cubic-bezier, no bounce easing. */
+@keyframes lp-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+
+.lp-float {
+  animation: lp-float 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* Sequenced loader dots — scale + opacity only, staggered via inline delays. */
+@keyframes lp-loader-dot {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50%      { opacity: 1; transform: scale(1.15); }
+}
+
+.lp-loader-dot {
+  animation: lp-loader-dot 1.3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 
 @keyframes lp-glow-pulse {
@@ -343,14 +360,13 @@ details[open] > .lp-panel-body {
 @media (prefers-reduced-motion: reduce) {
   .lp-border-glow,
   .lp-fade-in,
-  .lp-glow-pulse {
+  .lp-glow-pulse,
+  .lp-float,
+  .lp-loader-dot {
     animation: none;
   }
   .lp-fade-in {
     opacity: 1;
-  }
-  details[open] > .lp-panel-body {
-    animation: none;
   }
 }
 
@@ -577,6 +593,24 @@ details[open] > .lp-panel-body {
 }
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+/* ─── Shared select control: chevron spacing ─── */
+/* Native selects get a custom chevron (decorative — native selects expose no
+   arrow to assistive tech) positioned one md token (16px) from the right edge,
+   with 2xl (48px) right padding so option text never runs under it. Applied via
+   .select-control on every native <select>; utilities (pl-4/py-3) still own the
+   remaining padding. */
+@layer components {
+  .select-control {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%23A0A6B4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m19.5 8.25-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px 16px;
+    padding-right: 48px;
+  }
 }
 
 /* ─── Adopter Insight: "Why?" details expander ─── */

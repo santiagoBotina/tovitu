@@ -7,7 +7,7 @@
   <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden mb-6">
     <% if @pet.primary_photo.present? %>
       <div class="aspect-[16/10] bg-neutral-100">
-        <%= image_tag @pet.primary_photo.variant(resize_to_limit: [800, 500]), alt: @pet.name, class: "w-full h-full object-cover" %>
+        <%= image_tag @pet.primary_photo.variant(resize_to_limit: [800, 500], format: :webp, saver: { quality: 80 }), alt: @pet.name, fetchpriority: "high", decoding: "async", width: 800, height: 500, class: "w-full h-full object-cover" %>
       </div>
     <% end %>
 
@@ -85,7 +85,7 @@
     <%= form_with url: change_status_my_pet_path(@pet), method: :patch, local: true, class: "bg-white rounded-xl shadow-sm border border-neutral-200 p-6" do |f| %>
       <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".change_status") %></h2>
       <div class="flex items-center gap-3">
-        <%= f.select :status, options_for_select(Pet::STATUSES.map { |s| [s.humanize, s] }, @pet.status), {}, class: "px-4 py-2.5 border border-neutral-300 rounded-xl text-sm bg-white" %>
+        <%= f.select :status, options_for_select(Pet::STATUSES.map { |s| [s.humanize, s] }, @pet.status), {}, class: "pl-4 py-2.5 border border-neutral-300 rounded-xl text-sm bg-white select-control" %>
         <%= f.submit t(".update_status"), class: "px-4 py-2.5 bg-secondary-500 text-white font-semibold text-sm rounded-xl hover:bg-secondary-600 transition cursor-pointer" %>
       </div>
     <% end %>

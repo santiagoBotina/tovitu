@@ -36,6 +36,39 @@ RSpec.describe "Individual Dashboard (Gamification)" do
       expect(response.body).not_to match(/\d+% Match/)
     end
 
+    it "renders the journey explanation for a fresh user" do
+      get user_dashboard_path
+
+      expect(response.body).to include(CGI.escapeHTML(I18n.t("dashboard.index.journey_card.explanation.fresh")))
+    end
+
+    it "renders the achieved-milestones summary" do
+      get user_dashboard_path
+
+      expect(response.body).to include(CGI.escapeHTML(I18n.t("dashboard.index.journey_card.achieved", done: 0, total: 5)))
+    end
+
+    it "renders the complete-profile CTA for a fresh user" do
+      get user_dashboard_path
+
+      expect(response.body).to include(CGI.escapeHTML(I18n.t("dashboard.index.journey_card.cta.complete_profile")))
+      expect(response.body).to include(profile_onboarding_path)
+    end
+
+    it "renders the accompaniment line" do
+      get user_dashboard_path
+
+      expect(response.body).to include(CGI.escapeHTML(I18n.t("dashboard.index.journey_card.accompaniment")))
+    end
+
+    it "does not introduce points, levels, or leaderboards" do
+      get user_dashboard_path
+
+      expect(response.body).not_to include("Leaderboard")
+      expect(response.body).not_to match(/>\s*(Points?|Levels?)\s*</)
+      expect(response.body).not_to include(I18n.t("dashboard.index.journey_card.cta.see_requests"))
+    end
+
     it "renders the browse pets CTA without a translation-missing marker" do
       get user_dashboard_path
 
@@ -60,6 +93,43 @@ RSpec.describe "Individual Dashboard (Gamification)" do
 
         expect(response.body).to include(I18n.t("dashboard.index.readiness.next_step.next_save_pet"))
       end
+
+      it "renders the mid-journey explanation once a pet is saved" do
+        create(:saved_pet, user: user)
+        get user_dashboard_path
+
+        expect(response.body).to include(CGI.escapeHTML(I18n.t("dashboard.index.journey_card.explanation.mid_journey")))
+        expect(response.body).to include(CGI.escapeHTML(I18n.t("dashboard.index.journey_card.cta.browse_pets")))
+        expect(response.body).to include(pets_path)
+      end
+    end
+
+    context "when the user has an active adoption request" do
+      let(:user) { create(:user, :verified, :onboarding_completed) }
+
+      it "renders the active_applicant explanation and see-requests CTA" do
+        create(:adoption_request, adopter: user, status: :pending)
+        get user_dashboard_path
+
+        expect(response.body).to include(CGI.escapeHTML(I18n.t("dashboard.index.journey_card.explanation.active_applicant")))
+        expect(response.body).to include(CGI.escapeHTML(I18n.t("dashboard.index.journey_card.cta.see_requests")))
+        expect(response.body).to include(adoption_requests_path)
+      end
+    end
+  end
+
+  describe "requests-for-my-pets naming (REQ-13)" do
+    it "uses the clarified sidebar label instead of Incoming Requests" do
+      get user_dashboard_path
+
+      expect(response.body).to include(I18n.t("shared.sidebar.incoming_requests"))
+      expect(response.body).not_to include("Incoming Requests")
+    end
+
+    it "uses the clarified dashboard card title for publishers" do
+      get user_dashboard_path
+
+      expect(response.body).to include(CGI.escapeHTML(I18n.t("dashboard.index.incoming_requests")))
     end
   end
 

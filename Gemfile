@@ -93,3 +93,5 @@ group :development do
   # Schema annotations
   gem "annotate"
 end
+
+gem "roo", "~> 2.10"

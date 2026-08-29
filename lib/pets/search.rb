@@ -1,10 +1,11 @@
 module Pets
   class Search < ApplicationQuery
     DEFAULT_PAGE_SIZE = 24
+    MAX_PER_PAGE = 100
 
     def initialize(params: {})
       @page               = [ (params[:page] || 1).to_i, 1 ].max
-      @per_page           = (params[:per_page] || DEFAULT_PAGE_SIZE).to_i
+      @per_page           = (params[:per_page] || DEFAULT_PAGE_SIZE).to_i.clamp(1, MAX_PER_PAGE)
       @species            = params[:species]
       @breed              = params[:breed]
       @age_category       = params[:age_category]
@@ -22,6 +23,24 @@ module Pets
     end
 
     def call
+      scope = constraint_scope
+
+      scope = scope.order(created_at: :desc)
+      scope = scope.includes(:shelter, photos_attachments: :blob)
+
+      offset = (@page - 1) * @per_page
+      scope.offset(offset).limit(@per_page)
+    end
+
+    # Applies every structured filter without pagination or ordering, so NL
+    # ranking (Pets::NaturalSearch) can order the full constrained candidate
+    # set before the controller slices a page. Exposed as a class method for
+    # the controller.
+    def self.constraint_scope(params: {})
+      new(params: params).constraint_scope
+    end
+
+    def constraint_scope
       scope = Pet.undiscarded
 
       scope = @status.present? ? scope.where(status: @status) : scope.available
@@ -60,11 +79,7 @@ module Pets
         )
       end
 
-      scope = scope.order(created_at: :desc)
-      scope = scope.includes(:shelter, photos_attachments: :blob)
-
-      offset = (@page - 1) * @per_page
-      scope.offset(offset).limit(@per_page)
+      scope
     end
 
     private

@@ -3,7 +3,7 @@
     tovitu:exploration entry exists in localStorage. Everything is local —
     no PII, no cookies beyond what the app already uses. %>
 <% exploration_labels = {
-     "species" => Pet::SPECIES.index_with { |s| t("pets.species.#{s}") },
+     "species" => Pet::SPECIES.index_with { |s| "#{Pet::SPECIES_EMOJI[s]} #{t("pets.species.#{s}")}" },
      "age_category" => Pet::AGE_CATEGORIES.index_with { |c| t("pets.age_categories.#{c}") },
      "size" => Pet::SIZES.index_with { |s| t("pets.sizes.#{s}") },
      "sex" => Pet::SEXES.index_with { |s| t("pets.sex.#{s}") },

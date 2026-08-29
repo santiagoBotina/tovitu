@@ -1,62 +1,68 @@
 <%# ── Benefits of an Account ── %>
-<%# Outcome-focused benefit cards. Each card has a distinct tinted surface
-    and a real job — no decorative side stripes, no glass. %>
-<section class="bg-white px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
+<%# Editorial 2×2: a wide horizontal "keep your picks" card on top, a tinted
+    pair in the middle, and a wide horizontal "track your journey" card to
+    close. Generous padding, neutral-700 body copy, one accent per card. The
+    CTA closes with the hard-offset playground button. %>
+<section id="benefits" class="bg-white px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
   <div class="max-w-7xl mx-auto">
     <div class="text-center max-w-2xl mx-auto mb-14">
       <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 mb-4 text-balance">
         <%= t("landing.index.benefits.title") %>
       </h2>
-      <p class="text-lg text-neutral-600 leading-relaxed">
+      <p class="text-lg text-neutral-700 leading-relaxed text-pretty">
         <%= t("landing.index.benefits.subtitle") %>
       </p>
     </div>
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 mb-12">
-      <div class="bg-primary-50 rounded-xl border border-primary-100 p-6 sm:p-7">
-        <div class="w-12 h-12 rounded-2xl bg-primary-100 flex items-center justify-center mb-5">
-          <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <div class="grid sm:grid-cols-2 gap-6 lg:gap-8 mb-12">
+      <div class="bg-primary-50 rounded-xl border-2 border-primary-100 p-8 sm:col-span-2 flex flex-col sm:flex-row items-start gap-6">
+        <div class="w-14 h-14 rounded-2xl bg-primary-100 flex items-center justify-center shrink-0">
+          <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4.318 6.318a4.5 4.5 0 0 0 0 6.364L12 20.364l7.682-7.682a4.5 4.5 0 0 0-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 0 0-6.364 0Z"/>
           </svg>
         </div>
-        <h3 class="font-display text-lg font-bold text-neutral-900 mb-2"><%= t("landing.index.benefits.benefit1_title") %></h3>
-        <p class="text-sm text-neutral-600 leading-relaxed"><%= t("landing.index.benefits.benefit1_desc") %></p>
+        <div>
+          <h3 class="font-display text-xl font-bold text-neutral-900 mb-2 text-balance"><%= t("landing.index.benefits.benefit1_title") %></h3>
+          <p class="text-neutral-700 leading-relaxed text-pretty"><%= t("landing.index.benefits.benefit1_desc") %></p>
+        </div>
       </div>
 
-      <div class="bg-secondary-50 rounded-xl border border-secondary-100 p-6 sm:p-7">
-        <div class="w-12 h-12 rounded-2xl bg-secondary-100 flex items-center justify-center mb-5">
-          <svg class="w-6 h-6 text-secondary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <div class="bg-secondary-50 rounded-xl border-2 border-secondary-100 p-8">
+        <div class="w-14 h-14 rounded-2xl bg-secondary-100 flex items-center justify-center mb-5">
+          <svg class="w-7 h-7 text-secondary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="m12 3-1.9 5.8a2 2 0 0 1-1.287 1.288L3 12l5.8 1.9a2 2 0 0 1 1.288 1.287L12 21l1.9-5.8a2 2 0 0 1 1.287-1.288L21 12l-5.8-1.9a2 2 0 0 1-1.288-1.287Z"/>
           </svg>
         </div>
-        <h3 class="font-display text-lg font-bold text-neutral-900 mb-2"><%= t("landing.index.benefits.benefit2_title") %></h3>
-        <p class="text-sm text-neutral-600 leading-relaxed"><%= t("landing.index.benefits.benefit2_desc") %></p>
+        <h3 class="font-display text-xl font-bold text-neutral-900 mb-2 text-balance"><%= t("landing.index.benefits.benefit2_title") %></h3>
+        <p class="text-neutral-700 leading-relaxed text-pretty"><%= t("landing.index.benefits.benefit2_desc") %></p>
       </div>
 
-      <div class="bg-accent-yellow/15 rounded-xl border border-accent-yellow/30 p-6 sm:p-7">
-        <div class="w-12 h-12 rounded-2xl bg-accent-yellow/30 flex items-center justify-center mb-5">
-          <svg class="w-6 h-6 text-accent-yellow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <div class="bg-accent-yellow/15 rounded-xl border-2 border-accent-yellow/30 p-8">
+        <div class="w-14 h-14 rounded-2xl bg-accent-yellow/30 flex items-center justify-center mb-5">
+          <svg class="w-7 h-7 text-accent-yellow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 13h6"/><path d="M9 17h4"/>
           </svg>
         </div>
-        <h3 class="font-display text-lg font-bold text-neutral-900 mb-2"><%= t("landing.index.benefits.benefit3_title") %></h3>
-        <p class="text-sm text-neutral-600 leading-relaxed"><%= t("landing.index.benefits.benefit3_desc") %></p>
+        <h3 class="font-display text-xl font-bold text-neutral-900 mb-2 text-balance"><%= t("landing.index.benefits.benefit3_title") %></h3>
+        <p class="text-neutral-700 leading-relaxed text-pretty"><%= t("landing.index.benefits.benefit3_desc") %></p>
       </div>
 
-      <div class="bg-accent-pink/10 rounded-xl border border-accent-pink/25 p-6 sm:p-7">
-        <div class="w-12 h-12 rounded-2xl bg-accent-pink/15 flex items-center justify-center mb-5">
-          <svg class="w-6 h-6 text-accent-pink" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <div class="bg-accent-pink/10 rounded-xl border-2 border-accent-pink/25 p-8 sm:col-span-2 flex flex-col sm:flex-row items-start gap-6">
+        <div class="w-14 h-14 rounded-2xl bg-accent-pink/15 flex items-center justify-center shrink-0">
+          <svg class="w-7 h-7 text-accent-pink" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/>
           </svg>
         </div>
-        <h3 class="font-display text-lg font-bold text-neutral-900 mb-2"><%= t("landing.index.benefits.benefit4_title") %></h3>
-        <p class="text-sm text-neutral-600 leading-relaxed"><%= t("landing.index.benefits.benefit4_desc") %></p>
+        <div>
+          <h3 class="font-display text-xl font-bold text-neutral-900 mb-2 text-balance"><%= t("landing.index.benefits.benefit4_title") %></h3>
+          <p class="text-neutral-700 leading-relaxed text-pretty"><%= t("landing.index.benefits.benefit4_desc") %></p>
+        </div>
       </div>
     </div>
 
     <div class="text-center">
       <%= link_to new_registration_path(role: "individual"),
-          class: "inline-flex items-center gap-2 px-8 py-4 bg-primary-500 text-white font-bold text-base rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 active:scale-[0.97] transition-all duration-150 shadow-sm" do %>
+          class: "inline-flex items-center gap-2 px-8 py-4 bg-primary-500 text-white font-bold text-base rounded-xl border-2 border-primary-700 shadow-button-primary hover:bg-primary-600 hover:shadow-button-primary-hover active:shadow-button-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 active:scale-[0.97] transition-all duration-150" do %>
         <%= t("landing.index.benefits.cta") %>
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>

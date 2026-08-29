@@ -9,7 +9,15 @@ class Pet < ApplicationRecord
   has_many :adoption_applications, dependent: :restrict_with_error
   has_many :adoption_requests, dependent: :restrict_with_error
 
-  SPECIES = %w[dog cat other].freeze
+  SPECIES = %w[dog cat bird rabbit hamster other].freeze
+  SPECIES_EMOJI = {
+    "dog" => "🐶",
+    "cat" => "🐱",
+    "bird" => "🐦",
+    "rabbit" => "🐰",
+    "hamster" => "🐹",
+    "other" => "🐾"
+  }.freeze
   AGE_CATEGORIES = %w[baby young adult senior].freeze
   SIZES = %w[small medium large giant].freeze
   SEXES = %w[male female unknown].freeze
@@ -28,8 +36,11 @@ class Pet < ApplicationRecord
   validates :status, presence: true, inclusion: { in: STATUSES }
   validates :size, inclusion: { in: SIZES, allow_blank: true }
   validates :breed, length: { maximum: 100 }, allow_blank: true
+  validates :recommendation, length: { maximum: Pets::Recommendation::MAX_LENGTH }, allow_blank: true
   validate :must_have_shelter_or_publisher
+  validate :recommendation_content_appropriate
 
+  before_validation :sanitize_recommendation
   after_update :invalidate_life_preview_if_needed
 
   validate :birth_date_matches_age_category, if: -> { birth_date.present? && age_category.present? }
@@ -120,6 +131,19 @@ class Pet < ApplicationRecord
   end
 
   private
+
+  # The shelter/publisher-authored recommendation is untrusted input: strip it
+  # to plain text before it is stored so HTML/JS can never execute on display.
+  def sanitize_recommendation
+    self.recommendation = Pets::Recommendation.sanitize(recommendation)
+  end
+
+  def recommendation_content_appropriate
+    return if recommendation.blank?
+    return if Pets::Recommendation.appropriate?(recommendation)
+
+    errors.add(:recommendation, I18n.t("pets.errors.recommendation_inappropriate"))
+  end
 
   def must_have_shelter_or_publisher
     if shelter_id.blank? && publisher_id.blank?

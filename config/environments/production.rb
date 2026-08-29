@@ -20,6 +20,11 @@ Rails.application.configure do
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
+  #
+  # Serve Propshaft digests from a CDN/asset host when configured (e.g. a
+  # CloudFront distribution for /assets). Digests are immutable-safe; combine
+  # with `public, max-age=31536000, immutable` headers at the CDN.
+  config.asset_host = ENV["ASSET_HOST"] if ENV["ASSET_HOST"].present?
 
   # Store uploaded files on Amazon S3 (see config/storage.yml).
   config.active_storage.service = :amazon

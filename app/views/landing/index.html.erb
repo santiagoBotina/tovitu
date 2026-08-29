@@ -94,52 +94,65 @@
   <%= render "landing/featured_pets" %>
 
   <%# ── How It Works ── %>
-  <section class="bg-white px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
+  <%# A playground journey: oversized Baloo 2 numerals as texture, thick
+      borders + hard offset shadows (Playground Standard), a bold teal track
+      connecting the steps, and a saturated purple "destination" card for
+      Adopt. The numbers earn their place — this is a real sequence. %>
+  <section id="how-it-works" class="bg-white px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
     <div class="max-w-7xl mx-auto">
       <div class="text-center max-w-2xl mx-auto mb-16">
         <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 mb-4 text-balance">
           <%= t("landing.index.how_it_works.title") %>
         </h2>
-        <p class="text-lg text-neutral-600 leading-relaxed">
+        <p class="text-lg text-neutral-700 leading-relaxed text-pretty">
           <%= t("landing.index.how_it_works.subtitle") %>
         </p>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-12 md:gap-8 relative">
-        <div class="hidden md:block absolute top-10 left-[calc(16.67%+2rem)] right-[calc(16.67%+2rem)] h-0.5 bg-secondary-200"></div>
+      <div class="grid md:grid-cols-3 gap-8 lg:gap-10 relative">
+        <div class="hidden md:block absolute top-14 left-[calc(16.67%+2rem)] right-[calc(16.67%+2rem)] h-1.5 bg-secondary-500 rounded-full" aria-hidden="true"></div>
 
-        <div class="text-center relative">
-          <div class="w-14 h-14 rounded-full bg-secondary-500 flex items-center justify-center mx-auto mb-6 relative z-10 shadow-md">
-            <span class="text-white font-display font-bold text-xl">1</span>
+        <div class="relative z-10 bg-white rounded-xl border-2 border-primary-200 p-8 shadow-button-primary">
+          <span aria-hidden="true" class="absolute top-2 right-4 font-display text-7xl font-extrabold leading-none text-primary-100 select-none pointer-events-none">1</span>
+          <div class="w-12 h-12 rounded-xl bg-primary-500 flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
           </div>
-          <h3 class="font-display text-xl font-semibold text-neutral-900 mb-3">
+          <h3 class="font-display text-xl font-bold text-neutral-900 mb-2 text-balance">
             <%= t("landing.index.how_it_works.step1_title") %>
           </h3>
-          <p class="text-neutral-600 leading-relaxed max-w-xs mx-auto">
+          <p class="text-neutral-700 leading-relaxed text-pretty">
             <%= t("landing.index.how_it_works.step1_desc") %>
           </p>
         </div>
 
-        <div class="text-center relative">
-          <div class="w-14 h-14 rounded-full bg-secondary-500 flex items-center justify-center mx-auto mb-6 relative z-10 shadow-md">
-            <span class="text-white font-display font-bold text-xl">2</span>
+        <div class="relative z-10 bg-white rounded-xl border-2 border-secondary-300 p-8 shadow-button-secondary">
+          <span aria-hidden="true" class="absolute top-2 right-4 font-display text-7xl font-extrabold leading-none text-secondary-100 select-none pointer-events-none">2</span>
+          <div class="w-12 h-12 rounded-xl bg-secondary-500 flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"/>
+            </svg>
           </div>
-          <h3 class="font-display text-xl font-semibold text-neutral-900 mb-3">
+          <h3 class="font-display text-xl font-bold text-neutral-900 mb-2 text-balance">
             <%= t("landing.index.how_it_works.step2_title") %>
           </h3>
-          <p class="text-neutral-600 leading-relaxed max-w-xs mx-auto">
+          <p class="text-neutral-700 leading-relaxed text-pretty">
             <%= t("landing.index.how_it_works.step2_desc") %>
           </p>
         </div>
 
-        <div class="text-center relative">
-          <div class="w-14 h-14 rounded-full bg-secondary-500 flex items-center justify-center mx-auto mb-6 relative z-10 shadow-md">
-            <span class="text-white font-display font-bold text-xl">3</span>
+        <div class="relative z-10 bg-primary-500 rounded-xl border-2 border-primary-700 p-8 shadow-button-primary">
+          <span aria-hidden="true" class="absolute top-2 right-4 font-display text-7xl font-extrabold leading-none text-white/10 select-none pointer-events-none">3</span>
+          <div class="w-12 h-12 rounded-xl bg-white flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4.318 6.318a4.5 4.5 0 0 0 0 6.364L12 20.364l7.682-7.682a4.5 4.5 0 0 0-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 0 0-6.364 0Z"/>
+            </svg>
           </div>
-          <h3 class="font-display text-xl font-semibold text-neutral-900 mb-3">
+          <h3 class="font-display text-xl font-bold text-white mb-2 text-balance">
             <%= t("landing.index.how_it_works.step3_title") %>
           </h3>
-          <p class="text-neutral-600 leading-relaxed max-w-xs mx-auto">
+          <p class="text-primary-50 leading-relaxed text-pretty">
             <%= t("landing.index.how_it_works.step3_desc") %>
           </p>
         </div>
@@ -157,79 +170,149 @@
   <%= render "landing/benefits" %>
 
   <%# ── For Shelters ── %>
-  <section class="bg-primary-50 px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
+  <%# A deliberate bento: one large AI-match card, a request-inbox card with a
+      real card body + miniature UI mock, a team card, and a wide analytics
+      card. Each feature gets exactly one accent. The mini UIs are decorative
+      (aria-hidden) — shapes only, no fabricated data claims. %>
+  <section id="for-shelters" class="bg-primary-50 px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
     <div class="max-w-7xl mx-auto">
       <div class="text-center max-w-2xl mx-auto mb-16">
         <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 mb-4 text-balance">
           <%= t("landing.index.for_shelters.title") %>
         </h2>
-        <p class="text-lg text-neutral-600 leading-relaxed">
+        <p class="text-lg text-neutral-700 leading-relaxed text-pretty">
           <%= t("landing.index.for_shelters.subtitle") %>
         </p>
       </div>
 
-      <div class="max-w-4xl mx-auto space-y-8 sm:space-y-10">
-        <div class="bg-white rounded-xl shadow-sm border border-secondary-200 p-6 sm:p-8 flex flex-col sm:flex-row items-start gap-5">
-          <div class="w-12 h-12 rounded-xl bg-secondary-500 flex items-center justify-center shrink-0">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
-            </svg>
-          </div>
-          <div class="flex-1">
-            <h3 class="font-display text-xl font-bold text-neutral-900 mb-1.5">
-              <%= t("landing.index.for_shelters.feature1_title") %>
-            </h3>
-            <p class="text-neutral-600 leading-relaxed">
-              <%= t("landing.index.for_shelters.feature1_desc") %>
-            </p>
-          </div>
-        </div>
-
-        <div class="grid sm:grid-cols-2 gap-8 sm:gap-10">
-          <div class="bg-primary-50 rounded-xl p-6 text-center">
-            <div class="w-12 h-12 rounded-xl bg-primary-200 flex items-center justify-center mx-auto mb-4">
-              <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-              </svg>
-            </div>
-            <h3 class="font-display text-lg font-semibold text-neutral-900 mb-2">
-              <%= t("landing.index.for_shelters.feature2_title") %>
-            </h3>
-            <p class="text-neutral-600 leading-relaxed text-sm">
-              <%= t("landing.index.for_shelters.feature2_desc") %>
-            </p>
-          </div>
-
-          <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 flex flex-col items-start gap-4">
-            <div class="w-10 h-10 rounded-lg bg-secondary-100 flex items-center justify-center">
-              <svg class="w-5 h-5 text-secondary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.173-.786-3.057M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <%# feature1: AI-Powered Matching (large) %>
+        <div class="bg-white rounded-xl border-2 border-primary-200 shadow-sm p-8 sm:col-span-2">
+          <div class="flex flex-col sm:flex-row items-start gap-5">
+            <div class="w-12 h-12 rounded-xl bg-primary-500 flex items-center justify-center shrink-0">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"/>
               </svg>
             </div>
             <div>
-              <h3 class="font-display text-lg font-semibold text-neutral-900 mb-1.5">
-                <%= t("landing.index.for_shelters.feature3_title") %>
+              <h3 class="font-display text-xl font-bold text-neutral-900 mb-2 text-balance">
+                <%= t("landing.index.for_shelters.feature1_title") %>
               </h3>
-              <p class="text-neutral-600 leading-relaxed text-sm">
-                <%= t("landing.index.for_shelters.feature3_desc") %>
+              <p class="text-neutral-700 leading-relaxed text-pretty">
+                <%= t("landing.index.for_shelters.feature1_desc") %>
               </p>
+            </div>
+          </div>
+          <%# Decorative match visual: adopter ↔ pet, connected by a fit badge. %>
+          <div aria-hidden="true" class="mt-6 rounded-xl bg-primary-50 border border-primary-100 p-5">
+            <div class="flex items-center justify-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-primary-200 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+              <div class="flex-1 relative h-0.5 bg-primary-200">
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="w-8 h-8 rounded-full bg-secondary-500 border-2 border-white flex items-center justify-center shadow-sm">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4.318 6.318a4.5 4.5 0 0 0 0 6.364L12 20.364l7.682-7.682a4.5 4.5 0 0 0-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 0 0-6.364 0Z"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="w-10 h-10 rounded-full bg-secondary-200 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-secondary-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20z"/>
+                </svg>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
-          <div class="w-14 h-14 rounded-full bg-secondary-500 flex items-center justify-center shrink-0">
-            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+        <%# feature2: Application Management (real card body + request-inbox mock) %>
+        <div class="bg-white rounded-xl border-2 border-secondary-200 shadow-sm p-8">
+          <div class="w-12 h-12 rounded-xl bg-secondary-500 flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
             </svg>
           </div>
-          <div class="flex-1">
-            <h3 class="font-display text-xl font-bold text-neutral-900 mb-1.5">
-              <%= t("landing.index.for_shelters.feature4_title") %>
-            </h3>
-            <p class="text-neutral-600 leading-relaxed">
-              <%= t("landing.index.for_shelters.feature4_desc") %>
-            </p>
+          <h3 class="font-display text-xl font-bold text-neutral-900 mb-2 text-balance">
+            <%= t("landing.index.for_shelters.feature2_title") %>
+          </h3>
+          <p class="text-neutral-700 leading-relaxed text-pretty">
+            <%= t("landing.index.for_shelters.feature2_desc") %>
+          </p>
+          <%# Decorative request-inbox mock: applicant rows with status dots. %>
+          <div aria-hidden="true" class="mt-6 rounded-xl bg-secondary-50 border border-secondary-100 p-4 space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-secondary-200 shrink-0"></div>
+              <div class="flex-1 space-y-1.5">
+                <div class="h-2 w-3/4 rounded-full bg-secondary-200"></div>
+                <div class="h-2 w-1/2 rounded-full bg-secondary-100"></div>
+              </div>
+              <span class="w-2.5 h-2.5 rounded-full bg-warning shrink-0"></span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-secondary-200 shrink-0"></div>
+              <div class="flex-1 space-y-1.5">
+                <div class="h-2 w-2/3 rounded-full bg-secondary-200"></div>
+                <div class="h-2 w-1/3 rounded-full bg-secondary-100"></div>
+              </div>
+              <span class="w-2.5 h-2.5 rounded-full bg-secondary-500 shrink-0"></span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-secondary-200 shrink-0"></div>
+              <div class="flex-1 space-y-1.5">
+                <div class="h-2 w-3/4 rounded-full bg-secondary-200"></div>
+                <div class="h-2 w-1/2 rounded-full bg-secondary-100"></div>
+              </div>
+              <span class="w-2.5 h-2.5 rounded-full bg-primary-400 shrink-0"></span>
+            </div>
+          </div>
+        </div>
+
+        <%# feature3: Team Collaboration %>
+        <div class="bg-white rounded-xl border-2 border-accent-yellow/40 shadow-sm p-8">
+          <div class="w-12 h-12 rounded-xl bg-accent-yellow flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-neutral-900" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.173-.786-3.057M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
+            </svg>
+          </div>
+          <h3 class="font-display text-xl font-bold text-neutral-900 mb-2 text-balance">
+            <%= t("landing.index.for_shelters.feature3_title") %>
+          </h3>
+          <p class="text-neutral-700 leading-relaxed text-pretty">
+            <%= t("landing.index.for_shelters.feature3_desc") %>
+          </p>
+        </div>
+
+        <%# feature4: Success Analytics (wide) %>
+        <div class="bg-white rounded-xl border-2 border-accent-pink/30 shadow-sm p-8 sm:col-span-2">
+          <div class="flex flex-col sm:flex-row items-start gap-5">
+            <div class="w-12 h-12 rounded-xl bg-accent-pink flex items-center justify-center shrink-0">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-display text-xl font-bold text-neutral-900 mb-2 text-balance">
+                <%= t("landing.index.for_shelters.feature4_title") %>
+              </h3>
+              <p class="text-neutral-700 leading-relaxed text-pretty">
+                <%= t("landing.index.for_shelters.feature4_desc") %>
+              </p>
+            </div>
+          </div>
+          <%# Decorative analytics mock: rounded bars trending up. %>
+          <div aria-hidden="true" class="mt-6 rounded-xl bg-accent-pink/5 border border-accent-pink/20 p-5">
+            <div class="flex items-end justify-between gap-2 h-20">
+              <div class="w-6 rounded-t-lg bg-primary-200 h-8"></div>
+              <div class="w-6 rounded-t-lg bg-primary-300 h-12"></div>
+              <div class="w-6 rounded-t-lg bg-primary-400 h-10"></div>
+              <div class="w-6 rounded-t-lg bg-secondary-400 h-16"></div>
+              <div class="w-6 rounded-t-lg bg-secondary-500 h-14"></div>
+              <div class="w-6 rounded-t-lg bg-accent-pink h-20"></div>
+            </div>
           </div>
         </div>
       </div>

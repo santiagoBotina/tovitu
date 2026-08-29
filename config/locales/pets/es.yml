@@ -3,6 +3,9 @@ es:
     species:
       dog: Perro
       cat: Gato
+      bird: Ave
+      rabbit: Conejo
+      hamster: Hámster
       other: Otro
 
     age_categories:
@@ -54,6 +57,7 @@ es:
       status: Estado
       photos: Fotos
       adopted_at: Fecha de adopción
+      recommendation: Recomendación
 
     errors:
       no_photos: Se requiere al menos una foto
@@ -61,6 +65,7 @@ es:
       adopted_at_required: Debe establecerse al marcar una mascota como adoptada
       birth_date_mismatch: La fecha de nacimiento no coincide con la categoría de edad seleccionada (%{category})
       invalid_transition: No se puede cambiar el estado de '%{from}' a '%{to}'
+      recommendation_inappropriate: Este texto contiene lenguaje que no es apropiado para un perfil público de mascota. Por favor, reformula tu recomendación.
 
       photos:
         invalid_type: La foto debe ser JPEG, PNG o WebP
@@ -68,6 +73,9 @@ es:
         max_count: Esta mascota ya tiene el máximo de 10 fotos
         not_found: Foto no encontrada
         invalid_order: El orden de las fotos no coincide con las fotos existentes
+        no_files: Elige al menos una foto para subir
+        url_invalid: Eso no parece una URL de imagen válida.
+        url_unreachable: No pudimos cargar esa URL. Revisa el enlace e inténtalo de nuevo.
 
       bulk:
         no_ids: No se seleccionaron mascotas
@@ -80,6 +88,8 @@ es:
       destroyed: La mascota fue eliminada exitosamente.
       status_changed: Estado de la mascota cambiado a '%{status}'.
       photos_attached: Foto adjuntada exitosamente.
+      photos_attached_partial: Algunas fotos no se pudieron adjuntar — mira los mensajes a continuación.
+      primary_set: Foto principal actualizada.
       photo_detached: Foto eliminada exitosamente.
       photos_reordered: Fotos reordenadas exitosamente.
       bulk_updated: "%{count} mascota(s) fueron actualizadas."
@@ -122,6 +132,25 @@ es:
         clear: Limpiar
         clear_all: Limpiar todos los filtros
 
+      natural_language:
+        label: Describe a tu compañero ideal
+        eyebrow: Búsqueda Natural
+        placeholder: "Describe a tu compañero ideal… ej. un perro tranquilo para departamento"
+        example: "ej. un perro tranquilo para departamento"
+        submit: Encuentra mi match
+        loading: Buscando mascotas que encajen con tu vida…
+        understood_title: "Tovitu entendió:"
+        search_title: "Resultados para tu descripción"
+        results_description: "Ordenados según qué tan bien coinciden con lo que describiste."
+        reasons_title: Por qué coincide
+        match_keyword: "coincide: %{keyword}"
+        empty_title: Ninguna mascota coincidió con tu descripción
+        empty_body: Intenta reformular con otra especie, tamaño o temperamento — o explora todas las mascotas disponibles abajo.
+        browse_all: Explorar todas las mascotas
+        invalid_title: No pudimos leer esa descripción
+        invalid_body: Intenta una frase más corta como "un perro pequeño y tranquilo" o "un conejo para un hogar silencioso".
+        clear: Limpiar descripción
+
     show:
       photo_alt: "%{name} foto %{index}"
       back_to_pets: Volver a todas las mascotas
@@ -138,19 +167,39 @@ es:
       good_with_children: Bueno con niños
       good_with_dogs: Bueno con perros
       good_with_cats: Bueno con gatos
+      compatibility_personality: Personalidad
+      compatibility_ideal_home: Hogar Ideal
+      compatibility_fit_apartment: Ideal para departamento
+      compatibility_fit_spacious: Necesita espacio para moverse
+      compatibility_fit_kids: Excelente con niños
+      compatibility_fit_dogs: Se lleva bien con otros perros
+      compatibility_fit_cats: Se lleva bien con gatos
       health: Salud y Cuidado
       spayed_neutered: Esterilizado/Castrado
       vaccinated: Vacunado
       special_needs: Necesidades especiales
       shelter: Refugio
+      listed_by: "Publicado por"
+      individual_publisher_hint: "Una persona particular está ayudando a esta mascota a encontrar un nuevo hogar."
       apply_title: ¿Listo para adoptar?
-      apply_body: Inicia tu solicitud de adopción y dale a esta mascota un hogar amoroso.
+      apply_body: Inicia tu solicitud de adopción y dale a esta mascota un hogar lleno de amor.
       apply_to_adopt: Solicitar Adopción
+      adoption_process_title: El Proceso de Adopción
+      adoption_process_body: "Lo que sucede después de solicitar a %{name}."
+      adoption_step_apply: Solicitud
+      adoption_step_apply_body: "Envía tu solicitud y cuéntale al refugio sobre ti."
+      adoption_step_review: Revisión
+      adoption_step_review_body: "El refugio revisa tu perfil para confirmar la compatibilidad."
+      adoption_step_meet: Conócelo
+      adoption_step_meet_body: "Conoce a %{name} en persona junto al equipo del refugio."
+      adoption_step_home: Bienvenido a Casa
+      adoption_step_home_body: "Completa el papeleo y comienza su vida juntos."
       save_title: Favoritos
       save_body: Guarda esta mascota en tu lista — te estará esperando en tus favoritos.
       save_to_favorites: Guardar en favoritos
       saved: Guardado
       life_preview_title: "Vida con %{name}"
+      life_preview_badge: "Vista previa de vida con IA"
       life_preview_description: "Su futuro juntos, planificado semana a semana"
       life_preview_plan: Plan Semanal
       life_preview_week_count:
@@ -158,8 +207,26 @@ es:
         other: "%{count} semanas"
       life_preview_itinerary: Itinerario Diario
       life_preview_tips: Consejos de Preparación
+      life_preview_tip_categories:
+        home_preparation: "Preparación del hogar"
+        supplies: Suministros
+        family_preparation: "Preparación familiar"
+        lifestyle_adjustments: "Ajustes de estilo de vida"
+        training_resources: "Recursos de entrenamiento"
+        feeding: "Alimentación y nutrición"
+        health: "Salud y cuidado veterinario"
+        safety: Seguridad
+        bonding: "Vínculo y cuidado"
       life_preview_disclaimer: Este contenido fue generado por IA y puede no ser 100%% preciso. Siempre consulta con el personal del refugio.
       life_preview_loading: Generando vista previa...
+      life_preview_loader_messages:
+        - "Imaginando una vida con %{name}..."
+        - "Comparando tu perfil con el de %{name}..."
+        - "Preparando un plan semana a semana..."
+        - "Creando una rutina diaria para %{name}..."
+        - "Reuniendo consejos de preparación..."
+        - "Ya casi..."
+      life_preview_loader_timeout: "Esto está tomando más de lo esperado — recarga la página para intentarlo de nuevo."
       life_preview_error: No pudimos generar una vista previa de vida en este momento.
       life_preview_retry: Intentar de nuevo
       life_preview_unavailable: Vista previa no disponible
@@ -169,6 +236,10 @@ es:
       exercise_needs: Necesidades de Ejercicio
       grooming: Aseo
       vet_schedule: Calendario Veterinario
+      recommendation_aria: "Lo que las personas a cargo de %{name} dicen sobre él o ella"
+      recommendation_shelter_title: "Esto nos dice el refugio sobre %{name}"
+      recommendation_individual_title: "Esto nos dice %{publisher} sobre %{name}"
+      recommendation_written_by: "Escrito por %{author}"
 
   shelter:
     pets:
@@ -176,6 +247,7 @@ es:
         title: Mis Mascotas
         subtitle: Cada mascota que gestiona tu refugio. Publica nuevas mascotas y mantén los perfiles al día.
         add_pet: Agregar Mascota
+        import_pets: Importar Mascotas
         all: Todas
         empty_title: Aún no hay mascotas
         empty_body: Comienza agregando tu primera mascota al refugio.
@@ -201,6 +273,7 @@ es:
         edit: Editar
         delete: Eliminar
         delete_confirm: "¿Estás seguro de que quieres eliminar permanentemente a %{name}?"
+        manage_media: Gestionar Media
         change_status: Cambiar Estado
         photos: Fotos
         add_photo: Agregar Foto
@@ -235,6 +308,9 @@ es:
         compatibility: Compatibilidad
         requirements: Requisitos del Hogar
         photos: Fotos
+        recommendation: Recomendación
+        recommendation_placeholder: "¿Por qué podría ser esta mascota una buena pareja para un adoptante? Aparece en su perfil público."
+        recommendation_hint: "Tus palabras aparecen en el perfil de la mascota como \"Esto nos dice el refugio sobre %{name}\". Solo texto plano."
         select: Seleccionar...
         personality_placeholder: ej. Amigable, Juguetón, Tímido, Energético
         personality_hint: Separa los rasgos con comas
@@ -247,6 +323,99 @@ es:
         photos_hint: Puedes seleccionar múltiples fotos. Máximo 10 fotos. Solo JPEG, PNG o WebP.
         cancel: Cancelar
         submit: Guardar Mascota
+
+      media:
+        back_to_pet: Volver a la Mascota
+        view_pet: Ver Mascota
+        add_title: Agregar Fotos
+        add_body: Agrega fotos desde tu computadora o por URL. La primera foto es la foto de perfil de la mascota.
+        upload_label: Desde tu computadora
+        upload_hint: Haz clic para elegir una o más imágenes
+        upload_limits: JPEG, PNG o WebP · Máx. 10 fotos
+        selected_count: "%{count} foto(s) seleccionada(s)"
+        url_label: Desde una URL
+        url_placeholder: https://ejemplo.com/foto.jpg
+        url_submit: Agregar Foto
+
+      media_grid:
+        photos_title: "%{count} Fotos"
+        photo_alt: "%{name} foto %{index}"
+        primary_badge: Principal
+        set_primary: Establecer como principal
+        move_up: Subir
+        move_down: Bajar
+        delete: Eliminar
+        delete_confirm: "¿Estás seguro de que quieres eliminar esta foto?"
+        ordering_hint: Usa las flechas para reordenar. La primera foto es la foto de perfil de la mascota.
+        empty_title: Aún no hay fotos
+        empty_body: Agrega fotos para que el perfil de esta mascota sea atractivo para los adoptantes.
+        empty_hint: Puedes agregarlas desde tu computadora o por URL.
+
+    pet_imports:
+      status:
+        pending: Importando
+        processing: Importando
+        completed: Completado
+        failed: Fallido
+      summary:
+        line: "%{imported} importadas · %{duplicates} duplicadas · %{errors} errores"
+      progress:
+        importing_title: Importando tus mascotas…
+        importing_body: Esto sucede en segundo plano — puedes dejar esta página y volver más tarde.
+        failed_title: No pudimos procesar este archivo
+        failed_body: Corrige el archivo e intenta importarlo de nuevo.
+      errors:
+        format: Ese tipo de archivo no es compatible. Sube un archivo CSV o Excel (.xlsx).
+        file_required: Elige un archivo CSV o Excel para subir.
+        empty_file: Ese archivo parece estar vacío. Descarga la plantilla e inténtalo de nuevo.
+        missing_columns: "A este archivo le faltan columna(s) requerida(s): %{columns}. Descarga la plantilla para ver las columnas esperadas."
+        required_missing: es obligatoria
+        invalid_value: "no es válido. Usa uno de: %{allowed}"
+        invalid_boolean: debe ser Sí o No
+        invalid_date: debe ser una fecha (ej. 2024-01-15)
+        invalid_column: tiene un valor no válido
+        file_missing: No se pudo leer el archivo subido. Intenta subirlo de nuevo.
+      notices:
+        started: Tu importación ha comenzado. Verás los resultados aquí en breve.
+      index:
+        title: Importaciones de Mascotas
+        subtitle: Sube una hoja de cálculo para crear muchas mascotas a la vez.
+        new_import: Importar Mascotas
+        imported_on: "Importado %{date}"
+        count: "%{imported} de %{total} importadas"
+        empty_title: Aún no hay importaciones
+        empty_body: Importa muchas mascotas a la vez subiendo un archivo CSV o Excel.
+      new:
+        title: Importar Mascotas
+        subtitle: Crea muchas mascotas desde una sola hoja de cálculo.
+        back: Volver a Mis Mascotas
+        template_title: Empieza con la plantilla
+        template_body: La plantilla lista cada columna que Tovitu entiende, con una fila de ejemplo. Las columnas obligatorias son Nombre, Especie, Edad y Sexo.
+        download_template: Descargar plantilla
+        format_hint: CSV o Excel (.xlsx)
+        required_note: "Columnas obligatorias: %{columns}"
+        required_columns: Nombre, Especie, Edad, Sexo
+        upload_title: Sube tu archivo
+        upload_body: Llena la plantilla y súbela aquí. Validaremos cada fila y solo crearemos las mascotas que estén correctas.
+        file_label: Archivo de hoja de cálculo
+        privacy_note: En esta versión no importamos fotos — las agregarás en la sección de Media de la mascota.
+        submit: Iniciar Importación
+        submitting: Importando…
+      show:
+        back: Volver a Importaciones
+        subtitle: "Importado %{date}"
+      summary:
+        title: Resultados de la Importación
+        import_more: Importar Más
+        view_pets: Ver Mis Mascotas
+        errors_title: Filas con Errores
+        errors_hint: Corrige estas filas en tu archivo e importa de nuevo — las demás mascotas ya fueron creadas.
+        duplicates_title: Duplicadas Omitidas
+        duplicates_body: Estas filas coinciden con una mascota que ya está en tu refugio, así que no se importaron dos veces.
+        imported_title: Mascotas Creadas
+        imported_body: Estas mascotas fueron creadas y ahora aparecen en tu lista de mascotas.
+        row: "Fila %{number}"
+      unknown_name: "(sin nombre)"
 
   my:
     pets:
@@ -270,6 +439,9 @@ es:
         size_placeholder: "Seleccionar tamaño"
         sex_label: "Sexo"
         description_label: "Descripción"
+        recommendation_label: "Recomendación (opcional)"
+        recommendation_placeholder: "¿Por qué podría ser esta mascota una buena pareja para un adoptante? Aparece en el perfil público."
+        recommendation_hint: "Esto aparece en el perfil de la mascota como lo que tú dices sobre ella. Solo texto plano."
         photos_label: "Fotos"
         photos_hint: "JPEG, PNG o WebP. Máximo 10 fotos."
         submit: "Publicar Mascota"
@@ -284,7 +456,7 @@ es:
         size: "Tamaño"
         sex: "Sexo"
         status: "Estado"
-        incoming_requests: "Solicitudes de Adopción Entrantes"
+        incoming_requests: "Solicitudes para esta mascota"
         submitted: "Enviada hace %{time}"
         review: "Revisar"
         change_status: "Cambiar Estado"
@@ -301,6 +473,9 @@ es:
         size_placeholder: "Seleccionar tamaño"
         sex_label: "Sexo"
         description_label: "Descripción"
+        recommendation_label: "Recomendación (opcional)"
+        recommendation_placeholder: "¿Por qué podría ser esta mascota una buena pareja para un adoptante? Aparece en el perfil público."
+        recommendation_hint: "Esto aparece en el perfil de la mascota como lo que tú dices sobre ella. Solo texto plano."
         submit: "Guardar Cambios"
         cancel: "Cancelar"
 

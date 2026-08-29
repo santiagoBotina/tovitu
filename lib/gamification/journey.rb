@@ -133,6 +133,34 @@ module Gamification
       end
     end
 
+    # The dashboard journey card adapts to where the user is. The variant
+    # drives the explanation sentence, the achieved-milestones summary, and the
+    # single primary CTA (all presentation-only — never points/levels/boards).
+    def card_variant
+      return :active_applicant if active_request_count.positive?
+      return :fresh if !onboarding_complete? && saved_pet_count.zero? && request_count.zero?
+
+      :mid_journey
+    end
+
+    # i18n key suffix for the journey-card CTA label.
+    def card_cta_key
+      case card_variant
+      when :fresh           then :complete_profile
+      when :active_applicant then :see_requests
+      else :browse_pets
+      end
+    end
+
+    # Route helper name for the journey-card CTA (resolved by the view).
+    def card_cta_path
+      case card_variant
+      when :fresh           then :profile_onboarding_path
+      when :active_applicant then :adoption_requests_path
+      else :pets_path
+      end
+    end
+
     # The single most important missing action, used by the onboarding nudge.
     # Returns an i18n key + the path to the completion step.
     #

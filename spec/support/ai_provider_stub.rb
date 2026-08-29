@@ -26,6 +26,36 @@ module AiProviderStub
       "confidence" => "medium"
     }
   end
+  def default_search_intent_response
+    {
+      "species" => [ "dog" ],
+      "size" => [ "small" ],
+      "age_category" => [],
+      "sex" => [],
+      "temperament" => [ "calm" ],
+      "living_situation" => [ "apartment" ],
+      "energy_level" => [ "low" ],
+      "keywords" => [ "calm dog", "apartment" ],
+      "understood" => [ "A calm dog", "Apartment-friendly" ],
+      "valid" => true
+    }
+  end
+
+  def default_invalid_search_intent_response
+    {
+      "species" => [],
+      "size" => [],
+      "age_category" => [],
+      "sex" => [],
+      "temperament" => [],
+      "living_situation" => [],
+      "energy_level" => [],
+      "keywords" => [],
+      "understood" => [],
+      "valid" => false
+    }
+  end
+
   def default_preview_response
     {
       "plan" => [

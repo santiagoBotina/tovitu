@@ -73,6 +73,202 @@ RSpec.describe "Pets" do
 
       expect(response.body).to include(I18n.t("pets.age_categories.senior", locale: :es))
     end
+
+    it "renders the natural language search field with a visible label and placeholder" do
+      get pets_path
+
+      expect(response.body).to include(I18n.t("pets.index.natural_language.label"))
+      expect(response.body).to include(I18n.t("pets.index.natural_language.placeholder"))
+      expect(response.body).to include(%(name="intent"))
+      expect(response.body).to include(I18n.t("pets.index.natural_language.submit"))
+    end
+
+    it "pre-fills the natural language field with the current intent" do
+      allow(Ai::Provider).to receive(:call).and_return(default_search_intent_response.to_json)
+      get pets_path, params: { intent: "un perro tranquilo para departamento" }
+
+      expect(response.body).to include(%(value="un perro tranquilo para departamento"))
+    end
+
+    it "renders the understood panel, results header, and reasons for a valid intent" do
+      allow(Ai::Provider).to receive(:call).and_return(default_search_intent_response.to_json)
+      calm = create(:pet, shelter: shelter, species: "dog", size: "small",
+                     personality_traits: [ "calm" ], description: "Great in an apartment")
+      create(:pet, shelter: shelter, species: "bird")
+
+      get pets_path, params: { intent: "un perro tranquilo para departamento" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("pets.index.natural_language.understood_title"))
+      expect(response.body).to include(I18n.t("pets.index.natural_language.search_title"))
+      expect(response.body).to include(calm.name)
+      expect(response.body).to include(I18n.t("pets.index.natural_language.reasons_title"))
+      expect(response.body).to include(I18n.t("pets.index.natural_language.match_keyword", keyword: "calm"))
+    end
+
+    it "excludes species the user did not describe" do
+      allow(Ai::Provider).to receive(:call).and_return(default_search_intent_response.to_json)
+      bird = create(:pet, shelter: shelter, species: "bird", created_at: 3.days.ago)
+      dog = create(:pet, shelter: shelter, species: "dog", size: "small",
+                   personality_traits: [ "calm" ], created_at: 1.day.ago)
+
+      get pets_path, params: { intent: "un perro tranquilo para departamento" }
+
+      expect(response.body).to include(dog.name)
+      expect(response.body).not_to include(bird.name)
+    end
+
+    it "renders the friendly invalid banner and plain browse for an unreadable phrase" do
+      allow(Ai::Provider).to receive(:call).and_return(default_invalid_search_intent_response.to_json)
+      visible = create(:pet, shelter: shelter, name: "Still Visible")
+      get pets_path, params: { intent: "asdfghjkl" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(CGI.escapeHTML(I18n.t("pets.index.natural_language.invalid_title")))
+      expect(response.body).to include(visible.name)
+      expect(response.body).not_to include(I18n.t("pets.index.natural_language.search_title"))
+    end
+
+    it "falls back to plain browse without crashing when the AI provider fails" do
+      allow(Ai::Provider).to receive(:call).and_raise(Ai::ProviderError, "boom")
+      create(:pet, shelter: shelter, name: "Graceful Pet")
+
+      get pets_path, params: { intent: "un perro tranquilo" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Graceful Pet")
+      expect(response.body).to include(CGI.escapeHTML(I18n.t("pets.index.natural_language.invalid_title")))
+    end
+
+    it "renders the distinct natural-language empty state when nothing ranks" do
+      allow(Ai::Provider).to receive(:call).and_return(default_search_intent_response.to_json)
+
+      get pets_path, params: { intent: "un conejo gigante de tres patas" }
+
+      expect(response.body).to include(I18n.t("pets.index.natural_language.empty_title"))
+      expect(response.body).to include(I18n.t("pets.index.natural_language.browse_all"))
+      expect(response.body).not_to include(I18n.t("pets.index.no_results"))
+    end
+
+    it "renders all six species filter chips" do
+      get pets_path
+
+      Pet::SPECIES.each do |species|
+        expect(response.body).to include(I18n.t("pets.species.#{species}"))
+      end
+    end
+
+    it "renders the species emoji next to the species label on pet cards" do
+      rabbit = create(:pet, shelter: shelter, species: "rabbit")
+      get pets_path
+
+      expect(response.body).to include(Pet::SPECIES_EMOJI["rabbit"])
+      expect(response.body).to include(I18n.t("pets.species.rabbit"))
+    end
+
+    it "renders legacy 'other' species pets without breaking" do
+      legacy = create(:pet, shelter: shelter, species: "other")
+      get pets_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(legacy.name)
+      expect(response.body).to include(Pet::SPECIES_EMOJI["other"])
+    end
+
+    it "combines a natural-language intent with structured filters (filters constrain, NL ranks)" do
+      allow(Ai::Provider).to receive(:call).and_return(default_search_intent_response.to_json)
+      dog = create(:pet, shelter: shelter, species: "dog", size: "small",
+                   personality_traits: [ "calm" ], description: "Great in an apartment")
+      other_dog = create(:pet, shelter: shelter, species: "dog", size: "large",
+                        personality_traits: [ "energetic" ])
+      cat = create(:pet, shelter: shelter, species: "cat", size: "small",
+                  personality_traits: [ "calm" ])
+
+      get pets_path, params: { intent: "un perro tranquilo para departamento", species: "dog" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(dog.name)
+      expect(response.body).to include(other_dog.name)
+      expect(response.body).not_to include(cat.name)
+      # The species-matching, size-matching dog ranks first within the constrained set.
+      expect(response.body.index(dog.name)).to be < response.body.index(other_dog.name)
+    end
+
+    it "escapes a malicious intent value echoed into the search field" do
+      allow(Ai::Provider).to receive(:call).and_return(default_invalid_search_intent_response.to_json)
+      get pets_path, params: { intent: %q{<script>alert(1)</script>" onfocus="alert(2)} }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("&lt;script&gt;alert(1)&lt;/script&gt;")
+      expect(response.body).not_to include("<script>alert(1)</script>")
+    end
+
+    it "treats a whitespace-only intent as plain browse without calling the AI provider" do
+      create(:pet, shelter: shelter, name: "Whitespace Pet")
+      expect(Ai::Provider).not_to receive(:call)
+
+      get pets_path, params: { intent: "   \n\t  " }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Whitespace Pet")
+      expect(response.body).not_to include(I18n.t("pets.index.natural_language.invalid_title"))
+    end
+
+    it "handles a very long intent phrase without crashing" do
+      allow(Ai::Provider).to receive(:call).and_return(default_search_intent_response.to_json)
+      dog = create(:pet, shelter: shelter, species: "dog", size: "small",
+                   personality_traits: [ "calm" ])
+      long_phrase = "quiero un perro tranquilo para departamento " * 30
+
+      get pets_path, params: { intent: long_phrase }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(dog.name)
+    end
+
+    it "paginates natural-language results in ranked order" do
+      allow(Ai::Provider).to receive(:call).and_return(default_search_intent_response.to_json)
+      best = create(:pet, shelter: shelter, species: "dog", size: "small",
+                    personality_traits: [ "calm" ], description: "Great in an apartment", name: "Best Match")
+      middle = create(:pet, shelter: shelter, species: "dog", size: "small",
+                     personality_traits: [ "calm" ], name: "Middle Match")
+      worst = create(:pet, shelter: shelter, species: "dog", size: "large",
+                    personality_traits: [ "energetic" ], name: "Worst Match")
+
+      get pets_path, params: { intent: "un perro tranquilo para departamento", per_page: 2 }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(best.name)
+      expect(response.body).to include(middle.name)
+      expect(response.body).not_to include(worst.name)
+    end
+
+    it "does not crash on abusive per_page values in natural-language search" do
+      allow(Ai::Provider).to receive(:call).and_return(default_search_intent_response.to_json)
+      create(:pet, shelter: shelter, species: "dog", size: "small", personality_traits: [ "calm" ])
+
+      [ "0", "-5", "abc", "999999" ].each do |per_page|
+        get pets_path, params: { intent: "un perro tranquilo", per_page: per_page }
+        expect(response).to have_http_status(:ok), "per_page=#{per_page} should not crash"
+      end
+    end
+
+    it "does not crash on abusive per_page values in plain browse" do
+      create(:pet, shelter: shelter, name: "Browse Pet")
+
+      [ "0", "-5", "abc", "999999" ].each do |per_page|
+        get pets_path, params: { per_page: per_page }
+        expect(response).to have_http_status(:ok), "per_page=#{per_page} should not crash"
+      end
+    end
+
+    it "preserves the intent param when a species filter chip is clicked" do
+      allow(Ai::Provider).to receive(:call).and_return(default_search_intent_response.to_json)
+      get pets_path, params: { intent: "un perro tranquilo" }
+
+      expect(response.body).to include(%(species=dog))
+      expect(response.body).to include(CGI.escape("un perro tranquilo"))
+    end
   end
 
   describe "GET /pets/:id" do

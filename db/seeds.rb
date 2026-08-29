@@ -12,7 +12,7 @@ happy_paws = Shelter.find_or_create_by!(name: "Happy Paws Rescue") do |s|
   s.phone = "503-555-0123"
   s.website = "https://happypawsrescue.org"
   s.description = "Happy Paws Rescue is a nonprofit dedicated to finding loving homes for dogs and cats in the Pacific Northwest. We provide medical care, foster placement, and adoption counseling to ensure every pet finds the right family."
-  s.species_served = [ "dog", "cat" ]
+  s.species_served = [ "dog", "cat", "bird", "rabbit" ]
   s.hours = "Mon-Fri 10-6, Sat 10-4, Sun 12-4"
   s.status = "active"
   s.adoption_policies = {
@@ -33,7 +33,7 @@ furry_friends = Shelter.find_or_create_by!(name: "Furry Friends Animal Shelter")
   s.phone = "512-555-0456"
   s.website = "https://furryfriendsaustin.org"
   s.description = "Furry Friends has been serving the Austin community for over 20 years. We specialize in dog adoption and rehabilitation, helping hundreds of dogs find their forever homes each year."
-  s.species_served = [ "dog" ]
+  s.species_served = [ "dog", "hamster", "other" ]
   s.hours = "Tue-Sat 9-5"
   s.status = "active"
   s.adoption_policies = {
@@ -295,6 +295,46 @@ pets_data = [
     requirements: "Experienced owner preferred. Must be only pet in the home. Strong fence required.",
     status: "on_hold"
   },
+  {
+    shelter: happy_paws,
+    name: "Kiwi",
+    species: "bird",
+    breed: "Cockatiel",
+    age_category: "adult",
+    birth_date: Date.new(2021, 5, 10),
+    size: "small",
+    sex: "male",
+    description: "Kiwi is a cheerful cockatiel who loves whistling tunes and chatting with his humans. He's hand-tamed, enjoys head scratches, and will happily perch on your shoulder while you go about your day.",
+    personality_traits: [ "friendly", "playful", "vocal", "curious" ],
+    medical_notes: "Vaccinated. Wing feathers clipped for safety during the transition to his new home.",
+    spayed_neutered: false,
+    vaccinated: true,
+    good_with_children: true,
+    good_with_dogs: false,
+    good_with_cats: false,
+    requirements: "Needs a quiet home without cats or dogs. Daily out-of-cage time and a spacious cage required.",
+    status: "available"
+  },
+  {
+    shelter: happy_paws,
+    name: "Clover",
+    species: "rabbit",
+    breed: "Holland Lop",
+    age_category: "young",
+    birth_date: Date.new(2025, 3, 1),
+    size: "small",
+    sex: "female",
+    description: "Clover is a soft, bouncy Holland Lop with the floppiest ears. She's litter trained, loves zoomies around the living room, and melts for banana treats. A wonderful first rabbit for a gentle home.",
+    personality_traits: [ "gentle", "curious", "playful", "affectionate" ],
+    medical_notes: "Spayed and fully vaccinated. Healthy and ready to hop home.",
+    spayed_neutered: true,
+    vaccinated: true,
+    good_with_children: true,
+    good_with_dogs: false,
+    good_with_cats: false,
+    requirements: "Needs a rabbit-proofed home with a secure enclosure and daily supervised exercise time.",
+    status: "available"
+  },
 
   # ── Furry Friends Animal Shelter (Austin, TX) ─────────────────
   {
@@ -417,6 +457,46 @@ pets_data = [
     good_with_cats: true,
     requirements: "Patient, quiet household. Adults-only recommended. Another calm dog in home would help his confidence.",
     status: "available"
+  },
+  {
+    shelter: furry_friends,
+    name: "Peanut",
+    species: "hamster",
+    breed: "Syrian Hamster",
+    age_category: "baby",
+    birth_date: Date.new(2026, 4, 20),
+    size: "small",
+    sex: "male",
+    description: "Peanut is a tiny ball of energy with a big appetite for sunflower seeds. He's most active in the evenings, loves his wheel, and builds impressive tunnels in his bedding. Easygoing and fun to watch.",
+    personality_traits: [ "curious", "playful", "independent", "gentle" ],
+    medical_notes: "Young and healthy. No medical concerns.",
+    spayed_neutered: false,
+    vaccinated: false,
+    good_with_children: true,
+    good_with_dogs: false,
+    good_with_cats: false,
+    requirements: "Needs a spacious enclosure with deep bedding for burrowing. Best as a solo pet in a calm household.",
+    status: "available"
+  },
+  {
+    shelter: furry_friends,
+    name: "Sunny",
+    species: "other",
+    breed: "Guinea Pig",
+    age_category: "adult",
+    birth_date: Date.new(2023, 6, 12),
+    size: "small",
+    sex: "female",
+    description: "Sunny is a sweet, talkative guinea pig who wheeks with excitement whenever she hears the fridge open. She loves fresh veggies, cozy hideouts, and gentle lap time. A low-maintenance companion for any home.",
+    personality_traits: [ "gentle", "vocal", "affectionate", "calm" ],
+    medical_notes: "Healthy. Eats a balanced diet of hay, pellets, and daily fresh vegetables.",
+    spayed_neutered: false,
+    vaccinated: false,
+    good_with_children: true,
+    good_with_dogs: false,
+    good_with_cats: false,
+    requirements: "Needs a large cage with plenty of space and a companion-friendly household. Fresh hay must always be available.",
+    status: "available"
   }
 
 ]
@@ -440,7 +520,11 @@ pet_image_urls = {
   %w[Coco]   => [ "https://placehold.co/600x600/d97706/ffffff.png?text=Coco" ],
   %w[Bear]   => [ "https://placehold.co/800x600/1f2937/ffffff.png?text=Bear+1", "https://placehold.co/800x600/374151/ffffff.png?text=Bear+2" ],
   %w[Molly]  => [ "https://placehold.co/600x600/f472b6/ffffff.png?text=Molly" ],
-  %w[Shadow] => [ "https://placehold.co/800x600/78716c/ffffff.png?text=Shadow" ]
+  %w[Shadow] => [ "https://placehold.co/800x600/78716c/ffffff.png?text=Shadow" ],
+  %w[Kiwi]   => [ "https://placehold.co/600x600/22c55e/ffffff.png?text=Kiwi" ],
+  %w[Clover] => [ "https://placehold.co/600x600/a855f7/ffffff.png?text=Clover" ],
+  %w[Peanut] => [ "https://placehold.co/600x600/f59e0b/ffffff.png?text=Peanut" ],
+  %w[Sunny]  => [ "https://placehold.co/600x600/84cc16/ffffff.png?text=Sunny" ]
 }
 
 Pet.find_each do |pet|

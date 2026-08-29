@@ -1,0 +1,53 @@
+<%# ─── Shelter Pet Import Upload Page ─── %>
+<div class="w-full max-w-2xl mx-auto">
+
+  <div class="mb-6 bento-enter bento-enter-d1">
+    <%= render "shared/back_link", path: safe_back_path(shelter_pet_imports_path), label: t(".back") %>
+  </div>
+
+  <div class="mb-6 bento-enter bento-enter-d1">
+    <%= render "shared/section_header",
+               title: t(".title"),
+               subtitle: t(".subtitle"),
+               header_class: "flex flex-col gap-1" %>
+  </div>
+
+  <%# ─── Template & guidance ─── %>
+  <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6 bento-enter bento-enter-d2">
+    <h2 class="font-display text-lg font-bold text-neutral-800 mb-2"><%= t(".template_title") %></h2>
+    <p class="text-sm text-neutral-600 leading-relaxed mb-4"><%= t(".template_body") %></p>
+    <div class="flex items-center gap-3">
+      <%= link_to template_shelter_pet_imports_path, class: "inline-flex items-center gap-2 bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 active:scale-[0.97]" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>
+        <%= t(".download_template") %>
+      <% end %>
+      <span class="text-xs text-neutral-500"><%= t(".format_hint") %></span>
+    </div>
+    <p class="mt-4 text-xs text-neutral-500"><%= t(".required_note", columns: t(".required_columns")) %></p>
+  </section>
+
+  <%# ─── Upload ─── %>
+  <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d3">
+    <h2 class="font-display text-lg font-bold text-neutral-800 mb-1"><%= t(".upload_title") %></h2>
+    <p class="text-sm text-neutral-600 mb-5"><%= t(".upload_body") %></p>
+
+    <% if flash[:alert] %>
+      <div class="mb-4 p-4 rounded-xl bg-danger/10 border border-danger/20 text-danger text-sm" role="alert">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+
+    <%= form_tag shelter_pet_imports_path, multipart: true, data: { turbo: false } do %>
+      <label class="block">
+        <span class="text-sm font-medium text-neutral-700 mb-2 block"><%= t(".file_label") %></span>
+        <%= file_field_tag "pet_import[file]", accept: ".csv,.xlsx", required: true, class: "block w-full text-sm text-neutral-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-secondary-50 file:text-secondary-700 hover:file:bg-secondary-100 cursor-pointer" %>
+      </label>
+      <p class="mt-2 text-xs text-neutral-500"><%= t(".privacy_note") %></p>
+      <div class="mt-5">
+        <%= submit_tag t(".submit"), class: "inline-flex items-center gap-2 bg-secondary-500 hover:bg-secondary-600 text-white px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 shadow-sm", data: { disable_with: t(".submitting") } %>
+      </div>
+    <% end %>
+  </section>
+</div>

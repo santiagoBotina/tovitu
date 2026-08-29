@@ -1,18 +1,20 @@
 <%# ── Adoption Process ── %>
-<%# A simple horizontal journey. Links point to real pages where they exist;
-    future steps stay visual only. %>
-<section class="bg-secondary-50 px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
+<%# A 5-step journey that gains color as it advances: quiet white cards for
+    Discover → Meet → Apply, then saturated teal for Adopt and deep teal for
+    Thrive. Bold arrow connectors, readable body copy (neutral-700+), strong
+    focus/hover states on the link steps. %>
+<section id="process" class="bg-secondary-50 px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
   <div class="max-w-7xl mx-auto">
     <div class="text-center max-w-2xl mx-auto mb-14">
       <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 mb-4 text-balance">
         <%= t("landing.index.process.title") %>
       </h2>
-      <p class="text-lg text-neutral-600 leading-relaxed">
+      <p class="text-lg text-neutral-700 leading-relaxed text-pretty">
         <%= t("landing.index.process.subtitle") %>
       </p>
     </div>
 
-    <ol class="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-4">
+    <ol class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 lg:gap-6">
       <% steps = [
            { key: "discover", url: pets_path },
            { key: "meet", url: pets_path },
@@ -21,22 +23,29 @@
            { key: "thrive", url: nil }
          ] %>
       <% steps.each_with_index do |step, idx| %>
-        <li class="relative">
+        <% number = idx + 1 %>
+        <li class="relative <%= number == 5 ? "sm:col-span-2 lg:col-span-1" : "" %>">
           <% if step[:url].present? %>
-            <%= link_to step[:url], class: "group block h-full bg-white rounded-xl border border-neutral-200 shadow-sm p-6 text-center hover:border-secondary-300 hover:shadow-md card-lift transition-all duration-200" do %>
-              <%= render_step_badge(idx + 1) %>
-              <h3 class="font-display text-lg font-bold text-neutral-900 group-hover:text-secondary-700 transition-colors mb-1"><%= t("landing.index.process.step_#{step[:key]}") %></h3>
-              <p class="text-sm text-neutral-500 leading-relaxed"><%= t("landing.index.process.#{step[:key]}_desc") %></p>
+            <%= link_to step[:url], class: "group block h-full bg-white rounded-xl border-2 border-neutral-200 shadow-sm p-6 text-center hover:border-secondary-400 hover:shadow-md card-lift transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2" do %>
+              <span aria-hidden="true" class="w-10 h-10 rounded-full bg-secondary-100 text-secondary-700 font-display font-bold text-base flex items-center justify-center mx-auto mb-4"><%= number %></span>
+              <h3 class="font-display text-lg font-bold text-neutral-900 group-hover:text-secondary-700 transition-colors mb-1.5 text-balance"><%= t("landing.index.process.step_#{step[:key]}") %></h3>
+              <p class="text-sm text-neutral-700 leading-relaxed text-pretty"><%= t("landing.index.process.#{step[:key]}_desc") %></p>
             <% end %>
+          <% elsif number == 4 %>
+            <div class="block h-full bg-secondary-700 rounded-xl border-2 border-secondary-800 shadow-button-secondary p-6 text-center">
+              <span aria-hidden="true" class="w-10 h-10 rounded-full bg-white text-secondary-700 font-display font-bold text-base flex items-center justify-center mx-auto mb-4"><%= number %></span>
+              <h3 class="font-display text-lg font-bold text-white mb-1.5 text-balance"><%= t("landing.index.process.step_#{step[:key]}") %></h3>
+              <p class="text-sm text-secondary-100 leading-relaxed text-pretty"><%= t("landing.index.process.#{step[:key]}_desc") %></p>
+            </div>
           <% else %>
-            <div class="block h-full bg-white rounded-xl border border-neutral-200 shadow-sm p-6 text-center">
-              <%= render_step_badge(idx + 1) %>
-              <h3 class="font-display text-lg font-bold text-neutral-900 mb-1"><%= t("landing.index.process.step_#{step[:key]}") %></h3>
-              <p class="text-sm text-neutral-500 leading-relaxed"><%= t("landing.index.process.#{step[:key]}_desc") %></p>
+            <div class="block h-full bg-secondary-800 rounded-xl border-2 border-secondary-900 shadow-button-secondary p-6 text-center">
+              <span aria-hidden="true" class="w-10 h-10 rounded-full bg-white text-secondary-800 font-display font-bold text-base flex items-center justify-center mx-auto mb-4"><%= number %></span>
+              <h3 class="font-display text-lg font-bold text-white mb-1.5 text-balance"><%= t("landing.index.process.step_#{step[:key]}") %></h3>
+              <p class="text-sm text-secondary-100 leading-relaxed text-pretty"><%= t("landing.index.process.#{step[:key]}_desc") %></p>
             </div>
           <% end %>
           <% if idx < steps.length - 1 %>
-            <svg class="hidden md:block absolute top-1/2 -right-4 -translate-y-1/2 w-3 h-3 text-secondary-300 z-10" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg class="hidden lg:block absolute top-1/2 -right-5 -translate-y-1/2 w-5 h-5 text-secondary-500 z-10" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           <% end %>

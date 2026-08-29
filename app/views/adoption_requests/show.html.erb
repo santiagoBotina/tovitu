@@ -29,7 +29,7 @@
           <div class="w-20 h-20 rounded-xl bg-neutral-100 overflow-hidden shrink-0 shadow-sm relative" data-controller="image-loader">
             <div data-image-loader-target="skeleton" class="absolute inset-0 rounded-xl img-skeleton" aria-hidden="true"></div>
             <% if @pet.primary_photo.present? %>
-              <%= image_tag @pet.primary_photo.variant(resize_to_limit: [400, 400]), alt: @pet.name, decoding: "async",
+              <%= image_tag @pet.primary_photo.variant(resize_to_limit: [400, 400]), alt: @pet.name, decoding: "async", width: 80, height: 80,
                     data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
                     class: "relative w-full h-full object-cover opacity-0 transition-opacity duration-500" %>
             <% else %>

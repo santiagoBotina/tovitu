@@ -7,6 +7,7 @@
 <div id="saved-pets-list" class="<%= presented_pets.any? ? "" : "hidden" %>">
   <% if presented_pets.any? %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <% lcp_emitted = false %>
       <% presented_pets.each_with_index do |pet, idx| %>
         <% delay = ((idx % 6) + 1).clamp(1, 8) %>
         <div data-favorite-card="<%= pet.id %>" class="relative bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md hover:border-primary-200 transition-all duration-200 overflow-hidden group card-lift bento-enter bento-enter-d#{delay}">
@@ -14,10 +15,19 @@
             <div class="aspect-[4/3] bg-neutral-100 overflow-hidden relative" data-controller="image-loader">
               <div data-image-loader-target="skeleton" class="absolute inset-0 img-skeleton" aria-hidden="true"></div>
               <% if pet.primary_photo.present? %>
-                <%= image_tag pet.primary_photo_url(variant: :medium), alt: t("saved_pets.index.pet_photo", name: pet.name),
-                      loading: "lazy", decoding: "async",
-                      data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
-                      class: "relative w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-0" %>
+                <%# First rendered photo is the LCP: eager + high priority; rest lazy. %>
+                <% is_lcp = !lcp_emitted %>
+                <% lcp_emitted = true %>
+                <% saved_img_opts = {
+                     alt: t("saved_pets.index.pet_photo", name: pet.name),
+                     width: 400, height: 300,
+                     loading: is_lcp ? "eager" : "lazy",
+                     decoding: "async",
+                     data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
+                     class: "relative w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-0"
+                   } %>
+                <% saved_img_opts[:fetchpriority] = "high" if is_lcp %>
+                <%= image_tag pet.primary_photo_url(variant: :medium), **saved_img_opts %>
               <% else %>
                 <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-50">
                   <svg class="w-16 h-16 text-primary-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

@@ -8,6 +8,23 @@ RSpec.describe "My AdoptionRequests" do
     post session_path, params: { session: { email: publisher.email, password: "password123" } }
   end
 
+  describe "GET /my/adoption_requests" do
+    it "uses the clarified title for individual publishers" do
+      get my_adoption_requests_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("my.adoption_requests.index.title"))
+      expect(response.body).not_to include("Incoming Requests")
+    end
+
+    it "shows an explanatory empty state for a publisher with no requests" do
+      get my_adoption_requests_path
+
+      expect(response.body).to include(I18n.t("my.adoption_requests.index.empty_title"))
+      expect(response.body).to include(I18n.t("my.adoption_requests.index.empty_body"))
+    end
+  end
+
   describe "GET /my/adoption_requests/:id" do
     let(:pet) { create(:pet, :individual_listed, publisher: publisher) }
     let!(:request) { create(:adoption_request, pet: pet, adopter: adopter, shelter: nil) }

@@ -31,7 +31,10 @@ class ShelterPresenter < ApplicationPresenter
     else [ 200, 200 ]
     end
 
-    rails_representation_path(attachment.variant(resize_to_limit: dimension), only_path: true)
+    rails_representation_path(
+      attachment.variant(resize_to_limit: dimension, format: :webp, saver: { quality: 80 }),
+      only_path: true
+    )
   rescue ActiveStorage::FileNotFoundError, ActiveStorage::IntegrityError, ActiveStorage::InvariableError
     nil
   end

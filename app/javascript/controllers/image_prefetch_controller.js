@@ -40,6 +40,9 @@ export default class extends Controller {
 
     const img = new Image()
     img.decoding = "async"
+    // Low priority so the hover prefetch never competes with critical
+    // above-the-fold resources (LCP hero, CSS, fonts).
+    img.fetchPriority = "low"
     img.src = this.urlValue
   }
 }

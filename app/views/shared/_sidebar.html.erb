@@ -112,7 +112,7 @@
         <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.my_pets") %></span>
       <% end %>
 
-      <%# ─── Incoming Requests (individual publishers) ─── %>
+      <%# ─── Requests for my pets (individual publishers) ─── %>
       <% my_reqs_active = path_active?('/my/adoption_requests') %>
       <% pending_count = AdoptionRequest.pending_for_publisher(current_user).count %>
       <%= link_to my_adoption_requests_path,

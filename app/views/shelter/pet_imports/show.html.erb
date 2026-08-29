@@ -1,0 +1,31 @@
+<%# ─── Shelter Pet Import Show ─── %>
+<%# Shows live progress (polled by the pet-import controller) and the persisted
+    result summary once the import completes. %>
+<% import = @pet_import %>
+<div class="w-full max-w-4xl mx-auto"
+     data-controller="pet-import"
+     data-pet-import-status-url-value="<%= status_shelter_pet_import_path(import) %>">
+
+  <div class="mb-6 bento-enter bento-enter-d1">
+    <%= render "shared/back_link", path: safe_back_path(shelter_pet_imports_path), label: t(".back") %>
+  </div>
+
+  <div class="mb-6 bento-enter bento-enter-d1">
+    <%= render "shared/section_header",
+               title: import.file_name,
+               subtitle: t(".subtitle", date: l(import.created_at, format: :long)),
+               header_class: "flex flex-col gap-1" do %>
+      <span class="px-3 py-1 rounded-full text-xs font-semibold <%= import.completed? ? 'bg-secondary-50 text-secondary-700' : import.failed? ? 'bg-danger/10 text-danger' : 'bg-warning/10 text-warning-700' %>">
+        <%= pet_import_status_label(import) %>
+      </span>
+    <% end %>
+  </div>
+
+  <div id="pet-import-notice">
+    <%= render "shelter/pet_imports/progress_notice", pet_import: import %>
+  </div>
+
+  <div id="pet-import-summary">
+    <%= render "shelter/pet_imports/summary", pet_import: import %>
+  </div>
+</div>

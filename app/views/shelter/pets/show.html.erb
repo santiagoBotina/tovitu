@@ -18,6 +18,12 @@
         <p class="text-neutral-500 text-sm"><%= pet.species_label %><% if pet.breed.present? %> · <%= pet.breed %><% end %> · <%= pet.age_display %></p>
       </div>
       <div class="flex items-center gap-3">
+        <%= link_to media_shelter_pet_path(id: pet.id), class: "inline-flex items-center gap-2 bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 card-lift" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          <%= t(".manage_media") %>
+        <% end %>
         <%= link_to edit_shelter_pet_path(id: pet.id), class: "inline-flex items-center gap-2 bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 card-lift" do %>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -67,7 +73,7 @@
         <% pet.photo_gallery(variant: :medium).each_with_index do |photo_url, index| %>
           <div class="relative group aspect-square rounded-xl overflow-hidden bg-neutral-100 shadow-sm bento-enter bento-enter-d<%= ((index % 4) + 1) %> card-lift" data-controller="image-loader">
             <div data-image-loader-target="skeleton" class="absolute inset-0 img-skeleton" aria-hidden="true"></div>
-            <%= image_tag photo_url, alt: t(".photo_alt", name: pet.name, index: index + 1), loading: "lazy", decoding: "async",
+            <%= image_tag photo_url, alt: t(".photo_alt", name: pet.name, index: index + 1), loading: "lazy", decoding: "async", width: 400, height: 400,
                   data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
                   class: "relative w-full h-full object-cover opacity-0 transition-opacity duration-500" %>
             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">

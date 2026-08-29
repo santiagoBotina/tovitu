@@ -17,6 +17,13 @@ localstack:
   region: <%= ENV.fetch("AWS_REGION", "us-east-1") %>
   bucket: <%= ENV.fetch("S3_BUCKET", "tovitu-development") %>
   force_path_style: true
+  # Upload-time object metadata. Immutable Cache-Control on every stored object
+  # (originals and variants) so browsers and any CDN can cache image bytes
+  # indefinitely — Active Storage keys are content-addressed, so a cache miss
+  # is never stale. A CDN (CloudFront in front of S3 with OAC) will also honor
+  # these headers, making the pets section serve from the edge.
+  upload:
+    cache_control: "public, max-age=31536000, immutable"
 
 # Production storage on real Amazon S3. With no static credentials set, the
 # SDK falls back to the instance/IAM role credential chain.
@@ -26,3 +33,5 @@ amazon:
   secret_access_key: <%= ENV["AWS_SECRET_ACCESS_KEY"] %>
   region: <%= ENV.fetch("AWS_REGION", "us-east-1") %>
   bucket: <%= ENV.fetch("S3_BUCKET", "tovitu-production") %>
+  upload:
+    cache_control: "public, max-age=31536000, immutable"

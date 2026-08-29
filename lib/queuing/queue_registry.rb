@@ -7,18 +7,30 @@ module Queuing
   # Active Job queue name -> SQS queue suffix:
   #   default  -> <prefix>-jobs      (tovitu-jobs)
   #   mailers  -> <prefix>-mailers   (tovitu-mailers)
+  #   variants -> <prefix>-variants  (tovitu-variants)
   #
   # Any other Active Job queue name falls back to `<prefix>-<name>`; create the
   # matching SQS queue (and DLQ) before enqueueing to it.
   class QueueRegistry
     QUEUE_MAP = {
       "default" => "jobs",
-      "mailers" => "mailers"
+      "mailers" => "mailers",
+      "variants" => "variants"
     }.freeze
 
-    # Queues the worker long-polls. Mirrors the init script's queue set.
+    # Queues the worker long-polls by default. Override with SQS_QUEUES
+    # (comma-separated) to run a dedicated worker — e.g. `SQS_QUEUES=variants`
+    # so image variant generation gets its own process(es) and never
+    # head-of-line-blocks behind AI/import jobs on `default`, nor delays
+    # `mailers`. Mirrors the init script's queue set.
+    DEFAULT_QUEUES = %w[default mailers variants].freeze
+
     def self.queues
-      %w[default mailers]
+      if ENV["SQS_QUEUES"].present?
+        ENV["SQS_QUEUES"].split(",").map(&:strip).reject(&:empty?)
+      else
+        DEFAULT_QUEUES
+      end
     end
 
     def self.sqs_name_for(active_job_queue_name)

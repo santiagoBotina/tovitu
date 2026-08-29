@@ -51,7 +51,7 @@ FactoryBot.define do
         }
       end
       life_preview_generated_at { Time.current }
-      life_preview_version { 3 }
+      life_preview_version { Pet.current_life_preview_version }
     end
   end
 end

@@ -103,6 +103,85 @@ RSpec.describe Ai::GenerateLifePreview do
       end
     end
 
+    context "species-aware variables" do
+      it "includes species_display_name and species_care_notes in prompt variables" do
+        expect(Ai::PromptBuilder).to receive(:call).with(
+          prompt_name: "life_preview",
+          variables: hash_including(
+            species_display_name: "Dog",
+            species_care_notes: a_string_including("daily walks")
+          )
+        ).and_return("prompt")
+
+        allow(Ai::Provider).to receive(:call).and_return(default_preview_response.to_json)
+        service
+      end
+
+      it "passes rabbit-specific care notes for a rabbit pet" do
+        rabbit = create(:pet, shelter: shelter, species: "rabbit")
+        captured = nil
+        allow(Ai::PromptBuilder).to receive(:call) do |prompt_name:, variables:|
+          captured = variables
+          "prompt"
+        end
+        allow(Ai::Provider).to receive(:call).and_return(default_preview_response.to_json)
+
+        described_class.call(pet: rabbit, locale: "en")
+
+        expect(captured[:species_display_name]).to eq("Rabbit")
+        expect(captured[:species_care_notes]).to include("hay")
+        expect(captured[:species_care_notes]).not_to include("litter box")
+        expect(captured[:species_care_notes]).not_to include("daily walks")
+      end
+
+      it "passes bird-specific care notes for a bird pet" do
+        bird = create(:pet, shelter: shelter, species: "bird")
+        captured = nil
+        allow(Ai::PromptBuilder).to receive(:call) do |prompt_name:, variables:|
+          captured = variables
+          "prompt"
+        end
+        allow(Ai::Provider).to receive(:call).and_return(default_preview_response.to_json)
+
+        described_class.call(pet: bird, locale: "en")
+
+        expect(captured[:species_display_name]).to eq("Bird")
+        expect(captured[:species_care_notes]).to include("cage")
+        expect(captured[:species_care_notes]).not_to include("litter box")
+        expect(captured[:species_care_notes]).not_to include("daily walks")
+      end
+
+      it "uses neutral care notes for other species" do
+        other = create(:pet, shelter: shelter, species: "other")
+        captured = nil
+        allow(Ai::PromptBuilder).to receive(:call) do |prompt_name:, variables:|
+          captured = variables
+          "prompt"
+        end
+        allow(Ai::Provider).to receive(:call).and_return(default_preview_response.to_json)
+
+        described_class.call(pet: other, locale: "en")
+
+        expect(captured[:species_display_name]).to eq("Other")
+        expect(captured[:species_care_notes]).to include("shelter")
+        expect(captured[:species_care_notes]).not_to include("litter box")
+        expect(captured[:species_care_notes]).not_to include("daily walks")
+      end
+
+      it "interpolates the species display name into the system prompt" do
+        captured = nil
+        allow(Ai::Provider).to receive(:call) do |prompt:, system_prompt:|
+          captured = system_prompt
+          default_preview_response.to_json
+        end
+
+        described_class.call(pet: pet, locale: "en")
+
+        expect(captured).to include("This pet's species is Dog")
+        expect(captured).to include("NEVER apply dog- or cat-specific advice")
+      end
+    end
+
     context "when personality_spec is provided" do
       let(:personality_spec) { "Very shy around new people but warms up quickly. Loves squeaky toys." }
 

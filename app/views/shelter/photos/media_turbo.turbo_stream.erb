@@ -1,0 +1,17 @@
+<%# Shared turbo_stream response for media actions (attach/delete/reorder/
+    set_primary/move): swaps the photo grid and appends result toasts. %>
+<%= turbo_stream.replace "pet-media-grid" do %>
+  <%= render "shelter/pets/media_grid", pet: @presented_pet, presented_pet: @presented_pet %>
+<% end %>
+
+<% if @notice.present? %>
+  <%= turbo_stream.append "flash-container" do %>
+    <%= render "shared/toast", message: @notice, type: :success %>
+  <% end %>
+<% end %>
+
+<% if @alert.present? %>
+  <%= turbo_stream.append "flash-container" do %>
+    <%= render "shared/toast", message: @alert, type: :danger %>
+  <% end %>
+<% end %>

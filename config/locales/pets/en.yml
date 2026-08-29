@@ -3,6 +3,9 @@ en:
     species:
       dog: Dog
       cat: Cat
+      bird: Bird
+      rabbit: Rabbit
+      hamster: Hamster
       other: Other
 
     age_categories:
@@ -59,6 +62,7 @@ en:
       status: Status
       photos: Photos
       adopted_at: Adoption Date
+      recommendation: Recommendation
 
     errors:
       no_photos: At least one photo is required
@@ -66,6 +70,7 @@ en:
       adopted_at_required: Must be set when marking a pet as adopted
       birth_date_mismatch: Birth date does not match the selected age category (%{category})
       invalid_transition: Cannot change status from '%{from}' to '%{to}'
+      recommendation_inappropriate: This text contains language that isn't appropriate for a public pet profile. Please reword your recommendation.
 
       photos:
         invalid_type: Photo must be JPEG, PNG, or WebP
@@ -73,6 +78,9 @@ en:
         max_count: This pet already has the maximum of 10 photos
         not_found: Photo not found
         invalid_order: Photo order does not match existing photos
+        no_files: Choose at least one photo to upload
+        url_invalid: That doesn't look like a valid image URL.
+        url_unreachable: We couldn't load that URL. Check the link and try again.
 
       bulk:
         no_ids: No pets were selected
@@ -85,6 +93,8 @@ en:
       destroyed: Pet was successfully removed.
       status_changed: Pet status changed to '%{status}'.
       photos_attached: Photo was successfully attached.
+      photos_attached_partial: Some photos couldn't be attached — see the messages below.
+      primary_set: Primary photo updated.
       photo_detached: Photo was successfully removed.
       photos_reordered: Photos were successfully reordered.
       bulk_updated: "%{count} pet(s) were updated."
@@ -126,6 +136,25 @@ en:
         clear: Clear
         clear_all: Clear all filters
 
+      natural_language:
+        label: Describe your ideal companion
+        eyebrow: Natural Search
+        placeholder: "Describe your ideal companion… e.g. a calm dog for an apartment"
+        example: "e.g. a calm dog for an apartment"
+        submit: Find my match
+        loading: Finding pets that fit your life…
+        understood_title: "Tovitu understood:"
+        search_title: "Results for your description"
+        results_description: "Ranked by how well they match what you described."
+        reasons_title: Why this match
+        match_keyword: "matches: %{keyword}"
+        empty_title: No pets matched your description
+        empty_body: Try rephrasing with a different species, size, or temperament — or browse every available pet below.
+        browse_all: Browse all pets
+        invalid_title: We couldn't read that description
+        invalid_body: Try a shorter phrase such as "a calm small dog" or "a rabbit for a quiet home".
+        clear: Clear description
+
     show:
       photo_alt: "%{name} photo %{index}"
       back_to_pets: Back to all pets
@@ -142,19 +171,39 @@ en:
       good_with_children: Good with Children
       good_with_dogs: Good with Dogs
       good_with_cats: Good with Cats
+      compatibility_personality: Personality
+      compatibility_ideal_home: Ideal Home
+      compatibility_fit_apartment: Apartment-friendly
+      compatibility_fit_spacious: Needs space to roam
+      compatibility_fit_kids: Great with children
+      compatibility_fit_dogs: Lives well with other dogs
+      compatibility_fit_cats: Lives well with cats
       health: Health & Care
       spayed_neutered: Spayed/Neutered
       vaccinated: Vaccinated
       special_needs: Special Needs
       shelter: Shelter
+      listed_by: "Listed by"
+      individual_publisher_hint: "An individual is helping this pet find a new home."
       apply_title: Ready to adopt?
       apply_body: Start your adoption application and give this pet a loving home.
       apply_to_adopt: Apply to Adopt
+      adoption_process_title: The Adoption Process
+      adoption_process_body: "What happens after you apply for %{name}."
+      adoption_step_apply: Apply
+      adoption_step_apply_body: "Submit your application and tell the shelter about yourself."
+      adoption_step_review: Review
+      adoption_step_review_body: "The shelter reviews your profile to confirm the match."
+      adoption_step_meet: Meet & Greet
+      adoption_step_meet_body: "Get to know %{name} in person with the shelter team."
+      adoption_step_home: Welcome Home
+      adoption_step_home_body: "Complete the paperwork and start life together."
       save_title: Favorites
       save_body: Save this pet to your list — it will be waiting in your favorites.
       save_to_favorites: Save to favorites
       saved: Saved
       life_preview_title: "Life with %{name}"
+      life_preview_badge: "AI Life Preview"
       life_preview_description: "Your future together, mapped out week by week"
       life_preview_plan: Week-by-Week Plan
       life_preview_week_count:
@@ -162,8 +211,26 @@ en:
         other: "%{count} weeks"
       life_preview_itinerary: Daily Itinerary
       life_preview_tips: Preparation Tips
+      life_preview_tip_categories:
+        home_preparation: "Home preparation"
+        supplies: Supplies
+        family_preparation: "Family preparation"
+        lifestyle_adjustments: "Lifestyle adjustments"
+        training_resources: "Training resources"
+        feeding: "Food & nutrition"
+        health: "Health & vet care"
+        safety: Safety
+        bonding: "Bonding & care"
       life_preview_disclaimer: This content was generated by AI and may not be 100%% accurate. Always consult with shelter staff.
       life_preview_loading: Generating life preview...
+      life_preview_loader_messages:
+        - "Imagining a life with %{name}..."
+        - "Matching your profile with %{name}..."
+        - "Preparing a week-by-week plan..."
+        - "Building a daily routine for %{name}..."
+        - "Gathering preparation tips..."
+        - "Almost there..."
+      life_preview_loader_timeout: "Taking longer than expected — refresh the page to try again."
       life_preview_error: We couldn't generate a life preview right now.
       life_preview_retry: Try again
       life_preview_unavailable: Life preview unavailable
@@ -173,6 +240,10 @@ en:
       exercise_needs: Exercise Needs
       grooming: Grooming
       vet_schedule: Vet Schedule
+      recommendation_aria: "What the people caring for %{name} say about them"
+      recommendation_shelter_title: "What the shelter says about %{name}"
+      recommendation_individual_title: "What %{publisher} says about %{name}"
+      recommendation_written_by: "Written by %{author}"
 
   shelter:
     pets:
@@ -180,6 +251,7 @@ en:
         title: My Pets
         subtitle: Every pet your shelter manages. Publish new pets and keep profiles up to date.
         add_pet: Add Pet
+        import_pets: Import Pets
         all: All
         empty_title: No pets yet
         empty_body: Start by adding your first pet to the shelter.
@@ -205,6 +277,7 @@ en:
         edit: Edit
         delete: Delete
         delete_confirm: Are you sure you want to permanently remove %{name}?
+        manage_media: Manage Media
         change_status: Change Status
         photos: Photos
         add_photo: Add Photo
@@ -239,6 +312,9 @@ en:
         compatibility: Compatibility
         requirements: Home Requirements
         photos: Photos
+        recommendation: Recommendation
+        recommendation_placeholder: "Why could this pet be a good match for an adopter? This appears on their public profile."
+        recommendation_hint: "Your words appear on the pet's profile as \"What the shelter says about %{name}\". Plain text only."
         select: Select...
         personality_placeholder: e.g. Friendly, Playful, Shy, Energetic
         personality_hint: Separate traits with commas
@@ -251,6 +327,99 @@ en:
         photos_hint: You can select multiple photos. Maximum 10 photos. JPEG, PNG, or WebP only.
         cancel: Cancel
         submit: Save Pet
+
+      media:
+        back_to_pet: Back to Pet
+        view_pet: View Pet
+        add_title: Add Photos
+        add_body: Add photos from your computer or by URL. The first photo is the pet's profile picture.
+        upload_label: From your computer
+        upload_hint: Click to choose one or more images
+        upload_limits: JPEG, PNG, or WebP · Max 10 photos
+        selected_count: "%{count} photo(s) selected"
+        url_label: From a URL
+        url_placeholder: https://example.com/photo.jpg
+        url_submit: Add Photo
+
+      media_grid:
+        photos_title: "%{count} Photos"
+        photo_alt: "%{name} photo %{index}"
+        primary_badge: Primary
+        set_primary: Set as primary
+        move_up: Move up
+        move_down: Move down
+        delete: Remove
+        delete_confirm: Are you sure you want to remove this photo?
+        ordering_hint: Use the arrows to reorder. The first photo is the pet's profile picture.
+        empty_title: No photos yet
+        empty_body: Add photos to make this pet's profile inviting to adopters.
+        empty_hint: You can add them from your computer or by URL.
+
+    pet_imports:
+      status:
+        pending: Importing
+        processing: Importing
+        completed: Completed
+        failed: Failed
+      summary:
+        line: "%{imported} imported · %{duplicates} duplicates · %{errors} errors"
+      progress:
+        importing_title: Importing your pets…
+        importing_body: This happens in the background — you can leave this page and come back later.
+        failed_title: We couldn't process this file
+        failed_body: Fix the file and try importing again.
+      errors:
+        format: That file type isn't supported. Please upload a CSV or Excel (.xlsx) file.
+        file_required: Choose a CSV or Excel file to upload.
+        empty_file: That file appears to be empty. Download the template and try again.
+        missing_columns: "This file is missing required column(s): %{columns}. Download the template for the expected columns."
+        required_missing: is required
+        invalid_value: "is not valid. Use one of: %{allowed}"
+        invalid_boolean: must be Yes or No
+        invalid_date: must be a date (e.g. 2024-01-15)
+        invalid_column: has an invalid value
+        file_missing: The uploaded file could not be read. Try uploading it again.
+      notices:
+        started: Your import has started. You'll see the results here shortly.
+      index:
+        title: Pet Imports
+        subtitle: Upload a spreadsheet to create many pets at once.
+        new_import: Import Pets
+        imported_on: "Imported %{date}"
+        count: "%{imported} of %{total} imported"
+        empty_title: No imports yet
+        empty_body: Import many pets at once by uploading a CSV or Excel file.
+      new:
+        title: Import Pets
+        subtitle: Create many pets from a single spreadsheet.
+        back: Back to My Pets
+        template_title: Start with the template
+        template_body: The template lists every column Tovitu understands, with an example row. Required columns are Name, Species, Age, and Sex.
+        download_template: Download template
+        format_hint: CSV or Excel (.xlsx)
+        required_note: "Required columns: %{columns}"
+        required_columns: Name, Species, Age, Sex
+        upload_title: Upload your file
+        upload_body: Fill in the template, then upload it here. We'll validate every row and only create the pets that are correct.
+        file_label: Spreadsheet file
+        privacy_note: We never import photos in this version — you'll add them in the pet's Media section.
+        submit: Start Import
+        submitting: Importing…
+      show:
+        back: Back to Imports
+        subtitle: "Imported %{date}"
+      summary:
+        title: Import Results
+        import_more: Import More
+        view_pets: View My Pets
+        errors_title: Rows with Errors
+        errors_hint: Fix these rows in your file and import again — the other pets were created.
+        duplicates_title: Duplicates Skipped
+        duplicates_body: These rows match a pet already in your shelter, so they weren't imported twice.
+        imported_title: Pets Created
+        imported_body: These pets were created and now appear in your pet list.
+        row: "Row %{number}"
+      unknown_name: "(unnamed)"
 
   activerecord:
     models:
@@ -312,6 +481,9 @@ en:
         size_placeholder: "Select size"
         sex_label: "Sex"
         description_label: "Description"
+        recommendation_label: "Recommendation (optional)"
+        recommendation_placeholder: "Why could this pet be a good match for an adopter? Appears on the public profile."
+        recommendation_hint: "This appears on the pet's profile as what you say about them. Plain text only."
         photos_label: "Photos"
         photos_hint: "JPEG, PNG, or WebP. Max 10 photos."
         submit: "Publish Pet"
@@ -326,7 +498,7 @@ en:
         size: "Size"
         sex: "Sex"
         status: "Status"
-        incoming_requests: "Incoming Adoption Requests"
+        incoming_requests: "Requests for this pet"
         submitted: "Submitted %{time} ago"
         review: "Review"
         change_status: "Change Status"
@@ -343,6 +515,9 @@ en:
         size_placeholder: "Select size"
         sex_label: "Sex"
         description_label: "Description"
+        recommendation_label: "Recommendation (optional)"
+        recommendation_placeholder: "Why could this pet be a good match for an adopter? Appears on the public profile."
+        recommendation_hint: "This appears on the pet's profile as what you say about them. Plain text only."
         submit: "Save Changes"
         cancel: "Cancel"
 

@@ -27,7 +27,7 @@ RSpec.describe "Section header explanations", type: :request do
   it "renders explanation on my adoption requests" do
     sign_in_as(user)
     get my_adoption_requests_path
-    expect(response.body).to include("decide who meets your pet best")
+    expect(response.body).to include("Review applicants and respond")
   end
 
   it "renders explanation on adoption requests" do

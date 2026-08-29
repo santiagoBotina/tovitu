@@ -1,13 +1,15 @@
 <%= turbo_frame_tag "life_preview" do %>
-  <div class="bg-white rounded-xl border border-danger/20 shadow-sm p-6 text-center">
-    <div class="flex flex-col items-center gap-3 py-2">
-      <span class="w-12 h-12 rounded-full bg-danger/10 flex items-center justify-center text-2xl">🤖</span>
-      <p class="text-sm text-neutral-600"><%= t("pets.show.life_preview_error") %></p>
-      <%= link_to pet_life_preview_path(pet_id: pet), class: "inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-secondary-500 hover:bg-secondary-600 text-white text-sm font-medium transition-colors" do %>
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-        </svg>
-        <%= t("pets.show.life_preview_retry") %>
+  <div class="rounded-[2rem] bg-danger/5 ring-1 ring-danger/15 p-1.5">
+    <div class="rounded-[calc(2rem-0.375rem)] bg-white px-6 py-10 text-center">
+      <span class="mx-auto mb-4 flex items-center justify-center w-14 h-14 rounded-2xl bg-danger/10 text-2xl" aria-hidden="true">🤖</span>
+      <p class="text-sm text-neutral-600 max-w-xs mx-auto"><%= t("pets.show.life_preview_error") %></p>
+      <%= link_to pet_life_preview_path(pet_id: pet), class: "group mt-6 inline-flex items-center gap-2.5 rounded-full bg-primary-500 text-white pl-5 pr-1.5 py-1.5 hover:bg-primary-600 active:scale-[0.98] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2 focus:outline-none" do %>
+        <span class="font-medium text-sm"><%= t("pets.show.life_preview_retry") %></span>
+        <span class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:rotate-180 group-active:scale-95" aria-hidden="true">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+        </span>
       <% end %>
     </div>
   </div>

@@ -26,7 +26,7 @@ RSpec.describe Ai::GenerateLifePreviewJob do
       it "sets the preview version from the prompt file" do
         described_class.perform_now(pet.id)
         pet.reload
-        expect(pet.life_preview_version).to eq(3)
+        expect(pet.life_preview_version).to eq(Pet.current_life_preview_version)
       end
 
       it "passes the locale to the generation service" do

@@ -89,7 +89,7 @@ module My
         :medical_notes, :requirements, :status,
         :spayed_neutered, :vaccinated, :special_needs,
         :good_with_children, :good_with_dogs, :good_with_cats,
-        :personality_spec, :adopter_tips
+        :personality_spec, :adopter_tips, :recommendation
       )
     end
   end

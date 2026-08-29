@@ -23,6 +23,23 @@ RSpec.describe Pet, type: :model do
       expect(pet).not_to be_species_dog
     end
 
+    it "supports all six species values" do
+      expect(Pet::SPECIES).to eq(%w[dog cat bird rabbit hamster other])
+    end
+
+    it "defines an emoji for every supported species" do
+      expect(Pet::SPECIES_EMOJI.keys).to match_array(Pet::SPECIES)
+      expect(Pet::SPECIES_EMOJI["bird"]).to eq("🐦")
+      expect(Pet::SPECIES_EMOJI["rabbit"]).to eq("🐰")
+      expect(Pet::SPECIES_EMOJI["hamster"]).to eq("🐹")
+    end
+
+    it "keeps legacy 'other' pets valid and displayable" do
+      pet = build(:pet, shelter: create(:shelter), species: "other")
+      expect(pet).to be_valid
+      expect(pet.species_other?).to be true
+    end
+
     it "defines age categories enum with prefix scopes" do
       pet = create(:pet, age_category: "young")
       expect(pet).to be_age_category_young
@@ -215,6 +232,60 @@ RSpec.describe Pet, type: :model do
         expect { pet.update!(name: "New Name") }
           .not_to change { pet.life_preview_version }
       end
+    end
+  end
+
+  describe "recommendation" do
+    let(:shelter) { create(:shelter) }
+
+    it "is optional" do
+      pet = build(:pet, shelter: shelter, recommendation: nil)
+      expect(pet).to be_valid
+    end
+
+    it "sanitizes HTML and scripts on save (stores plain text)" do
+      pet = create(:pet, shelter: shelter, recommendation: '<script>alert("xss")</script>Luna loves <b>quiet</b> homes.')
+      expect(pet.reload.recommendation).to eq("Luna loves quiet homes.")
+      expect(pet.recommendation).not_to include("<script")
+      expect(pet.recommendation).not_to include("<b>")
+    end
+
+    it "strips event handlers and dangerous URL schemes" do
+      pet = create(:pet, shelter: shelter, recommendation: '<img src=x onerror="alert(1)">Check <a href="javascript:alert(2)">this</a>')
+      expect(pet.reload.recommendation).not_to include("onerror")
+      expect(pet.reload.recommendation).not_to include("javascript:")
+    end
+
+    it "neutralizes entity-encoded markup" do
+      pet = create(:pet, shelter: shelter, recommendation: "&lt;script&gt;alert(1)&lt;/script&gt; Fine text")
+      expect(pet.reload.recommendation).to eq("Fine text")
+    end
+
+    it "stores whitespace-only input as nil (section hidden)" do
+      pet = create(:pet, shelter: shelter, recommendation: "   \n\t  ")
+      expect(pet.reload.recommendation).to be_nil
+    end
+
+    it "truncates over-long input to the maximum length" do
+      pet = create(:pet, shelter: shelter, recommendation: "word " * 400)
+      expect(pet).to be_valid
+      expect(pet.reload.recommendation.length).to be <= Pets::Recommendation::MAX_LENGTH
+    end
+
+    it "rejects profanity with a friendly error" do
+      pet = build(:pet, shelter: shelter, recommendation: "This pet is complete shit")
+      expect(pet).not_to be_valid
+      expect(pet.errors[:recommendation]).to include(I18n.t("pets.errors.recommendation_inappropriate"))
+    end
+
+    it "rejects leetspeak-obfuscated profanity" do
+      pet = build(:pet, shelter: shelter, recommendation: "An absolute sh1t recommendation")
+      expect(pet).not_to be_valid
+    end
+
+    it "allows legitimate warm copy" do
+      pet = build(:pet, shelter: shelter, recommendation: "Luna is a sweet, calm companion who would thrive in a quiet home.")
+      expect(pet).to be_valid
     end
   end
 end

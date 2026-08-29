@@ -12,13 +12,13 @@ module Ai
     end
 
     def call
-      prompt_vars = prompt_variables
+      prompt_config = load_prompt_config
+      prompt_vars = prompt_variables(prompt_config)
       prompt = Ai::PromptBuilder.call(
         prompt_name: "life_preview",
         variables: prompt_vars
       )
 
-      prompt_config = YAML.load_file(Rails.root.join("config/prompts/life_preview.yml"))
       system_prompt = Ai::PromptBuilder.interpolate(prompt_config["system_prompt"], prompt_vars)
 
       response = Ai::Provider.call(
@@ -44,11 +44,17 @@ module Ai
       SUPPORTED_LOCALES.include?(candidate) ? candidate : I18n.default_locale.to_s
     end
 
-    def prompt_variables
+    def load_prompt_config
+      YAML.load_file(Rails.root.join("config/prompts/life_preview.yml"))
+    end
+
+    def prompt_variables(prompt_config)
       presenter = PetPresenter.new(pet)
       {
         pet_name: pet.name,
         species: pet.species,
+        species_display_name: presenter.species_label,
+        species_care_notes: species_care_notes(prompt_config, pet.species),
         breed: pet.breed.presence || "Mixed",
         age: presenter.age_display,
         size: pet.size.presence || "Unknown",
@@ -66,6 +72,11 @@ module Ai
         adopter_tips: adopter_tips.presence || "Not provided by shelter.",
         language: LANGUAGE_NAMES.fetch(locale, "English")
       }
+    end
+
+    def species_care_notes(prompt_config, species)
+      notes = prompt_config["species_care_notes"] || {}
+      notes[species] || notes["other"] || "Care needs vary by individual pet. Confirm specifics with the shelter."
     end
 
     def parse_response(response)

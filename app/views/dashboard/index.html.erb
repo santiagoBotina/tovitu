@@ -47,40 +47,96 @@
     <%# ─── LEFT COLUMN ─── %>
     <div class="space-y-5">
 
-      <%# Card: Adoption Journey Progress %>
-      <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d1" aria-label="<%= t(".readiness.title") %>">
-        <div class="flex items-center justify-between mb-4">
-          <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".readiness.title") %></h2>
-          <span class="font-display text-2xl font-bold text-primary-500"><%= t(".readiness.percent", percent: @readiness_percent) %></span>
+      <%# Card: Adoption Journey (explains, celebrates, drives a next action) %>
+      <% journey = current_user_journey %>
+      <section class="bg-gradient-to-br from-primary-50 via-primary-50/70 to-white rounded-xl p-5 sm:p-6 shadow-sm border border-primary-100 bento-enter bento-enter-d1"
+               aria-label="<%= t(".readiness.title") %>">
+        <%# Header: icon + title + percent %>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="shrink-0 w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center" aria-hidden="true">
+              <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>
+              </svg>
+            </div>
+            <h2 class="font-display text-lg font-bold text-neutral-800 truncate"><%= t(".readiness.title") %></h2>
+          </div>
+          <span class="font-display text-2xl font-bold text-primary-600 shrink-0"><%= t(".readiness.percent", percent: @readiness_percent) %></span>
         </div>
 
-        <%# Progress Bar %>
-        <div class="w-full bg-neutral-100 rounded-full h-3 mb-4 overflow-hidden" role="progressbar" aria-valuenow="<%= @readiness_percent %>" aria-valuemin="0" aria-valuemax="100">
-          <div class="progress-shimmer h-full rounded-full transition-all duration-1000 ease-out" style="width: <%= @readiness_percent %>%"></div>
-        </div>
+        <%# One-sentence explanation, adapted to the user's state %>
+        <p class="text-sm text-neutral-700 mb-4"><%= t(".journey_card.explanation.#{journey.card_variant}") %></p>
 
-        <%# Stepped journey indicator %>
-        <ol class="flex items-center gap-1 mb-4" aria-label="<%= t(".readiness.stages_label") %>">
-          <% current_user_journey.stages.each_with_index do |stage, idx| %>
-            <% current = stage[:key] == current_user_journey.current_stage[:key] %>
-            <li class="flex-1 flex items-center gap-1">
-              <span class="flex-1 h-1.5 rounded-full <%= stage[:reached] ? 'bg-secondary-500' : 'bg-neutral-200' %>"
-                    aria-hidden="true"></span>
-              <% if idx < current_user_journey.stages.size - 1 %>
-                <span class="w-2 h-2 rounded-full <%= current ? 'bg-primary-500 ring-2 ring-primary-200' : (stage[:reached] ? 'bg-secondary-500' : 'bg-neutral-300') %>"
+        <%# ─── Hybrid Journey Rail ─── %>
+        <%# ONE continuous track for the readiness fill, with the four stage
+            checkpoints + labels in a wrapping grid below it. The old duplicate
+            bar + stepper are gone; labels wrap so nothing gets clipped. %>
+        <div class="mt-4 mb-5">
+          <div class="h-2 rounded-full bg-neutral-100 overflow-hidden"
+               role="progressbar"
+               aria-valuenow="<%= @readiness_percent %>" aria-valuemin="0" aria-valuemax="100"
+               aria-label="<%= t(".readiness.stages_label") %>">
+            <div class="progress-shimmer h-full rounded-full transition-all duration-1000 ease-out"
+                 style="width: <%= @readiness_percent %>%"></div>
+          </div>
+
+          <ol class="mt-3 grid grid-cols-4 gap-1 sm:gap-2" aria-label="<%= t(".readiness.stages_label") %>">
+            <% journey.stages.each do |stage| %>
+              <% current = stage[:key] == journey.current_stage[:key] %>
+              <li class="flex flex-col items-center gap-1 text-center min-w-0">
+                <span class="w-2.5 h-2.5 rounded-full shrink-0 <%= current ? 'bg-primary-500' : (stage[:reached] ? 'bg-secondary-500' : 'bg-neutral-300') %>"
                       aria-hidden="true"></span>
+                <span class="text-[10px] sm:text-[11px] font-medium leading-tight <%= current ? 'text-primary-700' : (stage[:reached] ? 'text-neutral-700' : 'text-neutral-400') %>">
+                  <%= t(".readiness.stage.#{stage[:key]}") %>
+                </span>
+              </li>
+            <% end %>
+          </ol>
+        </div>
+
+        <%# What the user has achieved %>
+        <p class="text-sm font-semibold text-neutral-800 mb-2">
+          <%= t(".journey_card.achieved", done: journey.completed_milestone_count, total: journey.total_milestone_count) %>
+        </p>
+        <ul class="flex flex-wrap gap-1.5 mb-4">
+          <% journey.milestones.each do |milestone| %>
+            <li class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-semibold <%= milestone[:done] ? 'bg-secondary-500 text-white' : 'bg-white text-neutral-500 border border-neutral-200' %>">
+              <% if milestone[:done] %>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <% else %>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="<%= milestone_icon_path(milestone[:icon]) %>"/></svg>
               <% end %>
+              <span><%= t(".journey.milestone.#{milestone[:key]}") %></span>
             </li>
           <% end %>
-        </ol>
+        </ul>
 
         <%# Current stage + next step %>
         <p class="text-sm font-semibold text-neutral-800 mb-1">
-          <%= t(".readiness.stage.#{current_user_journey.current_stage[:key]}") %>
+          <%= t(".readiness.stage.#{journey.current_stage[:key]}") %>
         </p>
-        <p class="text-sm text-neutral-500">
+        <p class="text-sm text-neutral-600">
           <span class="inline-block w-2 h-2 rounded-full bg-secondary-500 mr-2 align-middle" aria-hidden="true"></span>
-          <%= t(".readiness.next_step.#{current_user_journey.next_step_key}") %>
+          <%= t(".readiness.next_step.#{journey.next_step_key}") %>
+        </p>
+
+        <%# Clear next-action CTA (full-width for a comfortable tap target) %>
+        <div class="mt-5">
+          <%= link_to send(journey.card_cta_path),
+              class: "inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
+            <%= t(".journey_card.cta.#{journey.card_cta_key}") %>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+          <% end %>
+        </div>
+
+        <%# Accompaniment %>
+        <p class="flex items-center justify-center gap-1.5 text-xs text-primary-600 mt-3">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+          </svg>
+          <%= t(".journey_card.accompaniment") %>
         </p>
       </section>
 
@@ -239,15 +295,15 @@
           <div class="space-y-5">
             <% @saved_pets.each do |pet| %>
               <% pet_presenter = PetPresenter.new(pet) %>
-              <div class="group card-lift"
+              <div class="group card-lift rounded-xl p-3 hover:bg-neutral-50"
                    data-controller="image-prefetch"
-                   data-image-prefetch-url-value="<%= pet_presenter.primary_photo_url(variant: :large) %>"
+                   data-image-prefetch-url-value="<%= pet.primary_photo.present? ? pet_presenter.primary_photo_url(variant: :large) : '' %>"
                    data-action="mouseenter->image-prefetch#prefetch mouseleave->image-prefetch#cancel">
                 <%= link_to pet_path(pet), class: "block" do %>
                   <div class="relative rounded-xl overflow-hidden bg-neutral-100 aspect-[16/10] mb-3" data-controller="image-loader">
                     <div data-image-loader-target="skeleton" class="absolute inset-0 img-skeleton" aria-hidden="true"></div>
                     <% if pet.primary_photo.present? %>
-                      <%= image_tag pet.primary_photo.variant(resize_to_limit: [500, 350]), loading: "lazy", decoding: "async",
+                      <%= image_tag pet.primary_photo.variant(resize_to_limit: [500, 350], format: :webp, saver: { quality: 80 }), loading: "lazy", decoding: "async", width: 500, height: 350,
                           data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
                           class: "relative w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-0",
                           alt: pet.name %>
@@ -334,7 +390,7 @@
               <div class="flex items-center gap-3 p-3 rounded-xl bg-neutral-50">
                 <div class="shrink-0 w-10 h-10 rounded-lg overflow-hidden bg-neutral-200">
                   <% if pet.primary_photo.present? %>
-                    <%= image_tag pet.primary_photo.variant(resize_to_limit: [40, 40]), class: "w-full h-full object-cover", alt: pet.name %>
+                    <%= image_tag pet.primary_photo.variant(resize_to_limit: [40, 40]), class: "w-full h-full object-cover", alt: pet.name, loading: "lazy", decoding: "async", width: 40, height: 40 %>
                   <% else %>
                     <div class="w-full h-full flex items-center justify-center text-neutral-500 text-xs font-bold"><%= pet.name.first.upcase %></div>
                   <% end %>
@@ -403,7 +459,7 @@
                   <% if pet&.primary_photo.present? %>
                     <%= image_tag pet.primary_photo.variant(resize_to_limit: [44, 44]),
                         class: "relative w-full h-full object-cover opacity-0 transition-opacity duration-500",
-                        decoding: "async",
+                        loading: "lazy", decoding: "async", width: 44, height: 44,
                         data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
                         alt: pet.name %>
                   <% else %>

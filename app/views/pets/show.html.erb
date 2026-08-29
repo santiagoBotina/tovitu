@@ -34,6 +34,7 @@
       <div class="aspect-[16/10] bg-neutral-100 relative" data-controller="image-loader">
         <div data-image-loader-target="skeleton" class="absolute inset-0 img-skeleton" aria-hidden="true"></div>
         <%= image_tag pet.primary_photo_url(variant: :large), alt: pet.name, fetchpriority: "high", decoding: "async",
+              width: 1200, height: 750,
               data: { image_loader_target: "image", action: "load->image-loader#loaded error->image-loader#failed" },
               class: "relative w-full h-full object-cover opacity-0 transition-opacity duration-500" %>
       </div>
@@ -41,7 +42,7 @@
         <div class="grid grid-cols-5 gap-1 p-1 bg-neutral-50">
           <% pet.photo_gallery(variant: :thumb).each_with_index do |photo_url, index| %>
             <%= image_tag photo_url, alt: t(".photo_alt", name: pet.name, index: index + 1),
-                  loading: "lazy", decoding: "async",
+                  loading: "lazy", decoding: "async", width: 150, height: 150,
                   class: "aspect-square object-cover rounded-lg hover:opacity-90 transition-opacity #{index == 0 ? 'ring-2 ring-secondary-500' : ''}" %>
           <% end %>
         </div>
@@ -60,14 +61,17 @@
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <div class="lg:col-span-2 space-y-6">
+    <div class="flex flex-col gap-6 lg:col-span-2">
       <%# ─── Pet Info Header Card ─── %>
       <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d3">
         <div class="flex items-start justify-between mb-4">
           <div>
             <h1 class="font-display text-3xl font-bold text-neutral-900 mb-2"><%= pet.name %></h1>
             <div class="flex flex-wrap items-center gap-2">
-              <span class="px-3 py-1 bg-secondary-50 text-secondary-600 text-xs font-medium rounded-full"><%= pet.species_label %></span>
+              <span class="inline-flex items-center gap-1 px-3 py-1 bg-secondary-50 text-secondary-600 text-xs font-medium rounded-full">
+                <span aria-hidden="true"><%= pet.species_emoji %></span>
+                <%= pet.species_label %>
+              </span>
               <% if pet.breed.present? %>
                 <span class="px-3 py-1 bg-neutral-100 text-neutral-600 text-xs font-medium rounded-full"><%= pet.breed %></span>
               <% end %>
@@ -91,7 +95,7 @@
           </div>
           <div class="text-center p-3 bg-neutral-50 rounded-xl">
             <p class="text-xs text-neutral-500 font-medium mb-1"><%= t(".species_label") %></p>
-            <p class="font-semibold text-neutral-800"><%= pet.species_label %></p>
+            <p class="font-semibold text-neutral-800"><span aria-hidden="true"><%= pet.species_emoji %></span> <%= pet.species_label %></p>
           </div>
         </div>
 
@@ -110,6 +114,33 @@
           <h2 class="font-display text-lg font-bold text-neutral-800 mb-3"><%= t(".description") %></h2>
           <div class="text-neutral-700 leading-relaxed text-pretty max-w-none">
             <p class="whitespace-pre-wrap"><%= pet.description %></p>
+          </div>
+        </section>
+      <% end %>
+
+      <%# ─── Shelter Recommendation Card ─── %>
+      <% if pet.recommendation.present? %>
+        <section class="bg-primary-50 border border-primary-100 rounded-xl shadow-sm p-6 bento-enter bento-enter-d4"
+                 aria-label="<%= t(".recommendation_aria", name: pet.name) %>">
+          <div class="flex items-start gap-4">
+            <div class="shrink-0 w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center" aria-hidden="true">
+              <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h2 class="font-display text-lg font-bold text-neutral-800">
+                <%= pet.recommendation_author_kind == :shelter ?
+                      t(".recommendation_shelter_title", name: pet.name) :
+                      t(".recommendation_individual_title", name: pet.name, publisher: pet.recommendation_author) %>
+              </h2>
+              <p class="text-sm text-neutral-500 mt-0.5">
+                <%= t(".recommendation_written_by", author: pet.recommendation_author) %>
+              </p>
+            </div>
+          </div>
+          <div class="mt-4 text-neutral-700 leading-relaxed text-pretty">
+            <p class="whitespace-pre-wrap"><%= pet.recommendation %></p>
           </div>
         </section>
       <% end %>
@@ -139,23 +170,10 @@
         </section>
       <% end %>
 
-      <%# ─── Life Preview ─── %>
-      <%= turbo_frame_tag "life_preview", src: pet_life_preview_path(pet_id: pet), loading: :lazy, class: "block min-h-[250px]" do %>
-        <div class="bg-white rounded-xl border border-neutral-200 shadow-sm p-6 text-center bento-enter bento-enter-d6">
-          <div class="flex flex-col items-center gap-3 py-4">
-            <div class="w-10 h-10 rounded-full bg-secondary-100 animate-pulse flex items-center justify-center">
-              <svg class="w-5 h-5 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-              </svg>
-            </div>
-            <p class="text-neutral-400 text-sm"><%= t(".life_preview_loading") %></p>
-          </div>
-        </div>
-      <% end %>
-
       <%# ─── Compatibility Card ─── %>
-      <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d6">
+      <section class="flex-1 flex flex-col bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d6">
         <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".compatibility") %></h2>
+
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="flex items-center gap-3 p-3 rounded-xl <%= pet.good_with_children? ? 'bg-secondary-50' : 'bg-danger/10' %>">
             <div class="w-8 h-8 flex items-center justify-center rounded-full <%= pet.good_with_children? ? 'bg-secondary-100 text-secondary-600' : 'bg-danger/20 text-danger' %>">
@@ -194,57 +212,117 @@
             <span class="text-sm font-medium <%= pet.good_with_cats? ? 'text-secondary-700' : 'text-danger' %>"><%= t(".good_with_cats") %></span>
           </div>
         </div>
+
+        <%# Shared panel tying Ideal Home + Personality together as one block %>
+        <% if pet.ideal_home_fit_list.any? || pet.personality_traits_list.any? %>
+          <div class="mt-5 rounded-xl border border-neutral-100 bg-neutral-50/60 overflow-hidden">
+            <% if pet.ideal_home_fit_list.any? %>
+              <div class="p-4">
+                <h3 class="flex items-center gap-2 text-sm font-bold text-neutral-700 mb-2.5">
+                  <span class="flex-shrink-0 w-6 h-6 rounded-md bg-primary-100 text-primary-600 inline-flex items-center justify-center" aria-hidden="true">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                  </span>
+                  <%= t(".compatibility_ideal_home") %>
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                  <% pet.ideal_home_fit_list.each do |fit| %>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-primary-700 text-sm font-medium rounded-full border border-primary-100 shadow-[0_2px_0_rgba(0,0,0,0.04)]">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                      </svg>
+                      <%= fit %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
+            <% if pet.ideal_home_fit_list.any? && pet.personality_traits_list.any? %>
+              <div class="mx-4 border-t border-neutral-100" aria-hidden="true"></div>
+            <% end %>
+
+            <% if pet.personality_traits_list.any? %>
+              <div class="p-4">
+                <h3 class="flex items-center gap-2 text-sm font-bold text-neutral-700 mb-2.5">
+                  <span class="flex-shrink-0 w-6 h-6 rounded-md bg-secondary-100 text-secondary-600 inline-flex items-center justify-center" aria-hidden="true">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  </span>
+                  <%= t(".compatibility_personality") %>
+                </h3>
+                <div class="flex flex-wrap gap-2">
+                  <% pet.personality_traits_list.each do |trait| %>
+                    <span class="px-3 py-1.5 bg-white text-secondary-700 text-sm font-medium rounded-full border border-secondary-200 capitalize"><%= trait %></span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
       </section>
 
       <%# ─── Health Card ─── %>
-      <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d7">
-        <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".health") %></h2>
-        <div class="flex flex-wrap gap-3">
-          <% if pet.spayed_neutered? %>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-50 text-secondary-700 text-sm font-medium rounded-full">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <%= t(".spayed_neutered") %>
-            </span>
-          <% end %>
-          <% if pet.vaccinated? %>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-50 text-secondary-700 text-sm font-medium rounded-full">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <%= t(".vaccinated") %>
-            </span>
-          <% end %>
-          <% if pet.special_needs? %>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-warning/10 text-warning text-sm font-medium rounded-full">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              <%= t(".special_needs") %>
-            </span>
-          <% end %>
-        </div>
-      </section>
+      <% if pet.spayed_neutered? || pet.vaccinated? || pet.special_needs? %>
+        <section class="flex-1 bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d7">
+          <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".health") %></h2>
+          <div class="flex flex-wrap gap-3">
+            <% if pet.spayed_neutered? %>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-50 text-secondary-700 text-sm font-medium rounded-full">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <%= t(".spayed_neutered") %>
+              </span>
+            <% end %>
+            <% if pet.vaccinated? %>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-50 text-secondary-700 text-sm font-medium rounded-full">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <%= t(".vaccinated") %>
+              </span>
+            <% end %>
+            <% if pet.special_needs? %>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-warning/10 text-warning text-sm font-medium rounded-full">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <%= t(".special_needs") %>
+              </span>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
     </div>
 
     <%# ─── Right Sidebar ─── %>
-    <div class="space-y-6">
-      <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d4 card-lift">
-        <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".shelter") %></h2>
-        <div class="space-y-4">
-          <%= link_to shelter_path(pet.shelter), class: "block group" do %>
-            <p class="font-medium text-primary-500 group-hover:text-primary-600 transition"><%= pet.shelter.name %></p>
-          <% end %>
-          <div class="flex items-start gap-2 text-sm text-neutral-500">
-            <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-            <span><%= pet.shelter.city %>, <%= pet.shelter.state %> <%= pet.shelter.zip %></span>
-          </div>
-          <div class="flex items-start gap-2 text-sm text-neutral-500">
-            <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-            </svg>
-            <span><%= pet.shelter.phone %></span>
+    <div class="flex flex-col gap-6">
+      <% if pet.shelter.present? %>
+        <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d4 card-lift">
+          <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".shelter") %></h2>
+          <div class="space-y-4">
+            <%= link_to shelter_path(pet.shelter), class: "block group" do %>
+              <p class="font-medium text-primary-500 group-hover:text-primary-600 transition"><%= pet.shelter.name %></p>
+            <% end %>
+            <div class="flex items-start gap-2 text-sm text-neutral-500">
+              <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              <span><%= pet.shelter.city %>, <%= pet.shelter.state %> <%= pet.shelter.zip %></span>
+            </div>
+            <div class="flex items-start gap-2 text-sm text-neutral-500">
+              <svg class="w-4 h-4 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+              </svg>
+              <span><%= pet.shelter.phone %></span>
+            </div>
           </div>
         </div>
-      </div>
+      <% elsif pet.recommendation_author.present? %>
+        <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d4 card-lift">
+          <h2 class="font-display text-lg font-bold text-neutral-800 mb-1"><%= t(".listed_by") %></h2>
+          <p class="font-medium text-primary-500"><%= pet.recommendation_author %></p>
+          <p class="text-sm text-neutral-500 mt-1"><%= t(".individual_publisher_hint") %></p>
+        </div>
+      <% end %>
 
       <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d4 card-lift">
         <h2 class="font-display text-lg font-bold text-neutral-800 mb-1"><%= t(".save_title") %></h2>
@@ -259,6 +337,73 @@
           <%= t(".apply_to_adopt") %>
         <% end %>
       </div>
+
+      <%# ─── Adoption Process (fills the sidebar gap) ─── %>
+      <div class="flex-1 bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d5 card-lift">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="shrink-0 w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center" aria-hidden="true">
+            <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </span>
+          <div>
+            <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".adoption_process_title") %></h2>
+            <p class="text-neutral-500 text-sm mt-0.5"><%= t(".adoption_process_body", name: pet.name) %></p>
+          </div>
+        </div>
+
+        <ol class="grid grid-cols-2 gap-3">
+          <%
+            steps = [
+              { title: t(".adoption_step_apply"), body: t(".adoption_step_apply_body"), icon: "📝", chip: "bg-primary-500" },
+              { title: t(".adoption_step_review"), body: t(".adoption_step_review_body"), icon: "🔍", chip: "bg-secondary-500" },
+              { title: t(".adoption_step_meet"), body: t(".adoption_step_meet_body", name: pet.name), icon: "🤝", chip: "bg-accent-pink" },
+              { title: t(".adoption_step_home"), body: t(".adoption_step_home_body"), icon: "🏡", chip: "bg-accent-orange" },
+            ]
+          %>
+          <% steps.each do |step| %>
+            <li class="flex flex-col gap-2 rounded-xl border border-neutral-100 bg-neutral-50/60 p-3">
+              <span class="flex-shrink-0 w-9 h-9 rounded-lg <%= step[:chip] %> text-white flex items-center justify-center text-base shadow-[0_3px_0_rgba(0,0,0,0.12)]" aria-hidden="true"><%= step[:icon] %></span>
+              <div class="min-w-0">
+                <h3 class="font-semibold text-neutral-800 text-sm"><%= step[:title] %></h3>
+                <p class="text-neutral-500 text-xs leading-relaxed mt-0.5"><%= step[:body] %></p>
+              </div>
+            </li>
+          <% end %>
+        </ol>
+      </div>
     </div>
+
+    <%# ─── Life Preview (full-width row) ─── %>
+    <%= turbo_frame_tag "life_preview", src: pet_life_preview_path(pet_id: pet), loading: :lazy, class: "block lg:col-span-3 min-h-[250px] bento-enter bento-enter-d6" do %>
+      <div class="rounded-[2rem] bg-primary-50 ring-1 ring-primary-100 p-1.5">
+        <div class="rounded-[calc(2rem-0.375rem)] bg-white overflow-hidden">
+          <div class="bg-primary-500 px-6 py-6 sm:px-8">
+            <div class="flex items-center gap-4">
+              <span class="flex-shrink-0 w-14 h-14 rounded-2xl bg-white shadow-[0_4px_0_rgba(58,26,142,0.9)] flex items-center justify-center overflow-hidden">
+                <% skeleton_icon = life_preview_icon_path(pet) %>
+                <% if skeleton_icon.present? %>
+                  <%= image_tag skeleton_icon, class: "w-9 h-9", alt: "" %>
+                <% else %>
+                  <span class="w-9 h-9 flex items-center justify-center text-2xl leading-none" aria-hidden="true"><%= pet.species_emoji %></span>
+                <% end %>
+              </span>
+              <div class="min-w-0">
+                <div class="h-3 w-24 rounded-full bg-primary-400/60 animate-pulse"></div>
+                <div class="h-5 w-40 rounded-full bg-primary-300/60 animate-pulse mt-2"></div>
+              </div>
+            </div>
+          </div>
+          <div class="px-6 py-8 sm:px-8">
+            <p class="text-primary-700 font-semibold text-sm"><%= t(".life_preview_loading") %></p>
+            <div class="mt-6 flex items-center gap-2" aria-hidden="true">
+              <span class="w-2.5 h-2.5 rounded-full bg-primary-400 lp-loader-dot"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-secondary-400 lp-loader-dot" style="animation-delay: 0.18s"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-accent-yellow lp-loader-dot" style="animation-delay: 0.36s"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>

@@ -32,6 +32,7 @@ describe("ImagePrefetchController", () => {
       constructor() {
         this.src = ""
         this.decoding = ""
+        this.fetchPriority = ""
         imageInstances.push(this)
       }
     })
@@ -60,6 +61,7 @@ describe("ImagePrefetchController", () => {
     expect(imageInstances).toHaveLength(1)
     expect(imageInstances[0].src).toBe("/rails/active_storage/representations/pet.jpg")
     expect(imageInstances[0].decoding).toBe("async")
+    expect(imageInstances[0].fetchPriority).toBe("low")
   })
 
   it("does not prefetch an empty url", async () => {

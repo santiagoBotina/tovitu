@@ -1,0 +1,98 @@
+<%# ─── Pet Import Result Summary ─── %>
+<%# Persisted result of a completed import: summary line, imported/duplicate
+    lists, and a per-row error table with friendly reasons. Nothing renders
+    while the import is still pending/processing. %>
+<% if pet_import.completed? %>
+  <div id="pet-import-summary" class="bento-enter bento-enter-d3">
+    <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".title") %></h2>
+          <p class="text-sm text-neutral-500 mt-1"><%= pet_import_summary_text(pet_import) %></p>
+        </div>
+        <div class="flex items-center gap-3">
+          <%= link_to new_shelter_pet_import_path, class: "inline-flex items-center gap-2 bg-white border border-neutral-300 text-neutral-700 hover:bg-neutral-50 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 active:scale-[0.97]" do %>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            <%= t(".import_more") %>
+          <% end %>
+          <%= link_to shelter_pets_path, class: "inline-flex items-center gap-2 bg-secondary-500 hover:bg-secondary-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
+            <%= t(".view_pets") %>
+          <% end %>
+        </div>
+      </div>
+    </section>
+
+    <%# ─── Errors ─── %>
+    <% if pet_import.error_rows.any? %>
+      <section class="bg-white rounded-xl shadow-sm border border-danger/20 overflow-hidden mb-6">
+        <div class="px-6 py-4 border-b border-neutral-200 flex items-center gap-2">
+          <h3 class="font-display text-base font-bold text-neutral-800"><%= t(".errors_title") %></h3>
+          <span class="px-2.5 py-0.5 rounded-full bg-danger/10 text-danger text-xs font-semibold"><%= pet_import.error_rows.length %></span>
+        </div>
+        <div class="divide-y divide-neutral-100">
+          <% pet_import.error_rows.each do |row| %>
+            <div class="px-6 py-4">
+              <p class="text-sm font-medium text-neutral-800">
+                <span class="text-neutral-400 font-normal"><%= t(".row", number: row["row"]) %></span>
+                <% if row["name"].present? %>
+                  · <%= row["name"] %>
+                <% end %>
+              </p>
+              <ul class="mt-2 space-y-1">
+                <% row["fields"].each do |field, messages| %>
+                  <li class="text-sm text-danger">
+                    <span class="font-medium"><%= Pets::Import.column_label(field) %>:</span>
+                    <%= Array(messages).join("; ") %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+        </div>
+        <div class="px-6 py-3 bg-neutral-50 border-t border-neutral-200 text-xs text-neutral-500">
+          <%= t(".errors_hint") %>
+        </div>
+      </section>
+    <% end %>
+
+    <%# ─── Duplicates ─── %>
+    <% if pet_import.duplicate_rows.any? %>
+      <section class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden mb-6">
+        <div class="px-6 py-4 border-b border-neutral-200 flex items-center gap-2">
+          <h3 class="font-display text-base font-bold text-neutral-800"><%= t(".duplicates_title") %></h3>
+          <span class="px-2.5 py-0.5 rounded-full bg-warning/10 text-warning-700 text-xs font-semibold"><%= pet_import.duplicate_rows.length %></span>
+        </div>
+        <div class="px-6 py-4 text-sm text-neutral-600">
+          <p class="mb-2"><%= t(".duplicates_body") %></p>
+          <ul class="space-y-1 list-disc list-inside">
+            <% pet_import.duplicate_rows.each do |row| %>
+              <li><%= t(".row", number: row["row"]) %> · <%= row["name"] %></li>
+            <% end %>
+          </ul>
+        </div>
+      </section>
+    <% end %>
+
+    <%# ─── Imported ─── %>
+    <% if pet_import.imported_rows.any? %>
+      <section class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-neutral-200 flex items-center gap-2">
+          <h3 class="font-display text-base font-bold text-neutral-800"><%= t(".imported_title") %></h3>
+          <span class="px-2.5 py-0.5 rounded-full bg-secondary-50 text-secondary-700 text-xs font-semibold"><%= pet_import.imported_rows.length %></span>
+        </div>
+        <div class="px-6 py-4 text-sm text-neutral-600">
+          <p class="mb-2"><%= t(".imported_body") %></p>
+          <ul class="space-y-1 list-disc list-inside">
+            <% pet_import.imported_rows.each do |row| %>
+              <li><%= t(".row", number: row["row"]) %> · <%= row["name"] %></li>
+            <% end %>
+          </ul>
+        </div>
+      </section>
+    <% end %>
+  </div>
+<% elsif pet_import.pending? %>
+  <div id="pet-import-summary" class="hidden" aria-hidden="true"></div>
+<% end %>

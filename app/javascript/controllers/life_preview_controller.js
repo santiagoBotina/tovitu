@@ -1,17 +1,8 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static values = { name: String, url: String }
+  static values = { name: String, url: String, messages: Array, timeout: String }
   static targets = ["message"]
-
-  messages = [
-    "Imagining a life with %{name}...",
-    "Matching your profile with %{name}...",
-    "Preparing a week-by-week plan...",
-    "Building a daily routine for %{name}...",
-    "Gathering preparation tips...",
-    "Almost there..."
-  ]
 
   connect() {
     this.messageIndex = 0
@@ -43,7 +34,7 @@ export default class extends Controller {
     this.cycleTimeout = setTimeout(() => {
       if (!this.hasMessageTarget) return
 
-      this.messageIndex = (this.messageIndex + 1) % this.messages.length
+      this.messageIndex = (this.messageIndex + 1) % this.messagesValue.length
       this.updateMessage()
 
       this.messageTarget.classList.remove("opacity-0")
@@ -52,7 +43,7 @@ export default class extends Controller {
 
   updateMessage() {
     if (!this.hasMessageTarget) return
-    const msg = this.messages[this.messageIndex].replace("%{name}", this.nameValue)
+    const msg = this.messagesValue[this.messageIndex].replace("%{name}", this.nameValue)
     this.messageTarget.textContent = msg
   }
 
@@ -100,7 +91,7 @@ export default class extends Controller {
     }
 
     if (this.hasMessageTarget) {
-      this.messageTarget.textContent = "Taking longer than expected — refresh the page to try again."
+      this.messageTarget.textContent = this.timeoutValue
       this.messageTarget.classList.remove("opacity-0")
     }
   }

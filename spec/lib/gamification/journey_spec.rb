@@ -153,4 +153,67 @@ RSpec.describe Gamification::Journey do
       expect(journey.missing_step).to be_nil
     end
   end
+
+  describe "#card_variant" do
+    it "is :fresh for a user who has done nothing" do
+      expect(journey.card_variant).to eq(:fresh)
+    end
+
+    it "is :mid_journey once onboarding is complete" do
+      user.update!(onboarding_completed_at: Time.current)
+      expect(journey.card_variant).to eq(:mid_journey)
+    end
+
+    it "is :mid_journey once a pet is saved" do
+      create(:saved_pet, user: user)
+      expect(journey.card_variant).to eq(:mid_journey)
+    end
+
+    it "is :active_applicant once there is an active request" do
+      user.update!(onboarding_completed_at: Time.current)
+      create(:adoption_request, adopter: user, status: :pending)
+      expect(journey.card_variant).to eq(:active_applicant)
+    end
+
+    it "is :active_applicant even when only a request exists (priority over fresh)" do
+      create(:adoption_request, adopter: user, status: :in_validation)
+      expect(journey.card_variant).to eq(:active_applicant)
+    end
+  end
+
+  describe "#card_cta_key" do
+    it "returns :complete_profile for a fresh user" do
+      expect(journey.card_cta_key).to eq(:complete_profile)
+    end
+
+    it "returns :browse_pets for a mid-journey user" do
+      user.update!(onboarding_completed_at: Time.current)
+      create(:saved_pet, user: user)
+      expect(journey.card_cta_key).to eq(:browse_pets)
+    end
+
+    it "returns :see_requests for an active applicant" do
+      user.update!(onboarding_completed_at: Time.current)
+      create(:adoption_request, adopter: user, status: :pending)
+      expect(journey.card_cta_key).to eq(:see_requests)
+    end
+  end
+
+  describe "#card_cta_path" do
+    it "maps fresh to the onboarding path" do
+      expect(journey.card_cta_path).to eq(:profile_onboarding_path)
+    end
+
+    it "maps mid-journey to pets" do
+      user.update!(onboarding_completed_at: Time.current)
+      create(:saved_pet, user: user)
+      expect(journey.card_cta_path).to eq(:pets_path)
+    end
+
+    it "maps active applicant to their requests" do
+      user.update!(onboarding_completed_at: Time.current)
+      create(:adoption_request, adopter: user, status: :pending)
+      expect(journey.card_cta_path).to eq(:adoption_requests_path)
+    end
+  end
 end

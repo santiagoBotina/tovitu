@@ -1,0 +1,24 @@
+<%# A single dismissible toast appended via turbo_stream for AJAX actions.
+    type: :success (default) or :danger. Mirrors shared/_flash positioning. %>
+<% danger = local_assigns.fetch(:type, :success) == :danger %>
+<div class="fixed top-16 right-4 z-40 max-w-sm">
+  <div class="<%= danger ? 'bg-danger' : 'bg-success' %> flex items-start gap-3 p-4 rounded-xl shadow-lg" role="alert" data-controller="dismiss">
+    <div class="flex-shrink-0 mt-0.5">
+      <% if danger %>
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      <% else %>
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      <% end %>
+    </div>
+    <p class="text-sm font-medium text-white flex-1"><%= message %></p>
+    <button type="button" data-action="click->dismiss#hide" class="flex-shrink-0 text-white/70 hover:text-white transition" aria-label="<%= t("shared.toast.dismiss") %>">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+</div>

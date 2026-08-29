@@ -1,0 +1,18 @@
+<%# Polled by the pet-import controller while an import is pending. Swaps the
+    status notice on every poll; once the import lands it also swaps in the
+    persisted summary and shows a one-time toast. %>
+<% if @pet_import %>
+  <%= turbo_stream.replace "pet-import-notice" do %>
+    <%= render "shelter/pet_imports/progress_notice", pet_import: @pet_import %>
+  <% end %>
+
+  <% if @pet_import.completed? %>
+    <%= turbo_stream.replace "pet-import-summary" do %>
+      <%= render "shelter/pet_imports/summary", pet_import: @pet_import %>
+    <% end %>
+
+    <%= turbo_stream.append "flash-container" do %>
+      <%= render "shared/milestone_toast", message: pet_import_summary_text(@pet_import) %>
+    <% end %>
+  <% end %>
+<% end %>

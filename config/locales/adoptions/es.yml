@@ -43,14 +43,14 @@ es:
   my:
     adoption_requests:
       index:
-        title: Solicitudes de Adopción Entrantes
-        subtitle: Solicitudes de adopción para tus mascotas. Revisa a los solicitantes y decide quién encaja mejor con tu mascota.
+        title: Solicitudes para mis mascotas
+        subtitle: Solicitudes que recibes de personas que quieren adoptar tus mascotas. Revisa a los solicitantes y responde.
         from: Solicitud de %{name}
         for_pet: Para %{pet_name}
         submitted: Enviada hace %{time}
         view: Ver
-        empty_title: Aún no hay solicitudes entrantes
-        empty_body: Cuando alguien solicite adoptar una de tus mascotas, lo verás aquí.
+        empty_title: Aún no hay solicitudes para tus mascotas
+        empty_body: Cuando publiques una mascota en adopción, aquí aparecerán las solicitudes de los adoptantes.
         pending_count:
           one: "%{count} necesita tu revisión"
           other: "%{count} necesitan tu revisión"

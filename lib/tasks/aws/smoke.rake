@@ -96,7 +96,7 @@ namespace :aws do
       require "aws-sdk-sqs"
       lambda do
         client = Aws::SQS::Client.new
-        queues = %w[tovitu-jobs tovitu-jobs-dlq tovitu-mailers tovitu-mailers-dlq]
+        queues = %w[tovitu-jobs tovitu-jobs-dlq tovitu-mailers tovitu-mailers-dlq tovitu-variants tovitu-variants-dlq]
         failures = []
 
         queues.each do |queue|
@@ -108,7 +108,8 @@ namespace :aws do
         # Primary queues must redrive to their DLQ after maxReceiveCount = 5.
         {
           "tovitu-jobs" => "tovitu-jobs-dlq",
-          "tovitu-mailers" => "tovitu-mailers-dlq"
+          "tovitu-mailers" => "tovitu-mailers-dlq",
+          "tovitu-variants" => "tovitu-variants-dlq"
         }.each do |queue, dlq|
           url = begin
             client.get_queue_url(queue_name: queue).queue_url

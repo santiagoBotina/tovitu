@@ -16,7 +16,7 @@
         <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-4 flex items-center gap-4 hover:shadow-md transition-shadow">
           <div class="shrink-0 w-16 h-16 rounded-xl overflow-hidden bg-neutral-100">
             <% if pet.primary_photo.present? %>
-              <%= image_tag pet.primary_photo.variant(resize_to_limit: [64, 64]), class: "w-full h-full object-cover", alt: pet.name %>
+              <%= image_tag pet.primary_photo.variant(resize_to_limit: [64, 64]), class: "w-full h-full object-cover", alt: pet.name, loading: "lazy", decoding: "async", width: 64, height: 64 %>
             <% else %>
               <div class="w-full h-full flex items-center justify-center text-neutral-400 text-lg font-bold"><%= pet.name.first.upcase %></div>
             <% end %>

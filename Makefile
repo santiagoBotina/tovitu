@@ -1,14 +1,14 @@
 .DEFAULT_GOAL := help
 
 .PHONY: help setup deps run dev docker-up docker-down docker-logs docker-clean \
-        localstack-up localstack-down aws-smoke db-migrate db-seed db-reset \
+        localstack-up localstack-down localstack-init aws-smoke db-migrate db-seed db-reset \
         test test-js test-verbose lint lint-fix console clean install
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-setup: deps .env docker-up install db-migrate db-setup ## First-time project setup (system deps + Docker + gems + DB)
+setup: deps .env docker-up install db-migrate db-setup localstack-init ## First-time project setup (system deps + Docker + gems + DB + AWS resources)
 	@echo ">>> Setup complete. Run 'make dev' to start."
 
 deps: ## Install system dependencies (libvips for image processing)
@@ -80,6 +80,11 @@ localstack-up: ## Start LocalStack (full AWS emulation for dev)
 
 localstack-down: ## Stop LocalStack
 	docker compose stop localstack
+
+localstack-init: ## Re-run LocalStack init hooks (provisions queues, buckets, topics, secrets, ...) on the running container
+	@echo ">>> Re-running LocalStack init hooks..."
+	@docker compose exec -T localstack bash -c 'for f in /etc/localstack/init/ready.d/*.sh; do echo "  -> $$(basename $$f)"; bash "$$f"; done'
+	@echo ">>> LocalStack resources provisioned (idempotent)."
 
 aws-smoke: ## Run the AWS smoke check (verify LocalStack footprint)
 	bin/rails aws:smoke

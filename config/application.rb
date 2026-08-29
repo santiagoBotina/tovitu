@@ -56,5 +56,25 @@ module Tovitu
 
     # Permit locale param from routing scope — not user input
     config.action_controller.always_permitted_parameters = %w[locale]
+
+    # Serve Active Storage images through the app (proxy mode) instead of
+    # redirecting to short-lived S3 presigned URLs. The proxy controller sets
+    # `Cache-Control: max-age=..., immutable` (http_cache_forever), so browsers
+    # cache pet photos for a year and repeat visits skip the network entirely.
+    # Variant URLs are content-addressed, so immutable caching is safe.
+    # Trade-off: image bytes flow through the app until a CDN is added in front.
+    config.active_storage.resolve_model_to_route = :rails_storage_proxy
+
+    # Route Active Storage's internal transform job (preprocessed/named
+    # variants) to the dedicated `variants` queue instead of the shared
+    # default queue. Pets::GeneratePhotoVariantsJob also uses `queue_as
+    # :variants`; see Queuing::QueueRegistry.
+    config.active_storage.queues = { transform: :variants }
+
+    # Track generated variants in `active_storage_variant_records` so URLs
+    # resolve from the DB instead of a per-request S3 HEAD. Safe because
+    # Pets::GeneratePhotoVariantsJob pre-generates every canonical variant at
+    # upload time, which records each one.
+    config.active_storage.track_variants = true
   end
 end

@@ -121,7 +121,28 @@ RSpec.describe "Localization key parity" do
     pets.show.life_preview_week_count.other
   ].freeze
 
-  (AUTH_KEYS + AGE_KEYS).each do |key|
+  # AC-36-17: every new REQ-10/REQ-11 string must exist in both locales.
+  SPECIES_KEYS = Pet::SPECIES.map { |s| "pets.species.#{s}" }.freeze
+  NL_SEARCH_KEYS = %w[
+    pets.index.natural_language.label
+    pets.index.natural_language.placeholder
+    pets.index.natural_language.example
+    pets.index.natural_language.submit
+    pets.index.natural_language.loading
+    pets.index.natural_language.understood_title
+    pets.index.natural_language.search_title
+    pets.index.natural_language.results_description
+    pets.index.natural_language.reasons_title
+    pets.index.natural_language.match_keyword
+    pets.index.natural_language.empty_title
+    pets.index.natural_language.empty_body
+    pets.index.natural_language.browse_all
+    pets.index.natural_language.invalid_title
+    pets.index.natural_language.invalid_body
+    pets.index.natural_language.clear
+  ].freeze
+
+  (AUTH_KEYS + AGE_KEYS + SPECIES_KEYS + NL_SEARCH_KEYS).each do |key|
     it "provides #{key} in both en and es" do
       en = I18n.t(key, locale: :en, default: nil)
       es = I18n.t(key, locale: :es, default: nil)

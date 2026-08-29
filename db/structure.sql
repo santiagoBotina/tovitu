@@ -736,6 +736,47 @@ ALTER SEQUENCE public.password_reset_tokens_id_seq OWNED BY public.password_rese
 
 
 --
+-- Name: pet_imports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pet_imports (
+    id bigint NOT NULL,
+    shelter_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    status character varying DEFAULT 'pending'::character varying NOT NULL,
+    file_name character varying NOT NULL,
+    imported_count integer DEFAULT 0 NOT NULL,
+    duplicate_count integer DEFAULT 0 NOT NULL,
+    error_count integer DEFAULT 0 NOT NULL,
+    total_count integer DEFAULT 0 NOT NULL,
+    error text,
+    summary jsonb DEFAULT '{}'::jsonb NOT NULL,
+    completed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: pet_imports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pet_imports_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pet_imports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pet_imports_id_seq OWNED BY public.pet_imports.id;
+
+
+--
 -- Name: pets; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -770,7 +811,8 @@ CREATE TABLE public.pets (
     life_preview_version integer DEFAULT 0,
     personality_spec text,
     adopter_tips text,
-    publisher_id bigint
+    publisher_id bigint,
+    recommendation text
 );
 
 
@@ -1095,6 +1137,13 @@ ALTER TABLE ONLY public.password_reset_tokens ALTER COLUMN id SET DEFAULT nextva
 
 
 --
+-- Name: pet_imports id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pet_imports ALTER COLUMN id SET DEFAULT nextval('public.pet_imports_id_seq'::regclass);
+
+
+--
 -- Name: pets id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1287,6 +1336,14 @@ ALTER TABLE ONLY public.notifications
 
 ALTER TABLE ONLY public.password_reset_tokens
     ADD CONSTRAINT password_reset_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pet_imports pet_imports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pet_imports
+    ADD CONSTRAINT pet_imports_pkey PRIMARY KEY (id);
 
 
 --
@@ -1695,6 +1752,27 @@ CREATE INDEX index_password_reset_tokens_on_user_id ON public.password_reset_tok
 
 
 --
+-- Name: index_pet_imports_on_shelter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pet_imports_on_shelter_id ON public.pet_imports USING btree (shelter_id);
+
+
+--
+-- Name: index_pet_imports_on_shelter_id_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pet_imports_on_shelter_id_and_created_at ON public.pet_imports USING btree (shelter_id, created_at);
+
+
+--
+-- Name: index_pet_imports_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pet_imports_on_user_id ON public.pet_imports USING btree (user_id);
+
+
+--
 -- Name: index_pets_on_age_category; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1905,6 +1983,14 @@ ALTER TABLE ONLY public.adoption_notes
 
 
 --
+-- Name: pet_imports fk_rails_2712fb23b5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pet_imports
+    ADD CONSTRAINT fk_rails_2712fb23b5 FOREIGN KEY (shelter_id) REFERENCES public.shelters(id);
+
+
+--
 -- Name: pets fk_rails_2976c2db1b; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2073,6 +2159,14 @@ ALTER TABLE ONLY public.adopter_insights
 
 
 --
+-- Name: pet_imports fk_rails_d3f15b1608; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pet_imports
+    ADD CONSTRAINT fk_rails_d3f15b1608 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: adoption_applications fk_rails_d7b317add5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2119,6 +2213,8 @@ ALTER TABLE ONLY public.adoption_applications
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260829000001'),
+('20260828233023'),
 ('20260827000001'),
 ('20260809120000'),
 ('20260806020000'),

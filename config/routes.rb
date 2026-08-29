@@ -113,11 +113,20 @@ Rails.application.routes.draw do
       resources :pets do
         member do
           patch :change_status
+          get :media
         end
         collection do
           patch :bulk_update
         end
-        resources :photos, only: [ :create, :destroy, :update ]
+        resources :photos, only: [ :create, :destroy, :update ] do
+          post :set_primary, on: :member
+          post :move, on: :member
+        end
+      end
+
+      resources :pet_imports, only: [ :index, :new, :create, :show ] do
+        get :status, on: :member
+        get :template, on: :collection
       end
 
       resources :adoption_requests, only: [ :index, :show ] do
