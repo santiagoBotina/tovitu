@@ -65,6 +65,32 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_USERNAME: tovitu
+      DB_PASSWORD: tovitu_dev
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Start PostgreSQL
+        run: docker compose up -d --wait postgres
+
+      - name: Prepare test database
+        run: bin/rails db:test:prepare
+
+      - name: Run test suite
+        run: bundle exec rspec
+
   aws_localstack:
     runs-on: ubuntu-latest
     env:
