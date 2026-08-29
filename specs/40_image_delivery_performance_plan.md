@@ -2,7 +2,7 @@
 
 **Domain:** AWS Infrastructure, Active Storage, Queuing
 **Priority:** 1 (High) — pets pages are image-heavy; every image round-trip currently costs app CPU/IO
-**Status:** Draft
+**Status:** Implemented
 **Tracks:** Pet discovery, Public homepage, Shelter management (all render pet photos)
 
 ---
@@ -242,7 +242,9 @@ variant_worker: env SQS_QUEUES=variants bin/rails queuing:work   # ×2–4 proce
 | `lib/tasks/aws/smoke.rake` | smoke check includes variants queues | ✅ implemented |
 | `config/storage.yml` | `upload.cache_control: immutable` on S3 services | ✅ implemented |
 | `config/environments/production.rb` | `config.asset_host` behind `ASSET_HOST` | ✅ implemented |
-| `db/` (migration) | `active_storage_variant_records` + `track_variants = true` | ⏳ follow-up (coordinated) |
+| `db/` (migration) | `active_storage_variant_records` + `track_variants = true` | ✅ implemented (`config/application.rb:78`, `db/migrate/20260615150851...`) |
+| `spec/lib/queuing/queue_registry_spec.rb` | `variants` mapping + `SQS_QUEUES` override coverage | ✅ implemented |
+| `specs/40_image_delivery_performance/` | specification + acceptance criteria | ✅ implemented |
 | `infra/` (new, with deployment strategy) | CloudFront distribution + cache policy (R1) | 📋 AWS account |
 | S3 lifecycle rule (`variants/`) | R3 | 📋 AWS account |
 | `tovitu-variants` SQS queue | R4 | 📋 AWS account |
