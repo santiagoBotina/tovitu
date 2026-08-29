@@ -1,0 +1,23 @@
+# GitHub Linguist configuration
+# Exclude vendored, generated, and documentation files from language stats.
+
+.opencode/**          linguist-vendored
+node_modules/**       linguist-vendored
+vendor/**             linguist-vendored
+storage/**            linguist-vendored
+log/**                linguist-vendored
+tmp/**                linguist-vendored
+
+Gemfile.lock          linguist-generated
+package-lock.json     linguist-generated
+
+specs/**              linguist-documentation
+*.md                  linguist-documentation
+
+# Force Ruby detection for Ruby source files.
+*.rb                  linguist-language=Ruby
+*.erb                 linguist-language=Ruby
+*.rhtml               linguist-language=Ruby
+*.jbuilder            linguist-language=Ruby
+*.rake                linguist-language=Ruby
+*.ru                  linguist-language=Ruby
