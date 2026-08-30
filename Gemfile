@@ -94,4 +94,4 @@ group :development do
   gem "annotate"
 end
 
-gem "roo", "~> 2.10"
+gem "roo", "~> 3.0"
