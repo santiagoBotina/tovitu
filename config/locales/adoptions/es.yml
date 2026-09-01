@@ -162,3 +162,11 @@ es:
           processing: Procesando...
           cancel: Cancelar
           declined_submit: Enviar Declinación
+
+  adoptions:
+    requests:
+      pagination:
+        label: Paginación
+        previous: Anterior
+        next: Siguiente
+        page: "Página %{page}"

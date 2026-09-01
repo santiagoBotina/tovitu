@@ -4,12 +4,14 @@ class Shelter::AdoptionRequestsController < ApplicationController
 
   def index
     authorize AdoptionRequest
-    @requests = policy_scope(AdoptionRequest)
-                  .by_shelter(@shelter.id)
-                  .includes(:pet, :adopter)
-                  .newest_first
+    scope = policy_scope(AdoptionRequest)
+              .by_shelter(@shelter.id)
+              .newest_first
+    scope = scope.by_status(params[:status]) if params[:status].present?
 
-    @requests = @requests.by_status(params[:status]) if params[:status].present?
+    result = Adoptions::RequestIndex.call(scope: scope, params: index_params)
+    @requests = result.records
+    @pagination = result
   end
 
   def show
@@ -25,6 +27,10 @@ class Shelter::AdoptionRequestsController < ApplicationController
   end
 
   private
+
+  def index_params
+    params.permit(:status, :page, :per_page)
+  end
 
   def refresh_stale_insight
     Ai::GenerateAdopterInsightJob.perform_later(request_id: @request.id) if @request.pet_fit_stale?

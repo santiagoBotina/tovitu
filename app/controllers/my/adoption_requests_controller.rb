@@ -4,11 +4,15 @@ module My
     before_action :require_individual
 
     def index
-      @requests = AdoptionRequest
-        .joins(:pet)
-        .where(pets: { publisher_id: current_user.id })
-        .includes(:pet, :adopter)
-        .order(created_at: :desc)
+      result = Adoptions::RequestIndex.call(
+        scope: AdoptionRequest
+          .joins(:pet)
+          .where(pets: { publisher_id: current_user.id })
+          .order(created_at: :desc),
+        params: params.permit(:page, :per_page)
+      )
+      @requests = result.records
+      @pagination = result
     end
 
     def show

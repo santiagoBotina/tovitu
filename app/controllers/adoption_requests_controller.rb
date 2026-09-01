@@ -5,8 +5,12 @@ class AdoptionRequestsController < ApplicationController
 
   def index
     authorize AdoptionRequest
-    @requests = policy_scope(AdoptionRequest).includes(:pet, :shelter, :timeline_events)
-                                              .newest_first
+    result = Adoptions::RequestIndex.call(
+      scope: policy_scope(AdoptionRequest).newest_first,
+      params: params.permit(:page, :per_page)
+    )
+    @requests = result.records
+    @pagination = result
   end
 
   def show

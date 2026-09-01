@@ -1,0 +1,28 @@
+<%# ─── Adoptions list pagination ─── %>
+<%# Self-hides on the first page with no further records. Preserves the current
+    query params (e.g. status filter) when moving between pages. %>
+<% if pagination.present? && (pagination.page > 1 || pagination.has_next) %>
+  <nav class="flex items-center justify-between gap-3 mt-6" aria-label="<%= t("adoptions.requests.pagination.label") %>">
+    <% if pagination.page > 1 %>
+      <%= link_to url_for(request.params.merge(page: pagination.page - 1)),
+                  class: "inline-flex items-center gap-1 px-4 py-2 text-sm font-medium text-neutral-600 bg-white border border-neutral-300 rounded-xl hover:border-secondary-300 hover:text-secondary-600 transition-all duration-200 active:scale-[0.97]" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        <%= t("adoptions.requests.pagination.previous") %>
+      <% end %>
+    <% else %>
+      <span></span>
+    <% end %>
+
+    <span class="text-sm text-neutral-500"><%= t("adoptions.requests.pagination.page", page: pagination.page) %></span>
+
+    <% if pagination.has_next %>
+      <%= link_to url_for(request.params.merge(page: pagination.page + 1)),
+                  class: "inline-flex items-center gap-1 px-4 py-2 text-sm font-medium text-neutral-600 bg-white border border-neutral-300 rounded-xl hover:border-secondary-300 hover:text-secondary-600 transition-all duration-200 active:scale-[0.97]" do %>
+        <%= t("adoptions.requests.pagination.next") %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      <% end %>
+    <% else %>
+      <span></span>
+    <% end %>
+  </nav>
+<% end %>

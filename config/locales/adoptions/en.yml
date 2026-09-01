@@ -274,6 +274,12 @@ en:
         declined: Request declined
         withdrawn: Request withdrawn by adopter
 
+      pagination:
+        label: Pagination
+        previous: Previous
+        next: Next
+        page: "Page %{page}"
+
   my:
     adoption_requests:
       index:
