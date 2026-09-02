@@ -90,4 +90,23 @@ RSpec.describe "Shelter Dashboard" do
       end
     end
   end
+
+  describe "pets needing attention cap" do
+    let(:shelter) { create(:shelter) }
+    let(:admin) { create(:user, :verified, :shelter_admin, :onboarding_completed, shelter: shelter) }
+
+    before do
+      post session_path, params: { session: { email: admin.email, password: "password123" } }
+    end
+
+    it "caps the pets needing attention list at five" do
+      # Six non-terminal pets, all lacking a photo and a description.
+      create_list(:pet, 6, shelter: shelter, status: "available")
+
+      get shelter_dashboard_path(shelter_id: shelter)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body.scan(%r{/shelter/pets/\d+/edit}).length).to eq(5)
+    end
+  end
 end

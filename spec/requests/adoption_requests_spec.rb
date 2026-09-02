@@ -29,7 +29,9 @@ RSpec.describe "AdoptionRequests" do
     end
 
     it "does not display other users' requests" do
-      other_request = create(:adoption_request)
+      # Explicit pet name avoids a Faker collision with the current user's pet
+      # name, which would make this negative assertion flaky.
+      other_request = create(:adoption_request, pet: create(:pet, name: "Other User Pet"))
       get adoption_requests_path
       expect(response.body).not_to include(other_request.pet.name)
     end

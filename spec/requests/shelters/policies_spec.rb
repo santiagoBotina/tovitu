@@ -75,7 +75,7 @@ RSpec.describe "Shelter Policies" do
         }
       }
 
-      expect(response).to redirect_to(edit_shelter_policies_path(shelter_id: shelter))
+      expect(response).to redirect_to(shelter_policies_path(shelter_id: shelter))
       expect(shelter.reload.adoption_policies["adoption_fee"]).to eq("150")
       expect(shelter.reload.adoption_policies["home_visit_required"]).to eq("true")
     end
@@ -97,7 +97,7 @@ RSpec.describe "Shelter Policies" do
         }
       }
 
-      expect(response).to redirect_to(edit_shelter_policies_path(shelter_id: shelter))
+      expect(response).to redirect_to(shelter_policies_path(shelter_id: shelter))
       policies = shelter.reload.adoption_policies
       expect(policies["adoption_fee"]).to eq("150")
       expect(policies["fee_description"]).to eq("Standard adoption fee")

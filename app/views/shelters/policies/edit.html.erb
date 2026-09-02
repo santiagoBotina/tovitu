@@ -51,7 +51,7 @@
 
           <div>
             <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-primary-50 transition-colors card-lift">
-              <%= check_box_tag "shelter[adoption_policies][home_visit_required]", "true", @shelter.adoption_policies["home_visit_required"] == true, class: "rounded border-neutral-300 text-primary-500 focus:ring-primary-500" %>
+              <%= check_box_tag "shelter[adoption_policies][home_visit_required]", "true", %w[true 1].include?(@shelter.adoption_policies["home_visit_required"].to_s), class: "rounded border-neutral-300 text-primary-500 focus:ring-primary-500" %>
               <div>
                 <span class="text-sm font-medium text-neutral-800"><%= t(".home_visit") %></span>
                 <p class="text-xs text-neutral-500"><%= t(".home_visit_desc") %></p>
@@ -61,7 +61,7 @@
 
           <div>
             <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-primary-50 transition-colors card-lift">
-              <%= check_box_tag "shelter[adoption_policies][fenced_yard_required]", "true", @shelter.adoption_policies["fenced_yard_required"] == true, class: "rounded border-neutral-300 text-primary-500 focus:ring-primary-500" %>
+              <%= check_box_tag "shelter[adoption_policies][fenced_yard_required]", "true", %w[true 1].include?(@shelter.adoption_policies["fenced_yard_required"].to_s), class: "rounded border-neutral-300 text-primary-500 focus:ring-primary-500" %>
               <div>
                 <span class="text-sm font-medium text-neutral-800"><%= t(".fenced_yard") %></span>
                 <p class="text-xs text-neutral-500"><%= t(".fenced_yard_desc") %></p>
@@ -71,7 +71,7 @@
 
           <div>
             <label class="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl cursor-pointer hover:bg-primary-50 transition-colors card-lift">
-              <%= check_box_tag "shelter[adoption_policies][vet_reference_required]", "true", @shelter.adoption_policies["vet_reference_required"] == true, class: "rounded border-neutral-300 text-primary-500 focus:ring-primary-500" %>
+              <%= check_box_tag "shelter[adoption_policies][vet_reference_required]", "true", %w[true 1].include?(@shelter.adoption_policies["vet_reference_required"].to_s), class: "rounded border-neutral-300 text-primary-500 focus:ring-primary-500" %>
               <div>
                 <span class="text-sm font-medium text-neutral-800"><%= t(".vet_reference") %></span>
                 <p class="text-xs text-neutral-500"><%= t(".vet_reference_desc") %></p>

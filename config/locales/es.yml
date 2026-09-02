@@ -418,10 +418,14 @@ es:
     dashboard:
       show:
         title: "Panel de %{name}"
-        subtitle: "Tu refugio de un vistazo: preparación, actividad reciente y próximos pasos para dar mascotas en adopción."
-        subtitle_new: "¡Configuremos tu refugio: agrega mascotas, define políticas e invita a tu equipo para estar en línea!"
-        alert_bar: "🐾 %{count} nueva solicitud de adopción necesita tu atención."
-        alert_bar_plural: "🐾 %{count} nuevas solicitudes de adopción necesitan tu atención."
+        subtitle: "Tienes %{adoptable} mascotas listas para adopción y %{active} adopciones activas."
+        subtitle_empty: "¡Configuremos tu refugio: agrega mascotas, define políticas e invita a tu equipo para estar en línea!"
+        subtitle_pending:
+          one: "Tienes %{count} solicitud de adopción esperando tu revisión."
+          other: "Tienes %{count} solicitudes de adopción esperando tu revisión."
+        alert_bar:
+          one: "Una nueva solicitud de adopción necesita tu atención."
+          other: "%{count} solicitudes de adopción necesitan tu atención."
         alert_cta: "Revisar Ahora"
         progress: "%{percent}% completado"
         onboarding:
@@ -437,21 +441,42 @@ es:
           checklist_title: "Completa estos pasos para publicar:"
           more_steps: "+ %{count} pasos más"
           cta: "¡Vamos!"
+        empty_state:
+          title: "Bienvenido a %{name}"
+          description: "Agrega tu primera mascota y configura tus políticas de adopción para que los adoptantes puedan encontrar a su próximo compañero."
+          primary_cta: "Agrega tu Primera Mascota"
+          secondary_cta_policies: "Revisar Políticas de Adopción"
+          secondary_cta_page: "Ver tu Página Pública"
         pipeline:
           adoptable_pets: "Mascotas Disponibles"
           pending_requests: "Solicitudes Pendientes"
           in_review: "En Revisión"
           active_adoptions: "Adopciones Activas"
+          adoptable_pets_hint_zero: "Agrega una mascota para publicarse"
+          pending_requests_hint_zero: "Todo al día — no hay solicitudes esperando"
+          in_review_hint_zero: "Nada en revisión en este momento"
+          active_adoptions_hint_zero: "Aún no hay adopciones en curso"
         activity:
           title: "Actividad Reciente"
           empty: "Una vez que los adoptantes comiencen a solicitar tus mascotas, su actividad aparecerá aquí."
+          empty_title: "Sin actividad todavía"
           empty_cta: "Agrega tu Primera Mascota"
-          view_all: "Ver toda la actividad →"
+          view_all: "Ver toda la actividad"
+          view_request: "Ver"
+          time_ago: "hace %{time}"
+          unknown_pet: "Mascota desconocida"
           event_new_application: "Nueva solicitud de %{adopter} para %{pet}"
           event_status_changed: "Solicitud para %{pet} cambió a %{status}"
           event_new_note: "Nueva nota sobre la solicitud de %{pet}"
           event_new_staff: "%{name} se unió al equipo"
           event_pet_status: "%{pet} ahora está %{status}"
+        attention:
+          title: "Mascotas que necesitan atención"
+          description: "Una foto y una descripción ayudan a que estas mascotas se adopten más rápido."
+          view_all: "Gestionar todas las mascotas"
+          complete: "Completar perfil"
+          missing_photo: "Sin foto"
+          missing_description: "Sin descripción"
         quick_actions:
           title: "Acciones Rápidas"
           add_pet:
@@ -460,12 +485,18 @@ es:
           review_apps:
             title: "Revisar Solicitudes"
             description: "Revisar y responder solicitudes"
+          manage_pets:
+            title: "Gestionar Mascotas"
+            description: "Ver y actualizar tus publicaciones"
           manage_team:
             title: "Gestionar Equipo"
             description: "Invitar y administrar personal"
           policies:
             title: "Configurar Políticas"
             description: "Establecer requisitos de adopción"
+          profile:
+            title: "Perfil del Refugio"
+            description: "Actualiza cómo aparece tu refugio"
         team:
           title: "Equipo"
           manage: "Gestionar Equipo"
@@ -475,8 +506,11 @@ es:
         title: "Gestión de Personal"
         subtitle: "Invita y administra los miembros de tu equipo del refugio."
         current_staff: "Personal Actual"
-        empty_staff: "Aún no hay miembros del personal."
+        invite_cta: "Invitar miembro del personal"
+        empty_staff_title: "Forma tu equipo"
+        empty_staff_description: "Invita a tu primer miembro del equipo para empezar a colaborar en las adopciones."
         pending_invitations: "Invitaciones Pendientes"
+        no_pending_invitations: "No hay invitaciones pendientes"
         invited_ago: "Invitado hace %{time}"
         expired: "Expirado"
         pending: "Pendiente"

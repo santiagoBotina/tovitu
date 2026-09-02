@@ -59,8 +59,8 @@ RSpec.describe "Section header explanations", type: :request do
     shelter_admin = create(:user, :verified, :shelter_admin, shelter: shelter)
     sign_in_as(shelter_admin)
     get shelter_dashboard_path(shelter)
-    # With pending requests => the "at a glance" explanation is shown (dynamic behavior)
-    expect(response.body).to include("at a glance")
+    # With pending requests => the pending-review explanation is shown (dynamic behavior)
+    expect(response.body).to include("waiting for review")
   end
 
   it "renders explanation on shelter pets" do

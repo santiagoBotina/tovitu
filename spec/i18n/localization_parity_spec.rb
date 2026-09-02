@@ -184,7 +184,61 @@ RSpec.describe "Localization key parity" do
     shelters.policies.edit.submit
   ].freeze
 
-  (AUTH_KEYS + AGE_KEYS + SPECIES_KEYS + NL_SEARCH_KEYS + POLICIES_KEYS).each do |key|
+  # AC-44-*: every Shelter Dashboard show string must exist in both locales.
+  DASHBOARD_KEYS = %w[
+    shelters.dashboard.show.title
+    shelters.dashboard.show.subtitle
+    shelters.dashboard.show.subtitle_empty
+    shelters.dashboard.show.subtitle_pending.one
+    shelters.dashboard.show.subtitle_pending.other
+    shelters.dashboard.show.alert_bar.one
+    shelters.dashboard.show.alert_bar.other
+    shelters.dashboard.show.alert_cta
+    shelters.dashboard.show.empty_state.title
+    shelters.dashboard.show.empty_state.description
+    shelters.dashboard.show.empty_state.primary_cta
+    shelters.dashboard.show.empty_state.secondary_cta_policies
+    shelters.dashboard.show.empty_state.secondary_cta_page
+    shelters.dashboard.show.pipeline.adoptable_pets
+    shelters.dashboard.show.pipeline.pending_requests
+    shelters.dashboard.show.pipeline.in_review
+    shelters.dashboard.show.pipeline.active_adoptions
+    shelters.dashboard.show.pipeline.adoptable_pets_hint_zero
+    shelters.dashboard.show.pipeline.pending_requests_hint_zero
+    shelters.dashboard.show.pipeline.in_review_hint_zero
+    shelters.dashboard.show.pipeline.active_adoptions_hint_zero
+    shelters.dashboard.show.activity.title
+    shelters.dashboard.show.activity.empty
+    shelters.dashboard.show.activity.empty_title
+    shelters.dashboard.show.activity.empty_cta
+    shelters.dashboard.show.activity.view_all
+    shelters.dashboard.show.activity.view_request
+    shelters.dashboard.show.activity.time_ago
+    shelters.dashboard.show.activity.unknown_pet
+    shelters.dashboard.show.activity.event_new_application
+    shelters.dashboard.show.attention.title
+    shelters.dashboard.show.attention.description
+    shelters.dashboard.show.attention.view_all
+    shelters.dashboard.show.attention.complete
+    shelters.dashboard.show.attention.missing_photo
+    shelters.dashboard.show.attention.missing_description
+    shelters.dashboard.show.quick_actions.title
+    shelters.dashboard.show.quick_actions.add_pet.title
+    shelters.dashboard.show.quick_actions.review_apps.title
+    shelters.dashboard.show.quick_actions.manage_pets.title
+    shelters.dashboard.show.quick_actions.manage_pets.description
+    shelters.dashboard.show.quick_actions.manage_team.title
+    shelters.dashboard.show.quick_actions.manage_team.description
+    shelters.dashboard.show.quick_actions.policies.title
+    shelters.dashboard.show.quick_actions.policies.description
+    shelters.dashboard.show.quick_actions.profile.title
+    shelters.dashboard.show.quick_actions.profile.description
+    shelters.dashboard.show.team.title
+    shelters.dashboard.show.team.manage
+    shelters.dashboard.show.team.more
+  ].freeze
+
+  (AUTH_KEYS + AGE_KEYS + SPECIES_KEYS + NL_SEARCH_KEYS + POLICIES_KEYS + DASHBOARD_KEYS).each do |key|
     it "provides #{key} in both en and es" do
       en = I18n.t(key, locale: :en, default: nil)
       es = I18n.t(key, locale: :es, default: nil)

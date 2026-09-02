@@ -23,9 +23,25 @@ module Shelters
                            .order(updated_at: :desc)
                            .limit(5)
 
+      base = @shelter.pets.undiscarded.where(status: %w[available on_hold])
+      # left_joins on both sides keeps the .or structurally compatible; distinct
+      # guards against a pet with multiple photos matching more than once.
+      @pets_needing_attention = base.left_joins(:photos_attachments)
+                                   .where("description IS NULL OR description = ''")
+                                   .or(base.left_joins(:photos_attachments).where(active_storage_attachments: { id: nil }))
+                                   .distinct
+                                   .includes(photos_attachments: :blob)
+                                   .order(created_at: :desc)
+                                   .limit(5)
+                                   .map do |pet|
+                                     missing = []
+                                     missing << :photo if pet.photos.empty?
+                                     missing << :description if pet.description.blank?
+                                     { pet: pet, missing: missing }
+                                   end
+
       @staff_count = @shelter.users.undiscarded.count
       @staff_members = @shelter.users.undiscarded.limit(5)
-      @pending_count = @pending_requests
     end
 
     # Permanently hides a completed onboarding checklist for this shelter.

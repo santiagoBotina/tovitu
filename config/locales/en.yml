@@ -399,10 +399,14 @@ en:
     dashboard:
       show:
         title: "%{name} Dashboard"
-        subtitle: "Your shelter at a glance: readiness, recent activity, and next steps to get pets adopted."
-        subtitle_new: "Let's get your shelter set up: add pets, set policies, and invite your team to go live."
-        alert_bar: "🐾 %{count} new adoption request needs your attention!"
-        alert_bar_plural: "🐾 %{count} new adoption requests need your attention!"
+        subtitle: "You have %{adoptable} pets ready for adoption and %{active} active adoptions."
+        subtitle_empty: "Let's get your shelter set up: add pets, set policies, and invite your team to go live."
+        subtitle_pending:
+          one: "You have %{count} adoption request waiting for review."
+          other: "You have %{count} adoption requests waiting for review."
+        alert_bar:
+          one: "A new adoption request needs your attention!"
+          other: "%{count} adoption requests need your attention!"
         alert_cta: "Review Now"
         progress: "%{percent}% complete"
         onboarding:
@@ -418,21 +422,42 @@ en:
           checklist_title: "Complete these steps to go live:"
           more_steps: "+ %{count} more steps"
           cta: "Let's Go!"
+        empty_state:
+          title: "Welcome to %{name}"
+          description: "Add your first pet and set your adoption policies so adopters can start finding their match."
+          primary_cta: "Add Your First Pet"
+          secondary_cta_policies: "Review Adoption Policies"
+          secondary_cta_page: "View Your Public Page"
         pipeline:
           adoptable_pets: "Adoptable Pets"
           pending_requests: "Pending Requests"
           in_review: "In Review"
           active_adoptions: "Active Adoptions"
+          adoptable_pets_hint_zero: "Add a pet to get listed for adoption"
+          pending_requests_hint_zero: "All caught up — no requests waiting"
+          in_review_hint_zero: "Nothing under review right now"
+          active_adoptions_hint_zero: "No adoptions in progress yet"
         activity:
           title: "Recent Activity"
           empty: "Once adopters start requesting your pets, their activity will show up here."
+          empty_title: "No activity yet"
           empty_cta: "Add Your First Pet"
-          view_all: "View all activity →"
+          view_all: "View all activity"
+          view_request: "View"
+          time_ago: "%{time} ago"
+          unknown_pet: "Unknown pet"
           event_new_application: "New request from %{adopter} for %{pet}"
           event_status_changed: "Request for %{pet} changed to %{status}"
           event_new_note: "New note on %{pet}'s request"
           event_new_staff: "%{name} joined the team"
           event_pet_status: "%{pet} is now %{status}"
+        attention:
+          title: "Pets needing attention"
+          description: "A photo and a description help these pets get adopted faster."
+          view_all: "Manage all pets"
+          complete: "Complete profile"
+          missing_photo: "No photo"
+          missing_description: "No description"
         quick_actions:
           title: "Quick Actions"
           add_pet:
@@ -441,12 +466,18 @@ en:
           review_apps:
             title: "Review Applications"
             description: "Review and respond to requests"
+          manage_pets:
+            title: "Manage Pets"
+            description: "View and update your pet listings"
           manage_team:
             title: "Manage Team"
             description: "Invite and manage staff"
           policies:
             title: "Configure Policies"
             description: "Set adoption requirements"
+          profile:
+            title: "Shelter Profile"
+            description: "Update how your shelter appears"
         team:
           title: "Team"
           manage: "Manage Team"
@@ -456,8 +487,11 @@ en:
         title: "Staff Management"
         subtitle: "Invite and manage your shelter team members."
         current_staff: "Current Staff"
-        empty_staff: "No staff members yet."
+        invite_cta: "Invite staff member"
+        empty_staff_title: "Build your team"
+        empty_staff_description: "Invite your first team member to start collaborating on adoptions."
         pending_invitations: "Pending Invitations"
+        no_pending_invitations: "No pending invitations"
         invited_ago: "Invited %{time} ago"
         expired: "Expired"
         pending: "Pending"

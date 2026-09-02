@@ -32,7 +32,9 @@ RSpec.describe "Shelter AdoptionRequests" do
       it "renders the request with the adopter's name and contact details" do
         get shelter_adoption_request_path(request)
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include(adopter.name)
+        # Names can contain apostrophes, which the HTML renderer escapes (&#39;),
+        # so compare against the escaped form.
+        expect(response.body).to include(CGI.escapeHTML(adopter.name))
         expect(response.body).to include(adopter.email)
       end
 

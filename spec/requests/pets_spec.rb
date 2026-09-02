@@ -108,7 +108,9 @@ RSpec.describe "Pets" do
 
     it "excludes species the user did not describe" do
       allow(Ai::Provider).to receive(:call).and_return(default_search_intent_response.to_json)
-      bird = create(:pet, shelter: shelter, species: "bird", created_at: 3.days.ago)
+      # Explicit bird name avoids a Faker collision with the dog's name, which
+      # would otherwise make the negative assertion below flaky.
+      bird = create(:pet, shelter: shelter, name: "Feathered Friend", species: "bird", created_at: 3.days.ago)
       dog = create(:pet, shelter: shelter, species: "dog", size: "small",
                    personality_traits: [ "calm" ], created_at: 1.day.ago)
 
@@ -177,11 +179,13 @@ RSpec.describe "Pets" do
 
     it "combines a natural-language intent with structured filters (filters constrain, NL ranks)" do
       allow(Ai::Provider).to receive(:call).and_return(default_search_intent_response.to_json)
-      dog = create(:pet, shelter: shelter, species: "dog", size: "small",
+      # Explicit names avoid Faker collisions between the two dogs (and the cat),
+      # which would make the ranking assertion below non-deterministic.
+      dog = create(:pet, shelter: shelter, name: "Calm Apartment Dog", species: "dog", size: "small",
                    personality_traits: [ "calm" ], description: "Great in an apartment")
-      other_dog = create(:pet, shelter: shelter, species: "dog", size: "large",
+      other_dog = create(:pet, shelter: shelter, name: "Energetic Large Dog", species: "dog", size: "large",
                         personality_traits: [ "energetic" ])
-      cat = create(:pet, shelter: shelter, species: "cat", size: "small",
+      cat = create(:pet, shelter: shelter, name: "Quiet Cat", species: "cat", size: "small",
                   personality_traits: [ "calm" ])
 
       get pets_path, params: { intent: "un perro tranquilo para departamento", species: "dog" }

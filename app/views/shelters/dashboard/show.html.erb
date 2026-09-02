@@ -1,12 +1,35 @@
 <% shelter = present(@shelter) %>
 <% can_manage = policy(@shelter).manage? %>
+<% empty_shelter = @total_pets.zero? && @total_requests_count.zero? %>
 
 <%# Welcome overlay for first-time visitors (JS checks sessionStorage) %>
-<% if @shelter.pets.undiscarded.count == 0 %>
+<% if @total_pets.zero? %>
   <%= render "shelters/dashboard/welcome_overlay", shelter: shelter %>
 <% end %>
 
-<div class="w-full max-w-5xl mx-auto"
+<%# Contextual header subtitle, derived from existing counts (REQ-44-2) %>
+<% subtitle_key, subtitle_args =
+     if @total_pets.zero? && @total_requests_count.zero?
+       [ ".subtitle_empty", {} ]
+     elsif @pending_requests > 0
+       [ ".subtitle_pending", { count: @pending_requests } ]
+     else
+       [ ".subtitle", { adoptable: @adoptable_pets, active: @active_adoptions } ]
+     end %>
+
+<%# Shelter identity avatar (logo where available, initials otherwise) %>
+<% avatar_html =
+     if shelter.logo_url.present?
+       tag.span(class: "shrink-0 w-10 h-10 rounded-xl overflow-hidden bg-primary-100 border border-primary-200 flex items-center justify-center") do
+         image_tag(shelter.logo_url, alt: "", class: "w-full h-full object-cover", loading: "lazy", decoding: "async")
+       end
+     else
+       tag.span(class: "shrink-0 w-10 h-10 rounded-xl bg-primary-100 border border-primary-200 flex items-center justify-center", aria: { hidden: "true" }) do
+         tag.span(class: "font-display text-base font-bold text-primary-600") { @shelter.name.first.upcase }
+       end
+     end %>
+
+<div class="w-full max-w-7xl mx-auto"
      data-controller="confetti"
      data-action="checklist:level-up@document->confetti#fire">
 
@@ -14,22 +37,30 @@
   <%# HEADER                                                        %>
   <%# ──────────────────────────────────────────────────────────── %>
   <%= render "shared/section_header",
-             title: t(".title", name: @shelter.name),
-             subtitle: (@pending_count > 0 ? t(".subtitle") : t(".subtitle_new")),
-             header_class: "mb-6" %>
+             title: safe_join([ avatar_html, t(".title", name: @shelter.name) ]),
+             subtitle: t(subtitle_key, **subtitle_args),
+             header_class: "mb-6 bento-enter bento-enter-d1",
+             title_class: "font-display text-2xl md:text-3xl font-bold text-neutral-900 flex items-center gap-3 min-w-0 flex-wrap text-balance",
+             subtitle_class: "text-neutral-500 text-sm md:text-base mt-2 max-w-2xl" %>
 
   <%# ──────────────────────────────────────────────────────────── %>
   <%# ALERT BAR (conditional)                                       %>
   <%# ──────────────────────────────────────────────────────────── %>
-  <% if @pending_count > 0 %>
-    <div class="mb-6 bg-secondary-50 border border-secondary-200 rounded-xl p-4 flex items-center justify-between gap-4 bento-enter bento-enter-d1">
-      <p class="text-sm font-medium text-secondary-700">
-        <%= t(@pending_count == 1 ? ".alert_bar" : ".alert_bar_plural", count: @pending_count) %>
-      </p>
+  <% if @pending_requests > 0 %>
+    <div class="mb-6 bg-warning/10 border border-warning/20 rounded-xl p-4 sm:p-5 flex items-center justify-between gap-4 bento-enter bento-enter-d2"
+         role="status">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="shrink-0 w-10 h-10 rounded-xl bg-warning flex items-center justify-center" aria-hidden="true">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <p class="text-sm font-semibold text-neutral-800"><%= t(".alert_bar", count: @pending_requests) %></p>
+      </div>
       <%= link_to shelter_adoption_requests_path,
-          class: "inline-flex items-center gap-1.5 px-4 py-2 bg-secondary-500 text-white text-sm font-medium rounded-xl hover:bg-secondary-600 focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 transition-all duration-150 active:scale-[0.97]" do %>
+          class: "shrink-0 inline-flex items-center gap-1.5 px-4 py-2 bg-primary-500 text-white text-sm font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
         <%= t(".alert_cta") %>
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="9 18 15 12 9 6"/>
         </svg>
       <% end %>
@@ -38,6 +69,7 @@
 
   <%# ──────────────────────────────────────────────────────────── %>
   <%# ONBOARDING CHECKLIST (Gamified)                                %>
+  <%# Turbo Stream targets #onboarding-checklist / #progress-bar      %>
   <%# ──────────────────────────────────────────────────────────── %>
   <% if shelter.checklist_dismissed? %>
     <% if can_manage %>
@@ -46,7 +78,7 @@
   <% else %>
     <div class="bg-primary-50 rounded-xl shadow-sm border border-primary-100 p-6 mb-8 bento-enter bento-enter-d2">
       <div class="flex items-center gap-3 mb-4">
-        <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center" aria-hidden="true">
+        <div class="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center" aria-hidden="true">
           <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"/>
           </svg>
@@ -71,159 +103,277 @@
   <% end %>
 
   <%# ──────────────────────────────────────────────────────────── %>
-  <%# PIPELINE METRICS                                              %>
+  <%# EMPTY SHELTER HERO (no pets, no requests)                     %>
   <%# ──────────────────────────────────────────────────────────── %>
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-    <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-5 bento-enter bento-enter-d3">
-      <div class="w-10 h-10 bg-primary-50 rounded-full flex items-center justify-center mb-3" aria-hidden="true">
-        <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
-        </svg>
+  <% if empty_shelter %>
+    <section class="bg-gradient-to-br from-primary-50 via-primary-50/70 to-white rounded-xl p-6 sm:p-10 border border-primary-100 shadow-sm mb-8 bento-enter bento-enter-d2">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-6">
+        <div class="shrink-0 w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center" aria-hidden="true">
+          <svg class="w-7 h-7 text-primary-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <h2 class="font-display text-xl font-bold text-neutral-900 mb-1"><%= t(".empty_state.title", name: @shelter.name) %></h2>
+          <p class="text-sm text-neutral-600 text-balance max-w-2xl"><%= t(".empty_state.description") %></p>
+        </div>
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+          <%= link_to new_shelter_pet_path,
+              class: "inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            <%= t(".empty_state.primary_cta") %>
+          <% end %>
+          <% if can_manage %>
+            <%= link_to edit_shelter_policies_path(shelter_id: @shelter),
+                class: "inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-neutral-200 text-neutral-700 font-semibold text-sm rounded-xl hover:bg-primary-50 hover:border-primary-200 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
+              <%= t(".empty_state.secondary_cta_policies") %>
+            <% end %>
+          <% else %>
+            <%= link_to shelter_path(@shelter),
+                class: "inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-neutral-200 text-neutral-700 font-semibold text-sm rounded-xl hover:bg-primary-50 hover:border-primary-200 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
+              <%= t(".empty_state.secondary_cta_page") %>
+            <% end %>
+          <% end %>
+        </div>
       </div>
-      <p class="font-display text-3xl font-bold text-neutral-900"><%= @adoptable_pets %></p>
-      <p class="text-neutral-500 text-sm mt-1"><%= t(".pipeline.adoptable_pets") %></p>
-    </div>
-
-    <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-5 bento-enter bento-enter-d4">
-      <div class="w-10 h-10 bg-warning/10 rounded-full flex items-center justify-center mb-3" aria-hidden="true">
-        <svg class="w-5 h-5 text-warning" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-        </svg>
-      </div>
-      <p class="font-display text-3xl font-bold text-neutral-900"><%= @pending_requests %></p>
-      <p class="text-neutral-500 text-sm mt-1"><%= t(".pipeline.pending_requests") %></p>
-    </div>
-
-    <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-5 bento-enter bento-enter-d5">
-      <div class="w-10 h-10 bg-info/10 rounded-full flex items-center justify-center mb-3" aria-hidden="true">
-        <svg class="w-5 h-5 text-info" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-      </div>
-      <p class="font-display text-3xl font-bold text-neutral-900"><%= @in_review_requests %></p>
-      <p class="text-neutral-500 text-sm mt-1"><%= t(".pipeline.in_review") %></p>
-    </div>
-
-    <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-5 bento-enter bento-enter-d6">
-      <div class="w-10 h-10 bg-secondary-50 rounded-full flex items-center justify-center mb-3" aria-hidden="true">
-        <svg class="w-5 h-5 text-secondary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 14c1.5-2.5 2-5.5 2-8 0-3-2-5-5-5-1.8 0-3.4.9-4.3 2.3C10.4 1.9 8.8 1 7 1 4 1 2 3 2 6c0 2.5.5 5.5 2 8M12 23c-4-3-8-6-8-10a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 4-4 7-8 10Z"/>
-        </svg>
-      </div>
-      <p class="font-display text-3xl font-bold text-neutral-900"><%= @active_adoptions %></p>
-      <p class="text-neutral-500 text-sm mt-1"><%= t(".pipeline.active_adoptions") %></p>
-    </div>
-  </div>
+    </section>
 
   <%# ──────────────────────────────────────────────────────────── %>
-  <%# TWO-COLUMN: Activity + Quick Actions                          %>
+  <%# PIPELINE METRICS (data-backed, zero-state aware)              %>
   <%# ──────────────────────────────────────────────────────────── %>
-  <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+  <% else %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
 
-    <%# ── Recent Activity ─────────────────────────────────────── %>
-    <div class="md:col-span-3 bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d7">
-      <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".activity.title") %></h2>
+      <%= link_to shelter_pets_path,
+          class: "group bg-white rounded-xl p-5 sm:p-6 shadow-sm border border-neutral-200 hover:border-primary-200 hover:shadow-md transition-all duration-200 card-lift bento-enter bento-enter-d3" do %>
+        <div class="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center mb-4" aria-hidden="true">
+          <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
+          </svg>
+        </div>
+        <p class="font-display text-3xl font-bold text-neutral-900"><%= @adoptable_pets %></p>
+        <p class="text-sm text-neutral-500 mt-1"><%= t(".pipeline.adoptable_pets") %></p>
+        <% if @adoptable_pets.zero? %>
+          <p class="text-xs text-neutral-400 mt-2"><%= t(".pipeline.adoptable_pets_hint_zero") %></p>
+        <% end %>
+      <% end %>
 
-      <% if @recent_activity.any? %>
-        <div class="space-y-0 divide-y divide-neutral-100">
-          <% @recent_activity.each do |req| %>
-            <% icon_color = case req.status
-              when "pending"   then "text-warning bg-warning/10"
-              when "in_validation" then "text-info bg-info/10"
-              when "accepted"  then "text-secondary-500 bg-secondary-50"
-              when "withdrawn" then "text-neutral-400 bg-neutral-100"
-              when "declined"  then "text-neutral-400 bg-neutral-100"
-              else "text-neutral-400 bg-neutral-100"
-              end %>
-            <div class="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-              <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 <%= icon_color %>" aria-hidden="true">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-                </svg>
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm text-neutral-700 truncate">
-                  <%= t(".activity.event_new_application",
-                        adopter: req.adopter.name,
-                        pet: req.pet&.name || "Unknown") %>
-                </p>
-                <p class="text-xs text-neutral-400"><%= distance_of_time_in_words(req.created_at, Time.current) %> ago</p>
-              </div>
-              <%= link_to shelter_adoption_request_path(req),
-                  class: "shrink-0 text-xs font-medium text-primary-500 hover:text-primary-600 transition-colors",
-                  aria: { label: "View request" } do %>
-                View &rarr;
-              <% end %>
-            </div>
+      <%= link_to shelter_adoption_requests_path(status: "pending"),
+          class: "group bg-white rounded-xl p-5 sm:p-6 shadow-sm border border-neutral-200 hover:border-warning/40 hover:shadow-md transition-all duration-200 card-lift bento-enter bento-enter-d4" do %>
+        <div class="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center mb-4" aria-hidden="true">
+          <svg class="w-5 h-5 text-warning" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <p class="font-display text-3xl font-bold text-neutral-900"><%= @pending_requests %></p>
+        <p class="text-sm text-neutral-500 mt-1"><%= t(".pipeline.pending_requests") %></p>
+        <% if @pending_requests.zero? %>
+          <p class="text-xs text-neutral-400 mt-2"><%= t(".pipeline.pending_requests_hint_zero") %></p>
+        <% end %>
+      <% end %>
+
+      <%= link_to shelter_adoption_requests_path(status: "in_validation"),
+          class: "group bg-white rounded-xl p-5 sm:p-6 shadow-sm border border-neutral-200 hover:border-info/40 hover:shadow-md transition-all duration-200 card-lift bento-enter bento-enter-d5" do %>
+        <div class="w-10 h-10 rounded-xl bg-info/10 flex items-center justify-center mb-4" aria-hidden="true">
+          <svg class="w-5 h-5 text-info" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </div>
+        <p class="font-display text-3xl font-bold text-neutral-900"><%= @in_review_requests %></p>
+        <p class="text-sm text-neutral-500 mt-1"><%= t(".pipeline.in_review") %></p>
+        <% if @in_review_requests.zero? %>
+          <p class="text-xs text-neutral-400 mt-2"><%= t(".pipeline.in_review_hint_zero") %></p>
+        <% end %>
+      <% end %>
+
+      <%= link_to shelter_adoption_requests_path(status: "accepted"),
+          class: "group bg-white rounded-xl p-5 sm:p-6 shadow-sm border border-neutral-200 hover:border-secondary-300 hover:shadow-md transition-all duration-200 card-lift bento-enter bento-enter-d6" do %>
+        <div class="w-10 h-10 rounded-xl bg-secondary-50 flex items-center justify-center mb-4" aria-hidden="true">
+          <svg class="w-5 h-5 text-secondary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 14c1.5-2.5 2-5.5 2-8 0-3-2-5-5-5-1.8 0-3.4.9-4.3 2.3C10.4 1.9 8.8 1 7 1 4 1 2 3 2 6c0 2.5.5 5.5 2 8M12 23c-4-3-8-6-8-10a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 4-4 7-8 10Z"/>
+          </svg>
+        </div>
+        <p class="font-display text-3xl font-bold text-neutral-900"><%= @active_adoptions %></p>
+        <p class="text-sm text-neutral-500 mt-1"><%= t(".pipeline.active_adoptions") %></p>
+        <% if @active_adoptions.zero? %>
+          <p class="text-xs text-neutral-400 mt-2"><%= t(".pipeline.active_adoptions_hint_zero") %></p>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# ──────────────────────────────────────────────────────────── %>
+  <%# TWO-COLUMN: Activity + Attention | Quick Actions + Team        %>
+  <%# ──────────────────────────────────────────────────────────── %>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+    <%# ── Left column ─────────────────────────────────────────── %>
+    <div class="lg:col-span-2 space-y-5">
+
+      <%# Recent Activity %>
+      <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d3">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".activity.title") %></h2>
+          <% if @recent_activity.length >= 5 %>
+            <%= link_to shelter_adoption_requests_path,
+                class: "text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors rounded-lg focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" do %>
+              <%= t(".activity.view_all") %>
+            <% end %>
           <% end %>
         </div>
 
-        <% if @recent_activity.length >= 5 %>
-          <div class="mt-4 pt-4 border-t border-neutral-100 text-center">
-            <%= link_to shelter_adoption_requests_path,
-                class: "text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors" do %>
-              <%= t(".activity.view_all") %>
+        <% if @recent_activity.any? %>
+          <div class="space-y-1 divide-y divide-neutral-100">
+            <% @recent_activity.each do |req| %>
+              <% icon_color = case req.status
+                when "pending"   then "text-warning bg-warning/10"
+                when "in_validation" then "text-info bg-info/10"
+                when "accepted"  then "text-secondary-500 bg-secondary-50"
+                when "withdrawn" then "text-neutral-400 bg-neutral-100"
+                when "declined"  then "text-neutral-400 bg-neutral-100"
+                else "text-neutral-400 bg-neutral-100"
+                end %>
+              <div class="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 <%= icon_color %>" aria-hidden="true">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-neutral-700 truncate">
+                    <%= t(".activity.event_new_application",
+                          adopter: req.adopter.name,
+                          pet: req.pet&.name || t(".activity.unknown_pet")) %>
+                  </p>
+                  <p class="text-xs text-neutral-400"><%= t(".activity.time_ago", time: distance_of_time_in_words(req.created_at, Time.current)) %></p>
+                </div>
+                <%= link_to shelter_adoption_request_path(req),
+                    class: "shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-primary-500 hover:text-primary-600 transition-colors rounded-lg focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2",
+                    aria: { label: t(".activity.view_request", adopter: req.adopter.name) } do %>
+                  <%= t(".activity.view_request") %>
+                  <span aria-hidden="true">→</span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <div class="w-14 h-14 mx-auto mb-3 rounded-xl bg-neutral-100 flex items-center justify-center" aria-hidden="true">
+              <svg class="w-7 h-7 text-neutral-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 8v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-base font-bold text-neutral-700 mb-1"><%= t(".activity.empty_title") %></h3>
+            <p class="text-sm text-neutral-500 mb-4 max-w-xs mx-auto"><%= t(".activity.empty") %></p>
+            <%= link_to new_shelter_pet_path,
+                class: "inline-flex items-center gap-1.5 px-4 py-2 bg-primary-500 text-white text-sm font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              <%= t(".activity.empty_cta") %>
             <% end %>
           </div>
         <% end %>
+      </section>
 
-      <% else %>
-        <div class="text-center py-8">
-          <div class="w-12 h-12 mx-auto mb-3 bg-neutral-100 rounded-full flex items-center justify-center" aria-hidden="true">
-            <svg class="w-6 h-6 text-neutral-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 8v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-            </svg>
+      <%# Pets needing attention (derived from existing data only) %>
+      <% if @pets_needing_attention.any? %>
+        <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d4">
+          <div class="flex items-center justify-between mb-1">
+            <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".attention.title") %></h2>
+            <%= link_to shelter_pets_path,
+                class: "text-sm font-medium text-primary-500 hover:text-primary-600 transition-colors rounded-lg focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" do %>
+              <%= t(".attention.view_all") %>
+            <% end %>
           </div>
-          <p class="text-sm text-neutral-500 mb-4"><%= t(".activity.empty") %></p>
-          <%= link_to new_shelter_pet_path,
-              class: "inline-flex items-center gap-1.5 px-4 py-2 bg-primary-500 text-white text-sm font-medium rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-150 active:scale-[0.97]" do %>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-            <%= t(".activity.empty_cta") %>
-          <% end %>
-        </div>
+          <p class="text-sm text-neutral-500 mb-4"><%= t(".attention.description") %></p>
+
+          <div class="space-y-2">
+            <% @pets_needing_attention.each do |entry| %>
+              <% pet = entry[:pet] %>
+              <%= link_to edit_shelter_pet_path(id: pet.id),
+                  class: "group flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" do %>
+                <div class="shrink-0 w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center" aria-hidden="true">
+                  <span class="font-display text-base font-bold text-neutral-400"><%= pet.name.first.upcase %></span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-neutral-800 truncate group-hover:text-primary-600 transition-colors"><%= pet.name %></p>
+                  <div class="flex flex-wrap gap-1.5 mt-1">
+                    <% entry[:missing].each do |missing| %>
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium <%= missing == :photo ? 'bg-warning/10 text-warning' : 'bg-info/10 text-info' %>">
+                        <% if missing == :photo %>
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                          </svg>
+                        <% else %>
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>
+                          </svg>
+                        <% end %>
+                        <%= t(".attention.missing_#{missing}") %>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+                <span class="shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-primary-500 group-hover:text-primary-600 transition-colors">
+                  <%= t(".attention.complete") %>
+                  <span aria-hidden="true">→</span>
+                </span>
+              <% end %>
+            <% end %>
+          </div>
+        </section>
       <% end %>
     </div>
 
-    <%# ── Quick Actions + Team Status ─────────────────────────── %>
-    <div class="md:col-span-2 space-y-6">
+    <%# ── Right column ────────────────────────────────────────── %>
+    <div class="space-y-5">
 
       <%# Quick Actions %>
-      <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d7">
+      <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d5">
         <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".quick_actions.title") %></h2>
-        <div class="grid grid-cols-1 gap-3">
+
+        <%# Most important actions, full-bleed (REQ-44-5) %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
           <%= link_to new_shelter_pet_path,
-              class: "group flex items-center gap-3 p-3.5 bg-neutral-50 rounded-xl hover:bg-primary-50 transition-colors duration-200 border border-neutral-100 hover:border-primary-100" do %>
-            <div class="w-9 h-9 bg-primary-50 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
-              <svg class="w-4.5 h-4.5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-              </svg>
-            </div>
-            <div>
-              <p class="font-medium text-sm text-neutral-800 group-hover:text-primary-700 transition-colors"><%= t(".quick_actions.add_pet.title") %></p>
-              <p class="text-xs text-neutral-500"><%= t(".quick_actions.add_pet.description") %></p>
-            </div>
+              class: "group inline-flex items-center justify-center gap-2 px-4 py-3 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            <%= t(".quick_actions.add_pet.title") %>
           <% end %>
 
           <%= link_to shelter_adoption_requests_path,
-              class: "group flex items-center gap-3 p-3.5 bg-neutral-50 rounded-xl hover:bg-primary-50 transition-colors duration-200 border border-neutral-100 hover:border-primary-100" do %>
+              class: "group inline-flex items-center justify-center gap-2 px-4 py-3 bg-secondary-500 text-white font-semibold text-sm rounded-xl hover:bg-secondary-600 focus-visible:ring-2 focus-visible:ring-secondary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <%= t(".quick_actions.review_apps.title") %>
+          <% end %>
+        </div>
+
+        <%# Secondary actions %>
+        <div class="grid grid-cols-1 gap-1">
+          <%= link_to shelter_pets_path,
+              class: "group flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" do %>
             <div class="w-9 h-9 bg-primary-50 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
-              <svg class="w-4.5 h-4.5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+              <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5.5 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm13 0a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM12 20a4.5 4.5 0 0 0 4.5-4.5c0-1.6-1.2-3.8-2.7-5.2a2.5 2.5 0 0 0-3.6 0C8.7 11.7 7.5 13.9 7.5 15.5A4.5 4.5 0 0 0 12 20Z"/>
               </svg>
             </div>
             <div>
-              <p class="font-medium text-sm text-neutral-800 group-hover:text-primary-700 transition-colors"><%= t(".quick_actions.review_apps.title") %></p>
-              <p class="text-xs text-neutral-500"><%= t(".quick_actions.review_apps.description") %></p>
+              <p class="font-medium text-sm text-neutral-800 group-hover:text-primary-700 transition-colors"><%= t(".quick_actions.manage_pets.title") %></p>
+              <p class="text-xs text-neutral-500"><%= t(".quick_actions.manage_pets.description") %></p>
             </div>
           <% end %>
 
           <% if can_manage %>
             <%= link_to shelter_staff_index_path(shelter_id: @shelter),
-                class: "group flex items-center gap-3 p-3.5 bg-neutral-50 rounded-xl hover:bg-primary-50 transition-colors duration-200 border border-neutral-100 hover:border-primary-100" do %>
+                class: "group flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" do %>
               <div class="w-9 h-9 bg-primary-50 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
-                <svg class="w-4.5 h-4.5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M12 4.354a4 4 0 1 1 0 5.292M15 21H3v-1a6 6 0 0 1 12 0v1Zm0 0h6v-1a6 6 0 0 0-9-5.197"/>
                 </svg>
               </div>
@@ -233,10 +383,10 @@
               </div>
             <% end %>
 
-            <%= link_to shelter_policies_path(shelter_id: @shelter),
-                class: "group flex items-center gap-3 p-3.5 bg-neutral-50 rounded-xl hover:bg-primary-50 transition-colors duration-200 border border-neutral-100 hover:border-primary-100" do %>
+            <%= link_to edit_shelter_policies_path(shelter_id: @shelter),
+                class: "group flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" do %>
               <div class="w-9 h-9 bg-primary-50 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
-                <svg class="w-4.5 h-4.5 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 </svg>
               </div>
@@ -245,13 +395,26 @@
                 <p class="text-xs text-neutral-500"><%= t(".quick_actions.policies.description") %></p>
               </div>
             <% end %>
+
+            <%= link_to edit_shelter_path(id: @shelter),
+                class: "group flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" do %>
+              <div class="w-9 h-9 bg-primary-50 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
+                <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                </svg>
+              </div>
+              <div>
+                <p class="font-medium text-sm text-neutral-800 group-hover:text-primary-700 transition-colors"><%= t(".quick_actions.profile.title") %></p>
+                <p class="text-xs text-neutral-500"><%= t(".quick_actions.profile.description") %></p>
+              </div>
+            <% end %>
           <% end %>
         </div>
-      </div>
+      </section>
 
       <%# Team Status (conditional) %>
       <% if @staff_count >= 2 %>
-        <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 bento-enter bento-enter-d7">
+        <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d6">
           <div class="flex items-center justify-between mb-4">
             <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".team.title") %></h2>
             <% if can_manage %>
@@ -279,7 +442,7 @@
               </div>
             <% end %>
           </div>
-        </div>
+        </section>
       <% end %>
     </div>
   </div>
