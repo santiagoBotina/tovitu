@@ -1,18 +1,14 @@
 <%# ─── Individual Publisher Decision Page ─── %>
 <div class="w-full max-w-2xl mx-auto">
-  <%= link_to my_adoption_request_path(@request), class: "inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-700 text-sm mb-6 transition" do %>
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-    </svg>
-    <%= t(".back") %>
-  <% end %>
+  <%= render "shared/section_header",
+             title: params[:decision] == "accepted" ? t(".accept_title") : t(".title"),
+             subtitle: params[:decision] == "accepted" ? t(".accept_subtitle", pet_name: @request.pet.name, adopter_name: @request.adopter.name) : t(".subtitle", pet_name: @request.pet.name, adopter_name: @request.adopter.name),
+             back_link_path: safe_back_path(my_adoption_request_path(@request)),
+             back_label: t(".back") %>
 
   <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
     <% if params[:decision] == "accepted" %>
       <%# ─── Accept Confirmation ─── %>
-      <h1 class="font-display text-xl font-bold text-neutral-900 mb-2"><%= t(".accept_title") %></h1>
-      <p class="text-neutral-500 text-sm mb-6"><%= t(".accept_subtitle", pet_name: @request.pet.name, adopter_name: @request.adopter.name) %></p>
-
       <%= form_tag my_adoption_request_decision_path(@request), method: :post, class: "space-y-6" do %>
         <%= hidden_field_tag :decision, "accepted" %>
 
@@ -32,9 +28,6 @@
       <% end %>
     <% else %>
       <%# ─── Decline Form ─── %>
-      <h1 class="font-display text-xl font-bold text-neutral-900 mb-2"><%= t(".title") %></h1>
-      <p class="text-neutral-500 text-sm mb-6"><%= t(".subtitle", pet_name: @request.pet.name, adopter_name: @request.adopter.name) %></p>
-
       <%= form_tag my_adoption_request_decision_path(@request), method: :post, class: "space-y-6" do %>
         <%= hidden_field_tag :decision, "declined" %>
 

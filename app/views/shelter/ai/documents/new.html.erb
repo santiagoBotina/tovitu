@@ -2,16 +2,12 @@
 <%# Design: Dashboard-level form card with consistent styling %>
 <div class="max-w-2xl mx-auto px-4 py-8">
 
-  <%# ─── Back link ─── %>
-  <div class="mb-6 bento-enter bento-enter-d1">
-    <%= render "shared/back_link", path: shelter_ai_documents_path, label: t(".back") %>
-  </div>
-
-  <%# ─── Page Header ─── %>
-  <header class="mb-6 bento-enter bento-enter-d1">
-    <h1 class="font-display text-2xl font-bold text-neutral-900"><%= t(".title") %></h1>
-    <p class="text-neutral-500 text-sm mt-1"><%= t(".subtitle") %></p>
-  </header>
+  <%= render "shared/section_header",
+             title: t(".title"),
+             subtitle: t(".subtitle"),
+             back_link_path: safe_back_path(shelter_ai_documents_path),
+             back_label: t(".back"),
+             header_class: "mb-6 bento-enter bento-enter-d1" %>
 
   <%= form_with model: @document, url: shelter_ai_documents_path, local: true, class: "bg-white rounded-xl p-8 shadow-sm border border-neutral-200 bento-enter bento-enter-d2" do |f| %>
     <% if @document.errors.any? %>

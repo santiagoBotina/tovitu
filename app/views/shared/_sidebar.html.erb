@@ -218,7 +218,7 @@
 
           <%# ─── Adoption Policies (admin-only) ─── %>
           <% policies_active = path_active?('/shelter/policies') || path_active?('/policies') %>
-          <%= link_to edit_shelter_policies_path(shelter_id: current_user.shelter_id),
+          <%= link_to shelter_policies_path(shelter_id: current_user.shelter_id),
               class: "#{base_link} #{policies_active ? active_link : inactive_link}",
               aria: { current: policies_active ? "page" : nil } do %>
             <div class="shrink-0 w-5 h-5 flex items-center justify-center">

@@ -3,6 +3,10 @@ module Shelters
     before_action :require_authentication
     before_action :set_shelter
 
+    def show
+      authorize @shelter, :policies_edit?
+    end
+
     def edit
       authorize @shelter, :policies_edit?
     end

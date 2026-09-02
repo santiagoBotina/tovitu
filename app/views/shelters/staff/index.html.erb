@@ -2,14 +2,11 @@
 <%# Design: Dashboard-level bento cards, team member rows, invite form with consistent styling %>
 <div class="w-full max-w-2xl mx-auto">
 
-  <%# ─── Page Header ─── %>
-  <header class="flex items-center gap-3 mb-6 bento-enter bento-enter-d1">
-    <%= render "shared/back_link", path: shelter_dashboard_path(shelter_id: @shelter) %>
-    <div>
-      <h1 class="font-display text-3xl font-bold text-neutral-900"><%= t(".title") %></h1>
-      <p class="text-neutral-500 text-sm mt-1"><%= t(".subtitle") %></p>
-    </div>
-  </header>
+  <%= render "shared/section_header",
+             title: t(".title"),
+             subtitle: t(".subtitle"),
+             back_link_path: safe_back_path(shelter_dashboard_path(shelter_id: @shelter)),
+             header_class: "mb-6 bento-enter bento-enter-d1" %>
 
   <%# ─── Current Staff Card ─── %>
   <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6 bento-enter bento-enter-d2">

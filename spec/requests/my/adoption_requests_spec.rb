@@ -32,7 +32,8 @@ RSpec.describe "My AdoptionRequests" do
     it "renders the request review page for the individual publisher" do
       get my_adoption_request_path(request)
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include(adopter.name)
+      # Names with apostrophes are HTML-escaped in the rendered body.
+      expect(response.body).to include(CGI.escapeHTML(adopter.name))
     end
 
     it "renders the shared Adopter Insight card" do

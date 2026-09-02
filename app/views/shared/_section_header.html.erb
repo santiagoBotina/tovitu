@@ -1,10 +1,15 @@
 <%# ─── Shared Section Header ─── %>
-<%# Renders a page title, an optional one-sentence explanation, and an optional CTA slot. %>
-<%# Usage: render "shared/section_header", title: ..., subtitle: ... do ... end %>
+<%# Renders a page title, an optional one-sentence explanation, an optional
+    back link, and an optional CTA slot. %>
+<%# Usage: render "shared/section_header", title: ..., subtitle: ..., back_link_path: ... do ... end %>
 <%# The block (if given) is rendered to the right of the title as the CTA slot. %>
 <%# Locals: %>
 <%#   - title          (required) h1 text %>
 <%#   - subtitle       (optional) one-sentence explanation of the section %>
+<%#   - back_link_path (optional) when present, renders shared/back_link above
+                        the title row. Resolve it with safe_back_path(fallback)
+                        in the CALLER — this partial stays dumb. %>
+<%#   - back_label     (optional) back link label (default: t("shared.back")) %>
 <%#   - centered       (optional) true centers the header block (Explorer hero) %>
 <%#   - header_class   (optional) header element classes. A top margin is always
                         prepended so the section explanation clears the navbar
@@ -31,18 +36,38 @@
   cta_class = local_assigns[:cta_class] || "flex items-center gap-3 shrink-0"
   cta_content = capture { yield }
   has_cta = cta_content.present?
+  has_back_link = local_assigns[:back_link_path].present?
 %>
 
 <header class="<%= header_class %>">
-  <div class="<%= content_class %>">
-    <h1 class="<%= title_class %>"><%= title %></h1>
-    <% if local_assigns[:subtitle].present? %>
-      <p class="<%= subtitle_class %>"><%= subtitle %></p>
-    <% end %>
-  </div>
-  <% if has_cta %>
-    <div class="<%= cta_class %>">
-      <%= cta_content %>
+  <% if has_back_link %>
+    <div class="mb-3">
+      <%= render "shared/back_link", path: back_link_path, label: local_assigns[:back_label] %>
     </div>
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      <div class="<%= content_class %>">
+        <h1 class="<%= title_class %>"><%= title %></h1>
+        <% if local_assigns[:subtitle].present? %>
+          <p class="<%= subtitle_class %>"><%= subtitle %></p>
+        <% end %>
+      </div>
+      <% if has_cta %>
+        <div class="<%= cta_class %>">
+          <%= cta_content %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="<%= content_class %>">
+      <h1 class="<%= title_class %>"><%= title %></h1>
+      <% if local_assigns[:subtitle].present? %>
+        <p class="<%= subtitle_class %>"><%= subtitle %></p>
+      <% end %>
+    </div>
+    <% if has_cta %>
+      <div class="<%= cta_class %>">
+        <%= cta_content %>
+      </div>
+    <% end %>
   <% end %>
 </header>

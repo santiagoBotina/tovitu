@@ -142,7 +142,49 @@ RSpec.describe "Localization key parity" do
     pets.index.natural_language.clear
   ].freeze
 
-  (AUTH_KEYS + AGE_KEYS + SPECIES_KEYS + NL_SEARCH_KEYS).each do |key|
+  # AC-42-9: every new Adoption Policies show/edit string must exist in both locales.
+  POLICIES_KEYS = %w[
+    shelters.policies.show.title
+    shelters.policies.show.description
+    shelters.policies.show.edit_policies
+    shelters.policies.show.not_set
+    shelters.policies.show.no_fee
+    shelters.policies.show.required
+    shelters.policies.show.not_required
+    shelters.policies.show.minimum_age
+    shelters.policies.show.minimum_age_value
+    shelters.policies.show.home_visit
+    shelters.policies.show.fenced_yard
+    shelters.policies.show.vet_reference
+    shelters.policies.show.fee.amount
+    shelters.policies.show.fee.description
+    shelters.policies.show.groups.fee.title
+    shelters.policies.show.groups.requirements.title
+    shelters.policies.show.groups.other.title
+    shelters.policies.show.empty.title
+    shelters.policies.show.empty.description
+    shelters.policies.edit.title
+    shelters.policies.edit.subtitle
+    shelters.policies.edit.groups.fee.title
+    shelters.policies.edit.groups.requirements.title
+    shelters.policies.edit.groups.other.title
+    shelters.policies.edit.adoption_fee
+    shelters.policies.edit.minimum_age
+    shelters.policies.edit.fee_description
+    shelters.policies.edit.fee_placeholder
+    shelters.policies.edit.home_visit
+    shelters.policies.edit.home_visit_desc
+    shelters.policies.edit.fenced_yard
+    shelters.policies.edit.fenced_yard_desc
+    shelters.policies.edit.vet_reference
+    shelters.policies.edit.vet_reference_desc
+    shelters.policies.edit.other_requirements
+    shelters.policies.edit.other_placeholder
+    shelters.policies.edit.one_per_line
+    shelters.policies.edit.submit
+  ].freeze
+
+  (AUTH_KEYS + AGE_KEYS + SPECIES_KEYS + NL_SEARCH_KEYS + POLICIES_KEYS).each do |key|
     it "provides #{key} in both en and es" do
       en = I18n.t(key, locale: :en, default: nil)
       es = I18n.t(key, locale: :es, default: nil)

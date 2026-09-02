@@ -3,7 +3,7 @@
 <% pet = @pet %>
 <div class="w-full max-w-4xl mx-auto">
   <%# ─── Back link ─── %>
-  <div class="mb-6 bento-enter bento-enter-d1">
+  <div class="mt-6 mb-6 bento-enter bento-enter-d1">
     <%= render "shared/back_link", path: safe_back_path(shelter_pets_path), label: params[:back_to].present? ? t("shared.back") : t(".back_to_pets") %>
   </div>
 

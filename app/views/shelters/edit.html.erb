@@ -1,89 +1,129 @@
 <%# ─── Shelter Edit Page ─── %>
-<%# Design: Dashboard-level bento card form with consistent spacing and focus rings %>
-<div class="w-full max-w-lg mx-auto">
+<%# Design: dashboard-level grouped cards (rounded-xl, border-neutral-200,
+    shadow-sm), font-display section headings, consistent form field recipes. %>
+<% shelter = present(@shelter) %>
 
-  <%# ─── Page Header ─── %>
-  <header class="flex items-center gap-3 mb-6 bento-enter bento-enter-d1">
-    <%= render "shared/back_link", path: shelter_dashboard_path(shelter_id: @shelter) %>
-    <div>
-      <h1 class="font-display text-3xl font-bold text-neutral-900"><%= t(".title") %></h1>
-      <p class="text-neutral-500 text-sm mt-1"><%= t(".subtitle") %></p>
-    </div>
-  </header>
+<%
+  base_input = "w-full px-4 py-3 border rounded-xl shadow-sm bg-white text-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+  input_class = ->(field) do
+    @shelter.errors[field].any? ? "#{base_input} border-danger focus-visible:ring-danger" : "#{base_input} border-neutral-300"
+  end
+  field_error = ->(field) do
+    next unless @shelter.errors[field].any?
+    content_tag(:p, @shelter.errors[field].first, class: "text-danger text-sm mt-1.5")
+  end
+  # Native selects keep their left padding via pl-4; .select-control owns the
+  # right padding so the chevron never collides with option text.
+  select_base = "w-full pl-4 py-3 border rounded-xl shadow-sm bg-white text-sm transition select-control focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+  select_class = ->(field) do
+    @shelter.errors[field].any? ? "#{select_base} border-danger focus-visible:ring-danger" : "#{select_base} border-neutral-300"
+  end
+  back_path = safe_back_path(shelter_dashboard_path(shelter_id: @shelter))
+%>
+
+<div class="w-full max-w-2xl mx-auto">
+
+  <%= render "shared/section_header",
+             title: t(".title"),
+             subtitle: t(".subtitle"),
+             back_link_path: back_path,
+             header_class: "mb-6 bento-enter bento-enter-d1" %>
 
   <%= render "shared/error_messages", resource: @shelter %>
 
-  <%= form_with model: @shelter, local: true, method: :patch, multipart: true, class: "bg-white rounded-xl p-8 shadow-sm border border-neutral-200 bento-enter bento-enter-d2" do |f| %>
-    <div class="space-y-5">
-      <div>
-        <%= f.label :logo, t(".logo_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
-        <%= f.file_field :logo, accept: "image/jpeg,image/png,image/webp", class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 bg-white text-sm transition file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-600 hover:file:bg-primary-100" %>
-        <% if @shelter.logo.attached? %>
-          <p class="text-xs text-neutral-500 mt-1"><%= t(".logo_attached") %></p>
-        <% end %>
-      </div>
+  <%= form_with model: @shelter, local: true, method: :patch, multipart: true, class: "space-y-6" do |f| %>
 
-      <div>
-        <%= f.label :cover_image, t(".cover_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
-        <%= f.file_field :cover_image, accept: "image/jpeg,image/png,image/webp", class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 bg-white text-sm transition file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-600 hover:file:bg-primary-100" %>
-        <% if @shelter.cover_image.attached? %>
-          <p class="text-xs text-neutral-500 mt-1"><%= t(".cover_attached") %></p>
-        <% end %>
-      </div>
-
-      <div>
-        <%= f.label :profile_picture, t(".profile_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
-        <%= f.file_field :profile_picture, accept: "image/jpeg,image/png,image/webp", class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 bg-white text-sm transition file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-600 hover:file:bg-primary-100" %>
-        <% if @shelter.profile_picture.attached? %>
-          <p class="text-xs text-neutral-500 mt-1"><%= t(".profile_attached") %></p>
-        <% end %>
-      </div>
-
-      <div>
-        <%= f.label :name, t(".name_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
-        <%= f.text_field :name, required: true, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition" %>
-      </div>
-
-      <div>
-        <%= f.label :street, t(".street_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
-        <%= f.text_field :street, required: true, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition" %>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4">
+    <%# ─── Basic Information ─── %>
+    <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 md:p-8 bento-enter bento-enter-d2">
+      <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".basic_info_title") %></h2>
+      <p class="text-neutral-500 text-sm mb-6"><%= t(".basic_info_helper") %></p>
+      <div class="space-y-5">
         <div>
-          <%= f.label :city, t(".city_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
-          <%= f.text_field :city, required: true, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition" %>
+          <%= f.label :name, t(".name_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+          <%= f.text_field :name, required: true, class: input_class.call(:name) %>
+          <%= field_error.call(:name) %>
         </div>
         <div>
-          <%= f.label :state, t(".state_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
-          <%= f.select :state, options_for_select(us_states, @shelter.state), {}, required: true, class: "w-full pl-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 bg-white transition select-control" %>
+          <%= f.label :description, t(".description_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+          <%= f.text_area :description, rows: 4, class: input_class.call(:description) %>
+          <%= field_error.call(:description) %>
         </div>
       </div>
+    </section>
 
-      <div class="grid grid-cols-2 gap-4">
+    <%# ─── Media & Branding ─── %>
+    <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 md:p-8 bento-enter bento-enter-d3">
+      <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".media_title") %></h2>
+      <p class="text-neutral-500 text-sm mb-6"><%= t(".media_helper") %></p>
+      <div class="space-y-5">
+        <%= render "shelters/edit/media_field", f: f, field: :logo, label: t(".logo_label"),
+            preview_url: shelter.logo_url(variant: :thumb), placeholder: t(".logo_placeholder"),
+            alt: t(".logo_preview_alt", name: @shelter.name) %>
+        <%= render "shelters/edit/media_field", f: f, field: :cover_image, label: t(".cover_label"),
+            preview_url: shelter.cover_url(variant: :large), placeholder: t(".cover_placeholder"),
+            alt: t(".cover_preview_alt", name: @shelter.name), wide: true %>
+        <%= render "shelters/edit/media_field", f: f, field: :profile_picture, label: t(".profile_label"),
+            preview_url: shelter.profile_picture_url(variant: :medium), placeholder: t(".profile_placeholder"),
+            alt: t(".profile_preview_alt", name: @shelter.name) %>
+      </div>
+    </section>
+
+    <%# ─── Contact & Location ─── %>
+    <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 md:p-8 bento-enter bento-enter-d4">
+      <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".contact_location_title") %></h2>
+      <p class="text-neutral-500 text-sm mb-6"><%= t(".contact_location_helper") %></p>
+      <div class="space-y-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <%= f.label :phone, t(".phone_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+            <%= f.telephone_field :phone, required: true, class: input_class.call(:phone) %>
+            <%= field_error.call(:phone) %>
+          </div>
+          <div>
+            <%= f.label :website, t(".website_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+            <%= f.url_field :website, class: input_class.call(:website) %>
+            <%= field_error.call(:website) %>
+          </div>
+        </div>
         <div>
-          <%= f.label :zip, t(".zip_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
-          <%= f.text_field :zip, required: true, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition" %>
+          <%= f.label :street, t(".street_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+          <%= f.text_field :street, required: true, class: input_class.call(:street) %>
+          <%= field_error.call(:street) %>
         </div>
-        <div>
-          <%= f.label :phone, t(".phone_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
-          <%= f.telephone_field :phone, required: true, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition" %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <%= f.label :city, t(".city_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+            <%= f.text_field :city, required: true, class: input_class.call(:city) %>
+            <%= field_error.call(:city) %>
+          </div>
+          <div>
+            <%= f.label :state, t(".state_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+            <%= f.select :state, options_for_select(us_states, @shelter.state), {}, required: true, class: select_class.call(:state) %>
+            <%= field_error.call(:state) %>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <%= f.label :zip, t(".zip_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+            <%= f.text_field :zip, required: true, class: input_class.call(:zip) %>
+            <%= field_error.call(:zip) %>
+          </div>
+          <div>
+            <%= f.label :hours, t(".hours_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
+            <%= f.text_field :hours, placeholder: t(".hours_placeholder"), class: input_class.call(:hours) %>
+            <%= field_error.call(:hours) %>
+          </div>
         </div>
       </div>
+    </section>
 
-      <div>
-        <%= f.label :website, t(".website_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
-        <%= f.url_field :website, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition" %>
-      </div>
-
-      <div>
-        <%= f.label :description, t(".description_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
-        <%= f.text_area :description, rows: 4, class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition" %>
-      </div>
-
+    <%# ─── Public Profile & Services ─── %>
+    <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 md:p-8 bento-enter bento-enter-d5">
+      <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".public_profile_title") %></h2>
+      <p class="text-neutral-500 text-sm mb-6"><%= t(".public_profile_helper") %></p>
       <div>
         <span class="block text-sm font-medium text-neutral-700 mb-2"><%= t(".species_label") %></span>
-        <div class="flex gap-6">
+        <div class="flex flex-wrap gap-x-6 gap-y-2">
           <% { "dog" => t("shelters.index.dog"), "cat" => t("shelters.index.cat"), "other" => t("shelters.index.other") }.each do |key, label| %>
             <label class="flex items-center gap-2 text-sm text-neutral-600 cursor-pointer">
               <%= f.check_box :species_served, { multiple: true, checked: Array(@shelter.species_served).include?(key), class: "rounded border-neutral-300 text-primary-500 focus:ring-primary-500" }, key, nil %>
@@ -91,16 +131,20 @@
             </label>
           <% end %>
         </div>
+        <% if Array(@shelter.species_served).empty? %>
+          <p class="text-xs text-neutral-500 mt-2"><%= t(".species_not_set") %></p>
+        <% end %>
+        <%= field_error.call(:species_served) %>
       </div>
+    </section>
 
-      <div>
-        <%= f.label :hours, t(".hours_label"), class: "block text-sm font-medium text-neutral-700 mb-1.5" %>
-        <%= f.text_field :hours, placeholder: t(".hours_placeholder"), class: "w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition" %>
-      </div>
-
+    <%# ─── Configuration ─── %>
+    <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 md:p-8 bento-enter bento-enter-d6">
+      <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".configuration_title") %></h2>
+      <p class="text-neutral-500 text-sm mb-6"><%= t(".configuration_helper") %></p>
       <div>
         <span class="block text-sm font-medium text-neutral-700 mb-2"><%= t(".status_label") %></span>
-        <div class="flex gap-6">
+        <div class="flex flex-wrap gap-x-6 gap-y-2">
           <% [[t(".active"), "active"], [t(".inactive"), "inactive"]].each do |label, value| %>
             <label class="flex items-center gap-2 text-sm text-neutral-600 cursor-pointer">
               <%= f.radio_button :status, value, class: "border-neutral-300 text-primary-500 focus:ring-primary-500" %>
@@ -108,11 +152,36 @@
             </label>
           <% end %>
         </div>
+        <%= field_error.call(:status) %>
       </div>
-    </div>
+    </section>
 
-    <div class="mt-8">
-      <%= f.submit t(".submit"), class: "w-full px-6 py-3.5 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm cursor-pointer" %>
+    <%# ─── Profile Metadata (read-only) ─── %>
+    <section class="bg-neutral-50 rounded-xl border border-neutral-200 p-6 md:p-8 bento-enter bento-enter-d7">
+      <h2 class="font-display text-sm font-semibold text-neutral-700"><%= t(".informational_title") %></h2>
+      <p class="text-xs text-neutral-500 mt-1 mb-5"><%= t(".informational_helper") %></p>
+      <dl class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <dt class="text-xs uppercase tracking-wide text-neutral-500 font-medium"><%= t(".shelter_id_label") %></dt>
+          <dd class="text-sm font-medium text-neutral-700 mt-1"><%= @shelter.id %></dd>
+        </div>
+        <div>
+          <dt class="text-xs uppercase tracking-wide text-neutral-500 font-medium"><%= t(".member_since_label") %></dt>
+          <dd class="text-sm font-medium text-neutral-700 mt-1"><%= l(@shelter.created_at.to_date, format: :long) %></dd>
+        </div>
+        <div>
+          <dt class="text-xs uppercase tracking-wide text-neutral-500 font-medium"><%= t(".updated_label") %></dt>
+          <dd class="text-sm font-medium text-neutral-700 mt-1"><%= l(@shelter.updated_at.to_date, format: :long) %></dd>
+        </div>
+      </dl>
+    </section>
+
+    <%# ─── Actions ─── %>
+    <div class="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 sm:gap-4 pt-2 bento-enter bento-enter-d8">
+      <%= link_to t(".cancel"), back_path,
+          class: "inline-flex items-center justify-center px-6 py-3.5 text-sm font-medium text-neutral-700 bg-white border border-neutral-200 rounded-xl hover:bg-neutral-50 hover:text-neutral-900 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-150 active:scale-[0.97]" %>
+      <%= f.submit t(".submit"),
+          class: "w-full sm:w-auto px-6 py-3.5 bg-primary-500 text-white font-semibold rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm cursor-pointer" %>
     </div>
   <% end %>
 </div>

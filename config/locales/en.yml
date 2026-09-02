@@ -370,6 +370,32 @@ en:
       active: "Active"
       inactive: "Inactive"
       submit: "Save Changes"
+      cancel: "Cancel"
+      basic_info_title: "Basic Information"
+      basic_info_helper: "Your shelter's name and the story adopters read first."
+      media_title: "Media & Branding"
+      media_helper: "The images that represent your shelter across Tovitu."
+      contact_location_title: "Contact & Location"
+      contact_location_helper: "How adopters reach you and where you're based."
+      public_profile_title: "Public Profile & Services"
+      public_profile_helper: "The species your shelter cares for."
+      configuration_title: "Configuration"
+      configuration_helper: "Controls how your shelter appears in the directory."
+      informational_title: "Profile Metadata"
+      informational_helper: "Read-only information about your shelter."
+      shelter_id_label: "Shelter ID"
+      member_since_label: "Member since"
+      updated_label: "Last updated"
+      logo_placeholder: "No logo uploaded"
+      cover_placeholder: "No cover image uploaded"
+      profile_placeholder: "No profile picture uploaded"
+      logo_preview_alt: "%{name} logo"
+      cover_preview_alt: "%{name} cover image"
+      profile_preview_alt: "%{name} profile picture"
+      species_not_set: "Not set yet"
+      media_field:
+        upload_hint: "Recommended: JPEG, PNG, or WebP."
+        replace_hint: "Choose a file to replace it."
     dashboard:
       show:
         title: "%{name} Dashboard"
@@ -442,9 +468,42 @@ en:
         remove_confirm: "Are you sure you want to remove %{name}?"
         remove: "Remove"
     policies:
+      show:
+        title: "Adoption Policies"
+        description: "These are the requirements and fees adopters must meet when adopting from your shelter. They appear to adopters during the adoption process."
+        edit_policies: "Edit policies"
+        not_set: "Not set"
+        no_fee: "No fee"
+        required: "Required"
+        not_required: "Not required"
+        minimum_age: "Minimum age"
+        minimum_age_value: "%{age}+"
+        home_visit: "Home visit"
+        fenced_yard: "Fenced yard"
+        vet_reference: "Vet reference"
+        fee:
+          amount: "Adoption fee"
+          description: "What it covers"
+        groups:
+          fee:
+            title: "Adoption fee"
+          requirements:
+            title: "Applicant requirements"
+          other:
+            title: "Other requirements"
+        empty:
+          title: "Set up your adoption policies"
+          description: "Tell adopters about your adoption fee and the requirements they'll need to meet. This information appears during the adoption process."
       edit:
         title: "Adoption Policies"
         subtitle: "Set the requirements and fees for adopters at your shelter."
+        groups:
+          fee:
+            title: "Adoption fee"
+          requirements:
+            title: "Applicant requirements"
+          other:
+            title: "Other requirements"
         adoption_fee: "Adoption Fee ($)"
         minimum_age: "Minimum Adopter Age"
         fee_description: "Fee Description"

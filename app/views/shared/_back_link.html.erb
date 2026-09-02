@@ -3,7 +3,7 @@
 <%# Label defaults to t("shared.back"). Margin/spacing is controlled by the caller. %>
 <% back_label = local_assigns[:label] || t("shared.back") %>
 
-<%= link_to path, class: "inline-flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-700 transition-colors rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" do %>
+<%= link_to path, class: "inline-flex items-center gap-1.5 py-1.5 text-sm text-neutral-500 hover:text-neutral-700 transition-colors rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" do %>
   <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
   </svg>

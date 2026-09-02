@@ -1,12 +1,11 @@
 <div class="w-full max-w-2xl mx-auto">
-  <div class="mb-6">
-    <%= render "shared/back_link", path: shelter_adoption_request_path(@request), label: t(".back") %>
-  </div>
+  <%= render "shared/section_header",
+             title: t(".title"),
+             subtitle: t(".subtitle", pet_name: @request.pet.name, adopter_name: @request.adopter.name),
+             back_link_path: safe_back_path(shelter_adoption_request_path(@request)),
+             back_label: t(".back") %>
 
   <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
-    <h1 class="font-display text-xl font-bold text-neutral-900 mb-2"><%= t(".title") %></h1>
-    <p class="text-neutral-500 text-sm mb-6"><%= t(".subtitle", pet_name: @request.pet.name, adopter_name: @request.adopter.name) %></p>
-
     <%= form_tag shelter_adoption_request_decision_path(@request), method: :post, class: "space-y-6" do %>
       <%= hidden_field_tag :decision, params[:decision] %>
 

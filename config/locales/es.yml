@@ -1,4 +1,8 @@
 es:
+  date:
+    formats:
+      long: "%d de %B de %Y"
+    month_names: [~, enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre, diciembre]
   layouts:
     application:
       title: "Tovitu"
@@ -385,6 +389,32 @@ es:
       active: "Activo"
       inactive: "Inactivo"
       submit: "Guardar Cambios"
+      cancel: "Cancelar"
+      basic_info_title: "Información Básica"
+      basic_info_helper: "El nombre de tu refugio y la historia que los adoptantes leen primero."
+      media_title: "Medios y Marca"
+      media_helper: "Las imágenes que representan a tu refugio en Tovitu."
+      contact_location_title: "Contacto y Ubicación"
+      contact_location_helper: "Cómo te contactan los adoptantes y dónde te encuentras."
+      public_profile_title: "Perfil Público y Servicios"
+      public_profile_helper: "Las especies que atiende tu refugio."
+      configuration_title: "Configuración"
+      configuration_helper: "Controla cómo aparece tu refugio en el directorio."
+      informational_title: "Metadatos del Perfil"
+      informational_helper: "Información de solo lectura sobre tu refugio."
+      shelter_id_label: "ID del Refugio"
+      member_since_label: "Miembro desde"
+      updated_label: "Última actualización"
+      logo_placeholder: "Sin logotipo subido"
+      cover_placeholder: "Sin imagen de portada subida"
+      profile_placeholder: "Sin foto de perfil subida"
+      logo_preview_alt: "Logotipo de %{name}"
+      cover_preview_alt: "Imagen de portada de %{name}"
+      profile_preview_alt: "Foto de perfil de %{name}"
+      species_not_set: "Aún no configurado"
+      media_field:
+        upload_hint: "Recomendado: JPEG, PNG o WebP."
+        replace_hint: "Elige un archivo para reemplazarlo."
     dashboard:
       show:
         title: "Panel de %{name}"
@@ -457,9 +487,42 @@ es:
         remove_confirm: "¿Estás seguro de que deseas eliminar a %{name}?"
         remove: "Eliminar"
     policies:
+      show:
+        title: "Políticas de Adopción"
+        description: "Estos son los requisitos y tarifas que los adoptantes deben cumplir al adoptar en tu refugio. Aparecen para los adoptantes durante el proceso de adopción."
+        edit_policies: "Editar políticas"
+        not_set: "No configurado"
+        no_fee: "Sin tarifa"
+        required: "Requerido"
+        not_required: "No requerido"
+        minimum_age: "Edad mínima"
+        minimum_age_value: "%{age}+"
+        home_visit: "Visita domiciliaria"
+        fenced_yard: "Patio cercado"
+        vet_reference: "Referencia veterinaria"
+        fee:
+          amount: "Tarifa de adopción"
+          description: "Qué incluye"
+        groups:
+          fee:
+            title: "Tarifa de adopción"
+          requirements:
+            title: "Requisitos del solicitante"
+          other:
+            title: "Otros requisitos"
+        empty:
+          title: "Configura tus políticas de adopción"
+          description: "Informa a los adoptantes sobre tu tarifa de adopción y los requisitos que deberán cumplir. Esta información aparece durante el proceso de adopción."
       edit:
         title: "Políticas de Adopción"
         subtitle: "Establece los requisitos y tarifas para los adoptantes en tu refugio."
+        groups:
+          fee:
+            title: "Tarifa de adopción"
+          requirements:
+            title: "Requisitos del solicitante"
+          other:
+            title: "Otros requisitos"
         adoption_fee: "Tarifa de Adopción ($)"
         minimum_age: "Edad Mínima del Adoptante"
         fee_description: "Descripción de la Tarifa"

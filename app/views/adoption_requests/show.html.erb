@@ -1,24 +1,14 @@
 <%# ─── Adoption Request Show Page ─── %>
 <%# Design: Dashboard-level bento cards, timeline with visual connectors, gradient accent cards %>
 <div class="w-full max-w-4xl mx-auto">
-  <%# ─── Back link ─── %>
-  <%= link_to adoption_requests_path, class: "inline-flex items-center gap-1.5 text-neutral-500 hover:text-neutral-700 text-sm mb-6 transition bento-enter bento-enter-d1" do %>
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-    </svg>
-    <%= t(".back_to_requests") %>
+  <%= render "shared/section_header",
+             title: t(".title", pet_name: @pet.name),
+             subtitle: t(".submitted", date: l(@request.created_at.to_date, format: :long)),
+             back_link_path: safe_back_path(adoption_requests_path),
+             back_label: t(".back_to_requests"),
+             header_class: "mb-6 bento-enter bento-enter-d1" do %>
+    <%= render "status_badge", status: @request.status %>
   <% end %>
-
-  <%# ─── Request Header Card ─── %>
-  <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6 bento-enter bento-enter-d2">
-    <div class="flex items-start justify-between">
-      <div>
-        <h1 class="font-display text-2xl font-bold text-neutral-900"><%= t(".title", pet_name: @pet.name) %></h1>
-        <p class="text-neutral-500 text-sm mt-1"><%= t(".submitted", date: l(@request.created_at.to_date, format: :long)) %></p>
-      </div>
-      <%= render "status_badge", status: @request.status %>
-    </div>
-  </section>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="lg:col-span-2 space-y-6">

@@ -56,4 +56,17 @@ RSpec.describe "shared/section_header", type: :view do
     assert_select "header.custom-header"
     assert_select "p.custom-subtitle", text: "S"
   end
+
+  it "renders a back link above the title row when back_link_path is given" do
+    render inline: '<%= render "shared/section_header", title: "My Pets", back_link_path: "/en/dashboard", back_label: "Back to dashboard" %>'
+
+    assert_select "a[href='/en/dashboard']", text: /Back to dashboard/
+    assert_select "header h1", text: "My Pets"
+  end
+
+  it "defaults the back link label to the shared back translation" do
+    render inline: '<%= render "shared/section_header", title: "My Pets", back_link_path: "/en/dashboard" %>'
+
+    assert_select "a[href='/en/dashboard']", text: /#{Regexp.escape(I18n.t("shared.back"))}/
+  end
 end

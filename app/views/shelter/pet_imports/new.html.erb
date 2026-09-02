@@ -1,16 +1,12 @@
 <%# ─── Shelter Pet Import Upload Page ─── %>
 <div class="w-full max-w-2xl mx-auto">
 
-  <div class="mb-6 bento-enter bento-enter-d1">
-    <%= render "shared/back_link", path: safe_back_path(shelter_pet_imports_path), label: t(".back") %>
-  </div>
-
-  <div class="mb-6 bento-enter bento-enter-d1">
-    <%= render "shared/section_header",
-               title: t(".title"),
-               subtitle: t(".subtitle"),
-               header_class: "flex flex-col gap-1" %>
-  </div>
+  <%= render "shared/section_header",
+             title: t(".title"),
+             subtitle: t(".subtitle"),
+             back_link_path: safe_back_path(shelter_pet_imports_path),
+             back_label: t(".back"),
+             header_class: "mb-6 bento-enter bento-enter-d1" %>
 
   <%# ─── Template & guidance ─── %>
   <section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6 bento-enter bento-enter-d2">

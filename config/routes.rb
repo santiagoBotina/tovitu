@@ -89,7 +89,7 @@ Rails.application.routes.draw do
       end
       resources :staff, only: [ :index, :create, :destroy ], controller: "shelters/staff"
       resources :invitations, only: [ :create ], controller: "shelters/invitations"
-      resource :policies, only: [ :edit, :update ], controller: "shelters/policies"
+      resource :policies, only: [ :show, :edit, :update ], controller: "shelters/policies"
     end
 
     # Legacy anonymous adoption applications (kept for existing data status checks)
