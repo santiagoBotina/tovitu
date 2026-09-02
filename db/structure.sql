@@ -1,7 +1,6 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -444,12 +443,12 @@ CREATE TABLE public.ar_internal_metadata (
 
 CREATE TABLE public.email_verification_tokens (
     id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    token character varying NOT NULL,
+    expires_at timestamp(6) without time zone NOT NULL,
     consumed_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    expires_at timestamp(6) without time zone NOT NULL,
-    token character varying NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    user_id bigint NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -591,13 +590,13 @@ ALTER SEQUENCE public.invitations_id_seq OWNED BY public.invitations.id;
 
 CREATE TABLE public.login_attempts (
     id bigint NOT NULL,
-    attempted_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
     email character varying NOT NULL,
     ip_address character varying NOT NULL,
+    user_agent character varying,
+    attempted_at timestamp(6) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     success boolean NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    user_agent character varying
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -707,12 +706,12 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 CREATE TABLE public.password_reset_tokens (
     id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    token character varying NOT NULL,
+    expires_at timestamp(6) without time zone NOT NULL,
     consumed_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    expires_at timestamp(6) without time zone NOT NULL,
-    token character varying NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    user_id bigint NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -968,19 +967,19 @@ ALTER SEQUENCE public.shelters_id_seq OWNED BY public.shelters.id;
 
 CREATE TABLE public.users (
     id bigint NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    discarded_at timestamp(6) without time zone,
     email character varying NOT NULL,
-    name character varying NOT NULL,
     password_digest character varying NOT NULL,
+    name character varying NOT NULL,
     role character varying DEFAULT 'individual'::character varying NOT NULL,
-    shelter_id bigint,
-    updated_at timestamp(6) without time zone NOT NULL,
     verified_at timestamp(6) without time zone,
+    shelter_id bigint,
+    discarded_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
     onboarding_completed_at timestamp(6) without time zone,
     onboarding_step integer DEFAULT 0 NOT NULL,
     locale character varying,
-    CONSTRAINT valid_role CHECK (((role)::text = ANY (ARRAY[('individual'::character varying)::text, ('shelter_admin'::character varying)::text, ('shelter_staff'::character varying)::text, ('admin'::character varying)::text, ('staff'::character varying)::text])))
+    CONSTRAINT valid_role CHECK (((role)::text = ANY ((ARRAY['individual'::character varying, 'shelter_admin'::character varying, 'shelter_staff'::character varying, 'admin'::character varying, 'staff'::character varying])::text[])))
 );
 
 

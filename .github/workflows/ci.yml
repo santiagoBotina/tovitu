@@ -85,6 +85,23 @@ jobs:
       - name: Start PostgreSQL
         run: docker compose up -d --wait postgres
 
+      - name: Assert PostgreSQL server version is 16.x
+        run: |
+          # db/structure.sql is dumped on PostgreSQL 16 (Option B alignment,
+          # pgvector/pgvector:pg16). Fail loudly on version drift instead of an
+          # obscure psql "unrecognized configuration parameter" schema error.
+          version="$(docker compose exec -T postgres psql -U "${POSTGRES_USER:-tovitu}" -d postgres -tAc "SELECT current_setting('server_version');")"
+          echo "PostgreSQL server version: ${version}"
+          case "${version}" in
+            16.*)
+              echo "OK: PostgreSQL 16 detected — matches pgvector/pgvector:pg16 and db/structure.sql."
+              ;;
+            *)
+              echo "ERROR: Expected PostgreSQL 16.x to match db/structure.sql, got: ${version}" >&2
+              exit 1
+              ;;
+          esac
+
       - name: Prepare test database
         run: bin/rails db:test:prepare
 
