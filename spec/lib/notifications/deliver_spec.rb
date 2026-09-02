@@ -105,7 +105,7 @@ RSpec.describe Notifications::Deliver do
 
       it "records email_delivered_at once the mail is actually delivered" do
         notification = described_class.call(**valid_attributes).data
-        perform_enqueued_jobs
+        perform_enqueued_jobs(only: ActionMailer::MailDeliveryJob)
         expect(notification.reload.email_delivered_at).not_to be_nil
         expect(notification.email_failed_at).to be_nil
       end

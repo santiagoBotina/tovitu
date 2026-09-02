@@ -70,7 +70,7 @@ RSpec.describe Notifications::DeliveryTracker do
         metadata: {}
       )
       expect(result.data.reload.email_delivered_at).to be_nil
-      perform_enqueued_jobs
+      perform_enqueued_jobs(only: ActionMailer::MailDeliveryJob)
       expect(result.data.reload.email_delivered_at).not_to be_nil
     end
   end

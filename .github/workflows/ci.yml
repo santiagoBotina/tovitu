@@ -82,6 +82,16 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Install libvips
+        # Active Storage uses the :vips variant processor (see
+        # config/initializers/active_storage.rb), but the ubuntu-latest runner
+        # image ships without libvips. Without it, variant pre-generation
+        # (Pets::GeneratePhotoVariantsJob) fails silently and the generated
+        # variant keys are never persisted.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libvips
+
       - name: Start PostgreSQL
         run: docker compose up -d --wait postgres
 
