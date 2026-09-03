@@ -24,10 +24,27 @@ FactoryBot.define do
 
     trait :shelter_admin do
       role { "shelter_admin" }
+      shelter_role { "owner" }
     end
 
     trait :shelter_staff do
       role { "shelter_staff" }
+      shelter_role { "staff_member" }
+    end
+
+    trait :shelter_owner do
+      role { "shelter_admin" }
+      shelter_role { "owner" }
+    end
+
+    trait :shelter_administrator do
+      role { "shelter_staff" }
+      shelter_role { "administrator" }
+    end
+
+    trait :shelter_staff_member do
+      role { "shelter_staff" }
+      shelter_role { "staff_member" }
     end
 
     trait :discarded do

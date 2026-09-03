@@ -498,9 +498,20 @@ en:
         invite_new: "Invite New Staff"
         email_label: "Email Address"
         email_placeholder: "colleague@example.com"
+        role_label: "Role"
+        role_placeholder: "Select a role"
         send_invitation: "Send Invitation"
+        change_role_label: "Role"
+        change_role: "Change"
+        change_role_confirm: "Change %{name}'s role?"
         remove_confirm: "Are you sure you want to remove %{name}?"
         remove: "Remove"
+        cancel_invitation: "Cancel"
+        cancel_invitation_confirm: "Cancel the invitation for %{email}?"
+      roles:
+        owner: "Owner"
+        administrator: "Administrator"
+        staff_member: "Staff member"
     policies:
       show:
         title: "Adoption Policies"
@@ -770,9 +781,13 @@ en:
         success: "Staff member added successfully."
       destroy:
         success: "Staff member removed successfully."
+      change_role:
+        success: "Role updated successfully."
     invitations:
       create:
         success: "Invitation accepted! Welcome to the shelter."
+      cancel:
+        success: "Invitation cancelled."
     policies:
       update:
         success: "Adoption policies updated successfully."
@@ -815,21 +830,40 @@ en:
       not_admin: "Only shelter admins can update the profile"
       wrong_shelter: "You can only edit your own shelter"
     invite_staff:
-      not_admin: "Only shelter admins can invite staff"
+      not_owner: "Only the shelter owner can invite staff"
       wrong_shelter: "You can only invite staff to your own shelter"
       invalid_email: "Invalid email format"
+      invalid_role: "Invalid role selection"
+      owner_not_invitable: "A shelter already has an owner and it cannot be assigned by invitation"
       already_member: "%{email} is already a member of this shelter"
       other_shelter: "%{email} already belongs to another shelter"
+      already_invited: "%{email} has already been invited"
     remove_staff:
-      not_admin: "Only shelter admins can remove staff"
+      not_owner: "Only the shelter owner can remove staff"
       wrong_shelter: "You can only manage your own shelter"
       cannot_remove_self: "Cannot remove yourself"
       not_member: "%{name} does not belong to this shelter"
-      last_admin: "Cannot remove the last admin. Promote another staff member to admin first."
+      cannot_remove_owner: "The shelter owner cannot be removed"
+    change_role:
+      not_owner: "Only the shelter owner can change roles"
+      wrong_shelter: "You can only manage your own shelter"
+      not_member: "%{name} does not belong to this shelter"
+      cannot_change_owner: "The shelter owner's role cannot be changed"
+      invalid_role: "Invalid role selection"
+      owner_not_assignable: "The owner role cannot be assigned"
+    cancel_invitation:
+      not_owner: "Only the shelter owner can cancel invitations"
+      wrong_shelter: "You can only manage your own shelter"
+      already_accepted: "This invitation has already been accepted"
+      already_cancelled: "This invitation has already been cancelled"
     accept_invitation:
       invalid: "Invalid invitation token"
       expired: "Invitation has expired"
       accepted: "Invitation has already been accepted"
+      cancelled: "Invitation has been cancelled"
+      email_mismatch: "This invitation was not sent to your email address"
+      owner_role: "This invitation cannot be accepted"
+      has_shelter: "You already belong to a shelter"
     register_user:
       invalid_role: "Invalid role selection"
     shelters:

@@ -162,7 +162,9 @@
 
     <% elsif current_user.shelter_user? %>
       <% if current_user.shelter_id.present? %>
-        <% can_manage_shelter = current_user.shelter.present? && policy(current_user.shelter).manage? %>
+        <% shelter = current_user.shelter %>
+        <% can_view_staff = shelter.present? && policy(shelter).staff_index? %>
+        <% can_manage_policies = shelter.present? && policy(shelter).manage_policies? %>
 
         <%# ─── Shelter Dashboard ─── %>
         <%= link_to shelter_dashboard_path(shelter_id: current_user.shelter_id),
@@ -202,8 +204,8 @@
           <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.adoptions") %></span>
         <% end %>
 
-        <%# ─── Staff (admin-only) ─── %>
-        <% if can_manage_shelter %>
+        <%# ─── Staff (owner + administrator) ─── %>
+        <% if can_view_staff %>
           <% staff_active = path_active?('/shelter/staff') || path_active?('/staff') %>
           <%= link_to shelter_staff_index_path(shelter_id: current_user.shelter_id),
               class: "#{base_link} #{staff_active ? active_link : inactive_link}",
@@ -215,20 +217,22 @@
             </div>
             <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.staff") %></span>
           <% end %>
-
-          <%# ─── Adoption Policies (admin-only) ─── %>
-          <% policies_active = path_active?('/shelter/policies') || path_active?('/policies') %>
-          <%= link_to shelter_policies_path(shelter_id: current_user.shelter_id),
-              class: "#{base_link} #{policies_active ? active_link : inactive_link}",
-              aria: { current: policies_active ? "page" : nil } do %>
-            <div class="shrink-0 w-5 h-5 flex items-center justify-center">
-              <svg class="w-5 h-5 #{policies_active ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              </svg>
-            </div>
-            <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.adoption_policies") %></span>
-          <% end %>
         <% end %>
+
+          <%# ─── Adoption Policies (owner + administrator) ─── %>
+          <% if can_manage_policies %>
+            <% policies_active = path_active?('/shelter/policies') || path_active?('/policies') %>
+            <%= link_to shelter_policies_path(shelter_id: current_user.shelter_id),
+                class: "#{base_link} #{policies_active ? active_link : inactive_link}",
+                aria: { current: policies_active ? "page" : nil } do %>
+              <div class="shrink-0 w-5 h-5 flex items-center justify-center">
+                <svg class="w-5 h-5 #{policies_active ? icon_active : icon_inactive}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <span data-sidebar-label class="md:hidden"><%= t("shared.sidebar.adoption_policies") %></span>
+            <% end %>
+          <% end %>
 
       <% else %>
         <div class="<%= base_link %> <%= inactive_link %> opacity-50 cursor-not-allowed" title="<%= t("shared.sidebar.no_shelter") %>">

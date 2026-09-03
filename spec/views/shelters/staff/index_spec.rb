@@ -13,6 +13,9 @@ RSpec.describe "shelters/staff/index", type: :view do
     # current_user lookup.
     current_user = admin
     view.singleton_class.send(:define_method, :current_user) { current_user }
+    # The admin (owner) manages the shelter, so the view's policy gate passes.
+    policy_double = double(manage?: true)
+    view.singleton_class.send(:define_method, :policy) { |_record| policy_double }
   end
 
   describe "standardized page header" do
@@ -26,22 +29,22 @@ RSpec.describe "shelters/staff/index", type: :view do
   end
 
   describe "staff members" do
-    let(:staff) { create(:user, :verified, :shelter_staff, :onboarding_completed, shelter: shelter) }
+    let(:staff) { create(:user, :verified, :shelter_staff_member, :onboarding_completed, shelter: shelter) }
 
     before { assign(:staff_members, [ admin, staff ]) }
 
-    it "renders each member with their name, email, and role badge" do
+    it "renders each member with their name, email, and localized role badge" do
       render
 
       assert_select "p", text: staff.name
       assert_select "p", text: staff.email
-      assert_select "span", text: staff.role.titleize
+      assert_select "span", text: I18n.t("shelters.staff.roles.staff_member")
     end
 
-    it "renders the role badge for the admin member" do
+    it "renders the role badge for the owner member" do
       render
 
-      assert_select "span", text: admin.role.titleize
+      assert_select "span", text: I18n.t("shelters.staff.roles.owner")
     end
 
     it "shows the remove action for non-self members with the confirmation prompt" do
@@ -68,13 +71,14 @@ RSpec.describe "shelters/staff/index", type: :view do
 
     before { assign(:pending_invitations, [ pending_invitation, expired_invitation ]) }
 
-    it "renders each invitation email with its invited-ago time" do
+    it "renders each invitation email with its invited-ago time and role" do
       render
 
       assert_select "p", text: "pending@example.com"
       expected = I18n.t("shelters.staff.index.invited_ago",
                         time: view.time_ago_in_words(pending_invitation.created_at))
-      assert_select "p", text: expected
+      role_label = I18n.t("shelters.staff.roles.staff_member")
+      assert_select "p", text: "#{expected} · #{role_label}"
     end
 
     it "renders a pending status badge for active invitations" do
@@ -93,12 +97,16 @@ RSpec.describe "shelters/staff/index", type: :view do
   describe "invite staff action" do
     before { assign(:staff_members, [ admin ]) }
 
-    it "renders the invite CTA and the single-email invite form" do
+    it "renders the invite CTA, the single-email invite form, and a required role selector" do
       render
 
       assert_select "summary", text: /#{Regexp.escape(I18n.t("shelters.staff.index.invite_cta"))}/
       assert_select "form[action='#{shelter_staff_index_path(shelter_id: shelter)}']"
       assert_select "input[type='email'][name='email']"
+      assert_select "select[name='role'][required='required']"
+      assert_select "option[value='administrator']"
+      assert_select "option[value='staff_member']"
+      assert_select "option[value='owner']", count: 0
       assert_select "input[type='submit'][value='#{I18n.t("shelters.staff.index.send_invitation")}']"
     end
   end

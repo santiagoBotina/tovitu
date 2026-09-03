@@ -15,11 +15,31 @@ module Shelters
       result = Shelters::InviteStaff.call(
         shelter: @shelter,
         inviter: current_user,
-        email: params[:email]
+        email: params[:email],
+        role: params[:role]
       )
 
       if result.success?
         redirect_to shelter_staff_index_path(shelter_id: @shelter), notice: t("flash.staff.create.success")
+      else
+        redirect_to shelter_staff_index_path(shelter_id: @shelter), alert: Array(result.errors).join(", ")
+      end
+    end
+
+    def change_role
+      authorize @shelter, :staff_change_role?
+
+      member = @shelter.users.undiscarded.find(params[:id])
+
+      result = Shelters::ChangeRole.call(
+        shelter: @shelter,
+        actor: current_user,
+        member: member,
+        new_role: params[:shelter_role]
+      )
+
+      if result.success?
+        redirect_to shelter_staff_index_path(shelter_id: @shelter), notice: t("flash.staff.change_role.success")
       else
         redirect_to shelter_staff_index_path(shelter_id: @shelter), alert: Array(result.errors).join(", ")
       end

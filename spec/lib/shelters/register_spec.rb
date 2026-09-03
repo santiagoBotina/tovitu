@@ -31,6 +31,11 @@ RSpec.describe Shelters::Register do
         expect(user.reload.role).to eq("shelter_admin")
       end
 
+      it "grants the creator the owner shelter role" do
+        described_class.call(user: user, shelter_params: shelter_params)
+        expect(user.reload.shelter_role).to eq("owner")
+      end
+
       it "associates the user with the shelter" do
         result = described_class.call(user: user, shelter_params: shelter_params)
         expect(user.reload.shelter_id).to eq(result.data.id)

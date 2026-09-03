@@ -518,8 +518,19 @@ es:
         email_label: "Correo Electrónico"
         email_placeholder: "colega@ejemplo.com"
         send_invitation: "Enviar Invitación"
+        role_label: "Rol"
+        role_placeholder: "Selecciona un rol"
+        change_role_label: "Rol"
+        change_role: "Cambiar"
+        change_role_confirm: "¿Cambiar el rol de %{name}?"
         remove_confirm: "¿Estás seguro de que deseas eliminar a %{name}?"
         remove: "Eliminar"
+        cancel_invitation: "Cancelar"
+        cancel_invitation_confirm: "¿Cancelar la invitación para %{email}?"
+      roles:
+        owner: "Propietario"
+        administrator: "Administrador"
+        staff_member: "Miembro del personal"
     policies:
       show:
         title: "Políticas de Adopción"
@@ -789,9 +800,13 @@ es:
         success: "Miembro del personal agregado correctamente."
       destroy:
         success: "Miembro del personal eliminado correctamente."
+      change_role:
+        success: "Rol actualizado correctamente."
     invitations:
       create:
         success: "¡Invitación aceptada! Bienvenido al refugio."
+      cancel:
+        success: "Invitación cancelada."
     policies:
       update:
         success: "Políticas de adopción actualizadas correctamente."
@@ -834,21 +849,40 @@ es:
       not_admin: "Solo los administradores del refugio pueden actualizar el perfil"
       wrong_shelter: "Solo puedes editar tu propio refugio"
     invite_staff:
-      not_admin: "Solo los administradores del refugio pueden invitar personal"
+      not_owner: "Solo el propietario del refugio puede invitar personal"
       wrong_shelter: "Solo puedes invitar personal a tu propio refugio"
       invalid_email: "Formato de correo inválido"
+      invalid_role: "Selección de rol inválida"
+      owner_not_invitable: "El refugio ya tiene un propietario y no puede asignarse por invitación"
       already_member: "%{email} ya es miembro de este refugio"
       other_shelter: "%{email} ya pertenece a otro refugio"
+      already_invited: "%{email} ya ha sido invitado"
     remove_staff:
-      not_admin: "Solo los administradores del refugio pueden eliminar personal"
+      not_owner: "Solo el propietario del refugio puede eliminar personal"
       wrong_shelter: "Solo puedes administrar tu propio refugio"
       cannot_remove_self: "No puedes eliminarte a ti mismo"
       not_member: "%{name} no pertenece a este refugio"
-      last_admin: "No se puede eliminar al último administrador. Promueve a otro miembro a administrador primero."
+      cannot_remove_owner: "El propietario del refugio no puede ser eliminado"
+    change_role:
+      not_owner: "Solo el propietario del refugio puede cambiar roles"
+      wrong_shelter: "Solo puedes administrar tu propio refugio"
+      not_member: "%{name} no pertenece a este refugio"
+      cannot_change_owner: "El rol del propietario del refugio no puede ser cambiado"
+      invalid_role: "Selección de rol inválida"
+      owner_not_assignable: "El rol de propietario no puede asignarse"
+    cancel_invitation:
+      not_owner: "Solo el propietario del refugio puede cancelar invitaciones"
+      wrong_shelter: "Solo puedes administrar tu propio refugio"
+      already_accepted: "Esta invitación ya ha sido aceptada"
+      already_cancelled: "Esta invitación ya ha sido cancelada"
     accept_invitation:
       invalid: "Token de invitación inválido"
       expired: "La invitación ha expirado"
       accepted: "La invitación ya ha sido aceptada"
+      cancelled: "La invitación ha sido cancelada"
+      email_mismatch: "Esta invitación no fue enviada a tu dirección de correo"
+      owner_role: "Esta invitación no puede ser aceptada"
+      has_shelter: "Ya perteneces a un refugio"
     register_user:
       invalid_role: "Selección de rol inválida"
     shelters:

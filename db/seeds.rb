@@ -52,7 +52,9 @@ end
 # exercised locally. All seeded users share the same password.
 #
 # NOTE: shelter users use the canonical domain roles "shelter_admin"
-# and "shelter_staff" (see ShelterPolicy#manage? and User#shelter_admin?).
+# and "shelter_staff" as their account type; the shelter-scoped
+# authorization role is derived on save (shelter_admin -> owner,
+# shelter_staff -> staff_member) via User#derive_shelter_role.
 # The legacy "admin"/"staff" role names are no longer assigned to shelter
 # users — they only remain in ROLES for backward compatibility.
 seed_password = "password123"

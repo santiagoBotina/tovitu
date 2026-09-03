@@ -91,6 +91,52 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "shelter roles" do
+    it "exposes the shelter role predicates" do
+      owner = build(:user, shelter_role: "owner")
+      administrator = build(:user, shelter_role: "administrator")
+      staff_member = build(:user, shelter_role: "staff_member")
+
+      expect(owner).to be_shelter_owner
+      expect(owner).not_to be_shelter_administrator
+      expect(administrator).to be_shelter_administrator
+      expect(staff_member).to be_shelter_staff_member
+      expect([ owner, administrator, staff_member ]).to all(be_shelter_member)
+    end
+
+    it "is false for users without a shelter role" do
+      user = build(:user)
+      expect(user).not_to be_shelter_member
+      expect(user).not_to be_shelter_owner
+    end
+
+    it "derives the shelter role from the legacy role when a shelter is present" do
+      shelter = create(:shelter)
+      admin = build(:user, role: "shelter_admin", shelter: shelter)
+      admin.valid?
+      expect(admin.shelter_role).to eq("owner")
+
+      staff = build(:user, role: "shelter_staff", shelter: shelter)
+      staff.valid?
+      expect(staff.shelter_role).to eq("staff_member")
+    end
+
+    it "keeps a manually assigned shelter role when both are present" do
+      shelter = create(:shelter)
+      administrator = build(:user, role: "shelter_staff", shelter_role: "administrator", shelter: shelter)
+      administrator.valid?
+      expect(administrator.shelter_role).to eq("administrator")
+    end
+
+    it "maps legacy predicates to the shelter role" do
+      owner = build(:user, shelter_role: "owner")
+      staff_member = build(:user, shelter_role: "staff_member")
+
+      expect(owner).to be_shelter_admin
+      expect(staff_member).to be_shelter_staff
+    end
+  end
+
   describe "scopes" do
     let!(:verified_user) { create(:user, :verified) }
     let!(:unverified_user) { create(:user) }

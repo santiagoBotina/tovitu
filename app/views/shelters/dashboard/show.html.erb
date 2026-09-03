@@ -1,5 +1,7 @@
 <% shelter = present(@shelter) %>
 <% can_manage = policy(@shelter).manage? %>
+<% can_view_staff = policy(@shelter).staff_index? %>
+<% can_manage_policies = policy(@shelter).manage_policies? %>
 <% empty_shelter = @total_pets.zero? && @total_requests_count.zero? %>
 
 <%# Welcome overlay for first-time visitors (JS checks sessionStorage) %>
@@ -125,7 +127,7 @@
             </svg>
             <%= t(".empty_state.primary_cta") %>
           <% end %>
-          <% if can_manage %>
+          <% if can_manage_policies %>
             <%= link_to edit_shelter_policies_path(shelter_id: @shelter),
                 class: "inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-neutral-200 text-neutral-700 font-semibold text-sm rounded-xl hover:bg-primary-50 hover:border-primary-200 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
               <%= t(".empty_state.secondary_cta_policies") %>
@@ -369,7 +371,7 @@
             </div>
           <% end %>
 
-          <% if can_manage %>
+          <% if can_view_staff %>
             <%= link_to shelter_staff_index_path(shelter_id: @shelter),
                 class: "group flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" do %>
               <div class="w-9 h-9 bg-primary-50 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
@@ -382,7 +384,9 @@
                 <p class="text-xs text-neutral-500"><%= t(".quick_actions.manage_team.description") %></p>
               </div>
             <% end %>
+          <% end %>
 
+          <% if can_manage_policies %>
             <%= link_to edit_shelter_policies_path(shelter_id: @shelter),
                 class: "group flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" do %>
               <div class="w-9 h-9 bg-primary-50 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
@@ -395,7 +399,9 @@
                 <p class="text-xs text-neutral-500"><%= t(".quick_actions.policies.description") %></p>
               </div>
             <% end %>
+          <% end %>
 
+          <% if can_manage %>
             <%= link_to edit_shelter_path(id: @shelter),
                 class: "group flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" do %>
               <div class="w-9 h-9 bg-primary-50 rounded-full flex items-center justify-center shrink-0 group-hover:bg-primary-100 transition-colors" aria-hidden="true">
@@ -417,7 +423,7 @@
         <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d6">
           <div class="flex items-center justify-between mb-4">
             <h2 class="font-display text-lg font-bold text-neutral-800"><%= t(".team.title") %></h2>
-            <% if can_manage %>
+            <% if can_view_staff %>
               <%= link_to shelter_staff_index_path(shelter_id: @shelter),
                   class: "text-xs font-medium text-primary-500 hover:text-primary-600 transition-colors" do %>
                 <%= t(".team.manage") %>

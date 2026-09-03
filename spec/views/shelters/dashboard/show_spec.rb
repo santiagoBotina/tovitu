@@ -2,8 +2,9 @@ require "rails_helper"
 
 RSpec.describe "shelters/dashboard/show", type: :view do
   let(:shelter) { create(:shelter) }
-  let(:admin_policy) { double(manage?: true) }
-  let(:staff_policy) { double(manage?: false) }
+  let(:admin_policy) { double(manage?: true, staff_index?: true, manage_policies?: true) }
+  let(:administrator_policy) { double(manage?: false, staff_index?: true, manage_policies?: true) }
+  let(:staff_policy) { double(manage?: false, staff_index?: false, manage_policies?: false) }
 
   before do
     view.controller.singleton_class.define_method(:default_url_options) { { locale: I18n.locale } }
@@ -286,7 +287,7 @@ RSpec.describe "shelters/dashboard/show", type: :view do
       end
     end
 
-    context "as an admin" do
+    context "as an admin (owner)" do
       let(:policy) { admin_policy }
 
       it "renders admin-gated actions with correct destinations" do
@@ -297,6 +298,21 @@ RSpec.describe "shelters/dashboard/show", type: :view do
         assert_select "a[href='#{shelter_staff_index_path(shelter_id: shelter)}'] p", text: I18n.t("shelters.dashboard.show.quick_actions.manage_team.title")
         assert_select "a[href='#{edit_shelter_policies_path(shelter_id: shelter)}'] p", text: I18n.t("shelters.dashboard.show.quick_actions.policies.title")
         assert_select "a[href='#{edit_shelter_path(id: shelter)}'] p", text: I18n.t("shelters.dashboard.show.quick_actions.profile.title")
+      end
+    end
+
+    context "as an administrator" do
+      let(:policy) { administrator_policy }
+
+      it "sees staff and policies but not owner-only profile management" do
+        assign_counts(total_pets: 1, adoptable_pets: 1)
+
+        render
+
+        assert_select "a[href='#{shelter_staff_index_path(shelter_id: shelter)}'] p", text: I18n.t("shelters.dashboard.show.quick_actions.manage_team.title")
+        assert_select "a[href='#{edit_shelter_policies_path(shelter_id: shelter)}'] p", text: I18n.t("shelters.dashboard.show.quick_actions.policies.title")
+        assert_select "a", text: I18n.t("shelters.dashboard.show.quick_actions.profile.title"), count: 0
+        expect(rendered).not_to include(edit_shelter_path(id: shelter))
       end
     end
   end

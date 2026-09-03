@@ -1,10 +1,10 @@
 class ShelterProfilePolicy < ApplicationPolicy
   def show?
-    user == record.user || shelter_admin_or_staff?
+    user == record.user || shelter_member?
   end
 
   def update?
-    user == record.user || shelter_admin?
+    user == record.user || shelter_owner?
   end
 
   def edit?
@@ -17,17 +17,17 @@ class ShelterProfilePolicy < ApplicationPolicy
 
   private
 
-  def shelter_admin?
-    user.shelter_admin? && record.shelter.present? && user.shelter_id == record.shelter_id
+  def shelter_owner?
+    user.shelter_owner? && record.shelter.present? && user.shelter_id == record.shelter_id
   end
 
-  def shelter_admin_or_staff?
-    shelter_admin? || (user.shelter_staff? && record.shelter.present? && user.shelter_id == record.shelter_id)
+  def shelter_member?
+    user.shelter_member? && record.shelter.present? && user.shelter_id == record.shelter_id
   end
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if user.shelter_admin? || user.admin?
+      if user.shelter_owner? || user.admin?
         scope.where(shelter_id: user.shelter_id)
       elsif user.adopter?
         scope.where(user: user)

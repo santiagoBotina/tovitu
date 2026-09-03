@@ -87,8 +87,16 @@ Rails.application.routes.draw do
         post :dismiss_checklist
         delete :restore_checklist
       end
-      resources :staff, only: [ :index, :create, :destroy ], controller: "shelters/staff"
-      resources :invitations, only: [ :create ], controller: "shelters/invitations"
+      resources :staff, only: [ :index, :create, :destroy ], controller: "shelters/staff" do
+        member do
+          patch :change_role
+        end
+      end
+      resources :invitations, only: [ :create ], controller: "shelters/invitations" do
+        member do
+          delete :cancel
+        end
+      end
       resource :policies, only: [ :show, :edit, :update ], controller: "shelters/policies"
     end
 

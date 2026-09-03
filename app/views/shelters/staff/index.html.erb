@@ -1,5 +1,7 @@
 <%# ─── Staff Management Page ─── %>
 <%# Design: Dashboard-level bento cards, team member rows, invite disclosure with consistent styling %>
+<% can_manage = policy(@shelter).manage? %>
+<% role_options = User::SHELTER_ROLES.reject { |r| r == "owner" }.map { |r| [ t("shelters.staff.roles.#{r}"), r ] } %>
 <div class="w-full max-w-2xl mx-auto">
 
   <%= render "shared/section_header",
@@ -8,10 +10,11 @@
              back_link_path: safe_back_path(shelter_dashboard_path(shelter_id: @shelter)),
              header_class: "mb-6 bento-enter bento-enter-d1" %>
 
-  <%# ─── Invite Staff Disclosure (REQ-45-4) ─── %>
+  <%# ─── Invite Staff Disclosure (REQ-45-4, plan 46 role selector) ─── %>
   <%# Native <details>/<summary> disclosure: a semantically sound, keyboard-accessible
-      pattern that reveals the invite form without a new Stimulus controller. %>
-  <% if @staff_members.any? %>
+      pattern that reveals the invite form without a new Stimulus controller.
+      Owner-only: invite is a staff-management action (DP-1). %>
+  <% if can_manage && @staff_members.any? %>
     <details class="group mb-6 bento-enter bento-enter-d2">
       <summary class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm cursor-pointer list-none [&::-webkit-details-marker]:hidden">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -32,26 +35,38 @@
     <% if @staff_members.any? %>
       <div class="divide-y divide-neutral-100">
         <% @staff_members.each do |member| %>
-          <div class="flex items-center justify-between gap-3 py-3">
-            <div class="flex items-center gap-3 min-w-0">
+          <%# Member row: identity + role badge stacked in the name column so the
+              name/email keep full width; the role-change and remove actions live
+              on their own wrapping line so they never crowd the name (fixes
+              overflow on narrow viewports). %>
+          <div class="py-3">
+            <div class="flex items-start gap-3">
               <div class="shrink-0 w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center shadow-sm" aria-hidden="true">
                 <span class="font-semibold text-primary-600 text-sm"><%= member.name.first.upcase %></span>
               </div>
               <div class="min-w-0">
                 <p class="font-medium text-neutral-800 text-sm truncate"><%= member.name %></p>
                 <p class="text-xs text-neutral-500 truncate"><%= member.email %></p>
+                <span class="mt-1.5 inline-block px-2.5 py-0.5 rounded-full text-xs font-medium <%= member.shelter_owner? ? "bg-primary-50 text-primary-600" : "bg-neutral-50 text-neutral-500" %>">
+                  <%= member.shelter_role.present? ? t("shelters.staff.roles.#{member.shelter_role}") : member.role.humanize %>
+                </span>
               </div>
             </div>
-            <div class="flex items-center gap-3 shrink-0">
-              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium <%= member.admin? ? "bg-primary-50 text-primary-600" : "bg-neutral-50 text-neutral-500" %>">
-                <%= member.role.titleize %>
-              </span>
-              <% if member.id != current_user.id %>
+            <% if can_manage && member.id != current_user.id && !member.shelter_owner? %>
+              <div class="mt-3 flex flex-wrap items-center gap-2">
+                <%= form_tag change_role_shelter_staff_path(shelter_id: @shelter, id: member), method: :patch, class: "inline-flex items-center gap-1.5" do %>
+                  <%= label_tag "shelter_role_#{member.id}", t(".change_role_label"), class: "sr-only" %>
+                  <%= select_tag :shelter_role, options_for_select(role_options, member.shelter_role),
+                      id: "shelter_role_#{member.id}",
+                      aria: { label: t(".change_role_label") },
+                      class: "text-xs font-medium border border-neutral-300 rounded-lg bg-white py-1.5 pl-2 pr-6 focus-visible:ring-2 focus-visible:ring-primary-500 focus:outline-none transition" %>
+                  <%= submit_tag t(".change_role"), data: { turbo_confirm: t(".change_role_confirm", name: member.name) }, class: "px-2.5 py-1.5 text-xs font-medium text-neutral-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition active:scale-[0.97] cursor-pointer" %>
+                <% end %>
                 <%= button_to shelter_staff_path(shelter_id: @shelter, id: member), method: :delete, data: { turbo_confirm: t(".remove_confirm", name: member.name) }, class: "px-3 py-1.5 text-xs font-medium text-danger hover:bg-danger/10 rounded-lg transition active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-danger/40 focus-visible:ring-offset-2" do %>
                   <%= t(".remove") %>
                 <% end %>
-              <% end %>
-            </div>
+              </div>
+            <% end %>
           </div>
         <% end %>
       </div>
@@ -65,18 +80,20 @@
         </div>
         <h3 class="font-display text-base font-bold text-neutral-700 mb-1"><%= t(".empty_staff_title") %></h3>
         <p class="text-sm text-neutral-500 mb-4 max-w-xs mx-auto"><%= t(".empty_staff_description") %></p>
-        <details class="group inline-block">
-          <summary class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-            <%= t(".invite_cta") %>
-          </summary>
-          <div class="mt-4 text-left bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
-            <h4 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".invite_new") %></h4>
-            <%= render "shelters/staff/invite_form" %>
-          </div>
-        </details>
+        <% if can_manage %>
+          <details class="group inline-block">
+            <summary class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              <%= t(".invite_cta") %>
+            </summary>
+            <div class="mt-4 text-left bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
+              <h4 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".invite_new") %></h4>
+              <%= render "shelters/staff/invite_form" %>
+            </div>
+          </details>
+        <% end %>
       </div>
     <% end %>
   </section>
@@ -94,12 +111,19 @@
               </div>
               <div class="min-w-0">
                 <p class="font-medium text-neutral-800 text-sm truncate"><%= invitation.email %></p>
-                <p class="text-xs text-neutral-500"><%= t(".invited_ago", time: time_ago_in_words(invitation.created_at)) %></p>
+                <p class="text-xs text-neutral-500"><%= t(".invited_ago", time: time_ago_in_words(invitation.created_at)) %> · <%= t("shelters.staff.roles.#{invitation.role}") %></p>
               </div>
             </div>
-            <span class="shrink-0 px-2.5 py-0.5 rounded-full text-xs font-medium <%= invitation.expired? ? "bg-danger/10 text-danger" : "bg-warning/10 text-warning" %>">
-              <%= invitation.expired? ? t(".expired") : t(".pending") %>
-            </span>
+            <div class="flex items-center gap-3 shrink-0">
+              <span class="shrink-0 px-2.5 py-0.5 rounded-full text-xs font-medium <%= invitation.expired? ? "bg-danger/10 text-danger" : "bg-warning/10 text-warning" %>">
+                <%= invitation.expired? ? t(".expired") : t(".pending") %>
+              </span>
+              <% if can_manage %>
+                <%= button_to cancel_shelter_invitation_path(shelter_id: @shelter, id: invitation), method: :delete, data: { turbo_confirm: t(".cancel_invitation_confirm", email: invitation.email) }, class: "px-3 py-1.5 text-xs font-medium text-danger hover:bg-danger/10 rounded-lg transition active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-danger/40 focus-visible:ring-offset-2" do %>
+                  <%= t(".cancel_invitation") %>
+                <% end %>
+              <% end %>
+            </div>
           </div>
         <% end %>
       </div>

@@ -10,7 +10,7 @@ RSpec.describe "Shelter Dashboard" do
 
     it "shows dashboard to shelter members" do
       shelter = create(:shelter)
-      user = create(:user, :verified, :onboarding_completed, shelter: shelter)
+      user = create(:user, :verified, :onboarding_completed, :shelter_staff_member, shelter: shelter)
       post session_path, params: { session: { email: user.email, password: "password123" } }
 
       get shelter_dashboard_path(shelter_id: shelter)

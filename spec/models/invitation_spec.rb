@@ -11,6 +11,14 @@ RSpec.describe Invitation, type: :model do
 
     it { is_expected.to validate_presence_of(:email) }
     it { is_expected.to validate_uniqueness_of(:token) }
+    it { is_expected.to validate_presence_of(:role) }
+    it { is_expected.to validate_inclusion_of(:role).in_array(%w[administrator staff_member]) }
+
+    it "rejects the owner role (a shelter cannot invite a second owner)" do
+      inv = build(:invitation, role: "owner")
+      inv.valid?
+      expect(inv.errors[:role]).to be_present
+    end
 
     it "validates email format" do
       inv = build(:invitation, email: "invalid")
@@ -37,10 +45,11 @@ RSpec.describe Invitation, type: :model do
     let!(:pending_inv) { create(:invitation, shelter: shelter, expires_at: 7.days.from_now) }
     let!(:expired_inv) { create(:invitation, :expired, shelter: shelter) }
     let!(:accepted_inv) { create(:invitation, :accepted, shelter: shelter) }
+    let!(:cancelled_inv) { create(:invitation, :cancelled, shelter: shelter) }
 
-    it "pending" do
+    it "pending excludes accepted, cancelled, and expired invitations" do
       expect(Invitation.pending).to include(pending_inv)
-      expect(Invitation.pending).not_to include(expired_inv, accepted_inv)
+      expect(Invitation.pending).not_to include(expired_inv, accepted_inv, cancelled_inv)
     end
 
     it "expired" do
@@ -49,6 +58,10 @@ RSpec.describe Invitation, type: :model do
 
     it "accepted" do
       expect(Invitation.accepted).to include(accepted_inv)
+    end
+
+    it "cancelled" do
+      expect(Invitation.cancelled).to include(cancelled_inv)
     end
   end
 
@@ -76,10 +89,54 @@ RSpec.describe Invitation, type: :model do
     end
   end
 
+  describe "#cancelled?" do
+    it "returns true when cancelled_at is set" do
+      inv = build(:invitation, :cancelled)
+      expect(inv).to be_cancelled
+    end
+
+    it "returns false when cancelled_at is nil" do
+      inv = build(:invitation)
+      expect(inv).not_to be_cancelled
+    end
+  end
+
   describe "#accept!" do
-    it "sets accepted_at" do
+    it "sets accepted_at for a pending invitation" do
       inv = create(:invitation)
       expect { inv.accept! }.to change(inv, :accepted_at).from(nil)
+    end
+
+    it "raises for an already accepted invitation" do
+      inv = create(:invitation, :accepted)
+      expect { inv.accept! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it "raises for a cancelled invitation" do
+      inv = create(:invitation, :cancelled)
+      expect { inv.accept! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it "raises for an expired invitation" do
+      inv = create(:invitation, :expired)
+      expect { inv.accept! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
+
+  describe "#cancel!" do
+    it "sets cancelled_at for a pending invitation" do
+      inv = create(:invitation)
+      expect { inv.cancel! }.to change(inv, :cancelled_at).from(nil)
+    end
+
+    it "raises for an already accepted invitation" do
+      inv = create(:invitation, :accepted)
+      expect { inv.cancel! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it "raises for an already cancelled invitation" do
+      inv = create(:invitation, :cancelled)
+      expect { inv.cancel! }.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 end
