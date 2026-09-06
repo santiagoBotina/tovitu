@@ -82,8 +82,8 @@ GEM
       rake (>= 0.8.7)
     ast (2.4.3)
     aws-eventstream (1.4.0)
-    aws-partitions (1.1262.0)
-    aws-sdk-cognitoidentityprovider (1.149.0)
+    aws-partitions (1.1283.0)
+    aws-sdk-cognitoidentityprovider (1.151.0)
       aws-sdk-core (~> 3, >= 3.254.0)
       aws-sigv4 (~> 1.5)
     aws-sdk-core (3.254.1)
@@ -513,8 +513,8 @@ CHECKSUMS
   annotate (2.6.5) sha256=14dc2adae397080ee14bf6e3fd6f1d8de81aa1d28c4ca670e734d11bf6b97d26
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
-  aws-partitions (1.1262.0) sha256=77e9b1dd3e8f616673f2959d2fc4e762065f83a43140e2cb82274525afbaccf7
-  aws-sdk-cognitoidentityprovider (1.149.0) sha256=4d2365f4ca65f8922b928adb3c9bead44754847a3055e8eca120c343aa41b9ad
+  aws-partitions (1.1283.0) sha256=125ba9cb65eb7ec2b0a2041a47d204d403b3f6d9aa62bffa53a6b95b04b1f1de
+  aws-sdk-cognitoidentityprovider (1.151.0) sha256=fdd995242d95b80cdba6c9a355de9cf580422e635e022cb2708f8b239c34d334
   aws-sdk-core (3.254.1) sha256=518089e32134c3478cd4ec63d07fb966546a45e9e4cbf5f80d2cf16d5699d29b
   aws-sdk-kms (1.129.0) sha256=363f548df321f4a4fcfd05523384e591060b400f8e65133ed7ef0793155a3343
   aws-sdk-s3 (1.226.0) sha256=e599f431e006ec9b92c61ee0f14d3f658a1f6c8a1d623d2160be927ac958e2bf
