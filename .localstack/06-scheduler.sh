@@ -1,8 +1,10 @@
 #!/bin/bash
 # Phase 0 — LocalStack init hook: EventBridge Scheduler schedule.
 # Idempotent: creates `tovitu-nightly-maintenance` targeting the `tovitu-jobs`
-# SQS queue with a job-invocation payload. Execution semantics are validated in
-# Phase 5; this phase only asserts the rule exists.
+# SQS queue with a job-invocation payload. Queuing::Worker recognizes this
+# invocation-spec format ({"job_class": ..., "arguments": [...]}) and runs the
+# whitelisted job (MaintenanceJob) via perform_now — see
+# lib/queuing/worker.rb SCHEDULED_JOB_WHITELIST.
 set -e
 
 SCHEDULE_NAME="tovitu-nightly-maintenance"

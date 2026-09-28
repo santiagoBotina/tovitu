@@ -3,8 +3,8 @@
 ## AC1: LocalStack boots the full service footprint
 ```
 Given a developer runs `docker compose up -d localstack`
-Then LocalStack starts with services s3, sqs, sns, ses, cognito-idp,
-    secretsmanager, logs, events, and scheduler
+Then LocalStack starts with services s3, sqs, ses, cognito-idp,
+    logs, events, and scheduler
 And the health endpoint reports every configured service as "running"
 And restarting LocalStack does not duplicate or break provisioned resources
     (idempotent init)
@@ -17,10 +17,10 @@ When the init scripts finish
 Then an S3 bucket `tovitu-development` exists
 And SQS queues `tovitu-jobs`, `tovitu-jobs-dlq`, `tovitu-mailers`, `tovitu-mailers-dlq` exist
     (primary queues have a redrive policy with maxReceiveCount = 5)
-And an SNS topic `tovitu-events` exists
 And a Cognito user pool named `tovitu` exists with an app client
-And a Secrets Manager secret `tovitu/development/runtime` exists
 And an EventBridge Scheduler rule `tovitu-nightly-maintenance` exists
+    (targeting SQS `tovitu-jobs` with a whitelisted job invocation spec:
+    `{"job_class":"MaintenanceJob","arguments":[]}`)
 And generated IDs (Cognito pool/client) are written to `.localstack/state/cognito.env`
     which is git-ignored
 ```
@@ -84,6 +84,5 @@ And the job passes only when the full footprint is verified
 ## Edge cases
 - LocalStack already running with resources from a previous session → init scripts no-op for existing resources (idempotent).
 - LocalStack not running when the app boots → app still boots; `aws:smoke` is the explicit gate.
-- Secrets state outlives restart (PERSISTENCE=1) but secret values change → `05-secrets.sh` updates values idempotently.
 - Cognito state file missing after a fresh volume → `04-cognito.sh` recreates pool + client and rewrites the file; smoke hints when stale.
 - One service fails to start → `aws:smoke` names it and exits 1; CI fails with the service name.

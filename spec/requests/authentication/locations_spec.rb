@@ -60,7 +60,7 @@ RSpec.describe "Profile location settings", type: :request do
 
     context "as an individual with an existing location" do
       let!(:location) { create(:user_location, user: user, city: "Old City", source: "manual") }
-      let!(:decision_at) { 3.days.ago }
+      let!(:decision_at) { 3.days.ago.change(usec: 0) }
 
       before do
         user.update!(

@@ -100,7 +100,7 @@ RSpec.describe "Onboarding location step", type: :request do
         it "returns 422 with a localized error" do
           patch_location(intent: "device")
 
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
           expect(response.parsed_body["success"]).to be(false)
           expect(response.parsed_body["errors"]).to include(I18n.t("locations.errors.coordinates_required"))
         end
@@ -115,7 +115,7 @@ RSpec.describe "Onboarding location step", type: :request do
         it "returns 422 with the reverse-geocode error (graceful degradation)" do
           patch_location(intent: "device", latitude: "30.267153", longitude: "-97.7431")
 
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
           expect(response.parsed_body["success"]).to be(false)
           expect(response.parsed_body["errors"]).to include(I18n.t("locations.errors.reverse_geocode_failed"))
         end
@@ -148,7 +148,7 @@ RSpec.describe "Onboarding location step", type: :request do
         it "returns 422 with a localized error" do
           patch_location(intent: "manual", city: "")
 
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
           expect(response.parsed_body["errors"]).to include(I18n.t("locations.errors.city_required"))
         end
       end
@@ -172,7 +172,7 @@ RSpec.describe "Onboarding location step", type: :request do
       it "returns 422 with a localized error" do
         patch_location(intent: "teleport")
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.parsed_body["success"]).to be(false)
         expect(response.parsed_body["errors"]).to include(I18n.t("locations.errors.invalid_intent"))
       end

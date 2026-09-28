@@ -37,7 +37,7 @@ module Authentication
         redirect_to root_path, notice: t("flash.passwords.update.success")
       else
         flash.now[:alert] = Array(result.errors).join(", ")
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
   end

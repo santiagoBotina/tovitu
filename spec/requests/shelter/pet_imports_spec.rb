@@ -45,7 +45,7 @@ RSpec.describe "Shelter::PetImports" do
         post shelter_pet_imports_path, params: { pet_import: { file: nil } }
       }.not_to change(PetImport, :count)
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.body).to include(I18n.t("shelter.pet_imports.errors.file_required"))
     end
 
@@ -56,7 +56,7 @@ RSpec.describe "Shelter::PetImports" do
         post shelter_pet_imports_path, params: { pet_import: { file: file } }
       }.not_to change(PetImport, :count)
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.body).to include("CSV or Excel")
     end
 

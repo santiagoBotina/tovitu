@@ -18,7 +18,7 @@ module Onboarding
         if result.success?
           render json: { success: true, data: result.data }, status: :ok
         else
-          render json: { success: false, errors: result.errors }, status: :unprocessable_entity
+          render json: { success: false, errors: result.errors }, status: :unprocessable_content
         end
       end
 

@@ -20,7 +20,7 @@ class Shelter::PetImportsController < ApplicationController
       @pet_import = current_shelter.pet_imports.new(user: current_user)
       authorize @pet_import
       flash.now[:alert] = t("shelter.pet_imports.errors.file_required")
-      render :new, status: :unprocessable_entity and return
+      render :new, status: :unprocessable_content and return
     end
 
     extension = File.extname(file.original_filename.to_s).downcase
@@ -28,7 +28,7 @@ class Shelter::PetImportsController < ApplicationController
       @pet_import = current_shelter.pet_imports.new(user: current_user)
       authorize @pet_import
       flash.now[:alert] = t("shelter.pet_imports.errors.format")
-      render :new, status: :unprocessable_entity and return
+      render :new, status: :unprocessable_content and return
     end
 
     @pet_import = current_shelter.pet_imports.new(
@@ -43,7 +43,7 @@ class Shelter::PetImportsController < ApplicationController
       PetImportJob.perform_later(@pet_import.id)
       redirect_to shelter_pet_import_path(@pet_import), notice: t("shelter.pet_imports.notices.started")
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

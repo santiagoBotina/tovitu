@@ -20,7 +20,7 @@ module Shelters
       redirect_to shelter_policies_path(shelter_id: @shelter), notice: t("flash.policies.update.success")
     rescue ActiveRecord::RecordInvalid => e
       flash.now[:alert] = e.record.errors.full_messages.join(", ")
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
 
     # Add natural-language policies (one per line) and translate them into

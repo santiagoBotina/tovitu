@@ -25,7 +25,7 @@ class Shelter::Ai::DocumentsController < ApplicationController
       redirect_to shelter_ai_documents_path,
                   notice: I18n.t("flash.ai.document.uploaded")
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

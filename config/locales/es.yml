@@ -768,6 +768,9 @@ es:
       first_application: "Hito desbloqueado: Primera solicitud 🎉"
       active_applicant: "Hito desbloqueado: Solicitante activo 🎉"
       publisher: "Hito desbloqueado: Publicador 🎉"
+  jobs:
+    maintenance:
+      document_timeout: "El procesamiento expiró — vuelve a subir el documento."
   flash:
     sessions:
       create:

@@ -98,7 +98,7 @@ class Shelter::PhotosController < ApplicationController
     @presented_pet = PetPresenter.new(@pet)
     @notice = result.success? ? (notice || photos_notice(result)) : nil
     @alert = result.errors.any? ? Array(result.errors).join(", ") : nil
-    render :media_turbo, status: result.success? ? :ok : :unprocessable_entity
+    render :media_turbo, status: result.success? ? :ok : :unprocessable_content
   end
 
   def photos_notice(result)

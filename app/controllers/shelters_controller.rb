@@ -31,7 +31,7 @@ class SheltersController < ApplicationController
       @shelter = Shelter.new(shelter_params)
       @shelter.validate
       flash.now[:alert] = Array(result.errors).join(", ")
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -48,7 +48,7 @@ class SheltersController < ApplicationController
       redirect_to shelter_path(id: @shelter), notice: t("flash.shelters.update.success")
     else
       flash.now[:alert] = Array(result.errors).join(", ")
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

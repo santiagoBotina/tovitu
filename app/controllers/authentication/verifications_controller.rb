@@ -14,7 +14,7 @@ module Authentication
           redirect_to destination, notice: t("flash.verifications.show.success")
         end
       elsif result.error_code == :expired
-        render :expired, status: :unprocessable_entity
+        render :expired, status: :unprocessable_content
       elsif result.error_code == :invalid_token
         token = EmailVerificationToken.find_by(token: params[:token])
         if token&.consumed?

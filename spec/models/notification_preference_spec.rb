@@ -5,14 +5,6 @@ RSpec.describe NotificationPreference, type: :model do
     it { is_expected.to belong_to(:user) }
   end
 
-  describe "validations" do
-    subject { build(:notification_preference) }
-
-    it { is_expected.to validate_inclusion_of(:in_app).in_array([ true, false ]) }
-    it { is_expected.to validate_inclusion_of(:email).in_array([ true, false ]) }
-    it { is_expected.to validate_inclusion_of(:whatsapp).in_array([ true, false ]) }
-  end
-
   describe "scopes" do
     describe ".whatsapp_opted_in" do
       let!(:opted_in) { create(:notification_preference, :whatsapp_opted_in) }

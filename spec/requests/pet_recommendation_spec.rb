@@ -99,7 +99,7 @@ RSpec.describe "Pet Recommendation" do
         }
       }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(Pet.count).to eq(0)
       expect(response.body).to include(CGI.escapeHTML(I18n.t("pets.errors.recommendation_inappropriate")))
     end

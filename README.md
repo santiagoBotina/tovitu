@@ -25,7 +25,7 @@ bin/dev                       # Start server + Tailwind watcher + SQS worker
 ```
 
 LocalStack emulates every AWS dependency locally (S3 storage, SQS jobs, SES email,
-Cognito auth, Secrets Manager, EventBridge Scheduler). Verify the footprint with
+Cognito auth, EventBridge Scheduler). Verify the footprint with
 `bin/rails aws:smoke`. Inspect queues/email via the `awslocal` CLI inside the container
 (`docker compose exec localstack awslocal ...`).
 

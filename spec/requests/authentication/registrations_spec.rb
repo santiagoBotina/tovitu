@@ -121,30 +121,30 @@ RSpec.describe "Registrations" do
     context "with invalid parameters" do
       it "re-renders the form when password is too short" do
         post registration_path, params: { user: { name: "Jane", email: "jane@example.com", password: "short", password_confirmation: "short" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.body).to include("too short")
       end
 
       it "re-renders the form when passwords don't match" do
         post registration_path, params: { user: { name: "Jane", email: "jane@example.com", password: "password123", password_confirmation: "different" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it "re-renders the form with invalid email" do
         post registration_path, params: { user: { name: "Jane", email: "invalid", password: "password123", password_confirmation: "password123" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it "rejects duplicate email" do
         create(:user, email: "jane@example.com")
         post registration_path, params: { user: { name: "Jane", email: "jane@example.com", password: "password123", password_confirmation: "password123" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.body).to include("already been taken")
       end
 
       it "shows localized validation errors in Spanish" do
         post registration_path(locale: :es), params: { user: { name: "Jane", email: "jane@example.com", password: "short", password_confirmation: "short" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.body).to include("Contraseña es demasiado corto (mínimo 8 caracteres)")
         expect(response.body).not_to include("too short")
       end
@@ -152,7 +152,7 @@ RSpec.describe "Registrations" do
       it "shows localized duplicate-email errors in Spanish" do
         create(:user, email: "jane@example.com")
         post registration_path(locale: :es), params: { user: { name: "Jane", email: "jane@example.com", password: "password123", password_confirmation: "password123" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.body).to include("Correo electrónico ya está en uso")
         expect(response.body).not_to include("already been taken")
       end

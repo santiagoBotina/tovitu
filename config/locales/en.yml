@@ -749,6 +749,9 @@ en:
       first_application: "Milestone unlocked: First application 🎉"
       active_applicant: "Milestone unlocked: Active applicant 🎉"
       publisher: "Milestone unlocked: Publisher 🎉"
+  jobs:
+    maintenance:
+      document_timeout: "Processing timed out — please re-upload the document."
   flash:
     sessions:
       create:

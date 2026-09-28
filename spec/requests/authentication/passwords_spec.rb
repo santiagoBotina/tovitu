@@ -130,14 +130,14 @@ RSpec.describe "Password Resets" do
         patch password_reset_path(id: token.token), params: {
           user: { password: "short", password_confirmation: "short" }
         }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it "re-renders the form when passwords don't match" do
         patch password_reset_path(id: token.token), params: {
           user: { password: "newpassword1", password_confirmation: "different" }
         }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

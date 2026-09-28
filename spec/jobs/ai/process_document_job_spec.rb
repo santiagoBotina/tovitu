@@ -8,6 +8,12 @@ RSpec.describe Ai::ProcessDocumentJob do
     stub_embedding_adapter(return_value: [ fake_embedding ] * 3)
   end
 
+  describe "queue routing" do
+    it "routes to the default queue (provisioned as tovitu-jobs)" do
+      expect(described_class.queue_name).to eq("default")
+    end
+  end
+
   describe "#perform" do
     context "with a manual document" do
       let(:document) do

@@ -1,6 +1,6 @@
 module Ai
   class ProcessDocumentJob < ApplicationJob
-    queue_as :ai
+    queue_as :default
     retry_on StandardError, attempts: 3, wait: :exponentially_longer
 
     def perform(document_id)

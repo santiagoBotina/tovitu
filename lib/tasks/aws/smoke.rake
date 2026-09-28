@@ -32,9 +32,7 @@ namespace :aws do
     checks = {
       "S3" => s3_check,
       "SQS" => sqs_check,
-      "SNS" => sns_check,
       "SES" => ses_check,
-      "Secrets Manager" => secrets_check,
       "Cognito" => cognito_check,
       "EventBridge Scheduler" => scheduler_check
     }
@@ -128,14 +126,6 @@ namespace :aws do
       end
     end
 
-    def sns_check
-      require "aws-sdk-sns"
-      lambda do
-        topics = Aws::SNS::Client.new.list_topics.topics.map(&:topic_arn)
-        topics.any? { |arn| arn.end_with?(":tovitu-events") } ? pass_result : fail_result("topic 'tovitu-events' not found (found: #{topics.join(", ")})")
-      end
-    end
-
     def ses_check
       require "aws-sdk-sesv2"
       lambda do
@@ -147,17 +137,6 @@ namespace :aws do
         else
           fail_result("list_email_identities failed (#{e.class}) — LocalStack SES may be unavailable")
         end
-      end
-    end
-
-    def secrets_check
-      require "aws-sdk-secretsmanager"
-      lambda do
-        name = ENV.fetch("SECRETS_PREFIX", "tovitu/development/runtime")
-        Aws::SecretsManager::Client.new.describe_secret(secret_id: name)
-        pass_result
-      rescue Aws::Errors::ServiceError => e
-        fail_result("secret '#{name}' missing or unreachable (#{e.class})")
       end
     end
 

@@ -20,8 +20,8 @@ services:
       retries: 5
 
   # LocalStack is the local equivalent of every AWS service the app uses
-  # (S3 storage, SQS jobs, SES email, Cognito auth, Secrets Manager,
-  # EventBridge Scheduler). Run `bin/rails queuing:work` to consume job queues.
+  # (S3 storage, SQS jobs, SES email, Cognito auth, EventBridge Scheduler).
+  # Run `bin/rails queuing:work` to consume job queues.
   localstack:
     # Community by default. To unlock Pro-only services (cognito-idp, sesv2)
     # and persistence, set LOCALSTACK_IMAGE=localstack/localstack-pro:4 and
@@ -34,9 +34,9 @@ services:
       # state (e.g. Cognito pool ids) is written to `.localstack/state/`.
       - "${LOCALSTACK_VOLUME:-./.localstack}:/etc/localstack/init/ready.d"
     environment:
-      # Every AWS service LocalStack emulates for the migration (s3, sqs, sns,
-      # ses + sesv2, cognito-idp, secretsmanager, logs, events, scheduler).
-      SERVICES: s3,sqs,sns,ses,sesv2,cognito-idp,secretsmanager,logs,events,scheduler
+      # Every AWS service LocalStack emulates for the migration (s3, sqs,
+      # ses + sesv2, cognito-idp, logs, events, scheduler).
+      SERVICES: s3,sqs,ses,sesv2,cognito-idp,logs,events,scheduler
       PERSISTENCE: 1
       # Optional LocalStack student/Pro license. Without it, Pro-only services
       # (cognito-idp, sesv2) are skipped gracefully; PERSISTENCE also requires it.
@@ -49,8 +49,8 @@ services:
       - "${LOCALSTACK_PORT:-4566}:4566"
     healthcheck:
       # "Ready" requires the init hooks (ready.d) to have finished, not just
-      # the services to be reachable — otherwise resources (queues, topics,
-      # secrets, schedules) appear missing to aws:smoke.
+      # the services to be reachable — otherwise resources (queues,
+      # schedules) appear missing to aws:smoke.
       test: ["CMD-SHELL", "curl -sf http://localhost:4566/_localstack/init/ready | python3 -c \"import json,sys; d=json.load(sys.stdin); sys.exit(0 if d.get('completed') is True else 1)\""]
       interval: 10s
       timeout: 5s

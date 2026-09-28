@@ -52,8 +52,6 @@ gem "aws-sdk-s3", require: false
 gem "aws-sdk-sqs", require: false
 gem "aws-sdk-sesv2", require: false
 gem "aws-sdk-cognitoidentityprovider", require: false
-gem "aws-sdk-secretsmanager", require: false
-gem "aws-sdk-sns", require: false
 gem "aws-sdk-scheduler", require: false
 
 gem "discard", "~> 1.3"

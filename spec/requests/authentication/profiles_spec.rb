@@ -79,7 +79,7 @@ RSpec.describe "Profiles" do
       context "with invalid data" do
         it "re-renders the form with errors" do
           patch profile_path, params: { user: { name: "", email: user.email } }
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
         end
       end
 

@@ -32,7 +32,7 @@ RSpec.describe "Ai::RagQueries" do
     it "returns 422 for blank question" do
       post shelter_rag_queries_path(shelter_id: shelter), params: { question: "" }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       json = response.parsed_body
       expect(json["error"]).to eq(I18n.t("ai.rag.question_required"))
     end
@@ -105,7 +105,7 @@ RSpec.describe "Ai::RagQueries" do
       post adoption_application_rag_queries_path(adoption_application_id: application.token),
            params: { question: "" }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       json = response.parsed_body
       expect(json["error"]).to eq(I18n.t("ai.rag.question_required"))
     end

@@ -32,7 +32,7 @@ module Authentication
           role: role
         )
         Array(result.errors).each { |error| @user.errors.add(:base, error) }
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
 

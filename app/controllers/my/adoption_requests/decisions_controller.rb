@@ -35,7 +35,7 @@ module My
                       notice: t(".decision_made")
         else
           flash.now[:alert] = Array(result.errors).join(", ")
-          render :new, status: :unprocessable_entity
+          render :new, status: :unprocessable_content
         end
       end
 

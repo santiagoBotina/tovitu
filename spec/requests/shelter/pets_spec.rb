@@ -60,7 +60,7 @@ RSpec.describe "Shelter::Pets" do
           post shelter_pets_path, params: valid_params.deep_merge(pet: { photos: [ file ] })
         }.not_to change(Pet, :count)
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 
@@ -70,7 +70,7 @@ RSpec.describe "Shelter::Pets" do
           post shelter_pets_path, params: valid_params
         }.not_to change(Pet, :count)
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
@@ -125,7 +125,7 @@ RSpec.describe "Shelter::Pets" do
 
       post shelter_pet_photos_path(pet), params: { files: [ gif ] }, headers: { "Accept" => "text/vnd.turbo-stream.html" }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(pet.reload.photos).not_to be_attached
     end
   end

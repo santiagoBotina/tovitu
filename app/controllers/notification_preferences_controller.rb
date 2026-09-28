@@ -13,7 +13,7 @@ class NotificationPreferencesController < ApplicationController
     if @preference.update(preference_params)
       redirect_to edit_notification_preferences_path, notice: t("notifications.preferences.saved")
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

@@ -31,7 +31,7 @@ module My
       else
         @pet = Pet.new(pet_params)
         flash.now[:alert] = Array(result.errors).join(", ")
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
 
@@ -48,7 +48,7 @@ module My
         redirect_to my_pet_path(@pet), notice: t("flash.my.pets.updated")
       else
         flash.now[:alert] = Array(result.errors).join(", ")
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

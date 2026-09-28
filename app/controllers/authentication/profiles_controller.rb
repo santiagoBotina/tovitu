@@ -12,7 +12,7 @@ module Authentication
       if @user.update(user_params)
         redirect_to edit_profile_path, notice: t("flash.profiles.update.success")
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

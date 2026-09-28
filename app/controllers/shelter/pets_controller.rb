@@ -42,7 +42,7 @@ class Shelter::PetsController < ApplicationController
       @pet = Pet.new(pet_params.except(:photos))
       @pet.shelter = current_shelter
       flash.now[:alert] = Array(result.errors).join(", ")
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -59,7 +59,7 @@ class Shelter::PetsController < ApplicationController
       redirect_to shelter_pet_path(id: @pet), notice: t("pets.notices.updated")
     else
       flash.now[:alert] = Array(result.errors).join(", ")
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

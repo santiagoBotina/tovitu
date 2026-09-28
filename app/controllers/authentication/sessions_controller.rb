@@ -42,7 +42,7 @@ module Authentication
       else
         flash.now[:alert] = Array(result.errors).join(", ")
         @role = normalized_role || "individual"
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
 

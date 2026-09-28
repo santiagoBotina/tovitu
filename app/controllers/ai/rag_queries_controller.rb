@@ -7,7 +7,7 @@ module Ai
       elsif params[:adoption_application_id]
         handle_application_query
       else
-        render json: { error: "Invalid query target" }, status: :unprocessable_entity
+        render json: { error: "Invalid query target" }, status: :unprocessable_content
       end
     end
 
@@ -17,7 +17,7 @@ module Ai
       @shelter = Shelter.undiscarded.find(params[:shelter_id])
 
       question = params[:question]
-      return render json: { error: I18n.t("ai.rag.question_required") }, status: :unprocessable_entity if question.blank?
+      return render json: { error: I18n.t("ai.rag.question_required") }, status: :unprocessable_content if question.blank?
 
       cache_key = "rag_faq/#{@shelter.id}/#{Digest::MD5.hexdigest(question)}"
       answer = Rails.cache.fetch(cache_key, expires_in: 1.hour) do
@@ -36,7 +36,7 @@ module Ai
       @application = AdoptionApplication.find_by!(token: params[:adoption_application_id])
 
       question = params[:question]
-      return render json: { error: I18n.t("ai.rag.question_required") }, status: :unprocessable_entity if question.blank?
+      return render json: { error: I18n.t("ai.rag.question_required") }, status: :unprocessable_content if question.blank?
 
       shelter_scope = Ai::DocumentChunk.joins(:ai_document)
                                        .where(ai_documents: { shelter_id: @application.shelter_id })

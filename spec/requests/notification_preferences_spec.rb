@@ -107,7 +107,7 @@ RSpec.describe "NotificationPreferences" do
 
     it "re-renders the form with errors on invalid data" do
       patch notification_preferences_path, params: { notification_preference: { in_app: nil } }
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     describe "per-kind email toggles (AC-7.1-5)" do

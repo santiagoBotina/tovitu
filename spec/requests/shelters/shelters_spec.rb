@@ -133,7 +133,7 @@ RSpec.describe "Shelters" do
         }
       }
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "rejects when required fields are missing" do
@@ -141,7 +141,7 @@ RSpec.describe "Shelters" do
       post session_path, params: { session: { email: user.email, password: "password123" } }
 
       post shelters_path, params: { shelter: { name: "" } }
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 
