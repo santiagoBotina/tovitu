@@ -27,6 +27,7 @@ module Adoptions
           adopter: @adopter,
           shelter: shelter,
           status: :pending,
+          adopter_city: @adopter.user_location&.city,
           additional_answers: sanitize_answers(@additional_answers)
         )
 

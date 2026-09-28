@@ -55,6 +55,12 @@ module Onboarding
           type: "text",
           options: [],
           max_length: 200
+        },
+        {
+          number: 9,
+          key: "location",
+          type: "location",
+          options: []
         }
       ].freeze
 

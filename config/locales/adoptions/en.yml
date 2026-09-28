@@ -459,6 +459,7 @@ en:
         pet_section: Pet Information
         adopter_section: Adopter Profile
         member_since: Member since %{date}
+        city: City
         no_profile: This adopter hasn't completed their profile yet.
         no_profile_hint: You can still reach out if you have questions before making a decision.
         answers_title: Their Answers

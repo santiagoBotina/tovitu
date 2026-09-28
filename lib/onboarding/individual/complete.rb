@@ -1,7 +1,8 @@
 module Onboarding
   module Individual
     class Complete < ApplicationService
-      TOTAL_QUESTIONS = 8
+      TOTAL_QUESTIONS = Onboarding::Individual::QuestionsData.count
+      MANDATORY_QUESTIONS = 8
 
       def initialize(user:, skip: false)
         @user = user
@@ -19,7 +20,7 @@ module Onboarding
         return Result.failure([ I18n.t("errors.onboarding.no_profile") ]) unless profile
 
         unless @skip
-          unanswered = (1..TOTAL_QUESTIONS).select do |qnum|
+          unanswered = (1..MANDATORY_QUESTIONS).select do |qnum|
             field = Onboarding::Individual::SaveResponse::QUESTION_FIELDS[qnum]
             value = profile[field]
             value.blank? || (value.is_a?(Array) && value.empty?)

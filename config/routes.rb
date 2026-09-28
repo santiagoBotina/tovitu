@@ -22,7 +22,9 @@ Rails.application.routes.draw do
 
     resource :verification, only: [ :show ], controller: "authentication/verifications"
 
-    resource :profile, only: [ :edit, :update ], controller: "authentication/profiles"
+    resource :profile, only: [ :edit, :update ], controller: "authentication/profiles" do
+      resource :location, only: [ :update, :destroy ], controller: "authentication/locations"
+    end
 
     get "profile/onboarding", to: "onboarding/individual/questions#show",
                               as: :profile_onboarding,
@@ -52,6 +54,7 @@ Rails.application.routes.draw do
     namespace :onboarding do
       namespace :individual do
         resource :questions, only: [ :show, :update ]
+        resource :location, only: [ :update ], controller: "locations"
         resource :completion, only: [ :create ]
       end
 

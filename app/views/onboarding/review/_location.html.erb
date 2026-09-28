@@ -1,0 +1,45 @@
+<%# Location summary card for the onboarding review page. Shown as the last
+    step of the profile review. Editing happens via the location wizard step
+    (from_profile flow) or the "My Location" card in profile settings. %>
+<div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-5 sm:p-6">
+  <div class="flex items-start gap-3">
+    <span class="text-2xl shrink-0" aria-hidden="true">📍</span>
+    <div class="flex-1 min-w-0">
+      <p class="font-display text-base font-bold text-neutral-800 mb-1.5">
+        <span class="text-neutral-400 mr-1">9.</span>
+        <%= t("onboarding.individual.questions.q9.text") %>
+      </p>
+
+      <div class="review-answer">
+        <% if user.user_location.present? %>
+          <p class="text-sm font-medium text-neutral-800">
+            <%= user.user_location.city %>
+            <% if user.user_location.region.present? %>
+              , <%= user.user_location.region %>
+            <% end %>
+            <% if user.user_location.country.present? %>
+              , <%= user.user_location.country %>
+            <% end %>
+          </p>
+          <p class="text-xs text-neutral-500 mt-0.5">
+            <%= user.user_location.device? ? t("locations.device") : t("locations.manual") %>
+          </p>
+        <% else %>
+          <p class="text-sm font-medium text-warning"><%= t("locations.not_shared") %></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <% if user.user_location.present? %>
+    <div class="mt-4 pt-4 border-t border-neutral-100">
+      <%= link_to edit_profile_path,
+          class: "inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors" do %>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z"/>
+        </svg>
+        <%= t("onboarding.review.edit") %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

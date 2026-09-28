@@ -112,10 +112,11 @@ es:
       show:
         back_to_requests: ← Volver a Solicitudes
         title: Solicitud para %{pet_name}
-        submitted: Enviada el %{date}
+        submitted: Enviada %{date}
         pet_section: Información de la Mascota
         adopter_section: Perfil del Adoptante
         member_since: Miembro desde %{date}
+        city: Ciudad
         no_profile: Este adoptante aún no ha completado su perfil.
         no_profile_hint: Aún puedes contactarlo si tienes preguntas antes de tomar una decisión.
         answers_title: Sus Respuestas
@@ -142,24 +143,24 @@ es:
         goals: Metas de Adopción
         view_full_profile: Ver Perfil Completo
         decline_reasons: Motivos de Declinación
-      no_events: Aún no hay eventos en la cronología.
-      manage: Gestionar Solicitud
-      withdraw_hint: Si cambiaste de opinión, puedes retirar esta solicitud.
-      withdraw: Retirar Solicitud
-      confirm_withdraw: ¿Estás seguro de que deseas retirar esta solicitud de adopción? Esta acción no se puede deshacer.
-      additional_info: Información Adicional
+        no_events: Aún no hay eventos en la cronología.
+        manage: Gestionar Solicitud
+        withdraw_hint: Si cambiaste de opinión, puedes retirar esta solicitud.
+        withdraw: Retirar Solicitud
+        confirm_withdraw: ¿Estás seguro de que deseas retirar esta solicitud de adopción? Esta acción no se puede deshacer.
+        additional_info: Información Adicional
 
-      decisions:
-        new:
-          back: ← Volver a la Solicitud
-          title: Declinar Solicitud de Adopción
-          subtitle: Proporciona motivo(s) para declinar la solicitud de %{adopter_name} para %{pet_name}
-          select_reasons: "Selecciona motivo(s):"
-          custom_reason_label: O agrega un motivo personalizado
-          custom_reason_placeholder: Escribe tu motivo...
-          custom_reason_hint: Esto se mostrará al adoptante junto con los motivos seleccionados.
-          submit: Enviar Declinación
-          processing: Procesando...
+        decisions:
+          new:
+            back: ← Volver a la Solicitud
+            title: Declinar Solicitud de Adopción
+            subtitle: Proporciona motivo(s) para declinar la solicitud de %{adopter_name} para %{pet_name}
+            select_reasons: "Selecciona motivo(s):"
+            custom_reason_label: O agrega un motivo personalizado
+            custom_reason_placeholder: Escribe tu motivo...
+            custom_reason_hint: Esto se mostrará al adoptante junto con los motivos seleccionados.
+            submit: Enviar Declinación
+            processing: Procesando...
           cancel: Cancelar
           declined_submit: Enviar Declinación
 

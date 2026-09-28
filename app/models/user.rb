@@ -23,6 +23,7 @@ class User < ApplicationRecord
 
   has_many :notifications, foreign_key: :recipient_id, dependent: :destroy
   has_one :notification_preference, dependent: :destroy
+  has_one :user_location, dependent: :destroy
 
   validates :email, presence: true,
                     uniqueness: { case_sensitive: false },

@@ -1,0 +1,54 @@
+<%# Optional location step (question 9) in the individual onboarding wizard.
+    Renders purpose disclosure + three actions (device / manual / skip).
+    The generic wizard next/skip buttons are hidden for this step by
+    onboarding_controller.js; this controller drives completion after a
+    successful decision (REQ-48-1, REQ-48-2, REQ-48-7). %>
+<div data-controller="location-step"
+     data-location-step-save-url-value="<%= onboarding_individual_location_path %>"
+     data-location-step-permission-denied-message-value="<%= t("locations.onboarding.permission_denied") %>"
+     data-location-step-device-unsupported-message-value="<%= t("locations.onboarding.device_unsupported") %>"
+     data-location-step-timeout-message-value="<%= t("locations.onboarding.timeout") %>"
+     data-location-step-position-unavailable-message-value="<%= t("locations.onboarding.position_unavailable") %>"
+     data-location-step-city-required-message-value="<%= t("locations.errors.city_required") %>"
+     data-location-step-saving-message-value="<%= t("locations.onboarding.saving") %>">
+
+  <div class="rounded-xl bg-primary-50 border border-primary-100 p-4 mb-4">
+    <p class="text-sm text-primary-900"><%= t("locations.disclosure") %></p>
+  </div>
+
+  <p class="text-xs text-danger hidden mb-3" data-location-step-target="message" role="alert"></p>
+
+  <div class="space-y-3" data-location-step-target="actions">
+    <button type="button"
+            data-action="click->location-step#useDevice"
+            data-location-step-target="deviceButton"
+            class="w-full flex items-center justify-center gap-2 px-5 py-3 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 active:bg-primary-700 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 109-9 9 9 0 00-9-9m0 18a9 9 0 110-18m0 18a9 9 0 110-18"/>
+      </svg>
+      <%= t("locations.onboarding.use_current_location") %>
+    </button>
+
+    <button type="button"
+            data-action="click->location-step#showManual"
+            class="w-full flex items-center justify-center gap-2 px-5 py-3 bg-white border-2 border-primary-200 text-primary-700 font-semibold text-sm rounded-xl hover:bg-primary-50 hover:border-primary-300 transition">
+      <%= t("locations.onboarding.enter_manually") %>
+    </button>
+
+    <button type="button"
+            data-action="click->location-step#skip"
+            class="w-full px-5 py-2.5 text-sm font-medium text-neutral-500 hover:text-neutral-700 transition rounded-xl">
+      <%= t("locations.onboarding.skip_for_now") %>
+    </button>
+  </div>
+
+  <%= form_with url: onboarding_individual_location_path, method: :patch,
+                data: { location_step_target: "manualForm", action: "submit->location-step#submitManual" },
+                class: "hidden space-y-3" do |f| %>
+    <%= f.hidden_field :intent, value: "manual" %>
+    <%= render "locations/city_fields", f: f, form_id: "onboarding" %>
+    <%= f.submit t("locations.settings.save"),
+        class: "w-full bg-primary-500 text-white font-semibold py-3 px-4 rounded-xl hover:bg-primary-600 transition shadow-sm cursor-pointer",
+        data: { location_step_target: "saveButton" } %>
+  <% end %>
+</div>

@@ -1091,6 +1091,8 @@ en:
           text: "What matters most to you when adopting a pet?"
           placeholder: "Tell us what's most important to you in finding your companion..."
           max_length: "Maximum 200 characters"
+        q9:
+          text: "Where are you located?"
     shelter:
       title: "Tell us about your organization"
       subtitle: "Help us understand your shelter's needs"

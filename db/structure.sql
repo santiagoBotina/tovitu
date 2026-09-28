@@ -301,7 +301,8 @@ CREATE TABLE public.adoption_requests (
     pet_fit_generated_at timestamp(6) without time zone,
     pet_fit_version integer DEFAULT 0 NOT NULL,
     pet_fit_fingerprint character varying,
-    pet_fit_signal_fingerprint character varying
+    pet_fit_signal_fingerprint character varying,
+    adopter_city character varying
 );
 
 
@@ -966,6 +967,44 @@ ALTER SEQUENCE public.shelters_id_seq OWNED BY public.shelters.id;
 
 
 --
+-- Name: user_locations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_locations (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    city character varying NOT NULL,
+    region character varying,
+    country character varying,
+    latitude numeric(10,6),
+    longitude numeric(10,6),
+    source character varying DEFAULT 'manual'::character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    CONSTRAINT valid_location_source CHECK (((source)::text = ANY ((ARRAY['device'::character varying, 'manual'::character varying])::text[])))
+);
+
+
+--
+-- Name: user_locations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_locations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_locations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_locations_id_seq OWNED BY public.user_locations.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -984,6 +1023,10 @@ CREATE TABLE public.users (
     onboarding_step integer DEFAULT 0 NOT NULL,
     locale character varying,
     shelter_role character varying,
+    location_decision character varying,
+    location_disclosure_version character varying,
+    location_decision_at timestamp(6) without time zone,
+    CONSTRAINT valid_location_decision CHECK (((location_decision IS NULL) OR ((location_decision)::text = ANY ((ARRAY['shared'::character varying, 'skipped'::character varying])::text[])))),
     CONSTRAINT valid_role CHECK (((role)::text = ANY (ARRAY[('individual'::character varying)::text, ('shelter_admin'::character varying)::text, ('shelter_staff'::character varying)::text, ('admin'::character varying)::text, ('staff'::character varying)::text]))),
     CONSTRAINT valid_shelter_role CHECK (((shelter_role IS NULL) OR ((shelter_role)::text = ANY ((ARRAY['owner'::character varying, 'administrator'::character varying, 'staff_member'::character varying])::text[]))))
 );
@@ -1174,6 +1217,13 @@ ALTER TABLE ONLY public.shelter_profiles ALTER COLUMN id SET DEFAULT nextval('pu
 --
 
 ALTER TABLE ONLY public.shelters ALTER COLUMN id SET DEFAULT nextval('public.shelters_id_seq'::regclass);
+
+
+--
+-- Name: user_locations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_locations ALTER COLUMN id SET DEFAULT nextval('public.user_locations_id_seq'::regclass);
 
 
 --
@@ -1389,6 +1439,14 @@ ALTER TABLE ONLY public.shelter_profiles
 
 ALTER TABLE ONLY public.shelters
     ADD CONSTRAINT shelters_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_locations user_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_locations
+    ADD CONSTRAINT user_locations_pkey PRIMARY KEY (id);
 
 
 --
@@ -1911,6 +1969,13 @@ CREATE INDEX index_shelters_on_status ON public.shelters USING btree (status);
 
 
 --
+-- Name: index_user_locations_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_user_locations_on_user_id ON public.user_locations USING btree (user_id);
+
+
+--
 -- Name: index_users_on_discarded_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2025,6 +2090,14 @@ ALTER TABLE ONLY public.adoption_requests
 
 ALTER TABLE ONLY public.email_verification_tokens
     ADD CONSTRAINT fk_rails_37a6b0cc74 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: user_locations fk_rails_3aef0f4606; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_locations
+    ADD CONSTRAINT fk_rails_3aef0f4606 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -2218,6 +2291,9 @@ ALTER TABLE ONLY public.adoption_applications
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260928000003'),
+('20260928000002'),
+('20260928000001'),
 ('20260902000002'),
 ('20260902000001'),
 ('20260829000001'),

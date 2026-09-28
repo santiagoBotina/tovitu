@@ -79,6 +79,10 @@
           <% end %>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 pt-4 border-t border-neutral-100">
+            <div class="sm:col-span-2">
+              <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-0.5"><%= t(".city") %></p>
+              <%= render "adoption_requests/adopter_city", adopter: @adopter, adoption_request: @request %>
+            </div>
             <% if @profile.personality.present? %>
               <div>
                 <p class="text-xs text-neutral-500 uppercase tracking-wide font-medium mb-0.5"><%= t(".personality") %></p>

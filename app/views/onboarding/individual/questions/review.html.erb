@@ -26,13 +26,19 @@
 
   <div class="space-y-4">
     <% @questions_data.each do |question| %>
-      <%= render "onboarding/review/question",
-          question: question,
-          profile: @profile,
-          i18n_prefix: "onboarding.individual.questions.q#{question[:number]}",
-          form_url: onboarding_individual_questions_path,
-          icon: question_icon(question[:number]),
-          edit_all: params[:edit_all] == "true" %>
+      <% if question[:type] == "location" %>
+        <%= render "onboarding/review/location",
+            user: @user,
+            from_profile: @from_profile %>
+      <% else %>
+        <%= render "onboarding/review/question",
+            question: question,
+            profile: @profile,
+            i18n_prefix: "onboarding.individual.questions.q#{question[:number]}",
+            form_url: onboarding_individual_questions_path,
+            icon: question_icon(question[:number]),
+            edit_all: params[:edit_all] == "true" %>
+      <% end %>
     <% end %>
   </div>
 </div>

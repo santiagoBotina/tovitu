@@ -1,0 +1,110 @@
+<%# "My Location" card in profile settings (adopter-only). Handles the
+    no-location and has-location states, with device re-detection, manual
+    edit, and delete (REQ-48-4). Updates arrive as turbo_stream replacing
+    this card. %>
+<section id="my-location-card"
+         class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d5"
+         aria-label="<%= t("locations.settings.title") %>"
+         data-controller="location-settings"
+         data-location-settings-save-url-value="<%= profile_location_path %>"
+         data-location-settings-permission-denied-message-value="<%= t("locations.settings.permission_denied") %>"
+         data-location-settings-device-unsupported-message-value="<%= t("locations.settings.device_unsupported") %>"
+         data-location-settings-timeout-message-value="<%= t("locations.settings.timeout") %>"
+         data-location-settings-position-unavailable-message-value="<%= t("locations.settings.position_unavailable") %>"
+         data-location-settings-city-required-message-value="<%= t("locations.errors.city_required") %>">
+
+  <div class="flex items-start gap-3 mb-4">
+    <div class="shrink-0 w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center" aria-hidden="true">
+      <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+      </svg>
+    </div>
+    <div class="flex-1 min-w-0">
+      <h2 class="font-display text-lg font-bold text-neutral-800"><%= t("locations.settings.title") %></h2>
+      <p class="text-sm text-neutral-500 mt-0.5"><%= t("locations.settings.description") %></p>
+    </div>
+  </div>
+
+  <p class="text-xs text-danger hidden mb-3" data-location-settings-target="message" role="alert"></p>
+
+  <% if current_user.user_location.present? %>
+    <div class="rounded-xl bg-neutral-50 border border-neutral-100 p-4 mb-4">
+      <p class="font-semibold text-neutral-900 text-lg">
+        <%= current_user.user_location.city %>
+        <% if current_user.user_location.region.present? %>
+          <span class="text-neutral-500 font-normal">, <%= current_user.user_location.region %></span>
+        <% end %>
+        <% if current_user.user_location.country.present? %>
+          <span class="text-neutral-500 font-normal">, <%= current_user.user_location.country %></span>
+        <% end %>
+      </p>
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2">
+        <span class="inline-flex items-center gap-1.5 text-xs text-neutral-500">
+          <%= current_user.user_location.device? ? t("locations.device") : t("locations.manual") %>
+        </span>
+        <span class="text-xs text-neutral-500">
+          <%= t("locations.last_updated", date: l(current_user.user_location.updated_at, format: :short)) %>
+        </span>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-2">
+      <button type="button"
+              data-action="click->location-settings#useDevice"
+              data-location-settings-target="deviceButton"
+              class="inline-flex items-center gap-2 px-4 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
+        <%= t("locations.settings.update_to_current") %>
+      </button>
+      <button type="button"
+              data-action="click->location-settings#showManual"
+              class="inline-flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-primary-200 text-primary-700 font-semibold text-sm rounded-xl hover:bg-primary-50 transition">
+        <%= t("locations.settings.edit_city") %>
+      </button>
+      <%= button_to profile_location_path,
+          method: :delete,
+          data: { turbo_confirm: t("locations.settings.delete_confirm") },
+          class: "inline-flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-danger/30 text-danger font-semibold text-sm rounded-xl hover:bg-danger/5 hover:border-danger/50 transition" do %>
+        <%= t("locations.settings.delete") %>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="font-semibold text-neutral-800 mb-1"><%= t("locations.settings.add_title") %></p>
+    <p class="text-sm text-neutral-600 mb-4"><%= t("locations.settings.add_description") %></p>
+    <div class="flex flex-wrap gap-2" data-location-settings-target="actions">
+      <button type="button"
+              data-action="click->location-settings#useDevice"
+              data-location-settings-target="deviceButton"
+              class="inline-flex items-center gap-2 px-4 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 transition disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
+        <%= t("locations.settings.use_current_location") %>
+      </button>
+      <button type="button"
+              data-action="click->location-settings#showManual"
+              class="inline-flex items-center gap-2 px-4 py-2.5 bg-white border-2 border-primary-200 text-primary-700 font-semibold text-sm rounded-xl hover:bg-primary-50 transition">
+        <%= t("locations.settings.enter_manually") %>
+      </button>
+      <button type="button"
+              data-action="click->location-settings#dismiss"
+              class="inline-flex items-center px-4 py-2.5 text-sm font-medium text-neutral-500 hover:text-neutral-700 transition rounded-xl">
+        <%= t("locations.settings.not_now") %>
+      </button>
+    </div>
+  <% end %>
+
+  <%= form_with url: profile_location_path, method: :patch,
+                data: { location_settings_target: "manualForm" },
+                class: "hidden space-y-3 mt-4" do |f| %>
+    <%= f.hidden_field :intent, value: "manual", data: { location_settings_target: "intentField" } %>
+    <%= render "locations/city_fields", f: f, form_id: "settings", initial: current_user.user_location %>
+    <div class="flex gap-3">
+      <%= f.submit t("locations.settings.save"),
+          class: "flex-1 bg-primary-500 text-white font-semibold py-3 px-4 rounded-xl hover:bg-primary-600 transition shadow-sm cursor-pointer",
+          data: { location_settings_target: "saveButton" } %>
+      <button type="button"
+              data-action="click->location-settings#cancelManual"
+              class="px-4 py-2.5 text-sm font-medium text-neutral-500 hover:text-neutral-700 transition rounded-xl">
+        <%= t("locations.settings.cancel") %>
+      </button>
+    </div>
+  <% end %>
+</section>

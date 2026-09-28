@@ -1110,6 +1110,8 @@ es:
           text: "¿Qué es lo más importante para ti al adoptar una mascota?"
           placeholder: "Cuéntanos qué es lo más importante para ti al encontrar tu compañero..."
           max_length: "Máximo 200 caracteres"
+        q9:
+          text: "¿Dónde te encuentras?"
     shelter:
       title: "Cuéntanos sobre tu organización"
       subtitle: "Ayúdanos a entender las necesidades de tu refugio"

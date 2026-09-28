@@ -41,8 +41,8 @@ module Onboarding
           question_number: @question_number,
           field: field,
           onboarding_step: profile.onboarding_step,
-          total_questions: 8,
-          complete: profile.onboarding_step >= 8
+          total_questions: Onboarding::Individual::QuestionsData.count,
+          complete: profile.onboarding_step >= QUESTION_FIELDS.size
         )
       rescue ActiveRecord::RecordInvalid => e
         Result.failure(e.record.errors.full_messages)

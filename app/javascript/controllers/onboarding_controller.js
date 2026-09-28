@@ -217,6 +217,11 @@ export default class extends Controller {
       const num = parseInt(q.dataset.question)
       q.classList.toggle("hidden", num !== step)
     })
+
+    const currentEl = this.questionTargets.find(q => parseInt(q.dataset.question) === step)
+    const isLocation = currentEl?.dataset.type === "location"
+    if (this.hasNextButtonTarget) this.nextButtonTarget.classList.toggle("hidden", isLocation)
+    if (this.hasSkipButtonTarget) this.skipButtonTarget.classList.toggle("hidden", isLocation)
   }
 
   updateProgress() {

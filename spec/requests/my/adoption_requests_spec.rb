@@ -106,4 +106,34 @@ RSpec.describe "My AdoptionRequests" do
       end
     end
   end
+
+  describe "adopter city display (location privacy)" do
+    let(:pet) { create(:pet, :individual_listed, publisher: publisher) }
+    let!(:request) { create(:adoption_request, pet: pet, adopter: adopter, shelter: nil) }
+
+    before do
+      # The profile summary is only rendered when the adopter has a profile.
+      create(:individual_profile, user: adopter)
+    end
+
+    it "shows the adopter's city in the profile summary" do
+      create(:user_location, user: adopter, city: "Austin", region: "TX", source: "manual")
+
+      get my_adoption_request_path(request)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Austin")
+    end
+
+    it "never renders the adopter's coordinates" do
+      create(:user_location, user: adopter, city: "Austin", region: "TX",
+             latitude: 30.267153, longitude: -97.7431, source: "device")
+
+      get my_adoption_request_path(request)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).not_to include("30.267153")
+      expect(response.body).not_to include("-97.7431")
+    end
+  end
 end
