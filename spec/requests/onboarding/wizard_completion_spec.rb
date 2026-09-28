@@ -33,6 +33,9 @@ RSpec.describe "Onboarding wizard completion", type: :request do
     patch_answer(6, "2_to_4h")
     patch_answer(7, "adventurous_energetic")
     patch_answer(8, "A loving home for a dog")
+    patch_answer(9, "1994-05-10")
+    patch_answer(10, "house_with_fenced_yard")
+    patch_answer(11, "no_other_pets")
 
     profile = user.individual_profile.reload
     expect(profile.weekend_activity).to eq(%w[going_for_walks outdoor_adventures])
@@ -43,6 +46,9 @@ RSpec.describe "Onboarding wizard completion", type: :request do
     expect(profile.daily_time_available).to eq("2_to_4h")
     expect(profile.personality).to eq("adventurous_energetic")
     expect(profile.adoption_priority).to eq("A loving home for a dog")
+    expect(profile.date_of_birth).to eq(Date.new(1994, 5, 10))
+    expect(profile.home_environment).to eq("house_with_fenced_yard")
+    expect(profile.other_pets).to eq("no_other_pets")
 
     post_completion
     expect(response).to redirect_to("/en/pets")
@@ -58,7 +64,10 @@ RSpec.describe "Onboarding wizard completion", type: :request do
       5 => %w[daily_companion],
       6 => "2_to_4h",
       7 => "adventurous_energetic",
-      8 => "A loving home"
+      8 => "A loving home",
+      9 => "1994-05-10",
+      10 => "house_with_fenced_yard",
+      11 => "no_other_pets"
     }
     answers.each { |qnum, answer| patch_answer(qnum, answer) }
     post_completion
@@ -76,7 +85,10 @@ RSpec.describe "Onboarding wizard completion", type: :request do
       5 => %w[daily_companion],
       6 => "2_to_4h",
       7 => "adventurous_energetic",
-      8 => "A loving home"
+      8 => "A loving home",
+      9 => "1994-05-10",
+      10 => "house_with_fenced_yard",
+      11 => "no_other_pets"
     }
     answers.each { |qnum, answer| patch_answer(qnum, answer) }
     post_completion
@@ -100,7 +112,10 @@ RSpec.describe "Onboarding wizard completion", type: :request do
       5 => %w[daily_companion],
       6 => "2_to_4h",
       7 => "adventurous_energetic",
-      8 => "A loving home"
+      8 => "A loving home",
+      9 => "1994-05-10",
+      10 => "house_with_fenced_yard",
+      11 => "no_other_pets"
     }
     answers.each { |qnum, answer| patch_answer(qnum, answer) }
     post_completion

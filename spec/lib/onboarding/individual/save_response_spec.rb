@@ -43,8 +43,20 @@ RSpec.describe Onboarding::Individual::SaveResponse do
 
     context "on last question" do
       it "marks as complete" do
-        result = described_class.call(user: user, question_number: 8, answer: "a loving home")
+        result = described_class.call(user: user, question_number: 11, answer: "no_other_pets")
         expect(result.data[:complete]).to be true
+      end
+
+      it "coerces a date answer for the date-of-birth question" do
+        result = described_class.call(user: user, question_number: 9, answer: "1994-05-10")
+        expect(result).to be_success
+        expect(user.individual_profile.date_of_birth).to eq(Date.new(1994, 5, 10))
+      end
+
+      it "rejects an unparseable date with a nil value (caught by completion)" do
+        result = described_class.call(user: user, question_number: 9, answer: "not-a-date")
+        expect(result).to be_success
+        expect(user.individual_profile.date_of_birth).to be_nil
       end
     end
 

@@ -56,6 +56,25 @@ module AiProviderStub
     }
   end
 
+  def default_policy_translation_response
+    {
+      "translations" => [
+        { "statement" => "Applicants must be at least 21 years old",
+          "status" => "translated",
+          "rules" => [ { "rule_type" => "adopter_age_min", "params" => { "years" => 21 }, "severity" => "red" } ],
+          "explanation" => nil },
+        { "statement" => "We prefer adopters with a fenced yard",
+          "status" => "translated",
+          "rules" => [ { "rule_type" => "home_fenced_yard_required", "params" => {}, "severity" => "red" } ],
+          "explanation" => nil },
+        { "statement" => "No small children in the home",
+          "status" => "not_evaluated",
+          "rules" => [],
+          "reason" => "unsupported_data" }
+      ]
+    }
+  end
+
   def default_preview_response
     {
       "plan" => [

@@ -103,6 +103,11 @@
                  insight_request: @request,
                  insight_adopter: @request.adopter %>
 
+      <%= render "adoption_requests/policy_check_card",
+                 policy_request: @request,
+                 policy_check_re_run_url: (policy(@request).manage? ? re_evaluate_my_adoption_request_path(@request) : nil),
+                 policy_check_settings_url: nil %>
+
       <% if @adopter_profile %>
         <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6">
           <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".adopter_profile") %></h2>

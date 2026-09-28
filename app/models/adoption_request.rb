@@ -4,12 +4,14 @@ class AdoptionRequest < ApplicationRecord
   belongs_to :shelter, optional: true
   belongs_to :reviewed_by, class_name: "User", optional: true
   has_many :timeline_events, class_name: "AdoptionRequestTimelineEvent", dependent: :destroy
+  has_one :policy_evaluation, class_name: "AdoptionRequestEvaluation", dependent: :destroy
 
   enum :status, { pending: "pending", in_validation: "in_validation",
                   accepted: "accepted", declined: "declined",
                   withdrawn: "withdrawn" }
 
   after_create_commit :enqueue_adopter_insight_generation
+  after_create_commit :enqueue_policy_evaluation
 
   validates :adopter_id, uniqueness: { scope: :pet_id,
     message: ->(obj, data) { I18n.t("adoptions.requests.errors.duplicate") },
@@ -102,5 +104,9 @@ class AdoptionRequest < ApplicationRecord
 
   def enqueue_adopter_insight_generation
     Ai::GenerateAdopterInsightJob.perform_later(request_id: id)
+  end
+
+  def enqueue_policy_evaluation
+    Adoptions::EvaluateRequestJob.perform_later(request_id: id)
   end
 end

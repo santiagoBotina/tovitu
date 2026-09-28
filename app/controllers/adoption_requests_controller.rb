@@ -24,6 +24,7 @@ class AdoptionRequestsController < ApplicationController
     @pet = Pet.undiscarded.available.find(params[:pet_id])
     @shelter = @pet.shelter
     @profile = current_user.adopter_profile
+    @show_evaluation_fields_notice = evaluation_fields_notice?
 
     authorize AdoptionRequest
   rescue ActiveRecord::RecordNotFound
@@ -64,6 +65,19 @@ class AdoptionRequestsController < ApplicationController
   end
 
   private
+
+  # Gentle, one-time (per browser session) prompt to existing adopters whose
+  # profile predates the plan-49 evaluation fields. Never blocks applying.
+  def evaluation_fields_notice?
+    return false unless current_user.individual? && current_user.onboarding_completed?
+
+    profile = current_user.individual_profile
+    return false if profile.blank? || profile.missing_evaluation_fields.none?
+    return false if session[:evaluation_fields_notice_seen]
+
+    session[:evaluation_fields_notice_seen] = true
+    true
+  end
 
   def set_request
     @request = AdoptionRequest.includes(:pet, :shelter, :adopter, :timeline_events).find(params[:id])

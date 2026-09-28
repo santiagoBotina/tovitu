@@ -33,6 +33,8 @@ es:
   adoption_requests:
     new:
       transparency_note: Tovitu muestra al refugio un resumen de tu perfil y actividad para ayudarte a encontrar el compañero perfecto.
+      evaluation_fields_notice: Agrega tu fecha de nacimiento, tu hogar y otras mascotas a tu perfil para que los refugios puedan evaluar tu solicitud automáticamente.
+      evaluation_fields_cta: Agregar datos
     index:
       title: Mis Solicitudes de Adopción
       subtitle: Cada mascota que has solicitado, en un solo lugar. Consulta el estado y haz seguimiento cuando lo necesites.
@@ -171,3 +173,141 @@ es:
         previous: Anterior
         next: Siguiente
         page: "Página %{page}"
+
+    evaluation:
+      verdicts:
+        high_concern: Alta preocupación
+        needs_review: Requiere revisión
+        pre_accept: Pre-aprobado
+      sources:
+        system: Sistema
+        shelter: Refugio
+      states:
+        passed: Aprobado
+        failed: Falló
+        unevaluable: No verificable
+      severity:
+        red: Alta preocupación
+        yellow: Advertencia
+      summaries:
+        high_concern:
+          one: "1 regla de alta preocupación falló. Recomendamos revisar esta solicitud con atención."
+          other: "%{count} reglas de alta preocupación fallaron. Recomendamos revisar esta solicitud con atención."
+        needs_review: "Esta solicitud requiere revisión: %{failed_count} regla(s) no pasaron y %{unverifiable_count} no pudieron verificarse."
+        pre_accept: "Esta solicitud pasó la verificación de políticas — está lista para tu decisión."
+      card:
+        title: Verificación de políticas
+        empty_state: Aún no se ha ejecutado la verificación de políticas para esta solicitud.
+        empty_state_hint: La verificación se ejecuta automáticamente al recibir una solicitud.
+        evaluating: Evaluando esta solicitud…
+        evaluating_hint: La verificación se está ejecutando y aparecerá aquí en breve.
+        re_run: Volver a evaluar
+        re_run_confirm: ¿Volver a ejecutar la verificación con el perfil actual del adoptante?
+        settings_link: Configuración de evaluación automática
+        reviewed_at: Evaluada %{time}
+        advisory: Solo informativo — esto nunca cambia el estado de la solicitud. La decisión final siempre es tuya.
+        rules_title: Desglose de reglas
+      chip:
+        label: "Verificación: %{verdict}"
+      rules:
+        account_age_min:
+          label: Antigüedad mínima de la cuenta
+          description: La cuenta del adoptante debe tener al menos %{days} días.
+        email_verified:
+          label: Correo verificado
+          description: El correo del adoptante debe estar verificado.
+        adopter_age_min:
+          label: Edad mínima del adoptante
+          description: El adoptante debe tener al menos %{years} años.
+        home_fenced_yard_required:
+          label: Requiere jardín cercado
+          description: El hogar del adoptante debe tener jardín cercado.
+        other_pets_allowed:
+          label: Sin otras mascotas
+          description: El hogar del adoptante no debe tener otras mascotas.
+        profile_completeness_min:
+          label: Integridad del perfil
+          description: El perfil del adoptante debe estar al menos al %{percent}% completo.
+        pet_experience_min:
+          label: Experiencia con mascotas
+          description: El adoptante debe tener al menos la experiencia requerida con mascotas.
+        daily_time_available_min:
+          label: Tiempo diario disponible
+          description: El adoptante debe tener al menos el tiempo diario requerido disponible.
+        adoption_priority_present:
+          label: Motivación para adoptar
+          description: El adoptante debe indicar por qué quiere adoptar.
+        additional_answers_present:
+          label: Respuestas de la solicitud
+          description: El adoptante debe responder las preguntas de la solicitud.
+        no_prior_decline_same_pet:
+          label: Sin declinación previa de esta mascota
+          description: El adoptante no debe tener una solicitud previa declinada o retirada para esta mascota.
+      evidence:
+        account_age_days:
+          one: "Cuenta creada hace %{days} día"
+          other: "Cuenta creada hace %{days} días"
+        email_verified: El correo está verificado
+        email_not_verified: El correo no está verificado
+        adopter_age: "Edad: %{years} años"
+        adopter_age_missing: No se proporcionó la fecha de nacimiento
+        home_environment_missing: No se proporcionó el entorno del hogar
+        home_environment: "Entorno del hogar: %{home}"
+        other_pets_missing: No se proporcionó información sobre otras mascotas
+        other_pets: "Otras mascotas: %{other_pets}"
+        profile_missing: Sin perfil en el sistema
+        profile_completeness: "Perfil al %{percent}% completo (%{answered} de %{total} preguntas respondidas)"
+        pet_experience_missing: No se proporcionó la experiencia con mascotas
+        pet_experience: "Experiencia con mascotas: %{level}"
+        daily_time_missing: No se proporcionó el tiempo diario disponible
+        daily_time: "Tiempo diario disponible: %{level}"
+        adoption_priority_present: Motivación para adoptar proporcionada
+        adoption_priority_missing: Motivación para adoptar no proporcionada
+        additional_answers_present: Respuestas de la solicitud proporcionadas
+        additional_answers_missing: Sin respuestas de la solicitud
+        prior_decline_same_pet: Solicitud previa declinada o retirada para esta mascota
+        no_prior_decline_same_pet: Sin solicitud previa declinada o retirada para esta mascota
+        rule_not_supported: Esta regla no pudo evaluarse.
+      settings:
+        title: Evaluación automática
+        subtitle: Evalúa las solicitudes entrantes con reglas de seguridad del sistema y reglas traducidas de tus políticas. Los veredictos son informativos — la decisión final siempre es tuya.
+        add_policy_title: Agregar una política
+        add_policy_hint: Escribe cada política en su propia línea. Propondremos reglas que puedes revisar, editar, activar o descartar.
+        add_policy_placeholder: p. ej. Los solicitantes deben tener jardín cercado
+        add_policy_submit: Guardar y traducir
+        translate_all: Traducir mis políticas
+        translated_title: Reglas propuestas
+        translated_hint: Revisa cada regla propuesta antes de activarla. Solo las reglas activas afectan las evaluaciones.
+        policy_label: Política
+        severity_label: Gravedad
+        enable_rule: Activar regla
+        disable_rule: Desactivar regla
+        delete_rule: Eliminar regla
+        rule_enabled: Activa
+        rule_disabled: Desactivada
+        not_evaluated_title: No evaluadas automáticamente
+        not_evaluated_hint: Todavía no podemos verificar estas políticas automáticamente. Se siguen mostrando a los adoptantes pero nunca afectan un veredicto.
+        reasons:
+          unsupported_data: Todavía no podemos verificar esto automáticamente.
+          not_screening: No es un requisito de selección que podamos evaluar.
+        failed_title: Falló la traducción
+        failed_hint: No pudimos traducir esta política en este momento. Tu texto está guardado — inténtalo de nuevo.
+        retry: Reintentar traducción
+        system_rules_title: Reglas del sistema (siempre activas)
+        system_rules_hint: Estas reglas de seguridad de la plataforma se ejecutan en cada solicitud. Los umbrales los gestiona la plataforma y no se pueden editar por refugio.
+        no_policies_title: Aún no hay políticas de evaluación
+        no_policies_hint: Agrega políticas en lenguaje natural y tradúcelas a reglas que tú controles.
+        no_rules_title: Aún no hay reglas traducidas
+        no_rules_hint: Agrega políticas arriba y luego tradúcelas a reglas revisables.
+        translated_count:
+          one: "%{count} regla"
+          other: "%{count} reglas"
+      errors:
+        policy_blank: La política no puede estar vacía.
+        no_rules: No se pudieron evaluar reglas para esta solicitud.
+        not_authorized: No estás autorizado para gestionar las políticas de evaluación.
+      flash:
+        re_run_success: La verificación se volvió a ejecutar con el perfil actual del adoptante.
+        policies_translated: "Políticas traducidas. Revisa las reglas propuestas a continuación."
+        policies_failed: No pudimos traducir tus políticas en este momento. Tu texto está guardado — inténtalo de nuevo.
+        policy_added: Política agregada. Sus reglas propuestas aparecen a continuación.

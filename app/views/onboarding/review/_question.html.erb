@@ -10,7 +10,7 @@
 <% question_type = question[:type] %>
 <% stored_value = profile.send(question_key) %>
 <% has_answer = stored_value.present? && (stored_value.is_a?(Array) ? stored_value.any? : stored_value.to_s.presence.present?) %>
-<% edit_partial = %w[single_select multi_select text].include?(question_type) ? question_type : "text" %>
+<% edit_partial = %w[single_select multi_select text date].include?(question_type) ? question_type : "text" %>
 <% open_editors = local_assigns[:edit_all] == true %>
 
 <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-5 sm:p-6" data-review-question="<%= question_number %>">

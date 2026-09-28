@@ -4,6 +4,18 @@
     <p class="text-neutral-500 mt-1"><%= t(".subtitle") %></p>
   </div>
 
+  <% if @show_evaluation_fields_notice %>
+    <div class="mb-6 px-4 py-3 rounded-xl bg-warning/10 border border-warning/20 flex items-center gap-3 bento-enter bento-enter-d2" role="status">
+      <span class="w-2 h-2 rounded-full bg-warning shrink-0" aria-hidden="true"></span>
+      <p class="text-sm text-warning font-medium">
+        <%= t(".evaluation_fields_notice") %>
+      </p>
+      <%= link_to profile_onboarding_path, class: "ml-auto text-sm font-semibold text-warning underline hover:no-underline shrink-0" do %>
+        <%= t(".evaluation_fields_cta") %>
+      <% end %>
+    </div>
+  <% end %>
+
   <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden mb-6">
     <div class="p-6 border-b border-neutral-100">
       <h2 class="font-display text-lg font-bold text-neutral-800 mb-4"><%= t(".pet_section_title") %></h2>

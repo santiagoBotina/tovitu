@@ -1,0 +1,20 @@
+<%# Tiny advisory verdict chip for the shelter request list (REQ-49-10).
+    Always paired with the status badge; never replaces it. Locals: evaluation %>
+<% if evaluation.present? %>
+  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium border
+               <%= case evaluation.verdict
+                   when "high_concern" then "bg-danger/10 text-danger border-danger/20"
+                   when "needs_review" then "bg-warning/10 text-warning border-warning/20"
+                   when "pre_accept" then "bg-success/10 text-success border-success/20"
+                   else "bg-neutral-100 text-neutral-600 border-neutral-200"
+                   end %>" title="<%= t("adoptions.evaluation.chip.label", verdict: t("adoptions.evaluation.verdicts.#{evaluation.verdict}")) %>">
+    <span class="w-1.5 h-1.5 rounded-full
+                 <%= case evaluation.verdict
+                     when "high_concern" then "bg-danger"
+                     when "needs_review" then "bg-warning"
+                     when "pre_accept" then "bg-success"
+                     else "bg-neutral-400"
+                     end %>" aria-hidden="true"></span>
+    <%= t("adoptions.evaluation.verdicts.#{evaluation.verdict}") %>
+  </span>
+<% end %>

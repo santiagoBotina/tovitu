@@ -34,6 +34,11 @@ Rails.application.configure do
   # Use test queue adapter so deliver_later works synchronously in tests
   config.active_job.queue_adapter = :test
 
+  # Disable prepared statements: DatabaseCleaner's TRUNCATE (used before the
+  # suite) invalidates the PostgreSQL generic-plan cache, intermittently
+  # raising "cached plan must not change result type" on later queries.
+  config.active_record.disable_prepared_statements = true
+
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.

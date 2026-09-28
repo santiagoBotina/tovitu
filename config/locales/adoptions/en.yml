@@ -280,6 +280,144 @@ en:
         next: Next
         page: "Page %{page}"
 
+    evaluation:
+      verdicts:
+        high_concern: High concern
+        needs_review: Needs review
+        pre_accept: Pre-accepted
+      sources:
+        system: System
+        shelter: Shelter
+      states:
+        passed: Passed
+        failed: Failed
+        unevaluable: Couldn't verify
+      severity:
+        red: High concern
+        yellow: Warning
+      summaries:
+        high_concern:
+          one: "1 high-concern rule failed. We recommend reviewing this request carefully."
+          other: "%{count} high-concern rules failed. We recommend reviewing this request carefully."
+        needs_review: "This request needs review: %{failed_count} rule(s) didn't pass and %{unverifiable_count} couldn't be verified."
+        pre_accept: "This request passed the policy check — it's ready for your decision."
+      card:
+        title: Policy check
+        empty_state: No policy check has run for this request yet.
+        empty_state_hint: The policy check runs automatically when a request is received.
+        evaluating: Evaluating this request…
+        evaluating_hint: The policy check is running and will appear here shortly.
+        re_run: Re-run evaluation
+        re_run_confirm: Re-run the policy check against the adopter's current profile?
+        settings_link: Automatic evaluation settings
+        reviewed_at: Evaluated %{time}
+        advisory: Advisory only — this never changes the request status. The final decision is always yours.
+        rules_title: Rule breakdown
+      chip:
+        label: "Policy check: %{verdict}"
+      rules:
+        account_age_min:
+          label: Minimum account age
+          description: The adopter's account must be at least %{days} days old.
+        email_verified:
+          label: Verified email
+          description: The adopter's email must be verified.
+        adopter_age_min:
+          label: Minimum adopter age
+          description: The adopter must be at least %{years} years old.
+        home_fenced_yard_required:
+          label: Fenced yard required
+          description: The adopter's home must have a fenced yard.
+        other_pets_allowed:
+          label: No other pets
+          description: The adopter's home must have no other pets.
+        profile_completeness_min:
+          label: Profile completeness
+          description: The adopter's profile must be at least %{percent}% complete.
+        pet_experience_min:
+          label: Pet experience
+          description: The adopter must have at least the required pet experience.
+        daily_time_available_min:
+          label: Daily time available
+          description: The adopter must have at least the required daily time available.
+        adoption_priority_present:
+          label: Adoption motivation
+          description: The adopter must state why they want to adopt.
+        additional_answers_present:
+          label: Request answers
+          description: The adopter must answer the request questions.
+        no_prior_decline_same_pet:
+          label: No prior decline for this pet
+          description: The adopter must not have a prior declined or withdrawn request for this pet.
+      evidence:
+        account_age_days:
+          one: "Account created %{days} day ago"
+          other: "Account created %{days} days ago"
+        email_verified: Email is verified
+        email_not_verified: Email is not verified
+        adopter_age: "Age: %{years} years old"
+        adopter_age_missing: Date of birth was not provided
+        home_environment_missing: Home environment was not provided
+        home_environment: "Home environment: %{home}"
+        other_pets_missing: Other pets were not provided
+        other_pets: "Other pets: %{other_pets}"
+        profile_missing: No profile on file
+        profile_completeness: "Profile %{percent}% complete (%{answered} of %{total} questions answered)"
+        pet_experience_missing: Pet experience was not provided
+        pet_experience: "Pet experience: %{level}"
+        daily_time_missing: Daily time available was not provided
+        daily_time: "Daily time available: %{level}"
+        adoption_priority_present: Adoption motivation provided
+        adoption_priority_missing: Adoption motivation not provided
+        additional_answers_present: Request answers provided
+        additional_answers_missing: No request answers provided
+        prior_decline_same_pet: Prior declined or withdrawn request for this pet
+        no_prior_decline_same_pet: No prior declined or withdrawn request for this pet
+        rule_not_supported: This rule could not be evaluated.
+      settings:
+        title: Automatic evaluation
+        subtitle: Screen incoming requests against system safety rules and rules translated from your policies. Verdicts are advisory — you always make the final call.
+        add_policy_title: Add a policy
+        add_policy_hint: Write each policy on its own line. We'll propose rules you can review, edit, enable, or discard.
+        add_policy_placeholder: e.g. Applicants must have a fenced yard
+        add_policy_submit: Save & translate
+        translate_all: Translate my policies
+        translated_title: Proposed rules
+        translated_hint: Review each proposed rule before enabling it. Only enabled rules affect evaluations.
+        policy_label: Policy
+        severity_label: Severity
+        enable_rule: Enable rule
+        disable_rule: Disable rule
+        delete_rule: Remove rule
+        rule_enabled: Active
+        rule_disabled: Disabled
+        not_evaluated_title: Not auto-evaluated
+        not_evaluated_hint: We can't check these policies automatically yet. They still show to adopters but never affect a verdict.
+        reasons:
+          unsupported_data: We can't check this automatically yet.
+          not_screening: This isn't a screening requirement we can evaluate.
+        failed_title: Translation failed
+        failed_hint: We couldn't translate this policy right now. Your policy text is saved — try again.
+        retry: Retry translation
+        system_rules_title: System rules (always on)
+        system_rules_hint: These platform safety rules run on every request. Thresholds are platform-managed and not editable per shelter.
+        no_policies_title: No evaluation policies yet
+        no_policies_hint: Add natural-language policies and translate them into rules you control.
+        no_rules_title: No translated rules yet
+        no_rules_hint: Add policies above, then translate them into reviewable rules.
+        translated_count:
+          one: "%{count} rule"
+          other: "%{count} rules"
+      errors:
+        policy_blank: Policy cannot be blank.
+        no_rules: No rules could be evaluated for this request.
+        not_authorized: You are not authorized to manage evaluation policies.
+      flash:
+        re_run_success: The policy check has been re-run with the adopter's current profile.
+        policies_translated: "Policies translated. Review the proposed rules below."
+        policies_failed: We couldn't translate your policies right now. Your policy text is saved — try again.
+        policy_added: Policy added. Its proposed rules are listed below.
+
   my:
     adoption_requests:
       index:
@@ -410,6 +548,8 @@ en:
       cancel: Cancel
       unknown_breed: Unknown breed
       transparency_note: Tovitu shows the shelter a summary of your profile and activity to help you find the right match.
+      evaluation_fields_notice: Add your date of birth, home environment, and other pets to your profile so shelters can screen your request automatically.
+      evaluation_fields_cta: Add details
 
     adopter_profile_summary:
       no_profile: No profile information available.

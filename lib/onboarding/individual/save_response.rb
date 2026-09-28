@@ -9,7 +9,10 @@ module Onboarding
         5 => :adoption_goals,
         6 => :daily_time_available,
         7 => :personality,
-        8 => :adoption_priority
+        8 => :adoption_priority,
+        9 => :date_of_birth,
+        10 => :home_environment,
+        11 => :other_pets
       }.freeze
 
       def initialize(user:, question_number:, answer:)
@@ -56,9 +59,17 @@ module Onboarding
         case column_type
         when :jsonb
           Array(answer).map(&:to_s)
+        when :date
+          coerce_date(answer)
         else
           answer.to_s.presence
         end
+      end
+
+      def coerce_date(answer)
+        Date.parse(answer.to_s)
+      rescue ArgumentError, TypeError
+        nil
       end
     end
   end

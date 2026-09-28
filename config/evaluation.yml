@@ -1,0 +1,20 @@
+# Platform-owned defaults for the adoption request policy evaluation
+# (REQ-49-3). Thresholds and severities are tuned centrally by the platform
+# team — shelters can see them but never edit them. Loaded via
+# `Rails.application.config_for(:evaluation)`; the `shared:` block is merged
+# into every environment.
+shared:
+  system_rules:
+    account_age_min:
+      days: 3
+      severity: red
+    email_verified:
+      severity: red
+    adopter_age_min:
+      years: 18
+      severity: red
+    profile_completeness_min:
+      percent: 60
+      severity: yellow
+    no_prior_decline_same_pet:
+      severity: yellow

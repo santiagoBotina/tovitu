@@ -6,6 +6,8 @@ class Shelter < ApplicationRecord
   has_many :adoption_applications, dependent: :restrict_with_error
   has_many :adoption_requests, dependent: :restrict_with_error
   has_many :ai_documents, class_name: "Ai::Document", dependent: :destroy
+  has_many :evaluation_policies, class_name: "ShelterEvaluationPolicy", dependent: :destroy
+  has_many :evaluation_rules, through: :evaluation_policies, source: :rules
 
   has_one_attached :logo
   has_one_attached :cover_image

@@ -21,7 +21,7 @@ module Adoptions
 
     def call
       fetched = @scope
-        .includes(:adopter, :shelter, pet: { photos_attachments: :blob })
+        .includes(:adopter, :shelter, :policy_evaluation, pet: { photos_attachments: :blob })
         .limit(@per_page + 1)
         .offset((@page - 1) * @per_page)
         .to_a

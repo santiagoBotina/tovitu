@@ -129,6 +129,24 @@
                 </div>
               </div>
 
+            <% elsif question[:type] == "date" %>
+              <div data-controller="character-count"
+                   data-character-count-max-length-value="0">
+                <div>
+                  <label for="onboarding-dob-<%= question[:number] %>" class="sr-only">
+                    <%= t("onboarding.individual.questions.q#{question[:number]}.text") %>
+                  </label>
+                  <input type="date"
+                         id="onboarding-dob-<%= question[:number] %>"
+                         data-onboarding-target="textInput"
+                         data-question-date="true"
+                         max="<%= Date.current.iso8601 %>"
+                         value="<%= @profile.send(question[:key]) %>"
+                         class="w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-neutral-800 transition">
+                  <p class="text-xs text-neutral-500 mt-2"><%= t("onboarding.individual.questions.q#{question[:number]}.hint") %></p>
+                </div>
+              </div>
+
             <% elsif question[:type] == "location" %>
               <%= render "onboarding/individual/questions/location_step",
                   user: @user %>

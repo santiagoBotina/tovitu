@@ -1,0 +1,20 @@
+<%# Inline parameter editor for a translated evaluation rule.
+    Locals: f (form_with), rule (ShelterEvaluationRule) %>
+<% schema = Adoptions::Evaluation::RuleCatalog.param_schema(rule.rule_type) %>
+<% schema.each do |param, type| %>
+  <div>
+    <label class="block text-xs text-neutral-500 mb-0.5"><%= param.humanize %></label>
+    <% if type == :pet_experience_level || type == :daily_time_level %>
+      <% levels = type == :pet_experience_level ?
+            Adoptions::Evaluation::RuleCatalog::PET_EXPERIENCE_LEVELS :
+            Adoptions::Evaluation::RuleCatalog::DAILY_TIME_LEVELS %>
+      <%= f.select "params[#{param}]",
+            options_for_select(levels, rule.params[param].to_s),
+            {},
+            class: "px-2 py-1.5 border border-neutral-300 rounded-lg text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500" %>
+    <% else %>
+      <%= f.number_field "params[#{param}]", value: rule.params[param], min: 1,
+            class: "w-20 px-2 py-1.5 border border-neutral-300 rounded-lg text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500" %>
+    <% end %>
+  </div>
+<% end %>

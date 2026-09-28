@@ -156,6 +156,12 @@
              insight_request: @request,
              insight_adopter: @adopter %>
 
+  <%# ─── Policy Check Card (advisory evaluation, REQ-49-8) ─── %>
+  <%= render "adoption_requests/policy_check_card",
+             policy_request: @request,
+             policy_check_re_run_url: (policy(@request).manage? ? re_evaluate_shelter_adoption_request_path(@request) : nil),
+             policy_check_settings_url: shelter_policies_path(shelter_id: @shelter) %>
+
   <%# ─── Adopter's Answers Card ─── %>
   <% answers = @request.additional_answers.to_h.with_indifferent_access %>
   <% answered = %w[interest_reason home_description current_pets_details something_else].select { |key| answers[key].present? } %>

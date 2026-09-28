@@ -58,6 +58,25 @@ module Onboarding
         },
         {
           number: 9,
+          key: "date_of_birth",
+          type: "date",
+          options: []
+        },
+        {
+          number: 10,
+          key: "home_environment",
+          type: "single_select",
+          options: %w[house_with_fenced_yard house_without_fenced_yard
+                       apartment_or_condo other_home]
+        },
+        {
+          number: 11,
+          key: "other_pets",
+          type: "single_select",
+          options: %w[no_other_pets has_dogs has_cats has_other_animals]
+        },
+        {
+          number: 12,
           key: "location",
           type: "location",
           options: []

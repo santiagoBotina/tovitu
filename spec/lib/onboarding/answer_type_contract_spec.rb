@@ -15,7 +15,7 @@ RSpec.describe "Onboarding answer-type contract" do
   it "defines question types with underscores, matching the JS comparisons" do
     [ Onboarding::Individual::QuestionsData, Onboarding::Shelter::QuestionsData ].each do |data|
       types = data.all.map { |q| q[:type] }
-      expect(types).to all(be_in(%w[multi_select single_select text location]))
+      expect(types).to all(be_in(%w[multi_select single_select text location date]))
     end
   end
 

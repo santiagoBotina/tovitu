@@ -1,0 +1,90 @@
+<%# Shared "Policy check" card for shelter + individual publisher request detail
+    pages (REQ-49-8 / REQ-49-9). Advisory only: the verdict never changes the
+    request status and never replaces the accept/validate/decline actions.
+    Locals:
+      - policy_request            AdoptionRequest
+      - policy_check_re_run_url   URL for re-running (nil hides the action)
+      - policy_check_settings_url URL to the shelter's evaluation settings
+                                  (nil for individual publishers) %>
+<% presenter = PolicyCheckPresenter.new(request: policy_request) %>
+
+<section class="bg-white rounded-xl shadow-sm border border-neutral-200 p-6 mb-6" data-testid="policy-check-card" aria-label="<%= t("adoptions.evaluation.card.title") %>">
+  <div class="flex items-start justify-between gap-3 mb-4">
+    <div class="flex items-center gap-2">
+      <span class="w-8 h-8 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0" aria-hidden="true">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </span>
+      <h2 class="font-display text-lg font-bold text-neutral-800"><%= t("adoptions.evaluation.card.title") %></h2>
+    </div>
+    <% if presenter.ready? %>
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border <%= presenter.verdict_badge_classes %> shrink-0">
+        <span class="w-1.5 h-1.5 rounded-full <%= presenter.verdict_dot_classes %>" aria-hidden="true"></span>
+        <%= presenter.verdict_label %>
+      </span>
+    <% end %>
+  </div>
+
+  <% if presenter.ready? %>
+    <p class="text-sm font-medium text-neutral-800"><%= presenter.summary %></p>
+    <p class="text-xs text-neutral-500 mt-1"><%= t("adoptions.evaluation.card.advisory") %></p>
+
+    <% if presenter.rules.any? %>
+      <div class="mt-4">
+        <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-2"><%= t("adoptions.evaluation.card.rules_title") %></h3>
+        <ul class="space-y-2">
+          <% presenter.rules.each do |rule| %>
+            <li class="flex items-start gap-3 p-3 rounded-xl border
+                       <%= rule[:state] == 'failed' ? 'border-danger/20 bg-danger/5' : (rule[:state] == 'unevaluable' ? 'border-warning/20 bg-warning/5' : 'border-neutral-100 bg-neutral-50') %>">
+              <div class="min-w-0 flex-1">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <p class="text-sm font-semibold text-neutral-800"><%= rule[:label] %></p>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
+                               <%= rule[:severity] == 'red' ? 'bg-danger/10 text-danger' : 'bg-warning/10 text-warning' %>">
+                    <%= rule[:severity_label] %>
+                  </span>
+                  <span class="text-xs text-neutral-400">· <%= rule[:source_label] %></span>
+                </div>
+                <% if rule[:policy_text].present? %>
+                  <p class="text-xs text-neutral-500 italic mt-1">"<%= rule[:policy_text] %>"</p>
+                <% end %>
+                <p class="text-sm text-neutral-600 mt-1"><%= rule[:evidence] %></p>
+              </div>
+              <span class="inline-flex items-center px-2 py-1 rounded-lg text-xs font-semibold shrink-0
+                           <%= rule[:state] == 'passed' ? 'bg-success/10 text-success' : (rule[:state] == 'failed' ? 'bg-danger/10 text-danger' : 'bg-warning/10 text-warning') %>">
+                <%= rule[:state_label] %>
+              </span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mt-4 pt-4 border-t border-neutral-100 flex flex-wrap items-center gap-3">
+      <span class="text-xs text-neutral-400"><%= t("adoptions.evaluation.card.reviewed_at", time: l(presenter.evaluated_at, format: :short)) %></span>
+      <% if policy_check_re_run_url.present? %>
+        <%= button_to t("adoptions.evaluation.card.re_run"), policy_check_re_run_url, method: :post,
+              data: { turbo_confirm: t("adoptions.evaluation.card.re_run_confirm") },
+              class: "ml-auto inline-flex items-center gap-2 px-4 py-2 bg-white border border-neutral-300 text-neutral-700 font-medium text-sm rounded-xl hover:bg-neutral-50 transition-all duration-200 active:scale-[0.97] shadow-sm" %>
+      <% end %>
+      <% if policy_check_settings_url.present? %>
+        <%= link_to t("adoptions.evaluation.card.settings_link"), policy_check_settings_url, class: "text-sm font-medium text-primary-600 hover:underline transition-colors" %>
+      <% end %>
+    </div>
+
+  <% elsif presenter.evaluating? %>
+    <div class="py-8 text-center bento-enter bento-enter-d1">
+      <div class="mx-auto w-8 h-8 mb-3 rounded-full border-2 border-primary-200 border-t-primary-500 animate-spin" aria-hidden="true"></div>
+      <p class="text-sm font-medium text-neutral-700"><%= t("adoptions.evaluation.card.evaluating") %></p>
+      <p class="text-xs text-neutral-500 mt-1"><%= t("adoptions.evaluation.card.evaluating_hint") %></p>
+    </div>
+
+  <% else %>
+    <div class="py-6 text-center bento-enter bento-enter-d1">
+      <p class="text-sm font-medium text-neutral-700"><%= t("adoptions.evaluation.card.empty_state") %></p>
+      <p class="text-xs text-neutral-500 mt-1 max-w-md mx-auto"><%= t("adoptions.evaluation.card.empty_state_hint") %></p>
+    </div>
+  <% end %>
+</section>

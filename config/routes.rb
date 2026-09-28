@@ -100,7 +100,11 @@ Rails.application.routes.draw do
           delete :cancel
         end
       end
-      resource :policies, only: [ :show, :edit, :update ], controller: "shelters/policies"
+      resource :policies, only: [ :show, :edit, :update ], controller: "shelters/policies" do
+        post :add_policy, on: :collection
+        post :translate, on: :collection
+      end
+      resources :evaluation_rules, only: [ :update, :destroy ], controller: "shelters/evaluation_rules"
     end
 
     # Legacy anonymous adoption applications (kept for existing data status checks)
@@ -142,6 +146,7 @@ Rails.application.routes.draw do
 
       resources :adoption_requests, only: [ :index, :show ] do
         resource :decision, only: [ :new, :create ], controller: "adoption_requests/decisions"
+        post :re_evaluate, on: :member
       end
 
       namespace :ai do
@@ -159,6 +164,7 @@ Rails.application.routes.draw do
 
       resources :adoption_requests, only: [ :index, :show ] do
         resource :decision, only: [ :new, :create ], controller: "adoption_requests/decisions"
+        post :re_evaluate, on: :member
       end
     end
     # ────────────────────────────────────────────────────────────

@@ -143,6 +143,11 @@ export default class extends Controller {
       if (errorMsg) errorMsg.classList.add("hidden")
     }
 
+    if (type === "date") {
+      const input = element.querySelector("input[type=\"date\"]")
+      if (input && !input.value) return false
+    }
+
     return true
   }
 
@@ -163,6 +168,11 @@ export default class extends Controller {
     if (type === "text") {
       const textarea = element.querySelector("textarea")
       return textarea ? textarea.value : ""
+    }
+
+    if (type === "date") {
+      const input = element.querySelector("input[type=\"date\"]")
+      return input ? input.value : ""
     }
 
     return ""

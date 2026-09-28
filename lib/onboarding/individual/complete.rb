@@ -2,7 +2,7 @@ module Onboarding
   module Individual
     class Complete < ApplicationService
       TOTAL_QUESTIONS = Onboarding::Individual::QuestionsData.count
-      MANDATORY_QUESTIONS = 8
+      MANDATORY_QUESTIONS = 11
 
       def initialize(user:, skip: false)
         @user = user

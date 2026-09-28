@@ -246,6 +246,42 @@ ALTER SEQUENCE public.adoption_notes_id_seq OWNED BY public.adoption_notes.id;
 
 
 --
+-- Name: adoption_request_evaluations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.adoption_request_evaluations (
+    id bigint NOT NULL,
+    adoption_request_id bigint NOT NULL,
+    verdict character varying NOT NULL,
+    summary jsonb DEFAULT '{}'::jsonb,
+    rules jsonb DEFAULT '[]'::jsonb,
+    version integer DEFAULT 1 NOT NULL,
+    evaluated_at timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: adoption_request_evaluations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.adoption_request_evaluations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: adoption_request_evaluations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.adoption_request_evaluations_id_seq OWNED BY public.adoption_request_evaluations.id;
+
+
+--
 -- Name: adoption_request_timeline_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -527,7 +563,10 @@ CREATE TABLE public.individual_profiles (
     adoption_priority character varying,
     onboarding_step integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    date_of_birth date,
+    home_environment character varying,
+    other_pets character varying
 );
 
 
@@ -881,6 +920,75 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: shelter_evaluation_policies; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.shelter_evaluation_policies (
+    id bigint NOT NULL,
+    shelter_id bigint NOT NULL,
+    content text NOT NULL,
+    status character varying DEFAULT 'draft'::character varying NOT NULL,
+    reason text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: shelter_evaluation_policies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.shelter_evaluation_policies_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: shelter_evaluation_policies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.shelter_evaluation_policies_id_seq OWNED BY public.shelter_evaluation_policies.id;
+
+
+--
+-- Name: shelter_evaluation_rules; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.shelter_evaluation_rules (
+    id bigint NOT NULL,
+    policy_id bigint NOT NULL,
+    rule_type character varying NOT NULL,
+    params jsonb DEFAULT '{}'::jsonb,
+    severity character varying DEFAULT 'yellow'::character varying NOT NULL,
+    enabled boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: shelter_evaluation_rules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.shelter_evaluation_rules_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: shelter_evaluation_rules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.shelter_evaluation_rules_id_seq OWNED BY public.shelter_evaluation_rules.id;
+
+
+--
 -- Name: shelter_profiles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1094,6 +1202,13 @@ ALTER TABLE ONLY public.adoption_notes ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: adoption_request_evaluations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adoption_request_evaluations ALTER COLUMN id SET DEFAULT nextval('public.adoption_request_evaluations_id_seq'::regclass);
+
+
+--
 -- Name: adoption_request_timeline_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1206,6 +1321,20 @@ ALTER TABLE ONLY public.saved_pets ALTER COLUMN id SET DEFAULT nextval('public.s
 
 
 --
+-- Name: shelter_evaluation_policies id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shelter_evaluation_policies ALTER COLUMN id SET DEFAULT nextval('public.shelter_evaluation_policies_id_seq'::regclass);
+
+
+--
+-- Name: shelter_evaluation_rules id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shelter_evaluation_rules ALTER COLUMN id SET DEFAULT nextval('public.shelter_evaluation_rules_id_seq'::regclass);
+
+
+--
 -- Name: shelter_profiles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1279,6 +1408,14 @@ ALTER TABLE ONLY public.adoption_applications
 
 ALTER TABLE ONLY public.adoption_notes
     ADD CONSTRAINT adoption_notes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: adoption_request_evaluations adoption_request_evaluations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adoption_request_evaluations
+    ADD CONSTRAINT adoption_request_evaluations_pkey PRIMARY KEY (id);
 
 
 --
@@ -1423,6 +1560,22 @@ ALTER TABLE ONLY public.saved_pets
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: shelter_evaluation_policies shelter_evaluation_policies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shelter_evaluation_policies
+    ADD CONSTRAINT shelter_evaluation_policies_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: shelter_evaluation_rules shelter_evaluation_rules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shelter_evaluation_rules
+    ADD CONSTRAINT shelter_evaluation_rules_pkey PRIMARY KEY (id);
 
 
 --
@@ -1595,6 +1748,13 @@ CREATE INDEX index_adoption_notes_on_adoption_application_id ON public.adoption_
 --
 
 CREATE INDEX index_adoption_notes_on_user_id ON public.adoption_notes USING btree (user_id);
+
+
+--
+-- Name: index_adoption_request_evaluations_on_adoption_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_adoption_request_evaluations_on_adoption_request_id ON public.adoption_request_evaluations USING btree (adoption_request_id);
 
 
 --
@@ -1913,6 +2073,20 @@ CREATE UNIQUE INDEX index_saved_pets_on_user_id_and_pet_id ON public.saved_pets 
 
 
 --
+-- Name: index_shelter_evaluation_policies_on_shelter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_shelter_evaluation_policies_on_shelter_id ON public.shelter_evaluation_policies USING btree (shelter_id);
+
+
+--
+-- Name: index_shelter_evaluation_rules_on_policy_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_shelter_evaluation_rules_on_policy_id ON public.shelter_evaluation_rules USING btree (policy_id);
+
+
+--
 -- Name: index_shelter_profiles_on_shelter_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2053,6 +2227,14 @@ ALTER TABLE ONLY public.adoption_notes
 
 
 --
+-- Name: shelter_evaluation_policies fk_rails_24459589b5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shelter_evaluation_policies
+    ADD CONSTRAINT fk_rails_24459589b5 FOREIGN KEY (shelter_id) REFERENCES public.shelters(id);
+
+
+--
 -- Name: pet_imports fk_rails_2712fb23b5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2149,6 +2331,14 @@ ALTER TABLE ONLY public.ai_document_chunks
 
 
 --
+-- Name: shelter_evaluation_rules fk_rails_7603bbb360; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shelter_evaluation_rules
+    ADD CONSTRAINT fk_rails_7603bbb360 FOREIGN KEY (policy_id) REFERENCES public.shelter_evaluation_policies(id);
+
+
+--
 -- Name: individual_profiles fk_rails_7a1d0aca47; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2210,6 +2400,14 @@ ALTER TABLE ONLY public.active_storage_variant_records
 
 ALTER TABLE ONLY public.adoption_notes
     ADD CONSTRAINT fk_rails_a3824c9e1b FOREIGN KEY (adoption_application_id) REFERENCES public.adoption_applications(id);
+
+
+--
+-- Name: adoption_request_evaluations fk_rails_b42a4c6ad3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.adoption_request_evaluations
+    ADD CONSTRAINT fk_rails_b42a4c6ad3 FOREIGN KEY (adoption_request_id) REFERENCES public.adoption_requests(id);
 
 
 --
@@ -2291,6 +2489,10 @@ ALTER TABLE ONLY public.adoption_applications
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260928000007'),
+('20260928000006'),
+('20260928000005'),
+('20260928000004'),
 ('20260928000003'),
 ('20260928000002'),
 ('20260928000001'),

@@ -49,6 +49,34 @@
     </section>
   <% end %>
 
+  <%# ─── New evaluation-fields prompt (existing adopters, non-blocking) ─── %>
+  <% if current_user.individual? && current_user.onboarding_completed? %>
+    <% profile = current_user.individual_profile %>
+    <% if profile.present? && profile.missing_evaluation_fields.any? %>
+      <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d2 card-lift" aria-label="<%= t(".evaluation_fields_title") %>">
+        <div class="flex items-start gap-4">
+          <div class="shrink-0 w-12 h-12 rounded-xl bg-warning/10 flex items-center justify-center" aria-hidden="true">
+            <svg class="w-6 h-6 text-warning" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v2m6.364 1.636-1.414 1.414M21 12h-2M4 12H2m10-7a7 7 0 0 1 7 7m-1.636 6.364-1.414-1.414M12 21v-2"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h2 class="font-display text-lg font-bold text-neutral-800 mb-1"><%= t(".evaluation_fields_title") %></h2>
+            <p class="text-sm text-neutral-500 mb-4"><%= t(".evaluation_fields_desc") %></p>
+            <%= link_to profile_onboarding_path,
+                class: "inline-flex items-center gap-2 px-5 py-2.5 bg-primary-500 text-white font-semibold text-sm rounded-xl hover:bg-primary-600 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 transition-all duration-200 active:scale-[0.97] shadow-sm" do %>
+              <%= t(".evaluation_fields_cta") %>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+              </svg>
+            <% end %>
+          </div>
+        </div>
+      </section>
+    <% end %>
+  <% end %>
+
   <%# ─── Your Adoption Journey (compact strip) ─── %>
   <% if current_user.individual? %>
     <section class="bg-white rounded-xl p-6 shadow-sm border border-neutral-200 bento-enter bento-enter-d2" aria-label="<%= t(".journey.title") %>">

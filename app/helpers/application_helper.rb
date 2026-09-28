@@ -25,6 +25,12 @@ module ApplicationHelper
     ""
   end
 
+  # True when an evaluation rule type carries configurable parameters (used by
+  # the shelter evaluation settings to render the parameter editor).
+  def rule_params?(rule_type)
+    Adoptions::Evaluation::RuleCatalog.param_schema(rule_type).any?
+  end
+
   def question_icon(number)
     icons = {
       1 => "\u{1F3E0}",
@@ -34,7 +40,11 @@ module ApplicationHelper
       5 => "\u{1F497}",
       6 => "\u{23F0}",
       7 => "\u{1F9D0}",
-      8 => "\u{1F4AC}"
+      8 => "\u{1F4AC}",
+      9 => "\u{1F382}",
+      10 => "\u{1F3E0}",
+      11 => "\u{1F43E}",
+      12 => "\u{1F4CD}"
     }
     icons[number] || "\u{1F43E}"
   end
@@ -45,7 +55,9 @@ module ApplicationHelper
       3 => { calm_friend: "\u{1F43E}", playful_companion: "\u{1F3B6}", affectionate_pet: "\u{1F496}", independent_pet: "\u{1F98E}", social_pet: "\u{1F46B}" },
       4 => { first_time: "\u{1F331}", some_experience: "\u{1F4DA}", years_of_experience: "\u{1F3DB}\u{FE0F}", very_experienced: "\u{1F3AF}" },
       6 => { less_than_1h: "\u{23F1}\u{FE0F}", "1_to_2h": "\u{23F1}\u{FE0F}", "2_to_4h": "\u{23F1}\u{FE0F}", more_than_4h: "\u{23F1}\u{FE0F}" },
-      7 => { calm_thoughtful: "\u{1F9D0}", friendly_social: "\u{1F60A}", adventurous_energetic: "\u{1F30D}", organized_routine: "\u{1F4CB}", flexible_spontaneous: "\u{1F300}" }
+      7 => { calm_thoughtful: "\u{1F9D0}", friendly_social: "\u{1F60A}", adventurous_energetic: "\u{1F30D}", organized_routine: "\u{1F4CB}", flexible_spontaneous: "\u{1F300}" },
+      10 => { house_with_fenced_yard: "\u{1F3E1}", house_without_fenced_yard: "\u{1F3E0}", apartment_or_condo: "\u{1F3E2}", other_home: "\u{1F3D8}\u{FE0F}" },
+      11 => { no_other_pets: "\u{1F6AB}", has_dogs: "\u{1F436}", has_cats: "\u{1F431}", has_other_animals: "\u{1F43E}" }
     }
     icons.dig(question_number, option.to_sym) || ""
   end

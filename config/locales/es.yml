@@ -721,6 +721,9 @@ es:
             first_application: "Primera solicitud"
             active_applicant: "Solicitante activo"
             publisher: "Publicador"
+        evaluation_fields_title: "Completa tu perfil de evaluación"
+        evaluation_fields_desc: "Agrega tu fecha de nacimiento, entorno de tu hogar y otras mascotas para que los refugios puedan evaluar tus solicitudes automáticamente — y las solicitudes aptas no se marquen solo porque no pudimos verificarte."
+        evaluation_fields_cta: "Agregar estos datos"
     verifications:
       expired:
         title: "Enlace expirado"
@@ -892,6 +895,7 @@ es:
       answer_too_long: "La respuesta es demasiado larga (máximo %{max_length} caracteres)"
       no_profile: "Perfil no encontrado"
       incomplete: "Por favor responde todas las preguntas antes de completar. Faltan: %{questions}"
+      invalid_date_of_birth: "La fecha de nacimiento debe ser hoy o anterior"
   ai:
     status:
       processing: "Procesando"
@@ -1111,6 +1115,25 @@ es:
           placeholder: "Cuéntanos qué es lo más importante para ti al encontrar tu compañero..."
           max_length: "Máximo 200 caracteres"
         q9:
+          text: "¿Cuál es tu fecha de nacimiento?"
+          hint: "Los refugios ven tu edad (nunca tu fecha de nacimiento) para verificar los requisitos de edad mínima."
+        q10:
+          text: "¿En qué tipo de hogar vives?"
+          placeholder: "Selecciona uno"
+          options:
+            house_with_fenced_yard: "Casa con jardín cercado"
+            house_without_fenced_yard: "Casa sin jardín cercado"
+            apartment_or_condo: "Departamento o condominio"
+            other_home: "Otro"
+        q11:
+          text: "¿Tienes otras mascotas en casa?"
+          placeholder: "Selecciona uno"
+          options:
+            no_other_pets: "Sin otras mascotas"
+            has_dogs: "Perro(s)"
+            has_cats: "Gato(s)"
+            has_other_animals: "Otros animales"
+        q12:
           text: "¿Dónde te encuentras?"
     shelter:
       title: "Cuéntanos sobre tu organización"

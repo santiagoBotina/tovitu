@@ -26,6 +26,19 @@ class Shelter::AdoptionRequestsController < ApplicationController
     refresh_stale_insight
   end
 
+  def re_evaluate
+    @request = AdoptionRequest.find(params[:id])
+    authorize @request, :manage?
+
+    result = Adoptions::EvaluateRequest.call(request: @request)
+
+    if result.success?
+      redirect_to shelter_adoption_request_path(@request), notice: t("adoptions.evaluation.flash.re_run_success")
+    else
+      redirect_to shelter_adoption_request_path(@request), alert: Array(result.errors).join(", ")
+    end
+  end
+
   private
 
   def index_params

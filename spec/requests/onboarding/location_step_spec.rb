@@ -208,7 +208,10 @@ RSpec.describe "Onboarding location step", type: :request do
         5 => %w[daily_companion],
         6 => "2_to_4h",
         7 => "adventurous_energetic",
-        8 => "A loving home"
+        8 => "A loving home",
+        9 => "1994-05-10",
+        10 => "house_with_fenced_yard",
+        11 => "no_other_pets"
       }
       answers.each do |qnum, answer|
         patch onboarding_individual_questions_path,

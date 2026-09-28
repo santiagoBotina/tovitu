@@ -702,6 +702,9 @@ en:
             first_application: "First application"
             active_applicant: "Active applicant"
             publisher: "Publisher"
+        evaluation_fields_title: "Complete your screening profile"
+        evaluation_fields_desc: "Add your date of birth, home environment, and other pets so shelters can screen your requests automatically — and good-fit requests aren't flagged just because we couldn't verify you."
+        evaluation_fields_cta: "Add these details"
     verifications:
       expired:
         title: "Link expired"
@@ -873,6 +876,7 @@ en:
       answer_too_long: "Answer is too long (maximum %{max_length} characters)"
       no_profile: "Profile not found"
       incomplete: "Please answer all questions before completing. Missing: %{questions}"
+      invalid_date_of_birth: "Date of birth must be today or earlier"
   ai:
     status:
       processing: "Processing"
@@ -1092,6 +1096,25 @@ en:
           placeholder: "Tell us what's most important to you in finding your companion..."
           max_length: "Maximum 200 characters"
         q9:
+          text: "What's your date of birth?"
+          hint: "Shelters see your age (never your birth date) to check minimum-age requirements."
+        q10:
+          text: "What type of home do you live in?"
+          placeholder: "Select one"
+          options:
+            house_with_fenced_yard: "House with fenced yard"
+            house_without_fenced_yard: "House without fenced yard"
+            apartment_or_condo: "Apartment or condo"
+            other_home: "Other"
+        q11:
+          text: "Do you have other pets at home?"
+          placeholder: "Select one"
+          options:
+            no_other_pets: "No other pets"
+            has_dogs: "Dog(s)"
+            has_cats: "Cat(s)"
+            has_other_animals: "Other animals"
+        q12:
           text: "Where are you located?"
     shelter:
       title: "Tell us about your organization"

@@ -20,6 +20,8 @@
       <span class="text-xs text-neutral-400">(<%= t("onboarding.review.legacy_value") %>)</span>
     <% end %>
   </p>
+<% elsif question[:type] == "date" && stored_value.present? %>
+  <p class="text-sm font-medium text-neutral-700"><%= l(stored_value.to_date, format: :long) %></p>
 <% else %>
   <p class="text-sm text-neutral-700 whitespace-pre-wrap"><%= stored_value %></p>
 <% end %>

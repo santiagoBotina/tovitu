@@ -48,7 +48,7 @@ RSpec.describe "Onboarding review page" do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include('data-review-question="1"')
       # All editors are rendered open.
-      expect(response.body.scan('<details class="review-edit mt-4 group" open>').size).to eq(8)
+      expect(response.body.scan('<details class="review-edit mt-4 group" open>').size).to eq(11)
     end
   end
 

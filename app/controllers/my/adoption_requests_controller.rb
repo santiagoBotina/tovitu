@@ -33,6 +33,22 @@ module My
       refresh_stale_insight
     end
 
+    def re_evaluate
+      @request = AdoptionRequest
+        .joins(:pet)
+        .where(pets: { publisher_id: current_user.id })
+        .find(params[:id])
+      authorize @request, :manage?
+
+      result = Adoptions::EvaluateRequest.call(request: @request)
+
+      if result.success?
+        redirect_to my_adoption_request_path(@request), notice: t("adoptions.evaluation.flash.re_run_success")
+      else
+        redirect_to my_adoption_request_path(@request), alert: Array(result.errors).join(", ")
+      end
+    end
+
     private
 
     def refresh_stale_insight

@@ -56,7 +56,10 @@
               </td>
               <td class="px-6 py-4 text-sm text-neutral-600"><%= request.adopter.name %></td>
               <td class="px-6 py-4">
-                <%= render "adoption_requests/status_badge", status: request.status %>
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <%= render "adoption_requests/status_badge", status: request.status %>
+                  <%= render "adoption_requests/policy_chip", evaluation: request.policy_evaluation %>
+                </div>
               </td>
               <td class="px-6 py-4 text-sm text-neutral-500"><%= l(request.created_at.to_date, format: :long) rescue request.created_at.to_date %></td>
               <td class="px-6 py-4 text-right">
